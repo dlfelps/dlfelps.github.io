@@ -1,7 +1,5 @@
 ---
 layout: single
-classes:
-  - dark-theme
 title: Experiment 02
 toc: true
 toc_sticky: true
