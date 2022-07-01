@@ -1,6 +1,6 @@
 ---
-layout: posts
 title: Experiment 03
+tags: reproducible net docker
 ---
 
 This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on *smallish* projects and there certainly are other ways to create reproducible software.

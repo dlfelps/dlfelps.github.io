@@ -1,8 +1,7 @@
 ---
-layout: single
+
 title: Experiment 01
-toc: true
-toc_sticky: true
+tags: net
 ---
 
 This experiment explores various publishing options associated with .NET, including: 

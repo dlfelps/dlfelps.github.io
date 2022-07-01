@@ -14,11 +14,12 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: .NET Experiments
+name: Daniel Felps
 email: dlfelps@gmail.com
-description: >- # this means to ignore newlines until "baseurl:"
-  Bill Nye meets Bill Gates ;)
+description:  "Bill Nye meets Bill Gates ;)"
 baseurl: "" # the subpath of your site, e.g. /blog
 url: https://dlfelps.github.io # the base hostname & protocol for your site, e.g. http://example.com
+repository: dlfelps/dlfelps.github.io
 
 github_username:  dlfelps
 
@@ -32,6 +33,41 @@ plugins:
 paginate: 5 # amount of posts to show
 paginate_path: /page:num/
 github: [metadata]
+
+words_per_minute: 100
+
+
+category_archive:
+  type: jekyll-archives
+  path: /categories/
+tag_archive:
+  type: jekyll-archives
+  path: /tags/
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
+  layouts:
+    category: archive-taxonomy
+    tag: archive-taxonomy
+  permalinks:
+    category: /categories/:name/
+    tag: /tags/:name/
+
+
+defaults:
+  # _posts
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: single
+      toc: true
+      toc_sticky: true
+      show_date: true
+      read_time: true
+      share: true
+      related: true
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

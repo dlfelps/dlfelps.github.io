@@ -1,8 +1,6 @@
 ---
-layout: single
 title: Experiment 02
-toc: true
-toc_sticky: true
+tags: reproducible net
 
 ---
 
@@ -19,9 +17,9 @@ Scientific experiments must be repeatable and reproducable to be considered scie
 
 It is useful to clarify our definition of reproducibility within the context of software development. Let P<sub>0</sub> represent a stable, compiling build of a codebase that results in a *correct* program. The reproducibility test for P<sub>0</sub> is as follows:
 
-> Does the code/documentation for P<sub>0</sub> contain sufficient information to reproduce the *correct* program from a clean environment? 
+> Does the code/documentation for P<sub>0</sub> contain sufficient information to reproduce the *correct* program from a clean environment? (Yes/No)
 
-Next, let P<sub>1</sub> represent the code (in the new environment) that has undergone a substantial change (e.g. new feature added) requiring a *modified  build environment.* We can reapply the reproducibilty test to P<sub>1</sub>. The number of times that code passes the reproducibility test can be defined as its reproducibility level [0..N].
+Next, let P<sub>1</sub> represent the code (in the new environment) that has undergone a substantial change that *modified the build environment.* We can reapply the reproducibilty test to P<sub>1</sub>. The number of times that code passes the reproducibility test can be defined as its reproducibility level [0..N].
 
 It may be useful to name a few of these levels.
 
