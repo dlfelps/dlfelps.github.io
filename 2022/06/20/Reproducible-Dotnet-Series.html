@@ -1,0 +1,570 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 02 - .NET Experiments</title>
+<meta name="description" content="The next few posts take step back to examine the benefits of creating reproducible software. We will explore:    the continuosly reproducible mindset (this post)   foundational tools for reproducibility (Exp 03)   creating a continuously reproducible .NET project (Exp 04)">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 02">
+<meta property="og:url" content="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html">
+
+
+  <meta property="og:description" content="The next few posts take step back to examine the benefits of creating reproducible software. We will explore:    the continuosly reproducible mindset (this post)   foundational tools for reproducibility (Exp 03)   creating a continuously reproducible .NET project (Exp 04)">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-06-20T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Daniel Felps",
+      "url": "https://dlfelps.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 02">
+    <meta itemprop="description" content="The next few posts take step back to examine the benefits of creating reproducible software. We will explore:  the continuosly reproducible mindset (this post)  foundational tools for reproducibility (Exp 03)  creating a continuously reproducible .NET project (Exp 04)">
+    <meta itemprop="datePublished" content="2022-06-20T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Experiment 02
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-20T00:00:00+00:00">June 20, 2022</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          8 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li><li><a href="#defining-reproducible-software">Defining reproducible software</a></li><li><a href="#the-continuously-reproducible-mindset">The continuously reproducible mindset</a></li><li><a href="#measuring-the-longevity-of-a-build">Measuring the longevity of a build</a></li><li><a href="#conclusion">Conclusion</a><ul><li><a href="#footnotes">Footnotes</a></li></ul></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <p>The next few posts take step back to examine the benefits of creating reproducible software. We will explore:</p>
+<ul>
+  <li>the continuosly reproducible mindset (this post)</li>
+  <li>foundational tools for reproducibility (Exp 03)</li>
+  <li>creating a continuously reproducible .NET project (Exp 04)</li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Scientific experiments must be repeatable and reproducable to be considered scientific. Reproducability in software is optional - software that works but is not reproducible is still successful software. I hope to convince you that the overhead required to create reproducible software is low compared to the benefits that it provides future developers, even if the only future developer is you.</p>
+
+<h2 id="defining-reproducible-software">Defining reproducible software</h2>
+
+<p>It is useful to clarify our definition of reproducibility within the context of software development. Let P<sub>0</sub> represent a stable, compiling build of a codebase that results in a <em>correct</em> program. The reproducibility test for P<sub>0</sub> is as follows:</p>
+
+<blockquote>
+  <p>Does the code/documentation for P<sub>0</sub> contain sufficient information to reproduce the <em>correct</em> program from a clean environment? (Yes/No)</p>
+</blockquote>
+
+<p>Next, let P<sub>1</sub> represent the code (in the new environment) that has undergone a substantial change that <em>modified the build environment.</em> We can reapply the reproducibilty test to P<sub>1</sub>. The number of times that code passes the reproducibility test can be defined as its reproducibility level [0..N].</p>
+
+<p>It may be useful to name a few of these levels.</p>
+
+<ul>
+  <li><em>Irreproducible</em> - Reproducibility level 0; P<sub>0</sub> failed the reproducibility test.</li>
+  <li><em>One-time reproducible</em> - Reproducibility level 1; P<sub>0</sub> passed the reproducibility test, but P<sub>1</sub> failed.</li>
+  <li><em>Continuously reproducible</em> - Reproducibility level 2+; If P<sub>0</sub> and P<sub>1</sub> pass the reproducibility test then it is indicitave that the code is written in a way that supports reproducibility for future generations of the code.</li>
+</ul>
+
+<h2 id="the-continuously-reproducible-mindset">The continuously reproducible mindset</h2>
+
+<p>How many times have you pulled a project from Github only to have it fail to compile?</p>
+
+<blockquote>
+  <p>It works on my machine ¯\_(ツ)_/¯</p>
+</blockquote>
+
+<p>We can reduce this problem by expanding our mindset to strive for <strong>continuously reproducible</strong> code. The key to creating continuously reproducible code is create a simple workflow that rebuilds the project from a clean environment (preferably Windows, Linux, and OSX). This allows you to isolate undocumented side-effects that can occur in your local development environment (e.g. relying on a tool available locally that is not installed during the build process).</p>
+
+<p>Continuosly reproducible code balances the need to solve the current problem with the need to redeploy the codebase to new systems. If this doesn’t seem worthwhile, then it might be helpful to imagine that your code (P<sub>0</sub>) will be extended by a different developer in a substantial way (P<sub>1</sub>) before it is returned to you for another round of development (P<sub>2</sub>). The time spent during the initial phase of development to create a build process that is easy to replicate across platforms (and modify as needed) will payoff in the long run.</p>
+
+<p>But what if you are the only developer that will ever use this code? I have  found the continuosly reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring robust code that works on multiple platforms (I develop locally on Windows but sometimes require a linux binary).</p>
+
+<h2 id="measuring-the-longevity-of-a-build">Measuring the longevity of a build</h2>
+
+<p>If a specific build passes the reproducibility test then its longevity can be measured. Longevity is a measure of the period of time between the first time the build passes the reproducibility test and the last time it passes. All builds eventually fail because some dependency of the build process will fail (including the language itself - .NET Framework 3.5 was released in November  2007 but it is no longer available from Microsoft).</p>
+
+<p align="center">
+  <img width="600" height="400" src="https://github.com/dlfelps/dlfelps.github.io/raw/4cf0e44e6697c701cc17399a4bd4cef867bc7b94/images/fight_club.jpg" />
+</p>
+
+<p>Longevity is measured for a single build configuration. Namely, P<sub>0</sub> will have a certain longevity, but P<sub>1</sub>’s longevity may be shorter or longer depending on the changes made to its build configuration. Although true longevity can only be calculated after the build fails, developers can make conscious decisions to maximize the expected longevity of their code:</p>
+<ul>
+  <li>prefer dependencies that offer long term support (e.g. choose .NET 6 LTS even after .NET 7 is released) <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></li>
+  <li>prefer dependencies that minimize the number of <a href="https://fsprojects.github.io/Paket/faq.html#What-does-transitive-dependencies-mean">transitive dependencies</a></li>
+  <li>specify dependencies using <a href="https://fsprojects.github.io/Paket/nuget-dependencies.html#Pinned-version-constraint">pinned version constraints</a> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup></li>
+  <li>if using Docker, build from standard base images <sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup></li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Reproducibility is relatively easy with modern software development tools. The crux of the problem is giving future developers the ability to:</p>
+<ol>
+  <li>easily recreate the initial development environment across multiple platforms/architectures</li>
+  <li>continue to make changes to the code that does not break this process</li>
+</ol>
+
+<p>In the next few posts I will describe the current (circa 2022) best practices for reproducibility and demonstrate how to apply them to an existing code base.</p>
+
+<h4 id="footnotes">Footnotes</h4>
+
+<!--
+
+1. Intro
+  - need for reproducibility
+  - in science
+  - in software
+  - in machine learning
+
+2. Basic tools
+  - Docker (links to learning resources)
+  - Gitlab/Github 
+  - CI/CD
+  - permissive licensing
+
+3. Producing reporducible builds
+  - choice of baseline (LTS)
+  - provide multiple options (multiple-platforms)
+    - local install w/ ci/cd
+    - docker-compose local (build)
+  - push build complexity to lowest level
+
+4. CI/CD
+  - Gitlab runner w/ docker
+  - (optional) docker registry
+
+5. Publishing
+  - code should be publish to allow someone (most likely yourself) to reproduce it
+  - but it shouldnt be required; also provide standalone executables
+
+-->
+
+<!--
+https://www.nature.com/articles/s41562-016-0021
+
+
+The problem
+A hallmark of scientific creativity is the ability to see novel and unexpected patterns in data. John Snow's identification of links between cholera and water supply17, Paul Broca's work on language lateralization18 and Jocelyn Bell Burnell's discovery of pulsars19 are examples of breakthroughs achieved by interpreting observations in a new way. However, a major challenge for scientists is to be open to new and important insights while simultaneously avoiding being misled by our tendency to see structure in randomness. The combination of apophenia (the tendency to see patterns in random data), confirmation bias (the tendency to focus on evidence that is in line with our expectations or favoured explanation) and hindsight bias (the tendency to see an event as having been predictable only after it has occurred) can easily lead us to false conclusions20. Thomas Levenson documents the example of astronomers who became convinced they had seen the fictitious planet Vulcan because their contemporary theories predicted its existence21. Experimenter effects are an example of this kind of bias22.
+
+Over-interpretation of noise is facilitated by the extent to which data analysis is rapid, flexible and automated23. In a high-dimensional dataset, there may be hundreds or thousands of reasonable alternative approaches to analysing the same data24,25. For example, in a systematic review of functional magnetic resonance imaging (fMRI) studies, Carp showed that there were almost as many unique analytical pipelines as there were studies26. If several thousand potential analytical pipelines can be applied to high-dimensional data, the generation of false-positive findings is highly likely. For example, applying almost 7,000 analytical pipelines to a single fMRI dataset resulted in over 90% of brain voxels showing significant activation in at least one analysis27.
+
+During data analysis it can be difficult for researchers to recognize P-hacking28 or data dredging because confirmation and hindsight biases can encourage the acceptance of outcomes that fit expectations or desires as appropriate, and the rejection of outcomes that do not as the result of suboptimal designs or analyses. Hypotheses may emerge that fit the data and are then reported without indication or recognition of their post hoc origin7. This, unfortunately, is not scientific discovery, but self-deception29. Uncontrolled, it can dramatically increase the false discovery rate. We need measures to counter the natural tendency of enthusiastic scientists who are motivated by discovery to see patterns in noise.
+
+
+-->
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Microsoft patches .NET LTS releases for 3 years while current releases are only patched for 18 months. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>While it may seem counterintuitive to limit the available versions of your dependencies, it improves control over the automatic dependency resolver. This is in line with the continuously reproducible mindset and future developers are always free to update the version if they encounter a conflict. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:3" role="doc-endnote">
+      <p>Docker terms of service include a 6 month image retention limit on inactive images for free accounts <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/net" class="page__taxonomy-item" rel="tag">net</a><span class="sep">, </span>
+    
+      <a href="/tags/reproducible" class="page__taxonomy-item" rel="tag">reproducible</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2022-06-20T00:00:00+00:00">June 20, 2022</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Experiment+02%20https%3A%2F%2Fdlfelps.github.io%2F2022%2F06%2F20%2FReproducible-Dotnet-Series.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2022%2F06%2F20%2FReproducible-Dotnet-Series.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fdlfelps.github.io%2F2022%2F06%2F20%2FReproducible-Dotnet-Series.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2022/06/06/DOTNET-Publishing-Options.html" class="pagination--pager" title="Experiment 01
+">Previous</a>
+    
+    
+      <a href="/2022/06/25/Reproducible-Foundations.html" class="pagination--pager" title="Experiment 03
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/2022/06/25/Reproducible-Foundations.html" rel="permalink">Experiment 03
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-25T00:00:00+00:00">June 25, 2022</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/2022/06/06/DOTNET-Publishing-Options.html" rel="permalink">Experiment 01
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-06T00:00:00+00:00">June 6, 2022</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          10 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">This experiment explores various publishing options associated with .NET, including:
+
+  framework-dependent vs self-contained
+  Windows vs Linux vs OSX
+  and...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/2022/06/04/My-First-Post.html" rel="permalink">Welcome to my blog!
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-04T00:00:00+00:00">June 4, 2022</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">My goal for this site is to document the “experiments” that I perform while exploring various computer science topics. I hope to include future posts on the ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 Daniel Felps. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

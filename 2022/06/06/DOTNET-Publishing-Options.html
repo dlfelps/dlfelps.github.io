@@ -1,0 +1,630 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 01 - .NET Experiments</title>
+<meta name="description" content="This experiment explores various publishing options associated with .NET, including:    framework-dependent vs self-contained   Windows vs Linux vs OSX   and more…">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 01">
+<meta property="og:url" content="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html">
+
+
+  <meta property="og:description" content="This experiment explores various publishing options associated with .NET, including:    framework-dependent vs self-contained   Windows vs Linux vs OSX   and more…">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-06-06T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Daniel Felps",
+      "url": "https://dlfelps.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 01">
+    <meta itemprop="description" content="This experiment explores various publishing options associated with .NET, including:  framework-dependent vs self-contained  Windows vs Linux vs OSX  and more…">
+    <meta itemprop="datePublished" content="2022-06-06T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Experiment 01
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-06T00:00:00+00:00">June 6, 2022</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          10 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li><li><a href="#setup">Setup</a></li><li><a href="#experiment">Experiment</a><ul><li><a href="#framework-dependent-vs-self-contained">Framework-dependent vs self-contained</a></li><li><a href="#varying-the-platform-of-self-contained-releases">Varying the platform of self-contained releases</a></li><li><a href="#trimming">Trimming</a></li></ul></li><li><a href="#limitations-of-study">Limitations of study</a></li><li><a href="#conclusion">Conclusion</a><ul><li><a href="#references">References</a></li><li><a href="#footnotes">Footnotes</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <p>This experiment explores various publishing options associated with .NET, including:</p>
+<ul>
+  <li>framework-dependent vs self-contained</li>
+  <li>Windows vs Linux vs OSX</li>
+  <li>and more…</li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>The traditional way to distribute a .NET application is by compiling code (e.g. C#) into bytecode known as <a href="https://en.wikipedia.org/wiki/Common_Intermediate_Language">CIL</a>. This bytecode can then be run by anyone who has installed the .NET runtime environment (also known as <a href="https://docs.microsoft.com/en-us/dotnet/standard/clr">CLR</a>). The process is illustrated below:</p>
+
+<p align="center">
+  <img width="416" height="480" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Overview_of_the_Common_Language_Infrastructure_2015.svg/416px-Overview_of_the_Common_Language_Infrastructure_2015.svg.png" />
+</p>
+
+<p>This compilation strategy is known as <a href="https://en.wikipedia.org/wiki/Dynamic_compilation">dynamic compilation</a> and was popularized by the Java Virtual Machine. Some languages like C++ use static compilers that produce native code for a specific platform directly. This code cannot be shared across platforms, but users also do not need to install a runtime environment.</p>
+
+<p>Although the .NET runtime is simple to install, some users may still prefer a “standalone” executable that does not require this extra step. Since .NET 3.0 developers have been able to publish their code as “self-contained” - which means that it includes the runtime environment along with their compiled bytecode. The only real downside is that it creates executables that are larger than they would be otherwise.</p>
+
+<p>This study explores the effect of publishing code as “self-contained” across various platforms and the extent to which the size can be reduced through advanced publishing options.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>I strive to make all of my experiments reproducible. Please follow the installation instructions below to configure your system to run the experiment.</p>
+
+<ol>
+  <li>Install <a href="https://dotnet.microsoft.com/en-us/download">.NET 6.0 SDK</a> (not the Runtime option)</li>
+  <li>Obtain the <a href="https://github.com/dlfelps/WaveFunctionCollapse">WaveFunctionCollapse</a> repo; you can either:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/dlfelps/WaveFunctionCollapse.git
+</code></pre></div>    </div>
+    <p>or <a href="https://github.com/dlfelps/WaveFunctionCollapse/archive/refs/heads/master.zip">download</a> and unzip</p>
+  </li>
+  <li>Run the provided commands for each experiment (see below)</li>
+</ol>
+
+<h2 id="experiment">Experiment</h2>
+
+<h3 id="framework-dependent-vs-self-contained">Framework-dependent vs self-contained</h3>
+
+<p>The first part of the experiment compares two deployment modes. In the framework-dependent distribution mode only the application and third-party assemblies are included; it is assumed that users will have the .NET runtime installed on their system. In the self-contained distribution mode the .NET runtime and runtime libraries included as well.</p>
+
+<p>Another difference between the two modes is that the framework-dependent mode produces a cross-platform binary, which means it can run on any platform. The self-contained option must be created for a specific platform (in this case we use win-x64 but any valid runtime in the <a href="https://docs.microsoft.com/en-us/dotnet/core/rid-catalog">RID Catalog</a> may be chosen).</p>
+
+<p>To run this portion of the experiment execute the following commands within your WaveFunctionCollapse folder (I am using Powershell for Windows):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet publish -c "exp_1a_framework-dependent"
+dotnet publish -c "exp_1a_self-contained" -r win-x64 --self-contained true
+</code></pre></div></div>
+<p>The published folders can be found at</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>..\WaveFunctionCollapse\bin\exp_1a_framework-dependent\net6.0\publish\
+..\WaveFunctionCollapse\bin\exp_1a_self-contained\net6.0\win-x64\publish
+</code></pre></div></div>
+<p>Execution of the created application is different in each case. From the framework-dependent publish folder the entrypoint is the cross-platform binary using the dotnet command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet WaveFunctionCollapse.dll
+</code></pre></div></div>
+<p>From the self-contained publish folder the entrypoint is simply the platform-specific executable (Windows here):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./WaveFunctionCollapse.exe
+</code></pre></div></div>
+<p>We measure the size of the corresponding publish folders to compare the final size of the distributable application in each case.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">size (MB)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>framework-dependent (cross-platform)</td>
+      <td style="text-align: center">1.53</td>
+    </tr>
+    <tr>
+      <td>self-contained (win-x64 only)</td>
+      <td style="text-align: center">68.7</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The difference does appear to be approximately the size of a binary installation of .NET 6.0 (for Windows is 68.1 MB). But 68 MB barely registers on a 500 GB hard drive. My bigger concern is that self-contained distributions limit the systems that can use it since they are platform specific. In the next experiment we look at platforms besides Windows. <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
+
+<h3 id="varying-the-platform-of-self-contained-releases">Varying the platform of self-contained releases</h3>
+
+<p>In this part of the experiment we determine the extent to which the target platform changes the size of the publish folder. To run this portion of the experiment execute the following commands within your WaveFunctionCollapse folder:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet publish -c "exp_1b_linux"  -r linux-x64 --self-contained true
+dotnet publish -c "exp_1b_osx_x64"  -r osx-x64 --self-contained true
+dotnet publish -c "exp_1b_osx12_arm"  -r osx.12-arm64 --self-contained true
+</code></pre></div></div>
+<p>I measured the size of the corresponding publish folders and also included the results from the self-contained win-x64 from the previous section.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">size (MB)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>win-x64</td>
+      <td style="text-align: center">68.7</td>
+    </tr>
+    <tr>
+      <td>linux-x64</td>
+      <td style="text-align: center">68.5</td>
+    </tr>
+    <tr>
+      <td>osx-x64</td>
+      <td style="text-align: center">68.5</td>
+    </tr>
+    <tr>
+      <td>osx12-arm</td>
+      <td style="text-align: center">75.0</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>There is no significant difference between the sizes of these various platforms. They are all approximately the size of the original application code plus the size of the binary installation of .NET 6.0 for the corresponding platform.</p>
+
+<h3 id="trimming">Trimming</h3>
+
+<p>To finish out this experiment I wanted to explore one of the advanced publishing options that dotnet provides - trimming. When you enable trimming the compiler tries to reduce deployment size by including only the minimum  subset of the framework assemblies that are needed to run the application. The unused parts of the framework are trimmed from the packaged application. But there is a risk that the compiler miscalculates which parts are necessary during build time causing a failure at run time.</p>
+
+<p>To run this portion of the experiment execute the following commands within your WaveFunctionCollapse folder:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet publish -c "exp_1c_windows"  -r win-x64 --self-contained true -p:PublishTrimmed=true
+dotnet publish -c "exp_1c_linux"  -r linux-x64 --self-contained true -p:PublishTrimmed=true
+dotnet publish -c "exp_1c_osx_x64"  -r osx-x64 --self-contained true -p:PublishTrimmed=true
+dotnet publish -c "exp_1c_osx12_arm"  -r osx.12-arm64 --self-contained true -p:PublishTrimmed=true
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">original size (MB)</th>
+      <th style="text-align: center">reduced size (MB)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>win-x64</td>
+      <td style="text-align: center">68.7</td>
+      <td style="text-align: center">22.1</td>
+    </tr>
+    <tr>
+      <td>linux-x64</td>
+      <td style="text-align: center">68.5</td>
+      <td style="text-align: center">23.8</td>
+    </tr>
+    <tr>
+      <td>osx-x64</td>
+      <td style="text-align: center">68.5</td>
+      <td style="text-align: center">22.7</td>
+    </tr>
+    <tr>
+      <td>osx12-arm</td>
+      <td style="text-align: center">75.0</td>
+      <td style="text-align: center">21.9</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The results show that the reduced size is about one third of the original size. But the risk that the application <em>may</em> fail at runtime does not seem worth the memory savings for most applications. However in this case I was able to verify that the Windows and Linux distributions worked correctly (OSX was not tested).</p>
+
+<h2 id="limitations-of-study">Limitations of study</h2>
+
+<p>The results shown above represent an experiment for a single code base. You may get different results for your own code (especially when trimming). If you do repeat this study on a different code base I would appreciate it if you would share the results for comparison!</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>.NET makes it amazingly simple to publish code that works on almost any device. In order to share your application with the widest audience I recommend publishing both the framework-dependent and (untrimmed) self-contained versions for all major platforms. I do not generally recommend trimming unless you are able to thoroughly test the created executables.</p>
+
+<h3 id="references">References</h3>
+
+<ol>
+  <li><a href="https://docs.microsoft.com/en-us/dotnet/core/deploying/">.NET application publishing overview</a></li>
+  <li><a href="https://github.com/mxgmn/WaveFunctionCollapse">WaveFunctionCollapse</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Common_Language_Infrastructure">CLI</a></li>
+</ol>
+
+<h3 id="footnotes">Footnotes</h3>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>By default the framework-dependent mode creates both a cross-platform binary and a platform-specific executable that targets the current platform. In my case the publish folder included a platform-specific file called WaveFunctionCollapse.exe (since I use Windows). This unnecessary  file was removed before the folder size was measured. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/net" class="page__taxonomy-item" rel="tag">net</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2022-06-06T00:00:00+00:00">June 6, 2022</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Experiment+01%20https%3A%2F%2Fdlfelps.github.io%2F2022%2F06%2F06%2FDOTNET-Publishing-Options.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2022%2F06%2F06%2FDOTNET-Publishing-Options.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fdlfelps.github.io%2F2022%2F06%2F06%2FDOTNET-Publishing-Options.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2022/06/04/My-First-Post.html" class="pagination--pager" title="Welcome to my blog!
+">Previous</a>
+    
+    
+      <a href="/2022/06/20/Reproducible-Dotnet-Series.html" class="pagination--pager" title="Experiment 02
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/2022/06/25/Reproducible-Foundations.html" rel="permalink">Experiment 03
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-25T00:00:00+00:00">June 25, 2022</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/2022/06/20/Reproducible-Dotnet-Series.html" rel="permalink">Experiment 02
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-20T00:00:00+00:00">June 20, 2022</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          8 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">The next few posts take step back to examine the benefits of creating reproducible software. We will explore:
+
+  the continuosly reproducible mindset (this p...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/2022/06/04/My-First-Post.html" rel="permalink">Welcome to my blog!
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-04T00:00:00+00:00">June 4, 2022</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">My goal for this site is to document the “experiments” that I perform while exploring various computer science topics. I hope to include future posts on the ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 Daniel Felps. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

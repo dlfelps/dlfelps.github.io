@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>https://dlfelps.github.io/2022/06/04/My-First-Post.html</loc>
+<lastmod>2022-06-04T00:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html</loc>
+<lastmod>2022-06-06T00:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html</loc>
+<lastmod>2022-06-20T00:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>https://dlfelps.github.io/2022/06/25/Reproducible-Foundations.html</loc>
+<lastmod>2022-06-25T00:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>https://dlfelps.github.io/about/</loc>
+</url>
+<url>
+<loc>https://dlfelps.github.io/</loc>
+</url>
+<url>
+<loc>https://dlfelps.github.io/</loc>
+</url>
+<url>
+<loc>https://dlfelps.github.io/tags/net/</loc>
+</url>
+<url>
+<loc>https://dlfelps.github.io/tags/reproducible/</loc>
+</url>
+<url>
+<loc>https://dlfelps.github.io/tags/docker/</loc>
+</url>
+</urlset>

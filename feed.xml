@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2022-07-01T21:28:02+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><entry><title type="html">Experiment 03</title><link href="https://dlfelps.github.io/2022/06/25/Reproducible-Foundations.html" rel="alternate" type="text/html" title="Experiment 03" /><published>2022-06-25T00:00:00+00:00</published><updated>2022-06-25T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/06/25/Reproducible-Foundations</id><content type="html" xml:base="https://dlfelps.github.io/2022/06/25/Reproducible-Foundations.html">&lt;p&gt;This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on &lt;em&gt;smallish&lt;/em&gt; projects and there certainly are other ways to create reproducible software.&lt;/p&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;T&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;code hosting&lt;/li&gt;
+  &lt;li&gt;container technology&lt;/li&gt;
+  &lt;li&gt;continuous integration / continuous delivery&lt;/li&gt;
+  &lt;li&gt;non-technical considerations (licensing)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!--
+
+1. Intro
+  - need for reproducibility
+  - in science
+  - in software
+  - in machine learning
+
+2. Basic tools
+  - Docker (links to learning resources)
+  - Gitlab/Github 
+  - CI/CD
+  - permissive licensing
+
+3. Producing reporducible builds
+  - choice of baseline (LTS)
+  - provide multiple options (multiple-platforms)
+    - local install w/ ci/cd
+    - docker-compose local (build)
+  - push build complexity to lowest level
+
+4. CI/CD
+  - Gitlab runner w/ docker
+  - (optional) docker registry
+
+5. Publishing
+  - code should be publish to allow someone (most likely yourself) to reproduce it
+  - but it shouldnt be required; also provide standalone executables
+
+--&gt;</content><author><name></name></author><category term="reproducible" /><category term="net" /><category term="docker" /><summary type="html">This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.</summary></entry><entry><title type="html">Experiment 02</title><link href="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html" rel="alternate" type="text/html" title="Experiment 02" /><published>2022-06-20T00:00:00+00:00</published><updated>2022-06-20T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series</id><content type="html" xml:base="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html">&lt;p&gt;The next few posts take step back to examine the benefits of creating reproducible software. We will explore:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;the continuosly reproducible mindset (this post)&lt;/li&gt;
+  &lt;li&gt;foundational tools for reproducibility (Exp 03)&lt;/li&gt;
+  &lt;li&gt;creating a continuously reproducible .NET project (Exp 04)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Scientific experiments must be repeatable and reproducable to be considered scientific. Reproducability in software is optional - software that works but is not reproducible is still successful software. I hope to convince you that the overhead required to create reproducible software is low compared to the benefits that it provides future developers, even if the only future developer is you.&lt;/p&gt;
+
+&lt;h2 id=&quot;defining-reproducible-software&quot;&gt;Defining reproducible software&lt;/h2&gt;
+
+&lt;p&gt;It is useful to clarify our definition of reproducibility within the context of software development. Let P&lt;sub&gt;0&lt;/sub&gt; represent a stable, compiling build of a codebase that results in a &lt;em&gt;correct&lt;/em&gt; program. The reproducibility test for P&lt;sub&gt;0&lt;/sub&gt; is as follows:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Does the code/documentation for P&lt;sub&gt;0&lt;/sub&gt; contain sufficient information to reproduce the &lt;em&gt;correct&lt;/em&gt; program from a clean environment? (Yes/No)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Next, let P&lt;sub&gt;1&lt;/sub&gt; represent the code (in the new environment) that has undergone a substantial change that &lt;em&gt;modified the build environment.&lt;/em&gt; We can reapply the reproducibilty test to P&lt;sub&gt;1&lt;/sub&gt;. The number of times that code passes the reproducibility test can be defined as its reproducibility level [0..N].&lt;/p&gt;
+
+&lt;p&gt;It may be useful to name a few of these levels.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;Irreproducible&lt;/em&gt; - Reproducibility level 0; P&lt;sub&gt;0&lt;/sub&gt; failed the reproducibility test.&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;One-time reproducible&lt;/em&gt; - Reproducibility level 1; P&lt;sub&gt;0&lt;/sub&gt; passed the reproducibility test, but P&lt;sub&gt;1&lt;/sub&gt; failed.&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Continuously reproducible&lt;/em&gt; - Reproducibility level 2+; If P&lt;sub&gt;0&lt;/sub&gt; and P&lt;sub&gt;1&lt;/sub&gt; pass the reproducibility test then it is indicitave that the code is written in a way that supports reproducibility for future generations of the code.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;the-continuously-reproducible-mindset&quot;&gt;The continuously reproducible mindset&lt;/h2&gt;
+
+&lt;p&gt;How many times have you pulled a project from Github only to have it fail to compile?&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;It works on my machine ¯\_(ツ)_/¯&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;We can reduce this problem by expanding our mindset to strive for &lt;strong&gt;continuously reproducible&lt;/strong&gt; code. The key to creating continuously reproducible code is create a simple workflow that rebuilds the project from a clean environment (preferably Windows, Linux, and OSX). This allows you to isolate undocumented side-effects that can occur in your local development environment (e.g. relying on a tool available locally that is not installed during the build process).&lt;/p&gt;
+
+&lt;p&gt;Continuosly reproducible code balances the need to solve the current problem with the need to redeploy the codebase to new systems. If this doesn’t seem worthwhile, then it might be helpful to imagine that your code (P&lt;sub&gt;0&lt;/sub&gt;) will be extended by a different developer in a substantial way (P&lt;sub&gt;1&lt;/sub&gt;) before it is returned to you for another round of development (P&lt;sub&gt;2&lt;/sub&gt;). The time spent during the initial phase of development to create a build process that is easy to replicate across platforms (and modify as needed) will payoff in the long run.&lt;/p&gt;
+
+&lt;p&gt;But what if you are the only developer that will ever use this code? I have  found the continuosly reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring robust code that works on multiple platforms (I develop locally on Windows but sometimes require a linux binary).&lt;/p&gt;
+
+&lt;h2 id=&quot;measuring-the-longevity-of-a-build&quot;&gt;Measuring the longevity of a build&lt;/h2&gt;
+
+&lt;p&gt;If a specific build passes the reproducibility test then its longevity can be measured. Longevity is a measure of the period of time between the first time the build passes the reproducibility test and the last time it passes. All builds eventually fail because some dependency of the build process will fail (including the language itself - .NET Framework 3.5 was released in November  2007 but it is no longer available from Microsoft).&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;600&quot; height=&quot;400&quot; src=&quot;https://github.com/dlfelps/dlfelps.github.io/raw/4cf0e44e6697c701cc17399a4bd4cef867bc7b94/images/fight_club.jpg&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Longevity is measured for a single build configuration. Namely, P&lt;sub&gt;0&lt;/sub&gt; will have a certain longevity, but P&lt;sub&gt;1&lt;/sub&gt;’s longevity may be shorter or longer depending on the changes made to its build configuration. Although true longevity can only be calculated after the build fails, developers can make conscious decisions to maximize the expected longevity of their code:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;prefer dependencies that offer long term support (e.g. choose .NET 6 LTS even after .NET 7 is released) &lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/li&gt;
+  &lt;li&gt;prefer dependencies that minimize the number of &lt;a href=&quot;https://fsprojects.github.io/Paket/faq.html#What-does-transitive-dependencies-mean&quot;&gt;transitive dependencies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;specify dependencies using &lt;a href=&quot;https://fsprojects.github.io/Paket/nuget-dependencies.html#Pinned-version-constraint&quot;&gt;pinned version constraints&lt;/a&gt; &lt;sup id=&quot;fnref:2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/li&gt;
+  &lt;li&gt;if using Docker, build from standard base images &lt;sup id=&quot;fnref:3&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:3&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Reproducibility is relatively easy with modern software development tools. The crux of the problem is giving future developers the ability to:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;easily recreate the initial development environment across multiple platforms/architectures&lt;/li&gt;
+  &lt;li&gt;continue to make changes to the code that does not break this process&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In the next few posts I will describe the current (circa 2022) best practices for reproducibility and demonstrate how to apply them to an existing code base.&lt;/p&gt;
+
+&lt;h4 id=&quot;footnotes&quot;&gt;Footnotes&lt;/h4&gt;
+
+&lt;!--
+
+1. Intro
+  - need for reproducibility
+  - in science
+  - in software
+  - in machine learning
+
+2. Basic tools
+  - Docker (links to learning resources)
+  - Gitlab/Github 
+  - CI/CD
+  - permissive licensing
+
+3. Producing reporducible builds
+  - choice of baseline (LTS)
+  - provide multiple options (multiple-platforms)
+    - local install w/ ci/cd
+    - docker-compose local (build)
+  - push build complexity to lowest level
+
+4. CI/CD
+  - Gitlab runner w/ docker
+  - (optional) docker registry
+
+5. Publishing
+  - code should be publish to allow someone (most likely yourself) to reproduce it
+  - but it shouldnt be required; also provide standalone executables
+
+--&gt;
+
+&lt;!--
+https://www.nature.com/articles/s41562-016-0021
+
+
+The problem
+A hallmark of scientific creativity is the ability to see novel and unexpected patterns in data. John Snow's identification of links between cholera and water supply17, Paul Broca's work on language lateralization18 and Jocelyn Bell Burnell's discovery of pulsars19 are examples of breakthroughs achieved by interpreting observations in a new way. However, a major challenge for scientists is to be open to new and important insights while simultaneously avoiding being misled by our tendency to see structure in randomness. The combination of apophenia (the tendency to see patterns in random data), confirmation bias (the tendency to focus on evidence that is in line with our expectations or favoured explanation) and hindsight bias (the tendency to see an event as having been predictable only after it has occurred) can easily lead us to false conclusions20. Thomas Levenson documents the example of astronomers who became convinced they had seen the fictitious planet Vulcan because their contemporary theories predicted its existence21. Experimenter effects are an example of this kind of bias22.
+
+Over-interpretation of noise is facilitated by the extent to which data analysis is rapid, flexible and automated23. In a high-dimensional dataset, there may be hundreds or thousands of reasonable alternative approaches to analysing the same data24,25. For example, in a systematic review of functional magnetic resonance imaging (fMRI) studies, Carp showed that there were almost as many unique analytical pipelines as there were studies26. If several thousand potential analytical pipelines can be applied to high-dimensional data, the generation of false-positive findings is highly likely. For example, applying almost 7,000 analytical pipelines to a single fMRI dataset resulted in over 90% of brain voxels showing significant activation in at least one analysis27.
+
+During data analysis it can be difficult for researchers to recognize P-hacking28 or data dredging because confirmation and hindsight biases can encourage the acceptance of outcomes that fit expectations or desires as appropriate, and the rejection of outcomes that do not as the result of suboptimal designs or analyses. Hypotheses may emerge that fit the data and are then reported without indication or recognition of their post hoc origin7. This, unfortunately, is not scientific discovery, but self-deception29. Uncontrolled, it can dramatically increase the false discovery rate. We need measures to counter the natural tendency of enthusiastic scientists who are motivated by discovery to see patterns in noise.
+
+
+--&gt;
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Microsoft patches .NET LTS releases for 3 years while current releases are only patched for 18 months. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;While it may seem counterintuitive to limit the available versions of your dependencies, it improves control over the automatic dependency resolver. This is in line with the continuously reproducible mindset and future developers are always free to update the version if they encounter a conflict. &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:3&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Docker terms of service include a 6 month image retention limit on inactive images for free accounts &lt;a href=&quot;#fnref:3&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="reproducible" /><category term="net" /><summary type="html">The next few posts take step back to examine the benefits of creating reproducible software. We will explore: the continuosly reproducible mindset (this post) foundational tools for reproducibility (Exp 03) creating a continuously reproducible .NET project (Exp 04)</summary></entry><entry><title type="html">Experiment 01</title><link href="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html" rel="alternate" type="text/html" title="Experiment 01" /><published>2022-06-06T00:00:00+00:00</published><updated>2022-06-06T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options</id><content type="html" xml:base="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html">&lt;p&gt;This experiment explores various publishing options associated with .NET, including:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;framework-dependent vs self-contained&lt;/li&gt;
+  &lt;li&gt;Windows vs Linux vs OSX&lt;/li&gt;
+  &lt;li&gt;and more…&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;The traditional way to distribute a .NET application is by compiling code (e.g. C#) into bytecode known as &lt;a href=&quot;https://en.wikipedia.org/wiki/Common_Intermediate_Language&quot;&gt;CIL&lt;/a&gt;. This bytecode can then be run by anyone who has installed the .NET runtime environment (also known as &lt;a href=&quot;https://docs.microsoft.com/en-us/dotnet/standard/clr&quot;&gt;CLR&lt;/a&gt;). The process is illustrated below:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;416&quot; height=&quot;480&quot; src=&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Overview_of_the_Common_Language_Infrastructure_2015.svg/416px-Overview_of_the_Common_Language_Infrastructure_2015.svg.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;This compilation strategy is known as &lt;a href=&quot;https://en.wikipedia.org/wiki/Dynamic_compilation&quot;&gt;dynamic compilation&lt;/a&gt; and was popularized by the Java Virtual Machine. Some languages like C++ use static compilers that produce native code for a specific platform directly. This code cannot be shared across platforms, but users also do not need to install a runtime environment.&lt;/p&gt;
+
+&lt;p&gt;Although the .NET runtime is simple to install, some users may still prefer a “standalone” executable that does not require this extra step. Since .NET 3.0 developers have been able to publish their code as “self-contained” - which means that it includes the runtime environment along with their compiled bytecode. The only real downside is that it creates executables that are larger than they would be otherwise.&lt;/p&gt;
+
+&lt;p&gt;This study explores the effect of publishing code as “self-contained” across various platforms and the extent to which the size can be reduced through advanced publishing options.&lt;/p&gt;
+
+&lt;h2 id=&quot;setup&quot;&gt;Setup&lt;/h2&gt;
+
+&lt;p&gt;I strive to make all of my experiments reproducible. Please follow the installation instructions below to configure your system to run the experiment.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Install &lt;a href=&quot;https://dotnet.microsoft.com/en-us/download&quot;&gt;.NET 6.0 SDK&lt;/a&gt; (not the Runtime option)&lt;/li&gt;
+  &lt;li&gt;Obtain the &lt;a href=&quot;https://github.com/dlfelps/WaveFunctionCollapse&quot;&gt;WaveFunctionCollapse&lt;/a&gt; repo; you can either:
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/dlfelps/WaveFunctionCollapse.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;or &lt;a href=&quot;https://github.com/dlfelps/WaveFunctionCollapse/archive/refs/heads/master.zip&quot;&gt;download&lt;/a&gt; and unzip&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Run the provided commands for each experiment (see below)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;experiment&quot;&gt;Experiment&lt;/h2&gt;
+
+&lt;h3 id=&quot;framework-dependent-vs-self-contained&quot;&gt;Framework-dependent vs self-contained&lt;/h3&gt;
+
+&lt;p&gt;The first part of the experiment compares two deployment modes. In the framework-dependent distribution mode only the application and third-party assemblies are included; it is assumed that users will have the .NET runtime installed on their system. In the self-contained distribution mode the .NET runtime and runtime libraries included as well.&lt;/p&gt;
+
+&lt;p&gt;Another difference between the two modes is that the framework-dependent mode produces a cross-platform binary, which means it can run on any platform. The self-contained option must be created for a specific platform (in this case we use win-x64 but any valid runtime in the &lt;a href=&quot;https://docs.microsoft.com/en-us/dotnet/core/rid-catalog&quot;&gt;RID Catalog&lt;/a&gt; may be chosen).&lt;/p&gt;
+
+&lt;p&gt;To run this portion of the experiment execute the following commands within your WaveFunctionCollapse folder (I am using Powershell for Windows):&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet publish -c &quot;exp_1a_framework-dependent&quot;
+dotnet publish -c &quot;exp_1a_self-contained&quot; -r win-x64 --self-contained true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The published folders can be found at&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;..\WaveFunctionCollapse\bin\exp_1a_framework-dependent\net6.0\publish\
+..\WaveFunctionCollapse\bin\exp_1a_self-contained\net6.0\win-x64\publish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Execution of the created application is different in each case. From the framework-dependent publish folder the entrypoint is the cross-platform binary using the dotnet command:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet WaveFunctionCollapse.dll
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;From the self-contained publish folder the entrypoint is simply the platform-specific executable (Windows here):&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./WaveFunctionCollapse.exe
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;We measure the size of the corresponding publish folders to compare the final size of the distributable application in each case.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;size (MB)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;framework-dependent (cross-platform)&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1.53&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;self-contained (win-x64 only)&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;68.7&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The difference does appear to be approximately the size of a binary installation of .NET 6.0 (for Windows is 68.1 MB). But 68 MB barely registers on a 500 GB hard drive. My bigger concern is that self-contained distributions limit the systems that can use it since they are platform specific. In the next experiment we look at platforms besides Windows. &lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;varying-the-platform-of-self-contained-releases&quot;&gt;Varying the platform of self-contained releases&lt;/h3&gt;
+
+&lt;p&gt;In this part of the experiment we determine the extent to which the target platform changes the size of the publish folder. To run this portion of the experiment execute the following commands within your WaveFunctionCollapse folder:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet publish -c &quot;exp_1b_linux&quot;  -r linux-x64 --self-contained true
+dotnet publish -c &quot;exp_1b_osx_x64&quot;  -r osx-x64 --self-contained true
+dotnet publish -c &quot;exp_1b_osx12_arm&quot;  -r osx.12-arm64 --self-contained true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;I measured the size of the corresponding publish folders and also included the results from the self-contained win-x64 from the previous section.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;size (MB)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;win-x64&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;68.7&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;linux-x64&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;68.5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;osx-x64&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;68.5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;osx12-arm&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;75.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;There is no significant difference between the sizes of these various platforms. They are all approximately the size of the original application code plus the size of the binary installation of .NET 6.0 for the corresponding platform.&lt;/p&gt;
+
+&lt;h3 id=&quot;trimming&quot;&gt;Trimming&lt;/h3&gt;
+
+&lt;p&gt;To finish out this experiment I wanted to explore one of the advanced publishing options that dotnet provides - trimming. When you enable trimming the compiler tries to reduce deployment size by including only the minimum  subset of the framework assemblies that are needed to run the application. The unused parts of the framework are trimmed from the packaged application. But there is a risk that the compiler miscalculates which parts are necessary during build time causing a failure at run time.&lt;/p&gt;
+
+&lt;p&gt;To run this portion of the experiment execute the following commands within your WaveFunctionCollapse folder:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet publish -c &quot;exp_1c_windows&quot;  -r win-x64 --self-contained true -p:PublishTrimmed=true
+dotnet publish -c &quot;exp_1c_linux&quot;  -r linux-x64 --self-contained true -p:PublishTrimmed=true
+dotnet publish -c &quot;exp_1c_osx_x64&quot;  -r osx-x64 --self-contained true -p:PublishTrimmed=true
+dotnet publish -c &quot;exp_1c_osx12_arm&quot;  -r osx.12-arm64 --self-contained true -p:PublishTrimmed=true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;original size (MB)&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;reduced size (MB)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;win-x64&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;68.7&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;22.1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;linux-x64&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;68.5&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;23.8&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;osx-x64&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;68.5&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;22.7&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;osx12-arm&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;75.0&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;21.9&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The results show that the reduced size is about one third of the original size. But the risk that the application &lt;em&gt;may&lt;/em&gt; fail at runtime does not seem worth the memory savings for most applications. However in this case I was able to verify that the Windows and Linux distributions worked correctly (OSX was not tested).&lt;/p&gt;
+
+&lt;h2 id=&quot;limitations-of-study&quot;&gt;Limitations of study&lt;/h2&gt;
+
+&lt;p&gt;The results shown above represent an experiment for a single code base. You may get different results for your own code (especially when trimming). If you do repeat this study on a different code base I would appreciate it if you would share the results for comparison!&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;.NET makes it amazingly simple to publish code that works on almost any device. In order to share your application with the widest audience I recommend publishing both the framework-dependent and (untrimmed) self-contained versions for all major platforms. I do not generally recommend trimming unless you are able to thoroughly test the created executables.&lt;/p&gt;
+
+&lt;h3 id=&quot;references&quot;&gt;References&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/en-us/dotnet/core/deploying/&quot;&gt;.NET application publishing overview&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/mxgmn/WaveFunctionCollapse&quot;&gt;WaveFunctionCollapse&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Common_Language_Infrastructure&quot;&gt;CLI&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;footnotes&quot;&gt;Footnotes&lt;/h3&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;By default the framework-dependent mode creates both a cross-platform binary and a platform-specific executable that targets the current platform. In my case the publish folder included a platform-specific file called WaveFunctionCollapse.exe (since I use Windows). This unnecessary  file was removed before the folder size was measured. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="net" /><summary type="html">This experiment explores various publishing options associated with .NET, including: framework-dependent vs self-contained Windows vs Linux vs OSX and more…</summary></entry><entry><title type="html">Welcome to my blog!</title><link href="https://dlfelps.github.io/2022/06/04/My-First-Post.html" rel="alternate" type="text/html" title="Welcome to my blog!" /><published>2022-06-04T00:00:00+00:00</published><updated>2022-06-04T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/06/04/My-First-Post</id><content type="html" xml:base="https://dlfelps.github.io/2022/06/04/My-First-Post.html">&lt;p&gt;My goal for this site is to document the “experiments” that I perform while exploring various computer science topics. I hope to include future posts on the following topics:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;.NET&lt;/li&gt;
+  &lt;li&gt;domain driven design&lt;/li&gt;
+  &lt;li&gt;software architecture&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you have any suggestions or comments please email me at &lt;a href=&quot;mailto:dlfelps@gmail.com&quot;&gt;dlfelps@gmail.com&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">My goal for this site is to document the “experiments” that I perform while exploring various computer science topics. I hope to include future posts on the following topics:</summary></entry></feed>
