@@ -7,9 +7,9 @@ jobs:
   jekyll:
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
 
-    # Use GitHub Actions' cache to shorten build times and decrease load on servers
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
@@ -17,11 +17,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gems-
 
-    - name: 💎 setup ruby
-      uses: ruby/setup-ruby@v1
+    - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.1 # can change this to 2.7 or whatever version you prefer
 
-    - name: 🔨 install dependencies & build site
-      run: bundle install
-      run: jekyll build 
+    
+    - run: bundle install
+    - run: jekyll build
