@@ -17,12 +17,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gems-
 
-    # Standard usage
-    - uses:  actions/jekyll-build-pages@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: 💎 setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1 # can change this to 2.7 or whatever version you prefer
 
-    # Standard usage
-    - uses:  actions/deploy-pages@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: 🔨 install dependencies & build site
+        run: bundle install
+        run: jekyll build 
