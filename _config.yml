@@ -67,7 +67,6 @@ defaults:
       show_date: true
       read_time: true
       share: true
-      related: true
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
