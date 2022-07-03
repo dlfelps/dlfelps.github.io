@@ -29,6 +29,7 @@ theme: minimal-mistakes-jekyll
 minimal_mistakes_skin: "air"
 plugins:
   - jekyll-feed
+  - jekyll-archives
 
 paginate: 5 # amount of posts to show
 paginate_path: /page:num/
@@ -67,6 +68,7 @@ defaults:
       show_date: true
       read_time: true
       share: true
+      
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
