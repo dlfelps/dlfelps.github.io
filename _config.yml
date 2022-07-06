@@ -35,7 +35,7 @@ paginate: 5 # amount of posts to show
 paginate_path: /page:num/
 github: [metadata]
 
-words_per_minute: 100
+words_per_minute: 75
 
 
 category_archive:
@@ -55,6 +55,19 @@ jekyll-archives:
     category: /categories/:name/
     tag: /tags/:name/
 
+author:
+  name: "Daniel Felps"
+  avatar: "/assets/images/headshot.jpg"
+  bio: "Electrical engineering undergrad, machine learning phd, self-taught coder." # Note: Markdown is allowed
+  location: "Fairfax VA"
+  links:
+    - label: "LinkedIn"
+      icon: "fab fa-brands fa-linkedin"
+      url: "https://www.linkedin.com/in/daniel-felps/"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/dlfelps"
+
 
 defaults:
   # _posts
@@ -68,7 +81,8 @@ defaults:
       show_date: true
       read_time: true
       share: true
-      
+
+
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

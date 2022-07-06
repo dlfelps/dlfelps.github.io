@@ -1,13 +1,19 @@
 ---
 title: Experiment 03
-tags: reproducible net docker
+tags: reproducible net docker ci/cd
 ---
 
 This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on *smallish* projects and there certainly are other ways to create reproducible software.
 
 ## Introduction
 
-T
+In the [first post]({% link _posts/2022-06-20-Reproducible-Dotnet-Series.md %}) in this [series]({% link tags/reproducible/index.html %}) I described the characteristics of reproducible code. This post describes my approach to meeting the following requirements of reproducible software:
+
+> 1. Build from a clean environment on any platform
+> 2. Satisfy #1 in a standard, lightweight, repeatable way across codebases
+
+Most of the techniques will be applicable to other languages
+
 - code hosting
 - container technology
 - continuous integration / continuous delivery

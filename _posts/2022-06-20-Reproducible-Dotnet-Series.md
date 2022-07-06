@@ -6,8 +6,8 @@ tags: reproducible net
 
 The next few posts take step back to examine the benefits of creating reproducible software. We will explore:
   - the continuosly reproducible mindset (this post)  
-  - foundational tools for reproducibility (Exp 03)
-  - creating a continuously reproducible .NET project (Exp 04)
+  - foundational tools for reproducibility ([Exp 03]({% link _posts/2022-06-25-Reproducible-Foundations.md %}))
+  - creating a continuously reproducible .NET project ([Exp 04]({% link _posts/2022-07-06-Reproducible-Example.md %}))
 
 ## Introduction
 
@@ -37,7 +37,7 @@ We can reduce this problem by expanding our mindset to strive for **continuously
 
 Continuosly reproducible code balances the need to solve the current problem with the need to redeploy the codebase to new systems. If this doesn't seem worthwhile, then it might be helpful to imagine that your code (P<sub>0</sub>) will be extended by a different developer in a substantial way (P<sub>1</sub>) before it is returned to you for another round of development (P<sub>2</sub>). The time spent during the initial phase of development to create a build process that is easy to replicate across platforms (and modify as needed) will payoff in the long run.
 
-But what if you are the only developer that will ever use this code? I have  found the continuosly reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring robust code that works on multiple platforms (I develop locally on Windows but sometimes require a linux binary). 
+But what if you are the only developer that will ever use this code? I have  found the continuosly reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring that my code works even after long pauses in active development. 
 
 ## Measuring the longevity of a build
 
@@ -59,7 +59,7 @@ Reproducibility is relatively easy with modern software development tools. The c
 1. easily recreate the initial development environment across multiple platforms/architectures 
 2. continue to make changes to the code that does not break this process
 
-In the next few posts I will describe the current (circa 2022) best practices for reproducibility and demonstrate how to apply them to an existing code base.
+In the next few posts I will describe my approach to reproducibility and demonstrate how to apply them to an existing code base.
 
 #### Footnotes
 
