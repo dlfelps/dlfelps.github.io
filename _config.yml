@@ -57,8 +57,9 @@ jekyll-archives:
 
 author:
   name: "Daniel Felps"
+  email: dlfelps@gmail.com
   avatar: "/assets/images/headshot.jpg"
-  bio: "Electrical engineering undergrad, machine learning phd, self-taught coder." # Note: Markdown is allowed
+  bio: "Electrical engineering undergrad, machine learning phd, programming language enthusiast currently enthralled with F#." 
   location: "Fairfax VA"
   links:
     - label: "LinkedIn"

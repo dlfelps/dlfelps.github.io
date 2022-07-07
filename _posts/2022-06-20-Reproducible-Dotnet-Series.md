@@ -51,7 +51,7 @@ Longevity is measured for a single build configuration. Namely, P<sub>0</sub> wi
 - prefer dependencies that offer long term support (e.g. choose .NET 6 LTS even after .NET 7 is released) [^1]
 - prefer dependencies that minimize the number of [transitive dependencies](https://fsprojects.github.io/Paket/faq.html#What-does-transitive-dependencies-mean)
 - specify dependencies using [pinned version constraints](https://fsprojects.github.io/Paket/nuget-dependencies.html#Pinned-version-constraint) [^2]
-- if using Docker, build from standard base images [^3]
+- if using Docker, build from [official base images](https://hub.docker.com/search?q=&type=image&image_filter=official) 
 
 ## Conclusion
 
@@ -67,7 +67,6 @@ In the next few posts I will describe my approach to reproducibility and demonst
 
 [^2]: While it may seem counterintuitive to limit the available versions of your dependencies, it improves control over the automatic dependency resolver. This is in line with the continuously reproducible mindset and future developers are always free to update the version if they encounter a conflict. 
 
-[^3]: Docker terms of service include a 6 month image retention limit on inactive images for free accounts
 
 <!--
 
