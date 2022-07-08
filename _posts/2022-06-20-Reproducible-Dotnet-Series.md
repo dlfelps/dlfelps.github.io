@@ -5,13 +5,13 @@ tags: reproducible net
 ---
 
 The next few posts take step back to examine the benefits of creating reproducible software. We will explore:
-  - the continuosly reproducible mindset (this post)  
+  - the continuously reproducible mindset (this post)  
   - foundational tools for reproducibility ([Exp 03]({% link _posts/2022-06-25-Reproducible-Foundations.md %}))
   - creating a continuously reproducible .NET project ([Exp 04]({% link _posts/2022-07-06-Reproducible-Example.md %}))
 
 ## Introduction
 
-Scientific experiments must be repeatable and reproducable to be considered scientific. Reproducability in software is optional - software that works but is not reproducible is still successful software. I hope to convince you that the overhead required to create reproducible software is low compared to the benefits that it provides future developers, even if the only future developer is you.
+Scientific experiments must be repeatable and reproducible to be considered scientific. Reproducibility in software is optional - software that works but is not reproducible is still successful software. I hope to convince you that the overhead required to create reproducible software is low compared to the benefits that it provides future developers, even if the only future developer is you.
 
 ## Defining reproducible software
 
@@ -37,7 +37,7 @@ We can reduce this problem by expanding our mindset to strive for **continuously
 
 Continuosly reproducible code balances the need to solve the current problem with the need to redeploy the codebase to new systems. If this doesn't seem worthwhile, then it might be helpful to imagine that your code (P<sub>0</sub>) will be extended by a different developer in a substantial way (P<sub>1</sub>) before it is returned to you for another round of development (P<sub>2</sub>). The time spent during the initial phase of development to create a build process that is easy to replicate across platforms (and modify as needed) will payoff in the long run.
 
-But what if you are the only developer that will ever use this code? I have  found the continuosly reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring that my code works even after long pauses in active development. 
+But what if you are the only developer that will ever use this code? I have  found the continuously reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring that my code works even after long pauses in active development. 
 
 ## Measuring the longevity of a build
 

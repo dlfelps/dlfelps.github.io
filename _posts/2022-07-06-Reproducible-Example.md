@@ -17,7 +17,7 @@ I selected [FsHttp](https://github.com/fsprojects/FsHttp) as a demonstration cod
 
 The preferred way for .NET projects is to use .NET directly to verify the build. I forked the FsHttp repo and removed some parts that were unnecessary to this blog post. You can find that fork [here](https://github.com/dlfelps/FsHttp-dotnet).
 
-Since the repository is already on Github I will use Github Actions to implement continuous integration. If you use another continuous integration platform you will have to translate this example into that platform's workflow sytax.
+Since the repository is already on Github I will use Github Actions to implement continuous integration. If you use another continuous integration platform you will have to translate this example into that platform's workflow syntax.
 
 Adding continuous integration is as easy as creating the `.github\workflows` folder at the base of the repository and then adding the workflow YAML file, which I named [dotnet.yml](https://github.com/dlfelps/FsHttp-dotnet/blob/main/.github/workflows/dotnet.yml) to that folder. Here are the contents of that file:
 
@@ -88,7 +88,7 @@ Each job consists of several `steps`; each step includes an optional name and th
         dotnet-version: 6.0.301
 {% endhighlight %}
 
-The next step users another offical action to install .NET 6. This action is actually redundant since the `ubuntu-20.04` runner actually comes [pre-installed](https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-Readme.md) with lots of useful software including .NET 6. However, I chose to add this step since this was an explicit dependency that the build relies upon. I can't be sure that Github will always include it with the runner so I want to explicitly install it. 
+The next step users another official action to install .NET 6. This action is actually redundant since the `ubuntu-20.04` runner actually comes [pre-installed](https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-Readme.md) with lots of useful software including .NET 6. However, I chose to add this step since this was an explicit dependency that the build relies upon. I can't be sure that Github will always include it with the runner, so I want to explicitly install it. 
 
 {% highlight yaml  %}
     - name: Restore dependencies
@@ -119,12 +119,12 @@ Here we see the names given to each of the steps along with some automatic setup
 
 ### Results
 
-In the [previous post]({% link _posts/2022-06-25-Reproducible-Foundations.md %}) we defined the following criteria for reprodicible software:
+In the [previous post]({% link _posts/2022-06-25-Reproducible-Foundations.md %}) we defined the following criteria for reproducible software:
 
 > 1. Build from any platform **with the help of one pre-installed dependency**
 > 2. Satisfy #1 in a standard and lightweight way across codebases
 
-Did we satisfy them? Adding a Github workflow is certainly lightweight and repeatable since it will work for most .NET projects with little modification. But we didn't explicity verify the first critieria since we only tested from Ubuntu. If you want to explicitly test additional platforms then I would recommend defining additional jobs that build in different environments:
+Did we satisfy them? Adding a Github workflow is certainly lightweight and repeatable since it will work for most .NET projects with little modification. But we didn't explicity verify the first criteria since we only tested from Ubuntu. If you want to explicitly test additional platforms then I would recommend defining additional jobs that build in different environments:
 
 {% highlight yaml %}
 jobs:     
@@ -231,7 +231,7 @@ The Dockerfile uses the standard .NET 6 baseimage provided by Microsoft, copies 
 
 ### Results
 
-This variant is still lightweight, but we must look closely to see if it is truly cross-platform. We have changed our dependency assumption from .NET to Docker - any platform that can run Docker can build this code. If this is a .NET project then any code that successfully compiles to the Common Intermediate Language and passes the test suite will work on any platform (.NET for the win)! But what if its a Golang project? In that case we would need a seperate job and Dockerfile for each platform. But there is no such thing as a macOS Docker image! In conclusion, Approach #3 meets the reproducibility criteria for all .NET projects, but not *all* projects.
+This variant is still lightweight, but we must look closely to see if it is truly cross-platform. We have changed our dependency assumption from .NET to Docker - any platform that can run Docker can build this code. If this is a .NET project then any code that successfully compiles to the Common Intermediate Language and passes the test suite will work on any platform (.NET for the win)! But what if its a Golang project? In that case we would need a separate job and Dockerfile for each platform. But there is no such thing as a macOS Docker image! In conclusion, Approach #3 meets the reproducibility criteria for all .NET projects, but not *all* projects.
 
 ## Conclusion
 
