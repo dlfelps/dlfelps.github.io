@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2022-07-08T20:29:26+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 04</title><link href="https://dlfelps.github.io/2022/07/06/Reproducible-Example.html" rel="alternate" type="text/html" title="Experiment 04" /><published>2022-07-06T00:00:00+00:00</published><updated>2022-07-06T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/07/06/Reproducible-Example</id><content type="html" xml:base="https://dlfelps.github.io/2022/07/06/Reproducible-Example.html"><![CDATA[<p>In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2022-07-08T20:40:22+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 04</title><link href="https://dlfelps.github.io/2022/07/06/Reproducible-Example.html" rel="alternate" type="text/html" title="Experiment 04" /><published>2022-07-06T00:00:00+00:00</published><updated>2022-07-06T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/07/06/Reproducible-Example</id><content type="html" xml:base="https://dlfelps.github.io/2022/07/06/Reproducible-Example.html"><![CDATA[<p>In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow.</p>
 
 <h2 id="introduction">Introduction</h2>
 
@@ -12,7 +12,7 @@
 
 <p>The preferred way for .NET projects is to use .NET directly to verify the build. I forked the FsHttp repo and removed some parts that were unnecessary to this blog post. You can find that fork <a href="https://github.com/dlfelps/FsHttp-dotnet">here</a>.</p>
 
-<p>Since the repository is already on Github I will use Github Actions to implement continuous integration. If you use another continuous integration platform you will have to translate this example into that platform’s workflow sytax.</p>
+<p>Since the repository is already on Github I will use Github Actions to implement continuous integration. If you use another continuous integration platform you will have to translate this example into that platform’s workflow syntax.</p>
 
 <p>Adding continuous integration is as easy as creating the <code class="language-plaintext highlighter-rouge">.github\workflows</code> folder at the base of the repository and then adding the workflow YAML file, which I named <a href="https://github.com/dlfelps/FsHttp-dotnet/blob/main/.github/workflows/dotnet.yml">dotnet.yml</a> to that folder. Here are the contents of that file:</p>
 
@@ -101,7 +101,7 @@
       <span class="na">with</span><span class="pi">:</span>
         <span class="na">dotnet-version</span><span class="pi">:</span> <span class="s">6.0.301</span></code></pre></figure>
 
-<p>The next step users another offical action to install .NET 6. This action is actually redundant since the <code class="language-plaintext highlighter-rouge">ubuntu-20.04</code> runner actually comes <a href="https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-Readme.md">pre-installed</a> with lots of useful software including .NET 6. However, I chose to add this step since this was an explicit dependency that the build relies upon. I can’t be sure that Github will always include it with the runner so I want to explicitly install it.</p>
+<p>The next step users another official action to install .NET 6. This action is actually redundant since the <code class="language-plaintext highlighter-rouge">ubuntu-20.04</code> runner actually comes <a href="https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-Readme.md">pre-installed</a> with lots of useful software including .NET 6. However, I chose to add this step since this was an explicit dependency that the build relies upon. I can’t be sure that Github will always include it with the runner, so I want to explicitly install it.</p>
 
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml">    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Restore dependencies</span>
       <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet restore</span>
@@ -130,7 +130,7 @@
 
 <h3 id="results">Results</h3>
 
-<p>In the <a href="/2022/06/25/Reproducible-Foundations.html">previous post</a> we defined the following criteria for reprodicible software:</p>
+<p>In the <a href="/2022/06/25/Reproducible-Foundations.html">previous post</a> we defined the following criteria for reproducible software:</p>
 
 <blockquote>
   <ol>
@@ -139,7 +139,7 @@
   </ol>
 </blockquote>
 
-<p>Did we satisfy them? Adding a Github workflow is certainly lightweight and repeatable since it will work for most .NET projects with little modification. But we didn’t explicity verify the first critieria since we only tested from Ubuntu. If you want to explicitly test additional platforms then I would recommend defining additional jobs that build in different environments:</p>
+<p>Did we satisfy them? Adding a Github workflow is certainly lightweight and repeatable since it will work for most .NET projects with little modification. But we didn’t explicity verify the first criteria since we only tested from Ubuntu. If you want to explicitly test additional platforms then I would recommend defining additional jobs that build in different environments:</p>
 
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">jobs</span><span class="pi">:</span>     
   <span class="na">build-linux</span><span class="pi">:</span>
@@ -296,7 +296,7 @@
 
 <h3 id="results-2">Results</h3>
 
-<p>This variant is still lightweight, but we must look closely to see if it is truly cross-platform. We have changed our dependency assumption from .NET to Docker - any platform that can run Docker can build this code. If this is a .NET project then any code that successfully compiles to the Common Intermediate Language and passes the test suite will work on any platform (.NET for the win)! But what if its a Golang project? In that case we would need a seperate job and Dockerfile for each platform. But there is no such thing as a macOS Docker image! In conclusion, Approach #3 meets the reproducibility criteria for all .NET projects, but not <em>all</em> projects.</p>
+<p>This variant is still lightweight, but we must look closely to see if it is truly cross-platform. We have changed our dependency assumption from .NET to Docker - any platform that can run Docker can build this code. If this is a .NET project then any code that successfully compiles to the Common Intermediate Language and passes the test suite will work on any platform (.NET for the win)! But what if its a Golang project? In that case we would need a separate job and Dockerfile for each platform. But there is no such thing as a macOS Docker image! In conclusion, Approach #3 meets the reproducibility criteria for all .NET projects, but not <em>all</em> projects.</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
@@ -370,14 +370,14 @@
   </ol>
 </div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><category term="docker" /><category term="ci/cd" /><summary type="html"><![CDATA[This post describes the approach that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.]]></summary></entry><entry><title type="html">Experiment 02</title><link href="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html" rel="alternate" type="text/html" title="Experiment 02" /><published>2022-06-20T00:00:00+00:00</published><updated>2022-06-20T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series</id><content type="html" xml:base="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html"><![CDATA[<p>The next few posts take step back to examine the benefits of creating reproducible software. We will explore:</p>
 <ul>
-  <li>the continuosly reproducible mindset (this post)</li>
+  <li>the continuously reproducible mindset (this post)</li>
   <li>foundational tools for reproducibility (<a href="/2022/06/25/Reproducible-Foundations.html">Exp 03</a>)</li>
   <li>creating a continuously reproducible .NET project (<a href="/2022/07/06/Reproducible-Example.html">Exp 04</a>)</li>
 </ul>
 
 <h2 id="introduction">Introduction</h2>
 
-<p>Scientific experiments must be repeatable and reproducable to be considered scientific. Reproducability in software is optional - software that works but is not reproducible is still successful software. I hope to convince you that the overhead required to create reproducible software is low compared to the benefits that it provides future developers, even if the only future developer is you.</p>
+<p>Scientific experiments must be repeatable and reproducible to be considered scientific. Reproducibility in software is optional - software that works but is not reproducible is still successful software. I hope to convince you that the overhead required to create reproducible software is low compared to the benefits that it provides future developers, even if the only future developer is you.</p>
 
 <h2 id="defining-reproducible-software">Defining reproducible software</h2>
 
@@ -409,7 +409,7 @@
 
 <p>Continuosly reproducible code balances the need to solve the current problem with the need to redeploy the codebase to new systems. If this doesn’t seem worthwhile, then it might be helpful to imagine that your code (P<sub>0</sub>) will be extended by a different developer in a substantial way (P<sub>1</sub>) before it is returned to you for another round of development (P<sub>2</sub>). The time spent during the initial phase of development to create a build process that is easy to replicate across platforms (and modify as needed) will payoff in the long run.</p>
 
-<p>But what if you are the only developer that will ever use this code? I have  found the continuosly reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring that my code works even after long pauses in active development.</p>
+<p>But what if you are the only developer that will ever use this code? I have  found the continuously reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring that my code works even after long pauses in active development.</p>
 
 <h2 id="measuring-the-longevity-of-a-build">Measuring the longevity of a build</h2>
 
@@ -492,7 +492,7 @@ During data analysis it can be difficult for researchers to recognize P-hacking2
       <p>While it may seem counterintuitive to limit the available versions of your dependencies, it improves control over the automatic dependency resolver. This is in line with the continuously reproducible mindset and future developers are always free to update the version if they encounter a conflict. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><summary type="html"><![CDATA[The next few posts take step back to examine the benefits of creating reproducible software. We will explore: the continuosly reproducible mindset (this post) foundational tools for reproducibility (Exp 03) creating a continuously reproducible .NET project (Exp 04)]]></summary></entry><entry><title type="html">Experiment 01</title><link href="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html" rel="alternate" type="text/html" title="Experiment 01" /><published>2022-06-06T00:00:00+00:00</published><updated>2022-06-06T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options</id><content type="html" xml:base="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html"><![CDATA[<p>This experiment explores various publishing options associated with .NET, including:</p>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><summary type="html"><![CDATA[The next few posts take step back to examine the benefits of creating reproducible software. We will explore: the continuously reproducible mindset (this post) foundational tools for reproducibility (Exp 03) creating a continuously reproducible .NET project (Exp 04)]]></summary></entry><entry><title type="html">Experiment 01</title><link href="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html" rel="alternate" type="text/html" title="Experiment 01" /><published>2022-06-06T00:00:00+00:00</published><updated>2022-06-06T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options</id><content type="html" xml:base="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html"><![CDATA[<p>This experiment explores various publishing options associated with .NET, including:</p>
 <ul>
   <li>framework-dependent vs self-contained</li>
   <li>Windows vs Linux vs OSX</li>

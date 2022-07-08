@@ -12,7 +12,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 02",
-        "excerpt":"The next few posts take step back to examine the benefits of creating reproducible software. We will explore: the continuosly reproducible mindset (this post) foundational tools for reproducibility (Exp 03) creating a continuously reproducible .NET project (Exp 04) Introduction Scientific experiments must be repeatable and reproducable to be considered scientific....","categories": [],
+        "excerpt":"The next few posts take step back to examine the benefits of creating reproducible software. We will explore: the continuously reproducible mindset (this post) foundational tools for reproducibility (Exp 03) creating a continuously reproducible .NET project (Exp 04) Introduction Scientific experiments must be repeatable and reproducible to be considered scientific....","categories": [],
         "tags": ["reproducible","net"],
         "url": "/2022/06/20/Reproducible-Dotnet-Series.html",
         "teaser": null
