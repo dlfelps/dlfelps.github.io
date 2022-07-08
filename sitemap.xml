@@ -17,10 +17,11 @@
 <lastmod>2022-06-25T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>https://dlfelps.github.io/about/</loc>
+<loc>https://dlfelps.github.io/2022/07/06/Reproducible-Example.html</loc>
+<lastmod>2022-07-06T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>https://dlfelps.github.io/</loc>
+<loc>https://dlfelps.github.io/about/</loc>
 </url>
 <url>
 <loc>https://dlfelps.github.io/</loc>
@@ -33,5 +34,8 @@
 </url>
 <url>
 <loc>https://dlfelps.github.io/tags/docker/</loc>
+</url>
+<url>
+<loc>https://dlfelps.github.io/tags/ci-cd/</loc>
 </url>
 </urlset>

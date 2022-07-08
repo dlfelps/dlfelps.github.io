@@ -10,8 +10,13 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>Experiment 03 - .NET Experiments</title>
-<meta name="description" content="This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.">
+<meta name="description" content="This post describes the approach that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.">
 
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
 
 
 <meta property="og:type" content="article">
@@ -21,7 +26,7 @@
 <meta property="og:url" content="https://dlfelps.github.io/2022/06/25/Reproducible-Foundations.html">
 
 
-  <meta property="og:description" content="This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.">
+  <meta property="og:description" content="This post describes the approach that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.">
 
 
 
@@ -135,7 +140,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Experiment 03">
-    <meta itemprop="description" content="This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.">
+    <meta itemprop="description" content="This post describes the approach that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.">
     <meta itemprop="datePublished" content="2022-06-25T00:00:00+00:00">
     
 
@@ -165,7 +170,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          less than 1 minute read
+          5 minute read
         
       </span>
     
@@ -180,22 +185,42 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li></ul>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li><li><a href="#my-continuously-reproducible-approach">(My) Continuously reproducible approach</a><ul><li><a href="#footnotes">Footnotes</a></li></ul></li></ul></li></ul>
 
             </nav>
           </aside>
         
-        <p>This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on <em>smallish</em> projects and there certainly are other ways to create reproducible software.</p>
+        <p>This post describes the approach that I use to make my code reproducible. NOTE: I have only tested this on <em>smallish</em> projects and there certainly are other ways to create reproducible software.</p>
 
 <h2 id="introduction">Introduction</h2>
 
-<p>T</p>
-<ul>
-  <li>code hosting</li>
-  <li>container technology</li>
-  <li>continuous integration / continuous delivery</li>
-  <li>non-technical considerations (licensing)</li>
-</ul>
+<p>The <a href="/2022/06/20/Reproducible-Dotnet-Series.html">first post</a> in this <a href="/tags/reproducible/">series</a> described the characteristics of reproducible code. This post describes my approach to meeting the following requirements of reproducible software:</p>
+
+<blockquote>
+  <ol>
+    <li>Build from a clean environment on any platform</li>
+    <li>Satisfy #1 in a standard, lightweight, repeatable way across codebases</li>
+  </ol>
+</blockquote>
+
+<p>My initial attempts at satisfying these requirements failed. Custom build tools (i.e. <a href="https://cakebuild.net/">CAKE</a>/<a href="https://fake.build/">FAKE</a>) were too cumbersome and assumed .NET was already installed (i.e. not a clean environment). Docker dev environments were a quick way to create one-time reproducible builds, but they also assumed Docker was installed. Installing from a purely clean environment seemed at odds with a lightweight build process. So I amended the requirements slightly:</p>
+
+<blockquote>
+  <ol>
+    <li>Build from any platform <strong>with the help of one pre-installed dependency</strong></li>
+    <li>Satisfy #1 in a standard, lightweight, repeatable way across codebases</li>
+  </ol>
+</blockquote>
+
+<p>This small change was sufficient for me to devise an approach for continuously reproducible code.</p>
+
+<h2 id="my-continuously-reproducible-approach">(My) Continuously reproducible approach</h2>
+
+<p>My approach is essentially continuous integration<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> plus the <a href="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html#the-continuously-reproducible-mindset">continuously reproducible mindset</a>. Continuous integration ensures that the build works now and the continuously reproducible mindset maximizes the chance that it will work even if left dormant for a period of time. I assume that the most recent LTS version of .NET is installed (this is currently .NET 6.0 which can be installed on any major platform); this assumption lets me use .NET to restore dependencies, build, and test the project. For projects outside of .NET, I assume that Docker is installed instead. I provide an example of both of these in the final post.</p>
+
+<p>By following this approach you can verify that your project builds from a (mostly) clean environment and have confidence that it will work continue to work for anyone else for <em>years</em> to come. If you have improvements or would like to share a different approach I would love to hear about it!</p>
+
+<h4 id="footnotes">Footnotes</h4>
 
 <!--
 
@@ -227,6 +252,13 @@
   - but it shouldnt be required; also provide standalone executables
 
 -->
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Continuous integration is the DevOps practice whereby code changes are regularly merged into a central repository and the entire project is automatically built and tested. Some common platforms for continuous integration are <a href="https://www.jetbrains.com/teamcity/">TeamCity</a>, <a href="https://www.jenkins.io/">Jenkins</a>, <a href="https://circleci.com/">CircleCI</a>, <a href="https://github.com/features/actions">Github Actions</a>, and <a href="https://gitlab.com/">Gitlab</a>. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
         
       </section>
@@ -242,6 +274,8 @@
   <p class="page__taxonomy">
     <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
     <span itemprop="keywords">
+    
+      <a href="/tags/ci-cd" class="page__taxonomy-item" rel="tag">ci/cd</a><span class="sep">, </span>
     
       <a href="/tags/docker" class="page__taxonomy-item" rel="tag">docker</a><span class="sep">, </span>
     
@@ -280,7 +314,8 @@
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/2022/07/06/Reproducible-Example.html" class="pagination--pager" title="Experiment 04
+">Next</a>
     
   </nav>
 

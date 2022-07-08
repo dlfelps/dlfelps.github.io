@@ -13,6 +13,11 @@
 <meta name="description" content="The next few posts take step back to examine the benefits of creating reproducible software. We will explore:    the continuosly reproducible mindset (this post)   foundational tools for reproducibility (Exp 03)   creating a continuously reproducible .NET project (Exp 04)">
 
 
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
 
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
@@ -165,7 +170,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          8 minute read
+          10 minute read
         
       </span>
     
@@ -188,8 +193,8 @@
         <p>The next few posts take step back to examine the benefits of creating reproducible software. We will explore:</p>
 <ul>
   <li>the continuosly reproducible mindset (this post)</li>
-  <li>foundational tools for reproducibility (Exp 03)</li>
-  <li>creating a continuously reproducible .NET project (Exp 04)</li>
+  <li>foundational tools for reproducibility (<a href="/2022/06/25/Reproducible-Foundations.html">Exp 03</a>)</li>
+  <li>creating a continuously reproducible .NET project (<a href="/2022/07/06/Reproducible-Example.html">Exp 04</a>)</li>
 </ul>
 
 <h2 id="introduction">Introduction</h2>
@@ -226,7 +231,7 @@
 
 <p>Continuosly reproducible code balances the need to solve the current problem with the need to redeploy the codebase to new systems. If this doesn’t seem worthwhile, then it might be helpful to imagine that your code (P<sub>0</sub>) will be extended by a different developer in a substantial way (P<sub>1</sub>) before it is returned to you for another round of development (P<sub>2</sub>). The time spent during the initial phase of development to create a build process that is easy to replicate across platforms (and modify as needed) will payoff in the long run.</p>
 
-<p>But what if you are the only developer that will ever use this code? I have  found the continuosly reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring robust code that works on multiple platforms (I develop locally on Windows but sometimes require a linux binary).</p>
+<p>But what if you are the only developer that will ever use this code? I have  found the continuosly reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring that my code works even after long pauses in active development.</p>
 
 <h2 id="measuring-the-longevity-of-a-build">Measuring the longevity of a build</h2>
 
@@ -241,7 +246,7 @@
   <li>prefer dependencies that offer long term support (e.g. choose .NET 6 LTS even after .NET 7 is released) <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></li>
   <li>prefer dependencies that minimize the number of <a href="https://fsprojects.github.io/Paket/faq.html#What-does-transitive-dependencies-mean">transitive dependencies</a></li>
   <li>specify dependencies using <a href="https://fsprojects.github.io/Paket/nuget-dependencies.html#Pinned-version-constraint">pinned version constraints</a> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup></li>
-  <li>if using Docker, build from standard base images <sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup></li>
+  <li>if using Docker, build from <a href="https://hub.docker.com/search?q=&amp;type=image&amp;image_filter=official">official base images</a></li>
 </ul>
 
 <h2 id="conclusion">Conclusion</h2>
@@ -252,7 +257,7 @@
   <li>continue to make changes to the code that does not break this process</li>
 </ol>
 
-<p>In the next few posts I will describe the current (circa 2022) best practices for reproducibility and demonstrate how to apply them to an existing code base.</p>
+<p>In the next few posts I will describe my approach to reproducibility and demonstrate how to apply them to an existing code base.</p>
 
 <h4 id="footnotes">Footnotes</h4>
 
@@ -307,9 +312,6 @@ During data analysis it can be difficult for researchers to recognize P-hacking2
     </li>
     <li id="fn:2" role="doc-endnote">
       <p>While it may seem counterintuitive to limit the available versions of your dependencies, it improves control over the automatic dependency resolver. This is in line with the continuously reproducible mindset and future developers are always free to update the version if they encounter a conflict. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-    <li id="fn:3" role="doc-endnote">
-      <p>Docker terms of service include a 6 month image retention limit on inactive images for free accounts <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>

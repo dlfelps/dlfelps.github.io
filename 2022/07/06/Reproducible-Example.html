@@ -1,0 +1,604 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 04 - .NET Experiments</title>
+<meta name="description" content="In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 04">
+<meta property="og:url" content="https://dlfelps.github.io/2022/07/06/Reproducible-Example.html">
+
+
+  <meta property="og:description" content="In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-07-06T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2022/07/06/Reproducible-Example.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Daniel Felps",
+      "url": "https://dlfelps.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 04">
+    <meta itemprop="description" content="In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow.">
+    <meta itemprop="datePublished" content="2022-07-06T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Experiment 04
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-07-06T00:00:00+00:00">July 6, 2022</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          20 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li><li><a href="#example">Example</a></li><li><a href="#approach-1-net-variant">Approach #1 (.NET variant)</a><ul><li><a href="#visualizing-the-workflow">Visualizing the workflow</a></li><li><a href="#results">Results</a></li></ul></li><li><a href="#approach-2-not-net-variant">Approach #2 (Not .NET variant)</a><ul><li><a href="#results-1">Results</a></li></ul></li><li><a href="#approach-3-docker-variant">Approach #3 (Docker variant)</a><ul><li><a href="#results-2">Results</a></li></ul></li><li><a href="#conclusion">Conclusion</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <p>In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow.</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>In the <a href="/2022/06/20/Reproducible-Dotnet-Series.html">first post</a> in this <a href="/tags/reproducible/">series</a> I described the characteristics of reproducible code. In the <a href="/2022/06/25/Reproducible-Foundations.html">second post</a> I described the foundational tools that I use in my approach to creating continuously reproducible code. This final post incorporates the approach into an existing repository.</p>
+
+<h2 id="example">Example</h2>
+
+<p>I selected <a href="https://github.com/fsprojects/FsHttp">FsHttp</a> as a demonstration codebase. FsHttp follows many recommendations of the continuously reproducible mindset (i.e. LTS releases, pinned dependencies), but it lacks continuous integration. I will show two different ways to adopt it.</p>
+
+<h2 id="approach-1-net-variant">Approach #1 (.NET variant)</h2>
+
+<p>The preferred way for .NET projects is to use .NET directly to verify the build. I forked the FsHttp repo and removed some parts that were unnecessary to this blog post. You can find that fork <a href="https://github.com/dlfelps/FsHttp-dotnet">here</a>.</p>
+
+<p>Since the repository is already on Github I will use Github Actions to implement continuous integration. If you use another continuous integration platform you will have to translate this example into that platform’s workflow sytax.</p>
+
+<p>Adding continuous integration is as easy as creating the <code class="language-plaintext highlighter-rouge">.github\workflows</code> folder at the base of the repository and then adding the workflow YAML file, which I named <a href="https://github.com/dlfelps/FsHttp-dotnet/blob/main/.github/workflows/dotnet.yml">dotnet.yml</a> to that folder. Here are the contents of that file:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+</pre></td><td class="code"><pre><span class="na">name</span><span class="pi">:</span> <span class="s">Dotnet CI</span>
+
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">workflow_dispatch</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">main</span> <span class="pi">]</span>
+  
+<span class="na">jobs</span><span class="pi">:</span>     
+  <span class="na">build</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-20.04</span>
+
+    <span class="na">steps</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout main</span>
+      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
+
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Setup .NET</span>
+      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-dotnet@v2</span>
+      <span class="na">with</span><span class="pi">:</span>
+        <span class="na">dotnet-version</span><span class="pi">:</span> <span class="s">6.0.301</span>
+
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Restore dependencies</span>
+      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet restore</span>
+
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build</span>
+      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet build --no-restore</span>
+
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Test</span>
+      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet test --verbosity normal</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now let’s breakdown each step.</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">name</span><span class="pi">:</span> <span class="s">Dotnet CI</span>
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">workflow_dispatch</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">main</span> <span class="pi">]</span>  </code></pre></figure>
+
+<p>The <code class="language-plaintext highlighter-rouge">name</code> keyword allows you to name the workflow - workflows will be grouped by name under the projects Action tab. The <code class="language-plaintext highlighter-rouge">on</code> keyword allows you to specify the conditions for which this workflow executes - here I only execute the workflow when I push to the <code class="language-plaintext highlighter-rouge">main</code> branch.</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">jobs</span><span class="pi">:</span>     
+  <span class="na">build</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-20.04</span></code></pre></figure>
+
+<p>The next block defines the sequence of <code class="language-plaintext highlighter-rouge">jobs</code> to execute when the workflow conditions are met. In this workflow I have only one job named <code class="language-plaintext highlighter-rouge">build</code> (define additional jobs at the same indentation level as <code class="language-plaintext highlighter-rouge">build</code>). The <code class="language-plaintext highlighter-rouge">runs-on</code> keyword selects the type of machine to run the job on; other options include <code class="language-plaintext highlighter-rouge">windows-2022</code> and <code class="language-plaintext highlighter-rouge">macos-11</code>. The full list of available options is <a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idruns-on">here</a>. <em>NOTE</em>: prefer <code class="language-plaintext highlighter-rouge">ubuntu-20.04</code> to <code class="language-plaintext highlighter-rouge">ubuntu-latest</code> even though they are currently equivalent; <code class="language-plaintext highlighter-rouge">ubuntu-latest</code> will eventually point to <code class="language-plaintext highlighter-rouge">ubuntu-22.04</code> so it is better to pin the dependency now.</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml">    <span class="na">steps</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout main</span>
+      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span></code></pre></figure>
+
+<p>Each job consists of several <code class="language-plaintext highlighter-rouge">steps</code>; each step includes an optional name and then an action. The first step <code class="language-plaintext highlighter-rouge">uses</code> a Github Action to check out the <code class="language-plaintext highlighter-rouge">main</code> branch. There are several <a href="https://github.com/orgs/actions/repositories">official Github actions</a> and also over 14,000 user contributed actions available through the <a href="https://github.com/marketplace?type=actions">Github Marketplace</a>. I tend to stick to the official actions since there are potentially some <a href="https://www.youtube.com/watch?v=bDG40Y1nPEk">security concerns</a> when using them. Also notice the <code class="language-plaintext highlighter-rouge">@v3</code> appended to the end of the <code class="language-plaintext highlighter-rouge">actions/checkout</code> action - this pins the version of the action.</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml">    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Setup .NET</span>
+      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-dotnet@v2</span>
+      <span class="na">with</span><span class="pi">:</span>
+        <span class="na">dotnet-version</span><span class="pi">:</span> <span class="s">6.0.301</span></code></pre></figure>
+
+<p>The next step users another offical action to install .NET 6. This action is actually redundant since the <code class="language-plaintext highlighter-rouge">ubuntu-20.04</code> runner actually comes <a href="https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-Readme.md">pre-installed</a> with lots of useful software including .NET 6. However, I chose to add this step since this was an explicit dependency that the build relies upon. I can’t be sure that Github will always include it with the runner so I want to explicitly install it.</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml">    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Restore dependencies</span>
+      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet restore</span>
+
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build</span>
+      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet build --no-restore</span>
+
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Test</span>
+      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet test --verbosity normal</span></code></pre></figure>
+
+<p>The final three steps restore the project’s dependencies, build, and test the project.</p>
+
+<h3 id="visualizing-the-workflow">Visualizing the workflow</h3>
+
+<p>If you push this workflow file to the repo’s <code class="language-plaintext highlighter-rouge">main</code> branch it will execute for the first time. You can watch its progress by clicking on the <code class="language-plaintext highlighter-rouge">Actions</code> button from the repository’s main page. Then click on the most recent run, which will have the same name as the message of the most recent commit.</p>
+
+<p><img src="/assets/images/workflow1.png" alt="Github Actions screenshot #1" title="Github Actions screenshot #1" /></p>
+
+<p>Then you can visualize the jobs contained within the workflow (there was only a single job named <code class="language-plaintext highlighter-rouge">build</code> in <code class="language-plaintext highlighter-rouge">dotnet.yml</code>). Clicking the <code class="language-plaintext highlighter-rouge">build</code> box will provide details of each step.</p>
+
+<p><img src="/assets/images/workflow2.png" alt="Github Actions screenshot #2" title="Github Actions screenshot #2" /></p>
+
+<p>Here we see the names given to each of the steps along with some automatic setup and teardown steps.</p>
+
+<p><img src="/assets/images/workflow3.png" alt="Github Actions screenshot #3" title="Github Actions screenshot #3" /></p>
+
+<h3 id="results">Results</h3>
+
+<p>In the <a href="/2022/06/25/Reproducible-Foundations.html">previous post</a> we defined the following criteria for reprodicible software:</p>
+
+<blockquote>
+  <ol>
+    <li>Build from any platform <strong>with the help of one pre-installed dependency</strong></li>
+    <li>Satisfy #1 in a standard and lightweight way across codebases</li>
+  </ol>
+</blockquote>
+
+<p>Did we satisfy them? Adding a Github workflow is certainly lightweight and repeatable since it will work for most .NET projects with little modification. But we didn’t explicity verify the first critieria since we only tested from Ubuntu. If you want to explicitly test additional platforms then I would recommend defining additional jobs that build in different environments:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">jobs</span><span class="pi">:</span>     
+  <span class="na">build-linux</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-20.04</span>
+    <span class="c1"># steps...</span>
+  
+  <span class="na">build-windows</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">windows-2022</span>
+    <span class="c1"># steps...</span>
+
+  <span class="na">build-macos</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">macos-11</span>
+    <span class="c1"># steps...</span></code></pre></figure>
+
+<p>But since I assume that .NET 6 is installed on the host platform I don’t really need to test the other operating systems - if it compiles on one platform it will compile on the others because .NET compiles to Common Intermediate Language. The runtimes for each platform differ, but that is an isolated component that I don’t feel the need to verify. I think this is a big win for Microsoft and one of the reasons that I ❤️ .NET!</p>
+
+<h2 id="approach-2-not-net-variant">Approach #2 (Not .NET variant)</h2>
+
+<p>How difficult is it to translate Approach #1 into another language? I was able to convert a popular Golang repo in about 5 minutes. You will notice the similarities in the workflow; the full repo is <a href="https://github.com/dlfelps/cobra-go">here</a>.</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+</pre></td><td class="code"><pre><span class="na">name</span><span class="pi">:</span> <span class="s">Go CI</span>
+
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">workflow_dispatch</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">main</span> <span class="pi">]</span>
+  
+<span class="na">jobs</span><span class="pi">:</span>     
+  <span class="na">build-linux</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-20.04</span>
+
+    <span class="na">steps</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout commit</span>
+      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
+
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Setup Go</span>
+      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-go@v3</span>
+      <span class="na">with</span><span class="pi">:</span>
+        <span class="na">go-version</span><span class="pi">:</span> <span class="m">1.18</span>
+
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build</span>
+      <span class="na">run</span><span class="pi">:</span> <span class="s">go build</span>
+
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Test</span>
+      <span class="na">run</span><span class="pi">:</span> <span class="s">go test .</span>
+
+  <span class="na">build-macos</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">macos-11</span>
+    <span class="c1"># steps...</span>
+
+  <span class="na">build-windows</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">windows-2022</span>
+    <span class="c1"># steps...</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="results-1">Results</h3>
+
+<p>This variant also meets the necessary criteria with one gotcha - since Golang compiles directly to machine code you need to add additional build jobs to test other platforms. Definitely still doable since Github also includes Golang in its machine images.</p>
+
+<h2 id="approach-3-docker-variant">Approach #3 (Docker variant)</h2>
+
+<p><em>Basic knowledge of Docker required to follow this tutorial.</em></p>
+
+<p>I know a lot of developers that really love Docker and they use it for everything. I use Docker to deploy services, but not for my development environment. It tends to add an extra step that I don’t really want while I am coding. But I also don’t tend to work on multiple projects simultaneously (each using a different version of something). Still, its simple enough to integrate Docker into the continuous integration workflow. If I was required to build a Docker image for a project then this is probably how I would do it (rather than building it locally). Here is the full <a href="https://github.com/dlfelps/FsHttp-dotnet">repo</a> and here are the contents of its workflow YAML:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="code"><pre><span class="na">name</span><span class="pi">:</span> <span class="s">Docker Image CI</span>
+
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">main</span> <span class="pi">]</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+
+  <span class="na">build</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+
+    <span class="na">steps</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout commit</span>
+      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
+
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build the Docker image</span>
+      <span class="na">run</span><span class="pi">:</span> <span class="s">docker build . --file Dockerfile --tag fshttp:$(date +%s)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The workflow only includes two steps - one to checkout the <code class="language-plaintext highlighter-rouge">main</code> branch and another to build the <code class="language-plaintext highlighter-rouge">Dockerfile</code>. The remaining steps are now inside the <code class="language-plaintext highlighter-rouge">Dockerfile</code>:</p>
+
+<figure class="highlight"><pre><code class="language-docker" data-lang="docker"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="k">FROM</span><span class="s"> mcr.microsoft.com/dotnet/sdk:6.0</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+
+<span class="k">COPY</span><span class="s"> . ./</span>
+<span class="k">RUN </span>dotnet restore 
+<span class="k">RUN </span>dotnet build <span class="nt">--no-restore</span>
+<span class="k">RUN </span>dotnet <span class="nb">test</span> <span class="nt">--verbosity</span> normal
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The Dockerfile uses the standard .NET 6 baseimage provided by Microsoft, copies the new commit into the /app folder, and then restore/build/test.</p>
+
+<h3 id="results-2">Results</h3>
+
+<p>This variant is still lightweight, but we must look closely to see if it is truly cross-platform. We have changed our dependency assumption from .NET to Docker - any platform that can run Docker can build this code. If this is a .NET project then any code that successfully compiles to the Common Intermediate Language and passes the test suite will work on any platform (.NET for the win)! But what if its a Golang project? In that case we would need a seperate job and Dockerfile for each platform. But there is no such thing as a macOS Docker image! In conclusion, Approach #3 meets the reproducibility criteria for all .NET projects, but not <em>all</em> projects.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>If I did not address your specific use case, please feel free to consult the <a href="https://docs.github.com/en/actions/using-workflows/about-workflows">Github Actions docs</a> for more information. Finally, thanks for reading this series on continuously reproducible code and I hope I have helped you develop a more continuously reproducible mindset! As always, your feedback is appreciated!</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/ci-cd" class="page__taxonomy-item" rel="tag">ci/cd</a><span class="sep">, </span>
+    
+      <a href="/tags/docker" class="page__taxonomy-item" rel="tag">docker</a><span class="sep">, </span>
+    
+      <a href="/tags/net" class="page__taxonomy-item" rel="tag">net</a><span class="sep">, </span>
+    
+      <a href="/tags/reproducible" class="page__taxonomy-item" rel="tag">reproducible</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2022-07-06T00:00:00+00:00">July 6, 2022</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Experiment+04%20https%3A%2F%2Fdlfelps.github.io%2F2022%2F07%2F06%2FReproducible-Example.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2022%2F07%2F06%2FReproducible-Example.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fdlfelps.github.io%2F2022%2F07%2F06%2FReproducible-Example.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2022/06/25/Reproducible-Foundations.html" class="pagination--pager" title="Experiment 03
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 Daniel Felps. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

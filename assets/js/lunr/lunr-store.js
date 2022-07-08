@@ -18,8 +18,14 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 03",
-        "excerpt":"This post introduces the tools that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.   Introduction   T     code hosting   container technology   continuous integration / continuous delivery   non-technical considerations (licensing)    ","categories": [],
-        "tags": ["reproducible","net","docker"],
+        "excerpt":"This post describes the approach that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software. Introduction The first post in this series described the characteristics of reproducible code. This post describes my approach...","categories": [],
+        "tags": ["reproducible","net","docker","ci/cd"],
         "url": "/2022/06/25/Reproducible-Foundations.html",
+        "teaser": null
+      },{
+        "title": "Experiment 04",
+        "excerpt":"In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow. Introduction In the first post in this series I described the characteristics of reproducible code. In the second post I described the foundational tools that I use in...","categories": [],
+        "tags": ["reproducible","net","docker","ci/cd"],
+        "url": "/2022/07/06/Reproducible-Example.html",
         "teaser": null
       }]
