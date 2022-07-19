@@ -233,8 +233,106 @@ The Dockerfile uses the standard .NET 6 baseimage provided by Microsoft, copies 
 
 This variant is still lightweight, but we must look closely to see if it is truly cross-platform. We have changed our dependency assumption from .NET to Docker - any platform that can run Docker can build this code. If this is a .NET project then any code that successfully compiles to the Common Intermediate Language and passes the test suite will work on any platform (.NET for the win)! But what if its a Golang project? In that case we would need a separate job and Dockerfile for each platform. But there is no such thing as a macOS Docker image! In conclusion, Approach #3 meets the reproducibility criteria for all .NET projects, but not *all* projects.
 
+## Approach #4 (NUKE variant)
+
+*Update 7/17/2022 - A reader suggested I also compare the NUKE build system.*
+
+The [NUKE](https://nuke.build/) build system has a unique way of creating continuous integration pipelines - unlike the previous three approaches, developers don't manually create the YAML file. Instead they use the NUKE build tool to create a seperate .NET project and then specify the build process using NUKE's extensive library. Running this project builds the primary solution and also generates any required artifacts (e.g. GitHub Actions YAML file). This makes NUKE's build process sound complicated, but from a user's perspective it is dead simple - they launch a single bootstrap script.  
+
+![NUKE flow diagram](/assets/images/mermaid-diagram-2022-07-18-061249.svg "NUKE flow diagram")
+
+I appreciate this build strategy because it isolates the custom part of the build process to the build project and uses a standard bootstrap script across projects. Here are the contents of ```Build.cs``` from the build project:
+
+{% highlight csharp linenos %}
+[GitHubActions(
+    "continuous",
+    GitHubActionsImage.UbuntuLatest,
+    OnPushBranches = new[] {"main"},
+    InvokedTargets = new[] { nameof(Test) })]
+class Build : NukeBuild
+{
+
+    [Solution] readonly Solution Solution;
+
+    public static int Main () => Execute<Build>(x => x.Test);
+
+    [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
+    readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+
+    Target Restore => _ => _
+        .Executes(() =>
+        {
+          DotNetRestore(_ => _
+            .SetProjectFile(Solution));
+        });
+
+    Target Compile => _ => _
+        .DependsOn(Restore)
+        .Executes(() =>
+        {
+          DotNetBuild(_ => _
+            .SetProjectFile(Solution)
+            .EnableNoRestore());
+        });
+
+    Target Test => _ => _
+      .DependsOn(Compile)
+      .Executes(() =>
+      {
+        DotNetTest();
+      });
+}
+{% endhighlight %}
+
+The first thing to notice is that this is proper C# code - *not* YAML. Starting from the top, the ```GitHubActions``` attribute before the ```Build``` class specifies which continuous integration platform YAML[^1] NUKE should create as part of the build process. Then - like the previous approaches - we define seperate targets for ```Restore```, ```Compile```, and ```Test```. But unlike previous approaches these targets are not strings; instead they are symbols that can be type checked and debugged. Targets can be further refined using NUKE's [Fluent API](https://nuke.build/docs/fundamentals/targets/), but I kept things pretty simple here. When the project runs a valid GitHubActions YAML is created:
+
+{% highlight yaml linenos %}
+name: continuous
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ubuntu-latest:
+    name: ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache .nuke/temp, ~/.nuget/packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            .nuke/temp
+            ~/.nuget/packages
+          key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
+      - name: Run './build.cmd Test'
+        run: ./build.cmd Test
+{% endhighlight %}
+
+It is a simple YAML that checks out the code and launches the build script. If we push these updates to Github (e.g. [FsHTTP-nuke](https://github.com/dlfelps/FsHttp-nuke)) then the GitHub Actions will automatically test the build:
+
+![NUKE github actions](/assets/images/nuke-github.png "NUKE build on Github Actions")
+
+### Results
+
+NUKE was able to restore our original definition of reproducibility since it does not assume that .NET (or Docker) is installed:
+
+> 1. Build from a clean environment on any platform
+> 2. Satisfy #1 in a standard, lightweight, repeatable way across codebases
+
+NUKE's approach is slightly more involved than the creating the YAML file directly, but for a little more work you get a build specification that can be type checked and debugged that is compatible with almost any continuous integration platform. And unlike CAKE/FAKE, NUKE has a very gradual learning curve - you can get started easily and master more over time. Sadly, NUKE is only for .NET projects so if you are using another language you will have to try **Approach #2 or #3**.
+
 ## Conclusion
 
-If I did not address your specific use case, please feel free to consult the [Github Actions docs](https://docs.github.com/en/actions/using-workflows/about-workflows) for more information. Finally, thanks for reading this series on continuously reproducible code and I hope I have helped you develop a more continuously reproducible mindset! As always, your feedback is appreciated!
+You may choose whichever approach fits best within your current development workflow. My recommendations are as follows:
+  1. If this is your first attempt at creating a reproducible build then follow **Approach #1**
+  2. If your project is *NOT* a .NET project then follow **Approach #2**
+  3. Otherwise follow **Approach #4**
 
+Finally, thanks for reading this series on continuously reproducible code and I hope I have helped you develop a more continuously reproducible mindset! As always, your feedback is appreciated!
 
+#### Footnotes
+
+[^1]: NUKE supports many popular CI/CD platforms out of the box (i.e. AppVeyor, Azure Pipelines, Bitbucket, GitHub Actions, GitLab, Jenkins, Space Automation, and TeamCity).
