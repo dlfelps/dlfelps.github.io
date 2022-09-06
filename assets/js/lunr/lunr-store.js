@@ -30,7 +30,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 05",
-        "excerpt":"When should you store data as a list, sequence, or an array? This post explains why you need all three in F#. Introduction Lists, sequences, and arrays appear interchangable on the surface - they are all linear collections of elements of the same type. But the architects of F# included...","categories": [],
+        "excerpt":"When should you store data as a list, sequence, or an array? This post explains why you need all three in F#. Introduction Lists, sequences, and arrays appear interchangeable on the surface - they are all linear collections of elements of the same type. But the architects of F# included...","categories": [],
         "tags": ["net","list","seq","collections"],
         "url": "/2022/09/01/List-vs-Seq.html",
         "teaser": null

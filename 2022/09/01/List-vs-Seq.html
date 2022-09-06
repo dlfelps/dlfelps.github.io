@@ -194,7 +194,7 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>Lists, sequences, and arrays appear interchangable on the surface - they are all linear collections of elements of the same type. But the architects of F# included all three with good reason. This post explores some of the situations that make each type shine, and dives into the tradeoffs you make when you select one collection over another<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. Let’s start with Microsoft’s official definitions:</p>
+<p>Lists, sequences, and arrays appear interchangeable on the surface - they are all linear collections of elements of the same type. But the architects of F# included all three with good reason. This post explores some of the situations that make each type shine, and dives into the tradeoffs you make when you select one collection over another<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. Let’s start with Microsoft’s official definitions:</p>
 
 <ul>
   <li><a href="https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/arrays">Arrays</a> are fixed-size, zero-based, mutable collections of consecutive data elements that are all of the same type.</li>
@@ -216,7 +216,7 @@
 <span class="k">let</span> <span class="n">arrayOfSquares</span> <span class="p">=</span> <span class="p">[|</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span> <span class="p">..</span> <span class="mi">10</span> <span class="p">-&gt;</span> <span class="n">i</span> <span class="p">*</span> <span class="n">i</span> <span class="p">|]</span>
 <span class="k">let</span> <span class="n">seqOfSquares</span> <span class="p">=</span> <span class="n">seq</span> <span class="p">{</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span> <span class="p">..</span> <span class="mi">10</span> <span class="p">-&gt;</span> <span class="n">i</span> <span class="p">*</span> <span class="n">i</span> <span class="p">}</span></code></pre></figure>
 
-<p>The syntax is well designed - different, but familiar. Now let’s dive into our first scenario.</p>
+<p>The syntax is well-designed - different, but familiar. Now let’s dive into our first scenario.</p>
 
 <h2 id="scenario-1-create-new-collection">Scenario 1 (create new collection)</h2>
 
@@ -407,7 +407,7 @@
     
 <svg id="js-plotly-tester" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position: absolute; left: -10000px; top: -10000px; width: 9000px; height: 9000px; z-index: 1;"><path class="js-reference-point" d="M0,0H1V1H0Z" style="stroke-width: 0; fill: black;"></path></svg></body></html>
 
-<p>Sequences had the fastest time, followed by array and list respectively. Given that there are only a few milliseconds between the conditions and each condition includes 1000 repititions, the difference for a single execution is only a few microseconds - hardly worth optimizing in my opinion.</p>
+<p>Sequences had the fastest time, followed by array and list respectively. Given that there are only a few milliseconds between the conditions and each condition includes 1000 repetitions, the difference for a single execution is only a few microseconds - hardly worth optimizing in my opinion.</p>
 
 <p><em>NOTE: the times above include the time to create a collection PLUS the time to sum its elements. I included the time to create the collection so that times could be better compared across scenarios; this will be true for all following scenarios.</em></p>
 
@@ -509,7 +509,7 @@
 
 <h2 id="scenario-4-search-and-count">Scenario 4 (search and count)</h2>
 
-<p>In this scenario I implement a common processing task - count the number of occurences of a target element in a given collection. In the code below, the target element is <code class="language-plaintext highlighter-rouge">5</code>.</p>
+<p>In this scenario I implement a common processing task - count the number of occurrences of a target element in a given collection. In the code below, the target element is <code class="language-plaintext highlighter-rouge">5</code>.</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">count5List</span> <span class="bp">()</span>  <span class="p">=</span> <span class="p">[</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">0</span> <span class="p">..</span> <span class="mi">1000</span> <span class="p">-&gt;</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span> <span class="p">]</span> <span class="p">|&gt;</span> <span class="p">(</span><span class="nn">List</span><span class="p">.</span><span class="n">filter</span> <span class="p">(</span><span class="k">fun</span> <span class="n">elem</span> <span class="p">-&gt;</span> <span class="n">elem</span> <span class="p">=</span> <span class="mi">5</span><span class="o">))</span> <span class="p">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span>
 <span class="k">let</span> <span class="n">count5Seq</span> <span class="bp">()</span>  <span class="p">=</span> <span class="n">seq</span> <span class="p">{</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">0</span> <span class="p">..</span> <span class="mi">1000</span> <span class="p">-&gt;</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span> <span class="p">}</span> <span class="p">|&gt;</span> <span class="p">(</span><span class="nn">Seq</span><span class="p">.</span><span class="n">filter</span> <span class="p">(</span><span class="k">fun</span> <span class="n">elem</span> <span class="p">-&gt;</span> <span class="n">elem</span> <span class="p">=</span> <span class="mi">5</span><span class="o">))</span> <span class="p">|&gt;</span> <span class="nn">Seq</span><span class="p">.</span><span class="n">length</span>
