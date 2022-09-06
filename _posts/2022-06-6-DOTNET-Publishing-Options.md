@@ -84,6 +84,8 @@ dotnet publish -c "exp_1b_osx12_arm"  -r osx.12-arm64 --self-contained true
 ```
 I measured the size of the corresponding publish folders and also included the results from the self-contained win-x64 from the previous section. 
 
+{::comment}Table generated using https://www.tablesgenerator.com/markdown_tables# {:/comment}
+
 |           	| size (MB) 	|
 |-----------	|:-----------:	|
 | win-x64   	| 68.7      	|
