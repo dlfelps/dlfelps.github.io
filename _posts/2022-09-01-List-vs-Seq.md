@@ -7,7 +7,7 @@ When should you store data as a list, sequence, or an array? This post explains 
 
 ## Introduction
 
-Lists, sequences, and arrays appear interchangable on the surface - they are all linear collections of elements of the same type. But the architects of F# included all three with good reason. This post explores some of the situations that make each type shine, and dives into the tradeoffs you make when you select one collection over another[^1]. Let's start with Microsoft's official definitions: 
+Lists, sequences, and arrays appear interchangeable on the surface - they are all linear collections of elements of the same type. But the architects of F# included all three with good reason. This post explores some of the situations that make each type shine, and dives into the tradeoffs you make when you select one collection over another[^1]. Let's start with Microsoft's official definitions: 
 
  - [Arrays](https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/arrays) are fixed-size, zero-based, mutable collections of consecutive data elements that are all of the same type.
  - [Lists](https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/lists) are ordered, immutable series of elements of the same type.
@@ -33,7 +33,7 @@ let seqOfSquares = seq { for i in 1 .. 10 -> i * i }
 {% endhighlight %}
 
 
-The syntax is well designed - different, but familiar. Now let's dive into our first scenario.
+The syntax is well-designed - different, but familiar. Now let's dive into our first scenario.
 
 ## Scenario 1 (create new collection)
 
@@ -116,7 +116,7 @@ And the results:
 
 {% include result2.html %}
 
-Sequences had the fastest time, followed by array and list respectively. Given that there are only a few milliseconds between the conditions and each condition includes 1000 repititions, the difference for a single execution is only a few microseconds - hardly worth optimizing in my opinion.
+Sequences had the fastest time, followed by array and list respectively. Given that there are only a few milliseconds between the conditions and each condition includes 1000 repetitions, the difference for a single execution is only a few microseconds - hardly worth optimizing in my opinion.
 
 *NOTE: the times above include the time to create a collection PLUS the time to sum its elements. I included the time to create the collection so that times could be better compared across scenarios; this will be true for all following scenarios.*
 
@@ -162,7 +162,7 @@ Here we see the main reason to avoid sequences - they have terrible random acces
 
 ## Scenario 4 (search and count)
 
-In this scenario I implement a common processing task - count the number of occurences of a target element in a given collection. In the code below, the target element is `5`.
+In this scenario I implement a common processing task - count the number of occurrences of a target element in a given collection. In the code below, the target element is `5`.
 
 {% highlight fsharp %}
 let count5List ()  = [ for i in 0 .. 1000 -> i % 10 ] |> (List.filter (fun elem -> elem = 5)) |> List.length
