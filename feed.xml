@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2022-09-06T16:25:39+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 05</title><link href="https://dlfelps.github.io/2022/09/01/List-vs-Seq.html" rel="alternate" type="text/html" title="Experiment 05" /><published>2022-09-01T00:00:00+00:00</published><updated>2022-09-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/09/01/List-vs-Seq</id><content type="html" xml:base="https://dlfelps.github.io/2022/09/01/List-vs-Seq.html"><![CDATA[<p>When should you store data as a list, sequence, or an array? This post explains why you need all three in F#.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2022-09-07T10:46:03+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 05</title><link href="https://dlfelps.github.io/2022/09/01/List-vs-Seq.html" rel="alternate" type="text/html" title="Experiment 05" /><published>2022-09-01T00:00:00+00:00</published><updated>2022-09-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/09/01/List-vs-Seq</id><content type="html" xml:base="https://dlfelps.github.io/2022/09/01/List-vs-Seq.html"><![CDATA[<p>When should you store data as a list, sequence, or an array? This post explains why you need all three in F#.</p>
 
 <h2 id="introduction">Introduction</h2>
 
@@ -419,7 +419,7 @@
 
 <p>I hope that this post has helped you get a better feel for collections in F#. I will end this post with a flowchart that you can use to guide you if you are having trouble.</p>
 
-<p><img src="/assets/images/mermaid-diagram-2022-09-06-101345.svg" alt="Collection flow diagram" title="Collection flow diagram" /></p>
+<p><img src="/assets/images/mermaid-diagram-2022-09-07-063841.svg" alt="Collection flow diagram" title="Collection flow diagram" /></p>
 
 <h4 id="footnotes">Footnotes</h4>
 
