@@ -212,7 +212,7 @@ For this reason, it is recommended to accept sequences in public facing function
 
 I hope that this post has helped you get a better feel for collections in F#. I will end this post with a flowchart that you can use to guide you if you are having trouble.
 
-![Collection flow diagram](/assets/images/mermaid-diagram-2022-09-06-101345.svg "Collection flow diagram")
+![Collection flow diagram](/assets/images/mermaid-diagram-2022-09-07-063841.svg "Collection flow diagram")
 
 
 #### Footnotes
