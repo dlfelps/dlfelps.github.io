@@ -209,7 +209,9 @@
 
 <h2 id="data-model-2a-concise-record-syntax">Data model #2a (Concise record syntax)</h2>
 
-<p>The expression above creates the same list of <code class="language-plaintext highlighter-rouge">Trade</code> records as in the first post without having to specify the record’s field names. This is accomplished through the use of a  <a href="https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/computation-expressions#extending-existing-builders-with-new-custom-operations">custom computation expression</a>. First we define a <code class="language-plaintext highlighter-rouge">TradeBuilder</code> class and provide an implementation for <code class="language-plaintext highlighter-rouge">Yield</code><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. Next we implement two custom operations (tagged with the <a href="https://fsharp.github.io/fsharp-core-docs/reference/fsharp-core-customoperationattribute.html"><code class="language-plaintext highlighter-rouge">CustomOperation</code></a> attribute). Due to the domain and record layout, I decided it was natural to use <code class="language-plaintext highlighter-rouge">Buy</code> and <code class="language-plaintext highlighter-rouge">Sell</code> as keywords to create the record. Each method takes 5 parameters: the first argument captures trades that were created above the current trade but within the same computation expression; it has type <code class="language-plaintext highlighter-rouge">seq&lt;Trade&gt;</code>. The next 4 parameters match those of the record (except <code class="language-plaintext highlighter-rouge">price</code>, which takes a <code class="language-plaintext highlighter-rouge">float</code> and is converted to <code class="language-plaintext highlighter-rouge">decimal</code>).</p>
+<p>The expression above creates the same list of <code class="language-plaintext highlighter-rouge">Trade</code> records as in the first post without having to specify the record’s field names. We might choose this data model if we want a <em>concise</em> record syntax.</p>
+
+<p>We accomplish this syntax by creating a <a href="https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/computation-expressions#extending-existing-builders-with-new-custom-operations">custom computation expression</a>. First, define a <code class="language-plaintext highlighter-rouge">TradeBuilder</code> class and provide an implementation for <code class="language-plaintext highlighter-rouge">Yield</code><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. Then implement two custom operations (tagged with the <a href="https://fsharp.github.io/fsharp-core-docs/reference/fsharp-core-customoperationattribute.html"><code class="language-plaintext highlighter-rouge">CustomOperation</code></a> attribute). Due to the domain and record layout, I decided it was natural to use <code class="language-plaintext highlighter-rouge">Buy</code> and <code class="language-plaintext highlighter-rouge">Sell</code> as keywords to create the record. Each method takes 5 parameters: the first argument captures trades that were created above the current trade but within the same computation expression; it has type <code class="language-plaintext highlighter-rouge">seq&lt;Trade&gt;</code>. The next 4 parameters match those of the record (except <code class="language-plaintext highlighter-rouge">price</code>, which takes a <code class="language-plaintext highlighter-rouge">float</code> and is converted to <code class="language-plaintext highlighter-rouge">decimal</code>).</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">module</span> <span class="nc">Trade</span> <span class="p">=</span> 
 
@@ -238,7 +240,7 @@
     <span class="nc">Sell</span> <span class="mi">6</span> <span class="nc">GOOGL</span> <span class="mi">106</span><span class="p">.</span><span class="mi">08</span> <span class="nc">AllOrNone</span>
   <span class="p">}</span></code></pre></figure>
 
-<p>Then if we run <code class="language-plaintext highlighter-rouge">Trade.trademany trades</code> we get the correct output:</p>
+<p>Then if we run <code class="language-plaintext highlighter-rouge">Trade.tradeMany trades</code> we get the correct output:</p>
 
 <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="gp">You just purchased 4 shares of MSFT for a total cost of $</span>1,033.28.
 <span class="gp">You just sold 3 shares of META for a total earnings of $</span>476.13.
@@ -248,7 +250,7 @@
 
 <h2 id="data-model-2b-concise-record-syntax-with-placeholders">Data model #2b (Concise record syntax with placeholders)</h2>
 
-<p>The approach above has a serious flaw - without specifying the field names it could be very easy to forget to include a field or put it in the wrong order. Imagine a record with 5 fields all the same type (e.g. decimal), how would you keep them straight? In some domains it may be appropriate to add a few placeholder keywords to help keep things straight. In this example, the following probably reads much better to domain experts:</p>
+<p>Our first attempt at a data model has a serious flaw - without specifying the field names it could be very easy to forget to include a field or put it in the wrong order. Imagine a record with 5 fields all the same type (e.g. decimal), how would you keep them straight? In some domains it may be appropriate to add a few placeholder keywords to help keep things straight. In this example, the following probably reads much better to domain experts:</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">trades</span> <span class="p">=</span> 
   <span class="n">trade</span><span class="p">{</span>
@@ -257,7 +259,7 @@
     <span class="nc">Sell</span> <span class="mi">6</span> <span class="nc">SharesOf</span> <span class="nc">GOOGL</span> <span class="nc">At</span> <span class="mi">106</span><span class="p">.</span><span class="mi">08</span> <span class="nc">AllOrNone</span>
   <span class="p">}</span></code></pre></figure>
 
-<p>The <code class="language-plaintext highlighter-rouge">SharesOf</code> keyword tells you 2 things - the previous parameter was the number of shares and the following parameter is company. The <code class="language-plaintext highlighter-rouge">At</code> keyword separates the price constraints for the trade. This is still much more concise than specifying all the field names and it improves readability, but it may not be possible in all cases. To update  the <code class="language-plaintext highlighter-rouge">TradeBuilder</code> code we need to define two new types (<code class="language-plaintext highlighter-rouge">SharesOf</code> and <code class="language-plaintext highlighter-rouge">At</code>) and add them to the parameter list of each method.</p>
+<p>The <code class="language-plaintext highlighter-rouge">SharesOf</code> keyword tells you 2 things - the previous parameter was the number of shares and the following parameter is company. The <code class="language-plaintext highlighter-rouge">At</code> keyword separates the price constraints for the trade. This is still much more concise than specifying all the field names and it improves readability. To update  the <code class="language-plaintext highlighter-rouge">TradeBuilder</code> code we need to define two new types (<code class="language-plaintext highlighter-rouge">SharesOf</code> and <code class="language-plaintext highlighter-rouge">At</code>) and add them to the parameter list of each method.</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">type</span> <span class="nc">SharesOf</span> <span class="p">=</span> <span class="nc">SharesOf</span>
 <span class="k">type</span> <span class="nc">At</span> <span class="p">=</span> <span class="nc">At</span>
@@ -336,9 +338,11 @@
       <span class="k">member</span> <span class="o">_.</span><span class="nc">Partial</span> <span class="p">(</span><span class="n">trade</span><span class="p">:</span> <span class="nc">Trade</span><span class="p">)</span> <span class="p">=</span> <span class="p">{</span><span class="n">trade</span> <span class="k">with</span> <span class="n">allOrNone</span> <span class="p">=</span> <span class="bp">false</span><span class="p">}</span>
         </code></pre></figure>
 
+<p>The code listing for this series can be found <a href="https://github.com/dlfelps/dsl-examples">here</a>.</p>
+
 <h2 id="some-other-examplesreferences">Some other examples/references</h2>
 
-<p>In my opinion, custom computational expressions are an underused feature of F#. They are much more flexible/powerful than we are showing here so if you would like learn more please check out the following resources that use custom computation expressions.</p>
+<p>In my opinion, custom computational expressions are an underutilized feature of F#. They are much more flexible/powerful than I are showing here so if you would like learn more please check out the following resources that use custom computation expressions.</p>
 
 <p><a href="https://github.com/panesofglass/computation-expressions-workshop">Computation expressions workshop</a></p>
 

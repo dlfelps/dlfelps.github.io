@@ -194,11 +194,11 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>In the previous two posts we explored several ways to model a simple stock trading domain using syntax that is available (or extendable) within F#. This can be described as an <em>internal</em> domain specific language; the biggest limitation with this approach is that all data must be entered before the program is compiled - not very realistic if you want to trade stocks regularly. This post explores how to create an <em>external</em> domain specific language that can be loaded after compile time.</p>
+<p>In the previous two posts we explored several ways to model a simple stock trading domain using syntax that is available (or extendable) within F#. This can be described as an <em>internal</em> domain specific language; the biggest limitation with this approach is that all data must be entered before the program is compiled - not very realistic if you want to trade stocks regularly. This post explores how to create an <em>external</em> domain specific language that can be used to load records after compile time.</p>
 
 <h2 id="parser-combinators">Parser combinators</h2>
 
-<p>The most common way to load text data is a delimted text loader, but this only works if your input is structured (i.e. every column of data is aligned). For this post, I want to use a more powerful tool - parser combinators. Parser combinators implement a formal grammar over the input, which can describe a more expressive domain specific language. But this post is not a full parser combinators tutorial. In fact, we will use the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from the <a href="https://github.com/stephan-tolksdorf/fparsec">FParsec</a> library instead of the more tradional (and recommended) parser combinator symbols (e.g <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&lt;&lt;.</code>, … ). For a deeper dive, see these tutorials <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. To demonstrate the power of this approach, I will use a parser that can handle the consice record syntax with or without the placeholder keywords. Accepting multiple forms of input could be useful if you want to have backwards compatibility or provide additional flexibility for users. Here are a few valid inputs:</p>
+<p>The most common way to load text data is a delimted text loader, but this only works if your input is structured (i.e. every column of data is aligned). For this post, I want to use a more powerful tool - parser combinators. Parser combinators implement a formal grammar over the input, which we need to interpret a domain specific language. But this post is not a full parser combinator tutorial. In fact, we will use the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from the <a href="https://github.com/stephan-tolksdorf/fparsec">FParsec</a> library instead of the more tradional (and recommended) parser combinator symbols (e.g <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&lt;&lt;.</code>, … ). For a deeper dive, see these tutorials <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. To demonstrate the power of this approach, I will use a parser that interpret the syntax from either data model 2a or 2b from <a href="/2022/10/02/DSL2.html">post #2</a> in this series. Here are a few examples of valid inputs:</p>
 
 <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="go">Buy 4 SharesOf MSFT At 258.32 AllOrNone
 Sell 3 SharesOf META At 158.71 
@@ -212,7 +212,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <h2 id="step-3-runparseronfile">Step 3: runParserOnFile</h2>
 
-<p>We begin with the final step - to run the complete parser on our input file. Here is the full snippet:</p>
+<p>We begin with the final step - to run the complete parser on our input file. Here is the code:</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">result</span><span class="p">:</span> <span class="nc">ParserResult</span><span class="p">&lt;</span><span class="nc">Trade</span> <span class="kt">list</span><span class="p">,</span><span class="kt">unit</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">runParserOnFile</span> <span class="p">(</span><span class="n">many</span> <span class="n">parseTrade</span><span class="p">)</span> <span class="bp">()</span> <span class="s2">"input.txt"</span> <span class="nn">System</span><span class="p">.</span><span class="nn">Text</span><span class="p">.</span><span class="nn">Encoding</span><span class="p">.</span><span class="nc">ASCII</span>
 
@@ -233,7 +233,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <h2 id="step-2-parsetrade">Step 2: parseTrade</h2>
 
-<p>The basic idea with this parser is that we are combining<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup> many simple parsers into a more complex parser that captures the grammar/rules of our domain specific language. Here is the finished parser:</p>
+<p>The basic idea with this parser is that we are composing<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup> many simple parsers into a more complex parser that captures the grammar/rules of our domain specific language. Here is the finished parser:</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">parseTrade</span> <span class="p">=</span>
   <span class="n">parse</span> <span class="p">{</span>
@@ -387,7 +387,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
   <li><code class="language-plaintext highlighter-rouge">Line 12</code> Maps the string to the corresponding <code class="language-plaintext highlighter-rouge">Stock</code> type</li>
 </ul>
 
-<p>This parser demonstrates two more primitive functions - <code class="language-plaintext highlighter-rouge">many1</code> and <code class="language-plaintext highlighter-rouge">asciiUpper</code>. Combined they create a parser that accepts 1 or more upper case ASCII characters. The other notable feature about <code class="language-plaintext highlighter-rouge">parseTicker</code> is that it mixes the use of <code class="language-plaintext highlighter-rouge">let!</code> and <code class="language-plaintext highlighter-rouge">let</code>. The <code class="language-plaintext highlighter-rouge">let!</code> on <code class="language-plaintext highlighter-rouge">Line 10</code> unwraps the parser context from the expresson on the right to bind <code class="language-plaintext highlighter-rouge">ticketCharList</code> to a list of characters (instead of a Parser that returns a list of characters). The following two lines perform operations on regular F# types so they use the <code class="language-plaintext highlighter-rouge">let</code> keyword.</p>
+<p>This parser demonstrates two more primitive functions - <code class="language-plaintext highlighter-rouge">many1</code> and <code class="language-plaintext highlighter-rouge">asciiUpper</code>. Combined they create a parser that accepts 1 or more upper case ASCII characters. The other notable feature about <code class="language-plaintext highlighter-rouge">parseTicker</code> is that it mixes the use of <code class="language-plaintext highlighter-rouge">let!</code> and <code class="language-plaintext highlighter-rouge">let</code>. The <code class="language-plaintext highlighter-rouge">let!</code> on <code class="language-plaintext highlighter-rouge">Line 10</code> unwraps the parser context from the expresson on the right to bind <code class="language-plaintext highlighter-rouge">ticketCharList</code> to a list of characters. The following two lines perform operations on regular F# types so they use the <code class="language-plaintext highlighter-rouge">let</code> keyword.</p>
 
 <h3 id="preturn"><code class="language-plaintext highlighter-rouge">preturn</code></h3>
 
@@ -409,10 +409,12 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">Line 03</code> Skip any whitespace</li>
   <li><code class="language-plaintext highlighter-rouge">Line 04</code> Check if the input begins with “AllOrNone” or “Partial”; if neither return “AllOrNone”</li>
-  <li><code class="language-plaintext highlighter-rouge">Line 05</code> Return true if #2 was “AllOrNone”</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 05</code> Return true if previous assignment was “AllOrNone”</li>
 </ul>
 
 <p>This parser is very similar to <code class="language-plaintext highlighter-rouge">parseTransaction</code> but it demonstrates use of the <code class="language-plaintext highlighter-rouge">preturn</code> primitive. <code class="language-plaintext highlighter-rouge">preturn</code> always succeeds with the provided value; here I use it as a default value <code class="language-plaintext highlighter-rouge">choice</code> parser by providing it as a final value (only used if all other choices fail).</p>
+
+<p>The code listing for this series can be found <a href="https://github.com/dlfelps/dsl-examples">here</a>.</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
@@ -431,7 +433,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <p><img src="/assets/images/ETRADE-mobile-stock-quote.png" alt="Stock App" title="Stock App" /></p>
 
-<p>But I have benefited from adopting internal domain specific languages. Using natural notions about the world within my code has made it easier to write, reason about, and revisit. If I have piqued your interest in domain modeling, I would recommend browsing the related topics below. I believe each topic has something different to offer so its worth browsing each perspective (like the <a href="https://en.wikipedia.org/wiki/Blind_men_and_an_elephant">parable of the blind men and the elephant</a>). My favorite reference is Scott Wlascin’s book <a href="https://pragprog.com/titles/swdddf/domain-modeling-made-functional/">Domain Modeling Made Functional</a>.</p>
+<p>I <em>DO</em> benefit from adopting internal domain specific languages. Using natural notions about the world within my code has made it easier to write, reason about, and revisit. If I have piqued your interest in domain modeling, I would recommend browsing the related topics below. I believe each topic has something different to offer so its worth browsing each perspective (like the <a href="https://en.wikipedia.org/wiki/Blind_men_and_an_elephant">parable of the blind men and the elephant</a>). My favorite reference is Scott Wlascin’s book <a href="https://pragprog.com/titles/swdddf/domain-modeling-made-functional/">Domain Modeling Made Functional</a>.</p>
 
 <table>
   <thead>

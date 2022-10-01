@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2022-10-01T12:50:49+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 08</title><link href="https://dlfelps.github.io/2022/10/03/DSL3.html" rel="alternate" type="text/html" title="Experiment 08" /><published>2022-10-03T00:00:00+00:00</published><updated>2022-10-03T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/10/03/DSL3</id><content type="html" xml:base="https://dlfelps.github.io/2022/10/03/DSL3.html"><![CDATA[<p>The final post explains how to use an external <strong>domain specific language</strong> to load records after compile time!</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2022-10-01T15:18:08+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 08</title><link href="https://dlfelps.github.io/2022/10/03/DSL3.html" rel="alternate" type="text/html" title="Experiment 08" /><published>2022-10-03T00:00:00+00:00</published><updated>2022-10-03T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/10/03/DSL3</id><content type="html" xml:base="https://dlfelps.github.io/2022/10/03/DSL3.html"><![CDATA[<p>The final post explains how to use an external <strong>domain specific language</strong> to load records after compile time!</p>
 
 <h2 id="introduction">Introduction</h2>
 
-<p>In the previous two posts we explored several ways to model a simple stock trading domain using syntax that is available (or extendable) within F#. This can be described as an <em>internal</em> domain specific language; the biggest limitation with this approach is that all data must be entered before the program is compiled - not very realistic if you want to trade stocks regularly. This post explores how to create an <em>external</em> domain specific language that can be loaded after compile time.</p>
+<p>In the previous two posts we explored several ways to model a simple stock trading domain using syntax that is available (or extendable) within F#. This can be described as an <em>internal</em> domain specific language; the biggest limitation with this approach is that all data must be entered before the program is compiled - not very realistic if you want to trade stocks regularly. This post explores how to create an <em>external</em> domain specific language that can be used to load records after compile time.</p>
 
 <h2 id="parser-combinators">Parser combinators</h2>
 
-<p>The most common way to load text data is a delimted text loader, but this only works if your input is structured (i.e. every column of data is aligned). For this post, I want to use a more powerful tool - parser combinators. Parser combinators implement a formal grammar over the input, which can describe a more expressive domain specific language. But this post is not a full parser combinators tutorial. In fact, we will use the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from the <a href="https://github.com/stephan-tolksdorf/fparsec">FParsec</a> library instead of the more tradional (and recommended) parser combinator symbols (e.g <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&lt;&lt;.</code>, … ). For a deeper dive, see these tutorials <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. To demonstrate the power of this approach, I will use a parser that can handle the consice record syntax with or without the placeholder keywords. Accepting multiple forms of input could be useful if you want to have backwards compatibility or provide additional flexibility for users. Here are a few valid inputs:</p>
+<p>The most common way to load text data is a delimted text loader, but this only works if your input is structured (i.e. every column of data is aligned). For this post, I want to use a more powerful tool - parser combinators. Parser combinators implement a formal grammar over the input, which we need to interpret a domain specific language. But this post is not a full parser combinator tutorial. In fact, we will use the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from the <a href="https://github.com/stephan-tolksdorf/fparsec">FParsec</a> library instead of the more tradional (and recommended) parser combinator symbols (e.g <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&lt;&lt;.</code>, … ). For a deeper dive, see these tutorials <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. To demonstrate the power of this approach, I will use a parser that interpret the syntax from either data model 2a or 2b from <a href="/2022/10/02/DSL2.html">post #2</a> in this series. Here are a few examples of valid inputs:</p>
 
 <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="go">Buy 4 SharesOf MSFT At 258.32 AllOrNone
 Sell 3 SharesOf META At 158.71 
@@ -20,7 +20,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <h2 id="step-3-runparseronfile">Step 3: runParserOnFile</h2>
 
-<p>We begin with the final step - to run the complete parser on our input file. Here is the full snippet:</p>
+<p>We begin with the final step - to run the complete parser on our input file. Here is the code:</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">result</span><span class="p">:</span> <span class="nc">ParserResult</span><span class="p">&lt;</span><span class="nc">Trade</span> <span class="kt">list</span><span class="p">,</span><span class="kt">unit</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">runParserOnFile</span> <span class="p">(</span><span class="n">many</span> <span class="n">parseTrade</span><span class="p">)</span> <span class="bp">()</span> <span class="s2">"input.txt"</span> <span class="nn">System</span><span class="p">.</span><span class="nn">Text</span><span class="p">.</span><span class="nn">Encoding</span><span class="p">.</span><span class="nc">ASCII</span>
 
@@ -41,7 +41,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <h2 id="step-2-parsetrade">Step 2: parseTrade</h2>
 
-<p>The basic idea with this parser is that we are combining<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup> many simple parsers into a more complex parser that captures the grammar/rules of our domain specific language. Here is the finished parser:</p>
+<p>The basic idea with this parser is that we are composing<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup> many simple parsers into a more complex parser that captures the grammar/rules of our domain specific language. Here is the finished parser:</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">parseTrade</span> <span class="p">=</span>
   <span class="n">parse</span> <span class="p">{</span>
@@ -195,7 +195,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
   <li><code class="language-plaintext highlighter-rouge">Line 12</code> Maps the string to the corresponding <code class="language-plaintext highlighter-rouge">Stock</code> type</li>
 </ul>
 
-<p>This parser demonstrates two more primitive functions - <code class="language-plaintext highlighter-rouge">many1</code> and <code class="language-plaintext highlighter-rouge">asciiUpper</code>. Combined they create a parser that accepts 1 or more upper case ASCII characters. The other notable feature about <code class="language-plaintext highlighter-rouge">parseTicker</code> is that it mixes the use of <code class="language-plaintext highlighter-rouge">let!</code> and <code class="language-plaintext highlighter-rouge">let</code>. The <code class="language-plaintext highlighter-rouge">let!</code> on <code class="language-plaintext highlighter-rouge">Line 10</code> unwraps the parser context from the expresson on the right to bind <code class="language-plaintext highlighter-rouge">ticketCharList</code> to a list of characters (instead of a Parser that returns a list of characters). The following two lines perform operations on regular F# types so they use the <code class="language-plaintext highlighter-rouge">let</code> keyword.</p>
+<p>This parser demonstrates two more primitive functions - <code class="language-plaintext highlighter-rouge">many1</code> and <code class="language-plaintext highlighter-rouge">asciiUpper</code>. Combined they create a parser that accepts 1 or more upper case ASCII characters. The other notable feature about <code class="language-plaintext highlighter-rouge">parseTicker</code> is that it mixes the use of <code class="language-plaintext highlighter-rouge">let!</code> and <code class="language-plaintext highlighter-rouge">let</code>. The <code class="language-plaintext highlighter-rouge">let!</code> on <code class="language-plaintext highlighter-rouge">Line 10</code> unwraps the parser context from the expresson on the right to bind <code class="language-plaintext highlighter-rouge">ticketCharList</code> to a list of characters. The following two lines perform operations on regular F# types so they use the <code class="language-plaintext highlighter-rouge">let</code> keyword.</p>
 
 <h3 id="preturn"><code class="language-plaintext highlighter-rouge">preturn</code></h3>
 
@@ -217,10 +217,12 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">Line 03</code> Skip any whitespace</li>
   <li><code class="language-plaintext highlighter-rouge">Line 04</code> Check if the input begins with “AllOrNone” or “Partial”; if neither return “AllOrNone”</li>
-  <li><code class="language-plaintext highlighter-rouge">Line 05</code> Return true if #2 was “AllOrNone”</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 05</code> Return true if previous assignment was “AllOrNone”</li>
 </ul>
 
 <p>This parser is very similar to <code class="language-plaintext highlighter-rouge">parseTransaction</code> but it demonstrates use of the <code class="language-plaintext highlighter-rouge">preturn</code> primitive. <code class="language-plaintext highlighter-rouge">preturn</code> always succeeds with the provided value; here I use it as a default value <code class="language-plaintext highlighter-rouge">choice</code> parser by providing it as a final value (only used if all other choices fail).</p>
+
+<p>The code listing for this series can be found <a href="https://github.com/dlfelps/dsl-examples">here</a>.</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
@@ -239,7 +241,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <p><img src="/assets/images/ETRADE-mobile-stock-quote.png" alt="Stock App" title="Stock App" /></p>
 
-<p>But I have benefited from adopting internal domain specific languages. Using natural notions about the world within my code has made it easier to write, reason about, and revisit. If I have piqued your interest in domain modeling, I would recommend browsing the related topics below. I believe each topic has something different to offer so its worth browsing each perspective (like the <a href="https://en.wikipedia.org/wiki/Blind_men_and_an_elephant">parable of the blind men and the elephant</a>). My favorite reference is Scott Wlascin’s book <a href="https://pragprog.com/titles/swdddf/domain-modeling-made-functional/">Domain Modeling Made Functional</a>.</p>
+<p>I <em>DO</em> benefit from adopting internal domain specific languages. Using natural notions about the world within my code has made it easier to write, reason about, and revisit. If I have piqued your interest in domain modeling, I would recommend browsing the related topics below. I believe each topic has something different to offer so its worth browsing each perspective (like the <a href="https://en.wikipedia.org/wiki/Blind_men_and_an_elephant">parable of the blind men and the elephant</a>). My favorite reference is Scott Wlascin’s book <a href="https://pragprog.com/titles/swdddf/domain-modeling-made-functional/">Domain Modeling Made Functional</a>.</p>
 
 <table>
   <thead>
@@ -348,7 +350,9 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <h2 id="data-model-2a-concise-record-syntax">Data model #2a (Concise record syntax)</h2>
 
-<p>The expression above creates the same list of <code class="language-plaintext highlighter-rouge">Trade</code> records as in the first post without having to specify the record’s field names. This is accomplished through the use of a  <a href="https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/computation-expressions#extending-existing-builders-with-new-custom-operations">custom computation expression</a>. First we define a <code class="language-plaintext highlighter-rouge">TradeBuilder</code> class and provide an implementation for <code class="language-plaintext highlighter-rouge">Yield</code><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. Next we implement two custom operations (tagged with the <a href="https://fsharp.github.io/fsharp-core-docs/reference/fsharp-core-customoperationattribute.html"><code class="language-plaintext highlighter-rouge">CustomOperation</code></a> attribute). Due to the domain and record layout, I decided it was natural to use <code class="language-plaintext highlighter-rouge">Buy</code> and <code class="language-plaintext highlighter-rouge">Sell</code> as keywords to create the record. Each method takes 5 parameters: the first argument captures trades that were created above the current trade but within the same computation expression; it has type <code class="language-plaintext highlighter-rouge">seq&lt;Trade&gt;</code>. The next 4 parameters match those of the record (except <code class="language-plaintext highlighter-rouge">price</code>, which takes a <code class="language-plaintext highlighter-rouge">float</code> and is converted to <code class="language-plaintext highlighter-rouge">decimal</code>).</p>
+<p>The expression above creates the same list of <code class="language-plaintext highlighter-rouge">Trade</code> records as in the first post without having to specify the record’s field names. We might choose this data model if we want a <em>concise</em> record syntax.</p>
+
+<p>We accomplish this syntax by creating a <a href="https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/computation-expressions#extending-existing-builders-with-new-custom-operations">custom computation expression</a>. First, define a <code class="language-plaintext highlighter-rouge">TradeBuilder</code> class and provide an implementation for <code class="language-plaintext highlighter-rouge">Yield</code><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. Then implement two custom operations (tagged with the <a href="https://fsharp.github.io/fsharp-core-docs/reference/fsharp-core-customoperationattribute.html"><code class="language-plaintext highlighter-rouge">CustomOperation</code></a> attribute). Due to the domain and record layout, I decided it was natural to use <code class="language-plaintext highlighter-rouge">Buy</code> and <code class="language-plaintext highlighter-rouge">Sell</code> as keywords to create the record. Each method takes 5 parameters: the first argument captures trades that were created above the current trade but within the same computation expression; it has type <code class="language-plaintext highlighter-rouge">seq&lt;Trade&gt;</code>. The next 4 parameters match those of the record (except <code class="language-plaintext highlighter-rouge">price</code>, which takes a <code class="language-plaintext highlighter-rouge">float</code> and is converted to <code class="language-plaintext highlighter-rouge">decimal</code>).</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">module</span> <span class="nc">Trade</span> <span class="p">=</span> 
 
@@ -377,7 +381,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
     <span class="nc">Sell</span> <span class="mi">6</span> <span class="nc">GOOGL</span> <span class="mi">106</span><span class="p">.</span><span class="mi">08</span> <span class="nc">AllOrNone</span>
   <span class="p">}</span></code></pre></figure>
 
-<p>Then if we run <code class="language-plaintext highlighter-rouge">Trade.trademany trades</code> we get the correct output:</p>
+<p>Then if we run <code class="language-plaintext highlighter-rouge">Trade.tradeMany trades</code> we get the correct output:</p>
 
 <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="gp">You just purchased 4 shares of MSFT for a total cost of $</span>1,033.28.
 <span class="gp">You just sold 3 shares of META for a total earnings of $</span>476.13.
@@ -387,7 +391,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <h2 id="data-model-2b-concise-record-syntax-with-placeholders">Data model #2b (Concise record syntax with placeholders)</h2>
 
-<p>The approach above has a serious flaw - without specifying the field names it could be very easy to forget to include a field or put it in the wrong order. Imagine a record with 5 fields all the same type (e.g. decimal), how would you keep them straight? In some domains it may be appropriate to add a few placeholder keywords to help keep things straight. In this example, the following probably reads much better to domain experts:</p>
+<p>Our first attempt at a data model has a serious flaw - without specifying the field names it could be very easy to forget to include a field or put it in the wrong order. Imagine a record with 5 fields all the same type (e.g. decimal), how would you keep them straight? In some domains it may be appropriate to add a few placeholder keywords to help keep things straight. In this example, the following probably reads much better to domain experts:</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">trades</span> <span class="p">=</span> 
   <span class="n">trade</span><span class="p">{</span>
@@ -396,7 +400,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
     <span class="nc">Sell</span> <span class="mi">6</span> <span class="nc">SharesOf</span> <span class="nc">GOOGL</span> <span class="nc">At</span> <span class="mi">106</span><span class="p">.</span><span class="mi">08</span> <span class="nc">AllOrNone</span>
   <span class="p">}</span></code></pre></figure>
 
-<p>The <code class="language-plaintext highlighter-rouge">SharesOf</code> keyword tells you 2 things - the previous parameter was the number of shares and the following parameter is company. The <code class="language-plaintext highlighter-rouge">At</code> keyword separates the price constraints for the trade. This is still much more concise than specifying all the field names and it improves readability, but it may not be possible in all cases. To update  the <code class="language-plaintext highlighter-rouge">TradeBuilder</code> code we need to define two new types (<code class="language-plaintext highlighter-rouge">SharesOf</code> and <code class="language-plaintext highlighter-rouge">At</code>) and add them to the parameter list of each method.</p>
+<p>The <code class="language-plaintext highlighter-rouge">SharesOf</code> keyword tells you 2 things - the previous parameter was the number of shares and the following parameter is company. The <code class="language-plaintext highlighter-rouge">At</code> keyword separates the price constraints for the trade. This is still much more concise than specifying all the field names and it improves readability. To update  the <code class="language-plaintext highlighter-rouge">TradeBuilder</code> code we need to define two new types (<code class="language-plaintext highlighter-rouge">SharesOf</code> and <code class="language-plaintext highlighter-rouge">At</code>) and add them to the parameter list of each method.</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">type</span> <span class="nc">SharesOf</span> <span class="p">=</span> <span class="nc">SharesOf</span>
 <span class="k">type</span> <span class="nc">At</span> <span class="p">=</span> <span class="nc">At</span>
@@ -475,9 +479,11 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
       <span class="k">member</span> <span class="o">_.</span><span class="nc">Partial</span> <span class="p">(</span><span class="n">trade</span><span class="p">:</span> <span class="nc">Trade</span><span class="p">)</span> <span class="p">=</span> <span class="p">{</span><span class="n">trade</span> <span class="k">with</span> <span class="n">allOrNone</span> <span class="p">=</span> <span class="bp">false</span><span class="p">}</span>
         </code></pre></figure>
 
+<p>The code listing for this series can be found <a href="https://github.com/dlfelps/dsl-examples">here</a>.</p>
+
 <h2 id="some-other-examplesreferences">Some other examples/references</h2>
 
-<p>In my opinion, custom computational expressions are an underused feature of F#. They are much more flexible/powerful than we are showing here so if you would like learn more please check out the following resources that use custom computation expressions.</p>
+<p>In my opinion, custom computational expressions are an underutilized feature of F#. They are much more flexible/powerful than I are showing here so if you would like learn more please check out the following resources that use custom computation expressions.</p>
 
 <p><a href="https://github.com/panesofglass/computation-expressions-workshop">Computation expressions workshop</a></p>
 
@@ -509,36 +515,42 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <h2 id="study-domain">Study domain</h2>
 
-<p>I found the financial domain used in the book <a href="https://www.manning.com/books/dsls-in-action">DSLs in Action</a> to provide a good case study. But since I don’t have a book’s worth of content I will adopt a subset of the domain functionallity to demonstrate my examples. We will model a simplified stock transaction.</p>
+<p>To motivate this series of posts I chose a similar domain to that used in the book <a href="https://www.manning.com/books/dsls-in-action">DSLs in Action</a>. But since I don’t have a book’s worth of content I will only adopt a subset of this domain to demonstrate my examples. We will model a simplified stock transaction.</p>
 
 <table>
   <thead>
     <tr>
       <th style="text-align: center"><strong>Simple transaction</strong></th>
+      <th style="text-align: center"><strong>type</strong></th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td style="text-align: center">Buy/Sell</td>
+      <td style="text-align: center">discriminated union</td>
     </tr>
     <tr>
       <td style="text-align: center">Which stock?</td>
+      <td style="text-align: center">discriminated union</td>
     </tr>
     <tr>
       <td style="text-align: center">Price?</td>
+      <td style="text-align: center">decimal</td>
     </tr>
     <tr>
       <td style="text-align: center">How many?</td>
+      <td style="text-align: center">int</td>
     </tr>
     <tr>
       <td style="text-align: center">Partial/AllOrNone</td>
+      <td style="text-align: center">bool</td>
     </tr>
   </tbody>
 </table>
 
 <h2 id="data-model-1-record-type">Data model #1 (Record type)</h2>
 
-<p>We start by modeling it with an F# Record type. Let me say for the <em>record</em> that I use F# record types 98% of the time. I rarely have a good reason to use anything else. Here is one way to create the record type.</p>
+<p>We start by modeling the domain with an F# Record type. Let me say for the <em>record</em> that I use F# record types 98% of the time. I rarely have a good reason to use anything else. Here is one way to create the record type.</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">type</span> <span class="nc">Transaction</span> <span class="p">=</span> <span class="nc">Buy</span> <span class="p">|</span> <span class="nc">Sell</span>
 
@@ -550,8 +562,6 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
         <span class="n">numShares</span><span class="p">:</span> <span class="kt">int</span>
         <span class="n">price</span><span class="p">:</span> <span class="n">decimal</span>
         <span class="n">allOrNone</span><span class="p">:</span> <span class="kt">bool</span> <span class="p">}</span></code></pre></figure>
-
-<p>I first define the <code class="language-plaintext highlighter-rouge">Transaction</code> type as a discriminated union to determine if the record is a <code class="language-plaintext highlighter-rouge">Buy</code> or <code class="language-plaintext highlighter-rouge">Sell</code>. Next I enumerate the possible stocks with another discriminated union. Another approach would be to model this field as a string and validate the input with an Option type, but adding a new stock to the validation step would essentially be the same amount of work as the discriminated union approach. Then I model the number of shares as an <code class="language-plaintext highlighter-rouge">int</code> (although you could use a <code class="language-plaintext highlighter-rouge">uint</code> or even better create a <code class="language-plaintext highlighter-rouge">NaturalNumber</code> type, but I felt that unnecessary for this example). <code class="language-plaintext highlighter-rouge">Price</code> is a <code class="language-plaintext highlighter-rouge">decimal</code> type and <code class="language-plaintext highlighter-rouge">allOrNone</code> is <code class="language-plaintext highlighter-rouge">bool</code> (I actually prefer a discriminated union for this field, but chose <code class="language-plaintext highlighter-rouge">bool</code> to mix it up).</p>
 
 <p>And this is what a list of trades would look like:</p>
 
@@ -600,6 +610,8 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 <span class="gp">You just sold 6 shares of GOOGL for a total earnings of $</span>636.48.
 <span class="go">-------------------------------------------------------------------
 </span><span class="gp">You just executed a series of trades that earned you $</span>79.33.</code></pre></figure>
+
+<p>The code listing for this series can be found <a href="https://github.com/dlfelps/dsl-examples">here</a>.</p>
 
 <h2 id="next">Next</h2>
 

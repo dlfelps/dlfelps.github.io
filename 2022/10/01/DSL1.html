@@ -170,7 +170,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          9 minute read
+          8 minute read
         
       </span>
     
@@ -200,36 +200,42 @@
 
 <h2 id="study-domain">Study domain</h2>
 
-<p>I found the financial domain used in the book <a href="https://www.manning.com/books/dsls-in-action">DSLs in Action</a> to provide a good case study. But since I don’t have a book’s worth of content I will adopt a subset of the domain functionallity to demonstrate my examples. We will model a simplified stock transaction.</p>
+<p>To motivate this series of posts I chose a similar domain to that used in the book <a href="https://www.manning.com/books/dsls-in-action">DSLs in Action</a>. But since I don’t have a book’s worth of content I will only adopt a subset of this domain to demonstrate my examples. We will model a simplified stock transaction.</p>
 
 <table>
   <thead>
     <tr>
       <th style="text-align: center"><strong>Simple transaction</strong></th>
+      <th style="text-align: center"><strong>type</strong></th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td style="text-align: center">Buy/Sell</td>
+      <td style="text-align: center">discriminated union</td>
     </tr>
     <tr>
       <td style="text-align: center">Which stock?</td>
+      <td style="text-align: center">discriminated union</td>
     </tr>
     <tr>
       <td style="text-align: center">Price?</td>
+      <td style="text-align: center">decimal</td>
     </tr>
     <tr>
       <td style="text-align: center">How many?</td>
+      <td style="text-align: center">int</td>
     </tr>
     <tr>
       <td style="text-align: center">Partial/AllOrNone</td>
+      <td style="text-align: center">bool</td>
     </tr>
   </tbody>
 </table>
 
 <h2 id="data-model-1-record-type">Data model #1 (Record type)</h2>
 
-<p>We start by modeling it with an F# Record type. Let me say for the <em>record</em> that I use F# record types 98% of the time. I rarely have a good reason to use anything else. Here is one way to create the record type.</p>
+<p>We start by modeling the domain with an F# Record type. Let me say for the <em>record</em> that I use F# record types 98% of the time. I rarely have a good reason to use anything else. Here is one way to create the record type.</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">type</span> <span class="nc">Transaction</span> <span class="p">=</span> <span class="nc">Buy</span> <span class="p">|</span> <span class="nc">Sell</span>
 
@@ -241,8 +247,6 @@
         <span class="n">numShares</span><span class="p">:</span> <span class="kt">int</span>
         <span class="n">price</span><span class="p">:</span> <span class="n">decimal</span>
         <span class="n">allOrNone</span><span class="p">:</span> <span class="kt">bool</span> <span class="p">}</span></code></pre></figure>
-
-<p>I first define the <code class="language-plaintext highlighter-rouge">Transaction</code> type as a discriminated union to determine if the record is a <code class="language-plaintext highlighter-rouge">Buy</code> or <code class="language-plaintext highlighter-rouge">Sell</code>. Next I enumerate the possible stocks with another discriminated union. Another approach would be to model this field as a string and validate the input with an Option type, but adding a new stock to the validation step would essentially be the same amount of work as the discriminated union approach. Then I model the number of shares as an <code class="language-plaintext highlighter-rouge">int</code> (although you could use a <code class="language-plaintext highlighter-rouge">uint</code> or even better create a <code class="language-plaintext highlighter-rouge">NaturalNumber</code> type, but I felt that unnecessary for this example). <code class="language-plaintext highlighter-rouge">Price</code> is a <code class="language-plaintext highlighter-rouge">decimal</code> type and <code class="language-plaintext highlighter-rouge">allOrNone</code> is <code class="language-plaintext highlighter-rouge">bool</code> (I actually prefer a discriminated union for this field, but chose <code class="language-plaintext highlighter-rouge">bool</code> to mix it up).</p>
 
 <p>And this is what a list of trades would look like:</p>
 
@@ -291,6 +295,8 @@
 <span class="gp">You just sold 6 shares of GOOGL for a total earnings of $</span>636.48.
 <span class="go">-------------------------------------------------------------------
 </span><span class="gp">You just executed a series of trades that earned you $</span>79.33.</code></pre></figure>
+
+<p>The code listing for this series can be found <a href="https://github.com/dlfelps/dsl-examples">here</a>.</p>
 
 <h2 id="next">Next</h2>
 
