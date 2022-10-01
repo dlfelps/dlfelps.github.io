@@ -170,7 +170,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          14 minute read
+          13 minute read
         
       </span>
     
@@ -198,7 +198,7 @@
 
 <p>This post demonstrates how to create a custom <a href="https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/computation-expressions">computation expression</a> to capture data. You may have already used computation expressions without knowing it -  <code class="language-plaintext highlighter-rouge">seq {}</code> and <code class="language-plaintext highlighter-rouge">async {}</code> are both built using computation expressions. Computation expressions  provide users with a way to extend F#. This ability is most similar to macros or metaprogramming abilities of other languages (e.g. LISP, Rust, Ruby, Template Haskell), but I find computation expressions more straightforward to understand and use. In this post, we will see how to create three kinds of computation expressions to model our data.</p>
 
-<p>Before we learn how to create a custom computation expression, it is best to understand <em>why</em> we would want to do so. Our first example uses computation expressions to create a concise record syntax.</p>
+<p>Our first example uses computation expressions to create a concise record syntax.</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">trades</span> <span class="p">=</span> 
   <span class="n">trade</span><span class="p">{</span>
@@ -259,7 +259,7 @@
     <span class="nc">Sell</span> <span class="mi">6</span> <span class="nc">SharesOf</span> <span class="nc">GOOGL</span> <span class="nc">At</span> <span class="mi">106</span><span class="p">.</span><span class="mi">08</span> <span class="nc">AllOrNone</span>
   <span class="p">}</span></code></pre></figure>
 
-<p>The <code class="language-plaintext highlighter-rouge">SharesOf</code> keyword tells you 2 things - the previous parameter was the number of shares and the following parameter is company. The <code class="language-plaintext highlighter-rouge">At</code> keyword separates the price constraints for the trade. This is still much more concise than specifying all the field names and it improves readability. To update  the <code class="language-plaintext highlighter-rouge">TradeBuilder</code> code we need to define two new types (<code class="language-plaintext highlighter-rouge">SharesOf</code> and <code class="language-plaintext highlighter-rouge">At</code>) and add them to the parameter list of each method.</p>
+<p>The <code class="language-plaintext highlighter-rouge">SharesOf</code> keyword tells you 2 things - the previous parameter was the number of shares and the following parameter is the stock ticker. The <code class="language-plaintext highlighter-rouge">At</code> keyword separates the price constraints for the trade. This is still much more concise than specifying all the field names and it improves readability. To update  the <code class="language-plaintext highlighter-rouge">TradeBuilder</code> code we need to define two new types (<code class="language-plaintext highlighter-rouge">SharesOf</code> and <code class="language-plaintext highlighter-rouge">At</code>) and add them to the parameter list of each method.</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">type</span> <span class="nc">SharesOf</span> <span class="p">=</span> <span class="nc">SharesOf</span>
 <span class="k">type</span> <span class="nc">At</span> <span class="p">=</span> <span class="nc">At</span>
@@ -309,7 +309,7 @@
   <span class="p">]</span>
         </code></pre></figure>
 
-<p>As you might have guessed, the <code class="language-plaintext highlighter-rouge">TradeBuilder</code> code is significantly different. <code class="language-plaintext highlighter-rouge">Yield</code> now provides the default record and we must specify custom operations for <code class="language-plaintext highlighter-rouge">Buy</code>, <code class="language-plaintext highlighter-rouge">Sell</code>, <code class="language-plaintext highlighter-rouge">SharesOf</code>, <code class="language-plaintext highlighter-rouge">At</code>, <code class="language-plaintext highlighter-rouge">AllOrNone</code>, and <code class="language-plaintext highlighter-rouge">Partial</code>. Each method takes the current trade and updates the corresponding field.</p>
+<p>As you might have guessed, the code for this data model is significantly different. <code class="language-plaintext highlighter-rouge">Yield</code> now provides the default record and we must specify custom operations for <code class="language-plaintext highlighter-rouge">Buy</code>, <code class="language-plaintext highlighter-rouge">Sell</code>, <code class="language-plaintext highlighter-rouge">SharesOf</code>, <code class="language-plaintext highlighter-rouge">At</code>, <code class="language-plaintext highlighter-rouge">AllOrNone</code>, and <code class="language-plaintext highlighter-rouge">Partial</code>. Each method takes the current trade and updates the corresponding field.</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">module</span> <span class="nc">Trade</span> <span class="p">=</span> 
 
@@ -342,7 +342,7 @@
 
 <h2 id="some-other-examplesreferences">Some other examples/references</h2>
 
-<p>In my opinion, custom computational expressions are an underutilized feature of F#. They are much more flexible/powerful than I are showing here so if you would like learn more please check out the following resources that use custom computation expressions.</p>
+<p>In my opinion, custom computational expressions are an underutilized feature of F#. They are much more flexible/powerful than I am showing here so if you would like learn more please check out the following resources that use custom computation expressions.</p>
 
 <p><a href="https://github.com/panesofglass/computation-expressions-workshop">Computation expressions workshop</a></p>
 

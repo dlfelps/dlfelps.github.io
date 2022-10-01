@@ -198,7 +198,7 @@
 
 <h2 id="parser-combinators">Parser combinators</h2>
 
-<p>The most common way to load text data is a delimted text loader, but this only works if your input is structured (i.e. every column of data is aligned). For this post, I want to use a more powerful tool - parser combinators. Parser combinators implement a formal grammar over the input, which we need to interpret a domain specific language. But this post is not a full parser combinator tutorial. In fact, we will use the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from the <a href="https://github.com/stephan-tolksdorf/fparsec">FParsec</a> library instead of the more tradional (and recommended) parser combinator symbols (e.g <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&lt;&lt;.</code>, … ). For a deeper dive, see these tutorials <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. To demonstrate the power of this approach, I will use a parser that interpret the syntax from either data model 2a or 2b from <a href="/2022/10/02/DSL2.html">post #2</a> in this series. Here are a few examples of valid inputs:</p>
+<p>The most common way to load text data is a delimted text loader, but this only works if your input is structured (i.e. every column of data is aligned). For this post, I want to use a more powerful tool - parser combinators. Parser combinators implement a formal grammar over the input, which we need to interpret a domain specific language. But this post is not a full parser combinator tutorial. In fact, we will use the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from the <a href="https://github.com/stephan-tolksdorf/fparsec">FParsec</a> library instead of the more tradional (and recommended) parser combinator symbols (e.g <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&lt;&lt;.</code>, … ). For a deeper dive, see these tutorials <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. To demonstrate the power of this approach, I will use a parser that can interpret the syntax from either data model 2a or 2b from <a href="/2022/10/02/DSL2.html">post #2</a> in this series. Here are a few examples of valid inputs:</p>
 
 <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="go">Buy 4 SharesOf MSFT At 258.32 AllOrNone
 Sell 3 SharesOf META At 158.71 
@@ -258,7 +258,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <h2 id="step-1-individual-token-parsers">Step 1: individual token parsers</h2>
 
-<p>Each of snippet of code below is a parser that detects a specific piece of our domain specific language. We will look at a few of these smaller parsers to highlight some fundamental parsing elements. The full code listing can be found <a href="https://github.com/dlfelps/dsl-examples/blob/main/exp08-parser-combinator.fsx">here</a>. The first snippet detects the token <em>Buy</em> or <em>Sell</em>.</p>
+<p>Each of snippet of code below is a parser that detects a specific token from our domain specific language. We will look at a few of these smaller parsers to highlight some fundamental parsing elements. The full code listing can be found <a href="https://github.com/dlfelps/dsl-examples/blob/main/exp08-parser-combinator.fsx">here</a>. The first snippet detects the token <em>Buy</em> or <em>Sell</em>.</p>
 
 <h3 id="do-let-pstring-choice"><code class="language-plaintext highlighter-rouge">do!</code>, <code class="language-plaintext highlighter-rouge">let!</code>, <code class="language-plaintext highlighter-rouge">pstring</code>, <code class="language-plaintext highlighter-rouge">choice</code></h3>
 
@@ -316,7 +316,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
   <span class="p">}</span> 
 </pre></td></tr></tbody></table></code></pre></figure>
 
-<p>Stepping through this snipping:</p>
+<p>Stepping through this snippet:</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">Line 03</code> Skip any whitespace</li>
   <li><code class="language-plaintext highlighter-rouge">Line 04</code> Read an integer</li>
@@ -414,7 +414,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <p>This parser is very similar to <code class="language-plaintext highlighter-rouge">parseTransaction</code> but it demonstrates use of the <code class="language-plaintext highlighter-rouge">preturn</code> primitive. <code class="language-plaintext highlighter-rouge">preturn</code> always succeeds with the provided value; here I use it as a default value <code class="language-plaintext highlighter-rouge">choice</code> parser by providing it as a final value (only used if all other choices fail).</p>
 
-<p>The code listing for this series can be found <a href="https://github.com/dlfelps/dsl-examples">here</a>.</p>
+<p>At this point it is probably worthwhile to revist <a href="#step-2-parsetrade">Step 2</a> for a better understanding of the composition of <code class="language-plaintext highlighter-rouge">parseTrade</code>. The code listing for this series can be found <a href="https://github.com/dlfelps/dsl-examples">here</a>.</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
@@ -433,7 +433,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <p><img src="/assets/images/ETRADE-mobile-stock-quote.png" alt="Stock App" title="Stock App" /></p>
 
-<p>I <em>DO</em> benefit from adopting internal domain specific languages. Using natural notions about the world within my code has made it easier to write, reason about, and revisit. If I have piqued your interest in domain modeling, I would recommend browsing the related topics below. I believe each topic has something different to offer so its worth browsing each perspective (like the <a href="https://en.wikipedia.org/wiki/Blind_men_and_an_elephant">parable of the blind men and the elephant</a>). My favorite reference is Scott Wlascin’s book <a href="https://pragprog.com/titles/swdddf/domain-modeling-made-functional/">Domain Modeling Made Functional</a>.</p>
+<p>On the other hand, I have benefited from using <strong>embedded domain modeling</strong>. Using natural notions about the world within my code has made it easier to write, reason about, and revisit. If I have piqued your interest in domain modeling, then I would recommend browsing the related topics below. I believe each topic has something different to offer  (like the <a href="https://en.wikipedia.org/wiki/Blind_men_and_an_elephant">parable of the blind men and the elephant</a>).</p>
 
 <table>
   <thead>

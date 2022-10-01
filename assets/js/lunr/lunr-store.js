@@ -36,7 +36,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 06",
-        "excerpt":"The first post in the domain specific language series explores the basics of domain modeling and using record types in F#. Introduction A recent study1 found that programmers who used functional, statically-typed languages often started a programming task by constructing types to model their problem domain. I do too, but...","categories": [],
+        "excerpt":"The first post in the domain specific language series explores the basics of domain modeling using record types in F#. Introduction A recent study1 found that programmers who used functional, statically-typed languages often started a programming task by constructing types to model their problem domain. I do too, but it’s...","categories": [],
         "tags": ["net","dsl","ddd"],
         "url": "/2022/10/01/DSL1.html",
         "teaser": null
