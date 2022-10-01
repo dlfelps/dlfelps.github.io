@@ -3,3 +3,4 @@ _site
 .jekyll-metadata
 *.lock
 .jekyll-cache
+*:Zone.Identifier
