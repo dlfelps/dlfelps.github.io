@@ -48,7 +48,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 08",
-        "excerpt":"The final post explains how to use an external domain specific language to load records after compile time! Introduction In the previous two posts we explored several ways to model a simple stock trading domain using sytax that is available (or extendable) within F#. This can be described as an...","categories": [],
+        "excerpt":"The final post explains how to use an external domain specific language to load records after compile time! Introduction In the previous two posts we explored several ways to model a simple stock trading domain using syntax that is available (or extendable) within F#. This can be described as an...","categories": [],
         "tags": ["net","dsl","ddd"],
         "url": "/2022/10/03/DSL3.html",
         "teaser": null
