@@ -40,4 +40,16 @@ var store = [{
         "tags": ["net","dsl","ddd"],
         "url": "/2022/10/01/DSL1.html",
         "teaser": null
+      },{
+        "title": "Experiment 07",
+        "excerpt":"The second post in the domain specific language series demonstrates how you can use F# computation expressions to create an embedded language. Introduction Please read the first post in this series before continuing. This post demonstrates how to create a custom computation expression to capture data. You may have already...","categories": [],
+        "tags": ["net","dsl","ddd"],
+        "url": "/2022/10/02/DSL2.html",
+        "teaser": null
+      },{
+        "title": "Experiment 08",
+        "excerpt":"The final post explains how to use an external domain specific language to load records after compile time! Introduction In the previous two posts we explored several ways to model a simple stock trading domain using sytax that is available (or extendable) within F#. This can be described as an...","categories": [],
+        "tags": ["net","dsl","ddd"],
+        "url": "/2022/10/03/DSL3.html",
+        "teaser": null
       }]

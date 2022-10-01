@@ -1,0 +1,630 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 08 - .NET Experiments</title>
+<meta name="description" content="The final post explains how to use an external domain specific language to load records after compile time!">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 08">
+<meta property="og:url" content="https://dlfelps.github.io/2022/10/03/DSL3.html">
+
+
+  <meta property="og:description" content="The final post explains how to use an external domain specific language to load records after compile time!">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-10-03T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2022/10/03/DSL3.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Daniel Felps",
+      "url": "https://dlfelps.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 08">
+    <meta itemprop="description" content="The final post explains how to use an external domain specific language to load records after compile time!">
+    <meta itemprop="datePublished" content="2022-10-03T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Experiment 08
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-10-03T00:00:00+00:00">October 3, 2022</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          24 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li><li><a href="#parser-combinators">Parser combinators</a></li><li><a href="#parser-combinator-workflow-overview">Parser combinator workflow overview</a></li><li><a href="#step-3-runparseronfile">Step 3: runParserOnFile</a></li><li><a href="#step-2-parsetrade">Step 2: parseTrade</a></li><li><a href="#step-1-individual-token-parsers">Step 1: individual token parsers</a><ul><li><a href="#do-let-pstring-choice">do!, let!, pstring, choice</a></li><li><a href="#pint32-pfloat">pint32, pfloat</a></li><li><a href="#skipmany-return">skipMany, return!</a></li><li><a href="#many1-asciiupper">many1, asciiUpper</a></li><li><a href="#preturn">preturn</a></li></ul></li><li><a href="#conclusion">Conclusion</a><ul><li><a href="#footnotes">Footnotes</a></li></ul></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <p>The final post explains how to use an external <strong>domain specific language</strong> to load records after compile time!</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>In the previous two posts we explored several ways to model a simple stock trading domain using sytax that is available (or extendable) within F#. This can be described as an <em>internal</em> domain specific language; the biggest limitation with this approach is that all data must be entered before the program is compiled - not very realistic if you want to trade stocks regularly. This post explores how to create an <em>external</em> domain specific language that can be loaded after compile time.</p>
+
+<h2 id="parser-combinators">Parser combinators</h2>
+
+<p>The most common way to load text data is a delimted text loader, but this only works if your input is structured (i.e. every column of data is aligned). For this post, I want to use a more powerful tool - parser combinators. Parser combinators implement a formal grammar over the input, which can describe a more expressive domain specific language. But this post is not a full parser combinators tutorial. In fact, we will use the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from the <a href="https://github.com/stephan-tolksdorf/fparsec">FParsec</a> library instead of the more tradional (and recommended) parser combinator symbols (e.g <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&lt;&lt;.</code>, … ). For a deeper dive, see these tutorials <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. To demonstrate the power of this approach, I will use a parser that can handle the consice record sytax with or without the placeholder keywords. Accepting multiple forms of input could be useful if you want to have backwards compatibility or provide additional flexibility for users. Here are a few valid inputs:</p>
+
+<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="go">Buy 4 SharesOf MSFT At 258.32 AllOrNone
+Sell 3 SharesOf META At 158.71 
+Sell 6 GOOGL 106.08</span></code></pre></figure>
+
+<h2 id="parser-combinator-workflow-overview">Parser combinator workflow overview</h2>
+
+<p>I find it easiest to follow this code by starting at the result and working backwards. Here is an overview of how the pieces fit together before we dig into the code (arrows are labeled with output type).</p>
+
+<p><img src="/assets/images/mermaid-diagram-2022-09-27-070837.svg" alt="Parser combinator program flow" title="Parser combinator program flow" /></p>
+
+<h2 id="step-3-runparseronfile">Step 3: runParserOnFile</h2>
+
+<p>We begin with the final step - to run the complete parser on our input file. Here is the full snippet:</p>
+
+<figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">result</span><span class="p">:</span> <span class="nc">ParserResult</span><span class="p">&lt;</span><span class="nc">Trade</span> <span class="kt">list</span><span class="p">,</span><span class="kt">unit</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">runParserOnFile</span> <span class="p">(</span><span class="n">many</span> <span class="n">parseTrade</span><span class="p">)</span> <span class="bp">()</span> <span class="s2">"input.txt"</span> <span class="nn">System</span><span class="p">.</span><span class="nn">Text</span><span class="p">.</span><span class="nn">Encoding</span><span class="p">.</span><span class="nc">ASCII</span>
+
+<span class="k">let</span> <span class="n">trades</span><span class="p">:</span> <span class="nc">Trade</span> <span class="kt">list</span> <span class="p">=</span> 
+  <span class="k">match</span> <span class="n">result</span> <span class="k">with</span>
+  <span class="p">|</span> <span class="nc">Success</span> <span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nc">Trade</span> <span class="kt">list</span><span class="o">,_,_)</span> <span class="p">-&gt;</span> <span class="n">x</span>
+  <span class="p">|</span> <span class="p">_</span> <span class="p">-&gt;</span> <span class="bp">[]</span></code></pre></figure>
+
+<p>The code uses the a built-in <code class="language-plaintext highlighter-rouge">FParsec</code> function called <code class="language-plaintext highlighter-rouge">runParserOnFile</code>, which takes the following arguments:</p>
+<ul>
+  <li>parser <code class="language-plaintext highlighter-rouge">(many parseTrade)</code></li>
+  <li>initial user state <code class="language-plaintext highlighter-rouge">()</code></li>
+  <li>input file <code class="language-plaintext highlighter-rouge">input.txt</code></li>
+  <li>file encoding  <code class="language-plaintext highlighter-rouge">System.Text.Encoding.ASCII</code></li>
+</ul>
+
+<p>The parser argument combines two functions: the built-in <code class="language-plaintext highlighter-rouge">FParsec</code> function <code class="language-plaintext highlighter-rouge">many</code><sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup> and our custom parser <code class="language-plaintext highlighter-rouge">parseTrade</code>, which we describe in the next section.  If the file is parsed successfully then we can extract our list of trades from the <code class="language-plaintext highlighter-rouge">ParseResult</code> type.</p>
+
+<h2 id="step-2-parsetrade">Step 2: parseTrade</h2>
+
+<p>There is a lot going on in this function, but the basic idea is that we are combining<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup> many simple parsers into a more complex parser that captures the grammar/rules of our domain specific language. Here is the finished parser:</p>
+
+<figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">parseTrade</span> <span class="p">=</span>
+  <span class="n">parse</span> <span class="p">{</span>
+    <span class="k">let</span><span class="o">!</span> <span class="n">buyOrSell</span> <span class="p">=</span> <span class="n">parseTransaction</span>
+    <span class="k">let</span><span class="o">!</span> <span class="n">numShares</span> <span class="p">=</span> <span class="n">parseNumShares</span>         
+    <span class="k">do</span><span class="o">!</span> <span class="n">optionalIgnore</span> <span class="s2">"SharesOf"</span>    
+    <span class="k">let</span><span class="o">!</span> <span class="n">ticker</span> <span class="p">=</span> <span class="n">parseTicker</span>
+    <span class="k">do</span><span class="o">!</span> <span class="n">optionalIgnore</span> <span class="s2">"At"</span>
+    <span class="k">let</span><span class="o">!</span> <span class="n">price</span> <span class="p">=</span> <span class="n">parsePrice</span>
+    <span class="k">let</span><span class="o">!</span> <span class="n">allOrNone</span> <span class="p">=</span> <span class="n">parsePortion</span> 
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">buyOrSell</span> <span class="p">=</span> <span class="n">buyOrSell</span><span class="p">;</span> <span class="n">numShares</span> <span class="p">=</span> <span class="n">numShares</span><span class="p">;</span> <span class="n">ticker</span> <span class="p">=</span> <span class="n">ticker</span><span class="p">;</span> <span class="n">price</span> <span class="p">=</span> <span class="n">price</span><span class="p">;</span> <span class="n">allOrNone</span> <span class="p">=</span> <span class="n">allOrNone</span><span class="p">}</span>
+  <span class="p">}</span></code></pre></figure>
+
+<p>The <code class="language-plaintext highlighter-rouge">parse</code> computation expression does a lot for us here. Under the hood, it threads together the sequence of assignments so that consecutive parsers are linked. The basic idea is shown in the diagram below.</p>
+
+<p><img src="/assets/images/mermaid-diagram-2022-09-29-100911.svg" alt="Parse computation expression" title="Parse computation expression" /></p>
+
+<p>Each call parses a different part of the transaction. We will examine a few of these parsers more closely in the following section, but for now just try to understand how this works at a high level.</p>
+
+<p><code class="language-plaintext highlighter-rouge">parseTrade</code> proceeds by parsing (or ignoring) the necessary values to create a <code class="language-plaintext highlighter-rouge">Trade</code> type and return it<sup id="fnref:5" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">5</a></sup>.</p>
+
+<h2 id="step-1-individual-token-parsers">Step 1: individual token parsers</h2>
+
+<p>Each of snippet of code below is a parser that detects a specific piece of our domain specific language. We will look at a few of these smaller parsers to highlight some fundamental parsing elements. The full code listing can be found <a href="https://github.com/dlfelps/dsl-examples/blob/main/exp08-parser-combinator.fsx">here</a>. The first snippet detects the token <em>Buy</em> or <em>Sell</em>.</p>
+
+<h3 id="do-let-pstring-choice"><code class="language-plaintext highlighter-rouge">do!</code>, <code class="language-plaintext highlighter-rouge">let!</code>, <code class="language-plaintext highlighter-rouge">pstring</code>, <code class="language-plaintext highlighter-rouge">choice</code></h3>
+
+<figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="k">let</span> <span class="n">convertTransaction</span> <span class="n">inputString</span> <span class="p">=</span> 
+  <span class="k">match</span> <span class="n">inputString</span> <span class="k">with</span>
+  <span class="p">|</span> <span class="s2">"Sell"</span> <span class="p">-&gt;</span> <span class="nc">Sell</span>
+  <span class="p">|</span> <span class="p">_</span> <span class="p">-&gt;</span> <span class="nc">Buy</span>
+
+<span class="k">let</span> <span class="n">parseTransaction</span> <span class="p">=</span> 
+  <span class="n">parse</span> <span class="p">{</span>
+    <span class="k">do</span><span class="o">!</span> <span class="n">spaces</span>
+    <span class="k">let</span><span class="o">!</span> <span class="n">buyOrSellString</span> <span class="p">=</span> <span class="n">choice</span> <span class="o">[(</span><span class="n">pstring</span> <span class="s2">"Buy"</span><span class="o">);(</span><span class="n">pstring</span> <span class="s2">"Sell"</span><span class="o">)]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">convertTransaction</span> <span class="n">buyOrSellString</span><span class="p">)</span>
+  <span class="p">}</span> 
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Notice that <code class="language-plaintext highlighter-rouge">parseTransaction</code> is itself another <code class="language-plaintext highlighter-rouge">parse</code> computation expression. First I will describe the purpose of each line, then we will discuss syntax.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Line 08</code> Skip any whitespace</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 09</code> Check if the input begins with “Buy” or “Sell”</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 10</code> If successful, convert the string to its corresponding type (e.g. <code class="language-plaintext highlighter-rouge">Buy</code> type) and return</li>
+</ul>
+
+<p>Now let’s revist any new syntax. The <code class="language-plaintext highlighter-rouge">do</code> keyword in F# requires the following expression to return <code class="language-plaintext highlighter-rouge">unit</code>. Similarly, the <code class="language-plaintext highlighter-rouge">do!</code> notation on <code class="language-plaintext highlighter-rouge">Line 08</code> is used in a computation expression when the following expression returns a “unit-like” value<sup id="fnref:6" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">6</a></sup>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Line 09</code> uses two new commands. <code class="language-plaintext highlighter-rouge">pstring</code> creates a parser that succeeds if it encounters its arguement (i.e. “Buy” or “Sell”) and fails otherwise. <code class="language-plaintext highlighter-rouge">choice</code> composes these two parsers in a way such that it returns the value of the first successful parser. If both fail then the <code class="language-plaintext highlighter-rouge">choice</code> parser fails.</p>
+
+<p>The difference between <code class="language-plaintext highlighter-rouge">let</code> and <code class="language-plaintext highlighter-rouge">let!</code> is analagous to <code class="language-plaintext highlighter-rouge">do</code> and <code class="language-plaintext highlighter-rouge">do!</code> - <code class="language-plaintext highlighter-rouge">let!</code> binds a name to an value that is within a computation expression context <sup id="fnref:7" role="doc-noteref"><a href="#fn:7" class="footnote" rel="footnote">7</a></sup>.</p>
+
+<h3 id="pint32-pfloat"><code class="language-plaintext highlighter-rouge">pint32</code>, <code class="language-plaintext highlighter-rouge">pfloat</code></h3>
+
+<figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="k">let</span> <span class="n">parseNumShares</span> <span class="p">=</span> 
+  <span class="n">parse</span> <span class="p">{</span>
+    <span class="k">do</span><span class="o">!</span> <span class="n">spaces</span>
+    <span class="k">let</span><span class="o">!</span> <span class="n">numShares</span> <span class="p">=</span> <span class="n">pint32</span>
+    <span class="k">return</span> <span class="n">numShares</span>
+  <span class="p">}</span> 
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Stepping through this snipping:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Line 03</code> Skip any whitespace</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 04</code> Read an integer</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 05</code> Return the integer</li>
+</ul>
+
+<p>You will recognize most of the syntax here, with the exception of <code class="language-plaintext highlighter-rouge">pint32</code>, which parses 1 or more digits as an integer. Although not shown here <code class="language-plaintext highlighter-rouge">parsePrice</code> uses the related function <code class="language-plaintext highlighter-rouge">pfloat</code>.</p>
+
+<h3 id="skipmany-return"><code class="language-plaintext highlighter-rouge">skipMany</code>, <code class="language-plaintext highlighter-rouge">return!</code></h3>
+
+<figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="k">let</span> <span class="n">optionalIgnore</span> <span class="n">str</span> <span class="p">=</span> 
+  <span class="n">parse</span> <span class="p">{</span>
+    <span class="k">do</span><span class="o">!</span> <span class="n">spaces</span>
+    <span class="k">return</span><span class="o">!</span> <span class="n">skipMany</span> <span class="p">(</span><span class="n">pstring</span> <span class="n">str</span><span class="p">)</span>    
+  <span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>This code snippet:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Line 03</code> Skips any whitespace</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 04</code> Creates a parser for the function argument <code class="language-plaintext highlighter-rouge">str</code> and skips it if found and returns <em>without</em> wrapping in a parser context</li>
+</ul>
+
+<p>This function is used to create parsers for our placeholder types (i.e. <code class="language-plaintext highlighter-rouge">SharesOf</code> and <code class="language-plaintext highlighter-rouge">At</code>). <code class="language-plaintext highlighter-rouge">skipMany</code> will apply the parser 0 or more times and throw away any tokens found. The careful reader will also notice the use of <code class="language-plaintext highlighter-rouge">return!</code> instead of <code class="language-plaintext highlighter-rouge">return</code>. The simple rule is use <code class="language-plaintext highlighter-rouge">return</code> if you need to wrap a value in the context of the computation expression (i.e. a parser) and use <code class="language-plaintext highlighter-rouge">return!</code> if the value already has the correct context<sup id="fnref:8" role="doc-noteref"><a href="#fn:8" class="footnote" rel="footnote">8</a></sup>.</p>
+
+<h3 id="many1-asciiupper"><code class="language-plaintext highlighter-rouge">many1</code>, <code class="language-plaintext highlighter-rouge">asciiUpper</code></h3>
+
+<figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="code"><pre><span class="k">let</span> <span class="n">convertTicker</span> <span class="n">inputString</span> <span class="p">=</span> 
+  <span class="k">match</span> <span class="n">inputString</span> <span class="k">with</span>
+  <span class="p">|</span> <span class="s2">"GOOGL"</span> <span class="p">-&gt;</span> <span class="nc">GOOGL</span>
+  <span class="p">|</span> <span class="s2">"META"</span> <span class="p">-&gt;</span> <span class="nc">META</span>
+  <span class="p">|</span> <span class="p">_</span> <span class="p">-&gt;</span> <span class="nc">MSFT</span>
+
+<span class="k">let</span> <span class="n">parseTicker</span> <span class="p">=</span> 
+  <span class="n">parse</span><span class="p">{</span>
+    <span class="k">do</span><span class="o">!</span> <span class="n">spaces</span>
+    <span class="k">let</span><span class="o">!</span> <span class="n">tickerCharList</span> <span class="p">=</span> <span class="p">(</span><span class="n">many1</span> <span class="n">asciiUpper</span><span class="p">)</span> 
+    <span class="k">let</span> <span class="n">tickerString</span> <span class="p">=</span>  <span class="n">tickerCharList</span> <span class="p">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> <span class="kt">string</span> <span class="p">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">reduce</span> <span class="o">(+)</span>
+    <span class="k">let</span> <span class="n">ticker</span> <span class="p">=</span> <span class="n">convertTicker</span> <span class="n">tickerString</span>
+    <span class="k">return</span> <span class="n">ticker</span>
+  <span class="p">}</span> 
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>This code snippet:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Line 09</code> Skips any whitespace</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 10</code> Creates a parser that accepts one or more capitalized characters in ‘A’ - ‘Z’</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 11</code> Converts the character list into a single string</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 12</code> Maps the string to the corresponding <code class="language-plaintext highlighter-rouge">Stock</code> type</li>
+</ul>
+
+<p>This parser demonstrates two more primitive functions - <code class="language-plaintext highlighter-rouge">many1</code> and <code class="language-plaintext highlighter-rouge">asciiUpper</code>. Combined they create a parser that accepts 1 or more upper case ASCII characters. The other notable feature about <code class="language-plaintext highlighter-rouge">parseTicker</code> is that it mixes the use of <code class="language-plaintext highlighter-rouge">let!</code> and <code class="language-plaintext highlighter-rouge">let</code>. The <code class="language-plaintext highlighter-rouge">let!</code> on <code class="language-plaintext highlighter-rouge">Line 10</code> unwraps the parser context from the expresson on the right to bind <code class="language-plaintext highlighter-rouge">ticketCharList</code> to a list of characters (instead of a Parser that returns a list of characters). The following two lines perform operations on regular F# types so they use the <code class="language-plaintext highlighter-rouge">let</code> keyword.</p>
+
+<h3 id="preturn"><code class="language-plaintext highlighter-rouge">preturn</code></h3>
+
+<figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="k">let</span> <span class="n">parsePortion</span> <span class="p">=</span> 
+  <span class="n">parse</span> <span class="p">{</span>
+    <span class="k">do</span><span class="o">!</span> <span class="n">spaces</span>
+    <span class="k">let</span><span class="o">!</span> <span class="n">portion</span> <span class="p">=</span> <span class="n">choice</span> <span class="o">[(</span><span class="n">pstring</span> <span class="s2">"AllOrNone"</span><span class="o">);</span> <span class="p">(</span><span class="n">pstring</span> <span class="s2">"Partial"</span><span class="o">);</span> <span class="p">(</span><span class="n">preturn</span> <span class="s2">"AllOrNone"</span><span class="o">)]</span>
+    <span class="k">return</span> <span class="n">portion</span> <span class="p">=</span> <span class="s2">"AllOrNone"</span>
+  <span class="p">}</span> 
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Stepping through this snippet:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Line 03</code> Skip any whitespace</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 04</code> Check if the input begins with “AllOrNone” or “Partial”; if neither return “AllOrNone”</li>
+  <li><code class="language-plaintext highlighter-rouge">Line 05</code> Return true if #2 was “AllOrNone”</li>
+</ul>
+
+<p>This parser is very similar to <code class="language-plaintext highlighter-rouge">parseTransaction</code> but it demonstrates use of the <code class="language-plaintext highlighter-rouge">preturn</code> primitive. <code class="language-plaintext highlighter-rouge">preturn</code> always succeeds with the provided value; here I use it as a default value <code class="language-plaintext highlighter-rouge">choice</code> parser by providing it as a final value (only used if all other choices fail).</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<blockquote>
+  <p>“A complex system that works is invariably found to have evolved from a simple system that worked.” - Gall’s law (John Gall)</p>
+</blockquote>
+
+<p>My favorite three things about parser combinators are:</p>
+<ol>
+  <li>There are many built-in primitive parsers</li>
+  <li>Simple parsers are easy to create and test</li>
+  <li>Complex parsers are easy to create by composing simple parsers</li>
+</ol>
+
+<p>I hope this post has demonstrated a useful application of parser combinators. But it may not have been as successful in convincing you the value of external domain specific languages - that’s probably because I can’t honestly make a good argument for them. If your program reads input from another machine then it will certainly be of a strucutured form (e.g. JSON). If your program reads input from a human then I doubt a domain specific language is the most natural way for the human to input data. I can’t think of a realistic example where a domain specific language would be better than a graphical user interface.</p>
+
+<p><img src="/assets/images/ETRADE-mobile-stock-quote.png" alt="Stock App" title="Stock App" /></p>
+
+<p>But I have benefitted from adopting internal domain specific languages. Using natural notions about the world within my code has made it easier to write, reason about, and revist. If I have piqued your interest in domain modeling, I would recommend browsing the related topics below. I believe each topic has something different to offer so its worth browsing each perspective (like the <a href="https://en.wikipedia.org/wiki/Blind_men_and_an_elephant">parable of the blind men and the elephant</a>). My favorite reference is Scott Wlascin’s book <a href="https://pragprog.com/titles/swdddf/domain-modeling-made-functional/">Domain Modeling Made Functional</a>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">Beginner resources</th>
+      <th style="text-align: center">Author</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">TDD</td>
+      <td style="text-align: center"><a href="https://blog.ploeh.dk/2015/08/10/type-driven-development/">Type Driven Development</a></td>
+      <td style="text-align: center">Mark Seemann</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">DDD-light</td>
+      <td style="text-align: center"><a href="https://pragprog.com/titles/swdddf/domain-modeling-made-functional/">Domain Modeling Made Functional</a></td>
+      <td style="text-align: center">Scott Wlascin</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">APIs</td>
+      <td style="text-align: center"><a href="http://www.infoq.com/presentations/effective-api-design">How to Design a Good API &amp; Why it Matters</a></td>
+      <td style="text-align: center">Josh Bloch</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">Advanced resources</th>
+      <th style="text-align: center">Author</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">DDD</td>
+      <td style="text-align: center"><a href="https://www.youtube.com/watch?v=pMuiVlnGqjk">Domain Driven Design</a></td>
+      <td style="text-align: center">Eric Evans</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">DSL</td>
+      <td style="text-align: center"><a href="https://martinfowler.com/books/dsl.html">Domain Specific Languages</a></td>
+      <td style="text-align: center">Martin Fowler</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">MDD</td>
+      <td style="text-align: center">Model-driven development: The good, the bad, and the ugly</td>
+      <td style="text-align: center">Hailpern/Tarr</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">LOP</td>
+      <td style="text-align: center">Language Oriented Programming</td>
+      <td style="text-align: center">Ward</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="footnotes">Footnotes</h4>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p><a href="http://www.quanttec.com/fparsec/tutorial.html">FParsec Tutorial</a> <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p><a href="https://fsharpforfunandprofit.com/posts/understanding-parser-combinators/">fsharpforfunandprofit </a> <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:3" role="doc-endnote">
+      <p><code class="language-plaintext highlighter-rouge">many</code> indicates that we expect to run <code class="language-plaintext highlighter-rouge">parseTrade</code> zero or more times (depending on the number of lines in our input file). <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:4" role="doc-endnote">
+      <p>Instead of using the more traditional parser combinator functions (e.g. <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&gt;&gt;.</code>, …) I elected to use a more familiar syntax with the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from FParsec. <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:5" role="doc-endnote">
+      <p>Within a computation expression, <code class="language-plaintext highlighter-rouge">return</code> performs an operation that is the opposite of <code class="language-plaintext highlighter-rouge">let!</code> - it wraps the value within a context specified by the computation expression. In this case the value has a <code class="language-plaintext highlighter-rouge">Trade</code> type, so <code class="language-plaintext highlighter-rouge">parseTrade</code> actually returns a value of type <code class="language-plaintext highlighter-rouge">Parser&lt;Trade, unit&gt;</code>. <a href="#fnref:5" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:6" role="doc-endnote">
+      <p>The function <a href="https://www.quanttec.com/fparsec/reference/charparsers.html#members.spaces"><code class="language-plaintext highlighter-rouge">spaces</code></a> has type <code class="language-plaintext highlighter-rouge">Parser&lt;unit,'u&gt;</code>, which is unit-like within this context. <a href="#fnref:6" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:7" role="doc-endnote">
+      <p>In this case the context is <code class="language-plaintext highlighter-rouge">ParserResult&lt;T&gt;</code>; <code class="language-plaintext highlighter-rouge">let!</code> binds the type <code class="language-plaintext highlighter-rouge">T</code>. This pattern is commonly used with the <code class="language-plaintext highlighter-rouge">async {}</code> computation expression. <a href="#fnref:7" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:8" role="doc-endnote">
+      <p>Note that <code class="language-plaintext highlighter-rouge">parseTrade</code> calls this function with <code class="language-plaintext highlighter-rouge">do!</code> since it returns a unit-like parser. <a href="#fnref:8" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/ddd" class="page__taxonomy-item" rel="tag">ddd</a><span class="sep">, </span>
+    
+      <a href="/tags/dsl" class="page__taxonomy-item" rel="tag">dsl</a><span class="sep">, </span>
+    
+      <a href="/tags/net" class="page__taxonomy-item" rel="tag">net</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2022-10-03T00:00:00+00:00">October 3, 2022</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Experiment+08%20https%3A%2F%2Fdlfelps.github.io%2F2022%2F10%2F03%2FDSL3.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2022%2F10%2F03%2FDSL3.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fdlfelps.github.io%2F2022%2F10%2F03%2FDSL3.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2022/10/02/DSL2.html" class="pagination--pager" title="Experiment 07
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 Daniel Felps. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
