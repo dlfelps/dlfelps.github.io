@@ -52,4 +52,10 @@ var store = [{
         "tags": ["net","dsl","ddd"],
         "url": "/2022/10/03/DSL3.html",
         "teaser": null
+      },{
+        "title": "Experiment 09",
+        "excerpt":"This post explores the possibility of using inclusive programming languages, i.e. ones that successfully accomodate functional and object-oriented programming styles in a single codebase. Introduction Python, C++, Java, and C# are 4 out of the top 10 most popular languages on any survey/poll/list and they have one thing in common...","categories": [],
+        "tags": ["inclusive","programming-languages","kotlin","scala","rust","swift","functional","object-oriented"],
+        "url": "/2022/11/01/inclusive.html",
+        "teaser": null
       }]
