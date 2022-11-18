@@ -14,17 +14,17 @@ Python, C++, Java, and C# are 4 out of the top 10 most popular languages on any 
 - Objects interact by means of message passing
 - Classes are organized in inheritance hierarchies
 
-But even these classic languages are now including new features to support a more functional programming style; some people see this as a sign of an upcoming paradigm shift[^2]. My thoughts are more in line with Richard Feldman who argued in his talk ["Why isn't functional programming the norm?"](https://youtu.be/QyJZzq0v7Z4?t=2319) that we are currently undergoing an intermediate phase where we are starting to apply functional programming techniques within object-oriented languages. This post uses 5 criteria to find suitable languages that align to this goal.
+But even these classic languages are now including new features to support a more functional programming style; some people see this as a sign of an upcoming paradigm shift[^2]. My thoughts are more in line with Richard Feldman who argued in his talk ["Why isn't functional programming the norm?"](https://youtu.be/QyJZzq0v7Z4?t=2319) that we are currently undergoing an intermediate phase where we are starting to apply functional programming techniques within object-oriented languages. This post uses 5 criteria to find suitable languages to be used for this purpose.
 
 ## Inclusive programming criteria
 
-The ideal inclusive language is one that allows each individual within a team to follow their preferred programming style (i.e. object-oriented or functional) within a single codebase. Alas, no such language exists. We next examine the critical elements necessary to provide successful collaboration between these unique programming styles. These elements are used to **support** and **identify** each paradigm.
+The ideal inclusive language is one that allows each individual within a team to follow their preferred programming style (i.e. object-oriented or functional). Alas, no such language exists. We next examine the critical elements necessary to provide successful collaboration between these unique programming styles. These elements are used to **support** and **identify** each paradigm.
 
 > This concept is distinct from that of [multiparadigm languages](https://en.wikipedia.org/wiki/List_of_programming_languages_by_type#Multiparadigm_languages). The primary difference being that while multiparadigm languages might support more than one paradigm, they may not necessarily be well-suited to support more than one paradigm within a single codebase.
 
 ### Criteria to support an object-oriented paradigm
 
-I identify 3 properties that I believe are essential for any object-oriented programmer to feel at home in a language:
+I identify 3 properties that are essential for any object-oriented programmer to feel at home in a language:
 
 > O1. classes with methods and properties
 >
@@ -115,11 +115,11 @@ Successful software development requires solving two kinds of problems - technic
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Junior programmer&#39;s bookshelf: 90% APIs and programming languages; Senior programmer&#39;s bookshelf: 80% applied psychology.</p>&mdash; ☕ J. B. Rainsberger (@jbrains) <a href="https://twitter.com/jbrains/status/616228270841962496?ref_src=twsrc%5Etfw">July 1, 2015</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-I believe inclusive languages offer benefits on both of these fronts. On the technical side, neither style is universally superior. The object-oriented approach is usually better if your system "operates" on "things" and new features typically involve adding new things (rather than new operations). On the other hand, if new features typically require new operations then a functional style may be a better fit[^8]. 
+I believe inclusive languages offer benefits on both of these fronts. On the technical side, neither style is universally superior. The object-oriented approach is usually better if your system operates on things and new features typically involve adding new things (rather than new operations). On the other hand, if new features typically require new operations then a functional style may be a better fit[^8]. 
 
-They can also be used in conjunction; [clean architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) may be a good model. Following this approach, you can model your domain and write all of your core business logic using functional code. Then use an object-oriented style at the adapter and interface layers. Given that the majority of code written today is object-oriented, there are certainly some benefits of applying functional techniques where it makes sense without having to demand that the entire codebase be rewritten in a functional language.
+They can also be used in conjunction; [clean architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) may be a good model. Following this approach, you can model your domain and write all of your core business logic using functional code and follow an object-oriented style at the adapter and interface layers. 
 
-I believe that providing your teammates with the ability to code as they want to, using the paradigm of their choice, will increase team happiness and morale. I hope it also encourages conversations and teaching moments from both sides. Will you be more productive? Will you create a better design? Will you get a better product? I don't know...
+I believe that providing your teammates with the ability to code as they want to, using the paradigm of their choice, will increase team happiness and morale. I hope it also encourages conversations and teaching moments from both sides. Will you be more productive? Will you create a better design? Will you get a better product? I don't know. I haven't tried this experiment myself.
 
 ## Next steps
 
@@ -147,7 +147,7 @@ Still unsure? Ok, Ok, don't twist my arm. Pick Kotlin :)
 
 > You can write crap code in any paradigm. - Dave Farley 
 
-There is clear division between those who use more mainstrain (i.e. object-oriented) languages and those who use functional languages. There are countless blogs (primarily from the functional crowd) trying to convince the majority to "see the light." It is a "them vs. us" mentality, but I believe there is a middle ground where these two crowds can meet, learn, develop, and succeed together. This middle ground is an *inclusive* programming language.
+There is clear division between those who use more mainstrain (i.e. object-oriented) languages and those who use functional languages. It is a "them vs. us" mentality, but I believe there is a middle ground where these two crowds can meet, learn, develop, and succeed together. And I believe this middle ground is an *inclusive* programming language.
 
 Thanks for reading!
 
