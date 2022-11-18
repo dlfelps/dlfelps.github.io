@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2022-11-18T19:12:26+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 09</title><link href="https://dlfelps.github.io/2022/11/01/inclusive.html" rel="alternate" type="text/html" title="Experiment 09" /><published>2022-11-01T00:00:00+00:00</published><updated>2022-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/11/01/inclusive</id><content type="html" xml:base="https://dlfelps.github.io/2022/11/01/inclusive.html"><![CDATA[<p>This post explores the possibility of using <em>inclusive</em> programming languages, i.e. ones that successfully accommodate functional and object-oriented programming styles in a single codebase.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2022-11-18T19:26:52+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 09</title><link href="https://dlfelps.github.io/2022/11/01/inclusive.html" rel="alternate" type="text/html" title="Experiment 09" /><published>2022-11-01T00:00:00+00:00</published><updated>2022-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/11/01/inclusive</id><content type="html" xml:base="https://dlfelps.github.io/2022/11/01/inclusive.html"><![CDATA[<p>This post explores the possibility of using <em>inclusive</em> programming languages, i.e. ones that successfully accommodate functional and object-oriented programming styles in a single codebase.</p>
 
 <h2 id="introduction">Introduction</h2>
 
@@ -11,11 +11,11 @@
   <li>Classes are organized in inheritance hierarchies</li>
 </ul>
 
-<p>But even these classic languages are now including new features to support a more functional programming style; some people see this as a sign of an upcoming paradigm shift<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. My thoughts are more in line with Richard Feldman who argued in his talk <a href="https://youtu.be/QyJZzq0v7Z4?t=2319">“Why isn’t functional programming the norm?”</a> that we are currently undergoing an intermediate phase where we are starting to apply functional programming techniques within object-oriented languages. This post uses 5 criteria to find suitable languages that align to this goal.</p>
+<p>But even these classic languages are now including new features to support a more functional programming style; some people see this as a sign of an upcoming paradigm shift<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. My thoughts are more in line with Richard Feldman who argued in his talk <a href="https://youtu.be/QyJZzq0v7Z4?t=2319">“Why isn’t functional programming the norm?”</a> that we are currently undergoing an intermediate phase where we are starting to apply functional programming techniques within object-oriented languages. This post uses 5 criteria to find suitable languages to be used for this purpose.</p>
 
 <h2 id="inclusive-programming-criteria">Inclusive programming criteria</h2>
 
-<p>The ideal inclusive language is one that allows each individual within a team to follow their preferred programming style (i.e. object-oriented or functional) within a single codebase. Alas, no such language exists. We next examine the critical elements necessary to provide successful collaboration between these unique programming styles. These elements are used to <strong>support</strong> and <strong>identify</strong> each paradigm.</p>
+<p>The ideal inclusive language is one that allows each individual within a team to follow their preferred programming style (i.e. object-oriented or functional). Alas, no such language exists. We next examine the critical elements necessary to provide successful collaboration between these unique programming styles. These elements are used to <strong>support</strong> and <strong>identify</strong> each paradigm.</p>
 
 <blockquote>
   <p>This concept is distinct from that of <a href="https://en.wikipedia.org/wiki/List_of_programming_languages_by_type#Multiparadigm_languages">multiparadigm languages</a>. The primary difference being that while multiparadigm languages might support more than one paradigm, they may not necessarily be well-suited to support more than one paradigm within a single codebase.</p>
@@ -23,7 +23,7 @@
 
 <h3 id="criteria-to-support-an-object-oriented-paradigm">Criteria to support an object-oriented paradigm</h3>
 
-<p>I identify 3 properties that I believe are essential for any object-oriented programmer to feel at home in a language:</p>
+<p>I identify 3 properties that are essential for any object-oriented programmer to feel at home in a language:</p>
 
 <blockquote>
   <p>O1. classes with methods and properties</p>
@@ -141,11 +141,11 @@
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Junior programmer&#39;s bookshelf: 90% APIs and programming languages; Senior programmer&#39;s bookshelf: 80% applied psychology.</p>&mdash; ☕ J. B. Rainsberger (@jbrains) <a href="https://twitter.com/jbrains/status/616228270841962496?ref_src=twsrc%5Etfw">July 1, 2015</a></blockquote>
 <script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<p>I believe inclusive languages offer benefits on both of these fronts. On the technical side, neither style is universally superior. The object-oriented approach is usually better if your system “operates” on “things” and new features typically involve adding new things (rather than new operations). On the other hand, if new features typically require new operations then a functional style may be a better fit<sup id="fnref:8" role="doc-noteref"><a href="#fn:8" class="footnote" rel="footnote">8</a></sup>.</p>
+<p>I believe inclusive languages offer benefits on both of these fronts. On the technical side, neither style is universally superior. The object-oriented approach is usually better if your system operates on things and new features typically involve adding new things (rather than new operations). On the other hand, if new features typically require new operations then a functional style may be a better fit<sup id="fnref:8" role="doc-noteref"><a href="#fn:8" class="footnote" rel="footnote">8</a></sup>.</p>
 
-<p>They can also be used in conjunction; <a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">clean architecture</a> may be a good model. Following this approach, you can model your domain and write all of your core business logic using functional code. Then use an object-oriented style at the adapter and interface layers. Given that the majority of code written today is object-oriented, there are certainly some benefits of applying functional techniques where it makes sense without having to demand that the entire codebase be rewritten in a functional language.</p>
+<p>They can also be used in conjunction; <a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">clean architecture</a> may be a good model. Following this approach, you can model your domain and write all of your core business logic using functional code and follow an object-oriented style at the adapter and interface layers.</p>
 
-<p>I believe that providing your teammates with the ability to code as they want to, using the paradigm of their choice, will increase team happiness and morale. I hope it also encourages conversations and teaching moments from both sides. Will you be more productive? Will you create a better design? Will you get a better product? I don’t know…</p>
+<p>I believe that providing your teammates with the ability to code as they want to, using the paradigm of their choice, will increase team happiness and morale. I hope it also encourages conversations and teaching moments from both sides. Will you be more productive? Will you create a better design? Will you get a better product? I don’t know. I haven’t tried this experiment myself.</p>
 
 <h2 id="next-steps">Next steps</h2>
 
@@ -180,7 +180,7 @@
   <p>You can write crap code in any paradigm. - Dave Farley</p>
 </blockquote>
 
-<p>There is clear division between those who use more mainstrain (i.e. object-oriented) languages and those who use functional languages. There are countless blogs (primarily from the functional crowd) trying to convince the majority to “see the light.” It is a “them vs. us” mentality, but I believe there is a middle ground where these two crowds can meet, learn, develop, and succeed together. This middle ground is an <em>inclusive</em> programming language.</p>
+<p>There is clear division between those who use more mainstrain (i.e. object-oriented) languages and those who use functional languages. It is a “them vs. us” mentality, but I believe there is a middle ground where these two crowds can meet, learn, develop, and succeed together. And I believe this middle ground is an <em>inclusive</em> programming language.</p>
 
 <p>Thanks for reading!</p>
 
