@@ -3,11 +3,11 @@ title: Experiment 09
 tags: inclusive programming-languages kotlin scala rust swift functional object-oriented
 ---
 
-This post explores the possibility of using *inclusive* programming languages, i.e. ones that successfully accomodate functional and object-oriented programming styles in a single codebase. 
+This post explores the possibility of using *inclusive* programming languages, i.e. ones that successfully accommodate functional and object-oriented programming styles in a single codebase. 
 
 ## Introduction
 
-Python, C++, Java, and C# are 4 out of the top 10 most popular languages on any survey/poll/list and they have one thing in common - they are all primarily object-oriented languages. This paradigm is characterized by[^1]:
+Python, C++, Java, and C# are 4 out of the top 10 most popular languages on any survey/poll/list, and they have one thing in common - they are all primarily object-oriented languages. This paradigm is characterized by[^1]:
 
 - Data/operations are encapsulated in objects
 - Information hiding is used to protect internal properties of an object
@@ -18,7 +18,7 @@ But even these classic languages are now including new features to support a mor
 
 ## Inclusive programming criteria
 
-The ideal inclusive language is one that allows each individual within a team to follow their preferred programming style (i.e. object-oriented or functional) within a single codebase. Alas no such language exists. We next examine the critical elements necessary to provide successful collaboration between these unique programming styles. These elements are used to **support** and **identify** each paradigm.
+The ideal inclusive language is one that allows each individual within a team to follow their preferred programming style (i.e. object-oriented or functional) within a single codebase. Alas, no such language exists. We next examine the critical elements necessary to provide successful collaboration between these unique programming styles. These elements are used to **support** and **identify** each paradigm.
 
 > This concept is distinct from that of [multiparadigm languages](https://en.wikipedia.org/wiki/List_of_programming_languages_by_type#Multiparadigm_languages). The primary difference being that while multiparadigm languages might support more than one paradigm, they may not necessarily be well-suited to support more than one paradigm within a single codebase.
 
@@ -59,7 +59,7 @@ How do you identify functional code? At a glance it may be difficult to pin down
  - no mutable variables
  - lots of functions
 
-Classes and `for` loops are easy enough to spot, but what about mutable variables? In order to facilitate this distinction, we add the following critieria:
+Classes and `for` loops are easy enough to spot, but what about mutable variables? In order to facilitate this distinction, we add the following criteria:
 
 > C1. mutable variables must be designated as such
 
