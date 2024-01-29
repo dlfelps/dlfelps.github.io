@@ -36,7 +36,7 @@ paginate_path: /page:num/
 github: [metadata]
 
 words_per_minute: 75
-
+future: true
 
 category_archive:
   type: jekyll-archives
@@ -59,7 +59,7 @@ author:
   name: "Daniel Felps"
   email: dlfelps@gmail.com
   avatar: "/assets/images/headshot.jpg"
-  bio: "Electrical engineering undergrad, machine learning phd, programming language enthusiast currently enthralled with F#." 
+  bio: "Electrical engineering undergrad, machine learning phd, programming language enthusiast currently enthralled with F# and Smalltalk." 
   location: "Fairfax VA"
   links:
     - label: "LinkedIn"
