@@ -1,5 +1,5 @@
 ---
-title: Experiment 11
+title: Experiment 10
 tags: quantum smalltalk
 ---
 
