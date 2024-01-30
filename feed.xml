@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-01-30T02:33:37+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 11</title><link href="https://dlfelps.github.io/2024/02/01/quantum-smalltalk1.html" rel="alternate" type="text/html" title="Experiment 11" /><published>2024-02-01T00:00:00+00:00</published><updated>2024-02-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/02/01/quantum-smalltalk1</id><content type="html" xml:base="https://dlfelps.github.io/2024/02/01/quantum-smalltalk1.html"><![CDATA[<h1 id="introducing-the-quantum-smalltalk-series">Introducing the Quantum Smalltalk series</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-01-30T02:36:34+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 11</title><link href="https://dlfelps.github.io/2024/02/01/quantum-smalltalk1.html" rel="alternate" type="text/html" title="Experiment 11" /><published>2024-02-01T00:00:00+00:00</published><updated>2024-02-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/02/01/quantum-smalltalk1</id><content type="html" xml:base="https://dlfelps.github.io/2024/02/01/quantum-smalltalk1.html"><![CDATA[<h1 id="introducing-the-quantum-smalltalk-series">Introducing the Quantum Smalltalk series</h1>
 <p>In this series I am going to introduce you to some of my favorite quantum experiments while modeling those experiments in <a href="https://pharo.org/">Pharo Smalltalk</a>. We will explore the quantum properties of superposition and entanglement. Our experimental model is rather simple - the optical devices typically used in such experiments (i.e. beam splitters, polarizers, mirrors) will be modeled using complex-valued linear transformations. Although the results of matrix multiplication may not surprise you, I hope that the results of these experiments will. I could have called this the “Complex-valued matrix multiplication with Smalltalk series,” but that doesn’t have quite the same ring.</p>
 
 <h2 id="why-smalltalk">Why Smalltalk?</h2>
@@ -451,95 +451,7 @@ Photon finally detected with following probabilities: &gt;&gt; #(0.2499999999999
 4   mirror;
 5   beamSplitter;
 6   detector.
-</code></pre></div></div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introducing the Quantum Smalltalk series In this series I am going to introduce you to some of my favorite quantum experiments while modeling those experiments in Pharo Smalltalk. We will explore the quantum properties of superposition and entanglement. Our experimental model is rather simple - the optical devices typically used in such experiments (i.e. beam splitters, polarizers, mirrors) will be modeled using complex-valued linear transformations. Although the results of matrix multiplication may not surprise you, I hope that the results of these experiments will. I could have called this the “Complex-valued matrix multiplication with Smalltalk series,” but that doesn’t have quite the same ring.]]></summary></entry><entry><title type="html">Experiment 10</title><link href="https://dlfelps.github.io/2022/12/01/atomic1.html" rel="alternate" type="text/html" title="Experiment 10" /><published>2022-12-01T00:00:00+00:00</published><updated>2022-12-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/12/01/atomic1</id><content type="html" xml:base="https://dlfelps.github.io/2022/12/01/atomic1.html"><![CDATA[<p>This post solves a simple problem from the book Atomic Kotlin using structured and functional styles to compare their solutions.</p>
-
-<h2 id="introduction">Introduction</h2>
-
-<ol>
-  <li>Intro - imperative vs declarative</li>
-  <li>Problem</li>
-  <li>Structural solution</li>
-  <li>Functional solution</li>
-  <li>Functional solution (refactored)</li>
-  <li>Conclusion</li>
-</ol>
-
-<p>https://learn.microsoft.com/en-us/dotnet/standard/linq/functional-vs-imperative-programming
-https://www.educative.io/blog/declarative-vs-imperative-programming
-https://youtu.be/pFbDZQ9M76Y?t=75</p>
-
-<h2 id="problem">Problem</h2>
-
-<p>Implement <code class="language-plaintext highlighter-rouge">everyFifthNonSpace()</code> to display every fifth non-space character in the given text. For example, <code class="language-plaintext highlighter-rouge">everyFifthNonSpace("abc d e fgh ik")</code> displays the characters <code class="language-plaintext highlighter-rouge">e</code> (fifth character if not counting spaces) and <code class="language-plaintext highlighter-rouge">k</code> (tenth).</p>
-
-<h2 id="structural-solution">Structural solution</h2>
-
-<figure class="highlight"><pre><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">everyFifthNonSpace</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nc">String</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="py">i</span> <span class="p">=</span> <span class="mi">1</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">c</span> <span class="k">in</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="p">%</span> <span class="mi">5</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">&amp;&amp;</span> <span class="n">c</span> <span class="p">!=</span> <span class="sc">' '</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nf">println</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="p">!=</span> <span class="sc">' '</span><span class="p">)</span> <span class="n">i</span><span class="p">++</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nf">everyFifthNonSpace</span><span class="p">(</span><span class="s">"abc d e fgh ik"</span><span class="p">)</span>
-<span class="p">}</span>
-<span class="cm">/* Output:
-e
-k
-*/</span></code></pre></figure>
-
-<h2 id="functional-solution">Functional solution</h2>
-
-<figure class="highlight"><pre><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">everyFifthNonSpace</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nc">String</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">val</span> <span class="py">trimmed</span> <span class="p">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">filterNot</span><span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="nf">isWhitespace</span><span class="p">()</span> <span class="p">}</span>
-  <span class="kd">val</span> <span class="py">listOfChars</span> <span class="p">=</span> <span class="n">trimmed</span><span class="p">.</span><span class="nf">toList</span><span class="p">()</span>
-  <span class="kd">val</span> <span class="py">filtered</span> <span class="p">=</span> <span class="n">listOfChars</span><span class="p">.</span><span class="nf">filterIndexed</span> <span class="p">{</span> <span class="n">idx</span><span class="p">,</span> <span class="n">_</span> <span class="p">-&gt;</span> <span class="p">(</span><span class="n">idx</span> <span class="p">%</span> <span class="mi">5</span> <span class="p">==</span> <span class="mi">4</span><span class="p">)</span> <span class="p">}</span>
-  <span class="k">return</span>  <span class="n">filtered</span><span class="p">.</span><span class="nf">joinToString</span><span class="p">(</span><span class="s">""</span><span class="p">)</span>  
-<span class="p">}</span>
-
-<span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kd">val</span> <span class="py">result</span> <span class="p">=</span> <span class="nf">everyFifthNonSpace</span><span class="p">(</span><span class="s">"abc d e fgh ik"</span><span class="p">)</span>
-  <span class="n">result</span><span class="p">.</span><span class="nf">map</span><span class="p">{</span> <span class="n">it</span> <span class="p">-&gt;</span> <span class="nf">println</span><span class="p">(</span><span class="n">it</span><span class="p">)}</span>
-<span class="p">}</span>
-<span class="cm">/* Output:
-e
-k
-*/</span></code></pre></figure>
-
-<h2 id="functional-solution-refactored">Functional solution (refactored)</h2>
-
-<figure class="highlight"><pre><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nc">String</span><span class="p">.</span><span class="nf">everyNth</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nc">Int</span><span class="p">)</span> <span class="p">:</span> <span class="nc">String</span> <span class="p">{</span>
-  <span class="kd">val</span> <span class="py">listOfChars</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="nf">toList</span><span class="p">()</span>
-  <span class="kd">val</span> <span class="py">filtered</span> <span class="p">=</span> <span class="n">listOfChars</span><span class="p">.</span><span class="nf">filterIndexed</span> <span class="p">{</span> <span class="n">idx</span><span class="p">,</span> <span class="n">_</span> <span class="p">-&gt;</span> <span class="p">(</span><span class="n">idx</span> <span class="p">%</span> <span class="n">n</span> <span class="p">==</span> <span class="p">(</span><span class="n">n</span> <span class="p">-</span> <span class="mi">1</span><span class="p">))</span> <span class="p">}</span>
-  <span class="k">return</span> <span class="n">filtered</span><span class="p">.</span><span class="nf">joinToString</span><span class="p">(</span><span class="s">""</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="k">fun</span> <span class="nf">everyFifth</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="nc">String</span><span class="p">)</span> <span class="p">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">everyNth</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="k">fun</span> <span class="nf">removeWhitespace</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="nc">String</span><span class="p">)</span> <span class="p">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">filterNot</span><span class="p">{</span><span class="n">it</span><span class="p">.</span><span class="nf">isWhitespace</span><span class="p">()}</span>
-
-<span class="k">fun</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="p">(</span><span class="nc">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nc">String</span><span class="p">,</span> <span class="n">g</span><span class="p">:</span> <span class="p">(</span><span class="nc">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nc">String</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="nc">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nc">String</span> <span class="p">=</span> <span class="p">{</span> <span class="n">x</span> <span class="p">-&gt;</span>
-  <span class="nf">g</span><span class="p">(</span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-<span class="p">}</span>
-
-<span class="kd">val</span> <span class="py">everyFifthNonSpace</span> <span class="p">=</span> <span class="nf">compose</span><span class="p">(</span><span class="o">::</span><span class="n">removeWhitespace</span><span class="p">,</span> <span class="o">::</span><span class="n">everyFifth</span><span class="p">)</span>
-
-<span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kd">val</span> <span class="py">result</span> <span class="p">=</span> <span class="nf">everyFifthNonSpace</span><span class="p">(</span><span class="s">"abc d e fgh ik"</span><span class="p">)</span>
-  <span class="n">result</span><span class="p">.</span><span class="nf">map</span><span class="p">{</span> <span class="n">it</span> <span class="p">-&gt;</span> <span class="nf">println</span><span class="p">(</span><span class="n">it</span><span class="p">)}</span>
-<span class="p">}</span>
-<span class="cm">/* Output:
-e
-k
-*/</span></code></pre></figure>
-
-<h2 id="conclusion">Conclusion</h2>
-
-<h4 id="footnotes">Footnotes</h4>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="atomic" /><category term="kotlin" /><category term="functional" /><summary type="html"><![CDATA[This post solves a simple problem from the book Atomic Kotlin using structured and functional styles to compare their solutions.]]></summary></entry><entry><title type="html">Experiment 09</title><link href="https://dlfelps.github.io/2022/11/01/inclusive.html" rel="alternate" type="text/html" title="Experiment 09" /><published>2022-11-01T00:00:00+00:00</published><updated>2022-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/11/01/inclusive</id><content type="html" xml:base="https://dlfelps.github.io/2022/11/01/inclusive.html"><![CDATA[<p>This post explores the possibility of using <em>inclusive</em> programming languages, i.e. ones that successfully accommodate functional and object-oriented programming styles in a single codebase.</p>
+</code></pre></div></div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introducing the Quantum Smalltalk series In this series I am going to introduce you to some of my favorite quantum experiments while modeling those experiments in Pharo Smalltalk. We will explore the quantum properties of superposition and entanglement. Our experimental model is rather simple - the optical devices typically used in such experiments (i.e. beam splitters, polarizers, mirrors) will be modeled using complex-valued linear transformations. Although the results of matrix multiplication may not surprise you, I hope that the results of these experiments will. I could have called this the “Complex-valued matrix multiplication with Smalltalk series,” but that doesn’t have quite the same ring.]]></summary></entry><entry><title type="html">Experiment 09</title><link href="https://dlfelps.github.io/2022/11/01/inclusive.html" rel="alternate" type="text/html" title="Experiment 09" /><published>2022-11-01T00:00:00+00:00</published><updated>2022-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/11/01/inclusive</id><content type="html" xml:base="https://dlfelps.github.io/2022/11/01/inclusive.html"><![CDATA[<p>This post explores the possibility of using <em>inclusive</em> programming languages, i.e. ones that successfully accommodate functional and object-oriented programming styles in a single codebase.</p>
 
 <h2 id="introduction">Introduction</h2>
 
@@ -2479,4 +2391,197 @@ During data analysis it can be difficult for researchers to recognize P-hacking2
       <p>While it may seem counterintuitive to limit the available versions of your dependencies, it improves control over the automatic dependency resolver. This is in line with the continuously reproducible mindset and future developers are always free to update the version if they encounter a conflict. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><summary type="html"><![CDATA[The next few posts take step back to examine the benefits of creating reproducible software. We will explore: the continuously reproducible mindset (this post) foundational tools for reproducibility (Exp 03) creating a continuously reproducible .NET project (Exp 04)]]></summary></entry></feed>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><summary type="html"><![CDATA[The next few posts take step back to examine the benefits of creating reproducible software. We will explore: the continuously reproducible mindset (this post) foundational tools for reproducibility (Exp 03) creating a continuously reproducible .NET project (Exp 04)]]></summary></entry><entry><title type="html">Experiment 01</title><link href="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html" rel="alternate" type="text/html" title="Experiment 01" /><published>2022-06-06T00:00:00+00:00</published><updated>2022-06-06T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options</id><content type="html" xml:base="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html"><![CDATA[<p>This experiment explores various publishing options associated with .NET, including:</p>
+<ul>
+  <li>framework-dependent vs self-contained</li>
+  <li>Windows vs Linux vs OSX</li>
+  <li>and more…</li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>The traditional way to distribute a .NET application is by compiling code (e.g. C#) into bytecode known as <a href="https://en.wikipedia.org/wiki/Common_Intermediate_Language">CIL</a>. This bytecode can then be run by anyone who has installed the .NET runtime environment (also known as <a href="https://docs.microsoft.com/en-us/dotnet/standard/clr">CLR</a>). The process is illustrated below:</p>
+
+<p align="center">
+  <img width="416" height="480" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Overview_of_the_Common_Language_Infrastructure_2015.svg/416px-Overview_of_the_Common_Language_Infrastructure_2015.svg.png" />
+</p>
+
+<p>This compilation strategy is known as <a href="https://en.wikipedia.org/wiki/Dynamic_compilation">dynamic compilation</a> and was popularized by the Java Virtual Machine. Some languages like C++ use static compilers that produce native code for a specific platform directly. This code cannot be shared across platforms, but users also do not need to install a runtime environment.</p>
+
+<p>Although the .NET runtime is simple to install, some users may still prefer a “standalone” executable that does not require this extra step. Since .NET 3.0 developers have been able to publish their code as “self-contained” - which means that it includes the runtime environment along with their compiled bytecode. The only real downside is that it creates executables that are larger than they would be otherwise.</p>
+
+<p>This study explores the effect of publishing code as “self-contained” across various platforms and the extent to which the size can be reduced through advanced publishing options.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>I strive to make all of my experiments reproducible. Please follow the installation instructions below to configure your system to run the experiment.</p>
+
+<ol>
+  <li>Install <a href="https://dotnet.microsoft.com/en-us/download">.NET 6.0 SDK</a> (not the Runtime option)</li>
+  <li>Obtain the <a href="https://github.com/dlfelps/WaveFunctionCollapse">WaveFunctionCollapse</a> repo; you can either:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/dlfelps/WaveFunctionCollapse.git
+</code></pre></div>    </div>
+    <p>or <a href="https://github.com/dlfelps/WaveFunctionCollapse/archive/refs/heads/master.zip">download</a> and unzip</p>
+  </li>
+  <li>Run the provided commands for each experiment (see below)</li>
+</ol>
+
+<h2 id="experiment">Experiment</h2>
+
+<h3 id="framework-dependent-vs-self-contained">Framework-dependent vs self-contained</h3>
+
+<p>The first part of the experiment compares two deployment modes. In the framework-dependent distribution mode only the application and third-party assemblies are included; it is assumed that users will have the .NET runtime installed on their system. In the self-contained distribution mode the .NET runtime and runtime libraries included as well.</p>
+
+<p>Another difference between the two modes is that the framework-dependent mode produces a cross-platform binary, which means it can run on any platform. The self-contained option must be created for a specific platform (in this case we use win-x64 but any valid runtime in the <a href="https://docs.microsoft.com/en-us/dotnet/core/rid-catalog">RID Catalog</a> may be chosen).</p>
+
+<p>To run this portion of the experiment execute the following commands within your WaveFunctionCollapse folder (I am using Powershell for Windows):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet publish -c "exp_1a_framework-dependent"
+dotnet publish -c "exp_1a_self-contained" -r win-x64 --self-contained true
+</code></pre></div></div>
+<p>The published folders can be found at</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>..\WaveFunctionCollapse\bin\exp_1a_framework-dependent\net6.0\publish\
+..\WaveFunctionCollapse\bin\exp_1a_self-contained\net6.0\win-x64\publish
+</code></pre></div></div>
+<p>Execution of the created application is different in each case. From the framework-dependent publish folder the entrypoint is the cross-platform binary using the dotnet command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet WaveFunctionCollapse.dll
+</code></pre></div></div>
+<p>From the self-contained publish folder the entrypoint is simply the platform-specific executable (Windows here):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./WaveFunctionCollapse.exe
+</code></pre></div></div>
+<p>We measure the size of the corresponding publish folders to compare the final size of the distributable application in each case.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">size (MB)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>framework-dependent (cross-platform)</td>
+      <td style="text-align: center">1.53</td>
+    </tr>
+    <tr>
+      <td>self-contained (win-x64 only)</td>
+      <td style="text-align: center">68.7</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The difference does appear to be approximately the size of a binary installation of .NET 6.0 (for Windows is 68.1 MB). But 68 MB barely registers on a 500 GB hard drive. My bigger concern is that self-contained distributions limit the systems that can use it since they are platform specific. In the next experiment we look at platforms besides Windows. <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
+
+<h3 id="varying-the-platform-of-self-contained-releases">Varying the platform of self-contained releases</h3>
+
+<p>In this part of the experiment we determine the extent to which the target platform changes the size of the publish folder. To run this portion of the experiment execute the following commands within your WaveFunctionCollapse folder:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet publish -c "exp_1b_linux"  -r linux-x64 --self-contained true
+dotnet publish -c "exp_1b_osx_x64"  -r osx-x64 --self-contained true
+dotnet publish -c "exp_1b_osx12_arm"  -r osx.12-arm64 --self-contained true
+</code></pre></div></div>
+<p>I measured the size of the corresponding publish folders and also included the results from the self-contained win-x64 from the previous section.</p>
+
+<p><!-- Table generated using https://www.tablesgenerator.com/markdown_tables#  --></p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">size (MB)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>win-x64</td>
+      <td style="text-align: center">68.7</td>
+    </tr>
+    <tr>
+      <td>linux-x64</td>
+      <td style="text-align: center">68.5</td>
+    </tr>
+    <tr>
+      <td>osx-x64</td>
+      <td style="text-align: center">68.5</td>
+    </tr>
+    <tr>
+      <td>osx12-arm</td>
+      <td style="text-align: center">75.0</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>There is no significant difference between the sizes of these various platforms. They are all approximately the size of the original application code plus the size of the binary installation of .NET 6.0 for the corresponding platform.</p>
+
+<h3 id="trimming">Trimming</h3>
+
+<p>To finish out this experiment I wanted to explore one of the advanced publishing options that dotnet provides - trimming. When you enable trimming the compiler tries to reduce deployment size by including only the minimum  subset of the framework assemblies that are needed to run the application. The unused parts of the framework are trimmed from the packaged application. But there is a risk that the compiler miscalculates which parts are necessary during build time causing a failure at run time.</p>
+
+<p>To run this portion of the experiment execute the following commands within your WaveFunctionCollapse folder:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet publish -c "exp_1c_windows"  -r win-x64 --self-contained true -p:PublishTrimmed=true
+dotnet publish -c "exp_1c_linux"  -r linux-x64 --self-contained true -p:PublishTrimmed=true
+dotnet publish -c "exp_1c_osx_x64"  -r osx-x64 --self-contained true -p:PublishTrimmed=true
+dotnet publish -c "exp_1c_osx12_arm"  -r osx.12-arm64 --self-contained true -p:PublishTrimmed=true
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">original size (MB)</th>
+      <th style="text-align: center">reduced size (MB)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>win-x64</td>
+      <td style="text-align: center">68.7</td>
+      <td style="text-align: center">22.1</td>
+    </tr>
+    <tr>
+      <td>linux-x64</td>
+      <td style="text-align: center">68.5</td>
+      <td style="text-align: center">23.8</td>
+    </tr>
+    <tr>
+      <td>osx-x64</td>
+      <td style="text-align: center">68.5</td>
+      <td style="text-align: center">22.7</td>
+    </tr>
+    <tr>
+      <td>osx12-arm</td>
+      <td style="text-align: center">75.0</td>
+      <td style="text-align: center">21.9</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The results show that the reduced size is about one third of the original size. But the risk that the application <em>may</em> fail at runtime does not seem worth the memory savings for most applications. However in this case I was able to verify that the Windows and Linux distributions worked correctly (OSX was not tested).</p>
+
+<h2 id="limitations-of-study">Limitations of study</h2>
+
+<p>The results shown above represent an experiment for a single code base. You may get different results for your own code (especially when trimming). If you do repeat this study on a different code base I would appreciate it if you would share the results for comparison!</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>.NET makes it amazingly simple to publish code that works on almost any device. In order to share your application with the widest audience I recommend publishing both the framework-dependent and (untrimmed) self-contained versions for all major platforms. I do not generally recommend trimming unless you are able to thoroughly test the created executables.</p>
+
+<h3 id="references">References</h3>
+
+<ol>
+  <li><a href="https://docs.microsoft.com/en-us/dotnet/core/deploying/">.NET application publishing overview</a></li>
+  <li><a href="https://github.com/mxgmn/WaveFunctionCollapse">WaveFunctionCollapse</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Common_Language_Infrastructure">CLI</a></li>
+</ol>
+
+<h3 id="footnotes">Footnotes</h3>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>By default the framework-dependent mode creates both a cross-platform binary and a platform-specific executable that targets the current platform. In my case the publish folder included a platform-specific file called WaveFunctionCollapse.exe (since I use Windows). This unnecessary  file was removed before the folder size was measured. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="net" /><summary type="html"><![CDATA[This experiment explores various publishing options associated with .NET, including: framework-dependent vs self-contained Windows vs Linux vs OSX and more…]]></summary></entry></feed>

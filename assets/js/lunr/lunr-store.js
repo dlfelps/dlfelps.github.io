@@ -59,12 +59,6 @@ var store = [{
         "url": "/2022/11/01/inclusive.html",
         "teaser": null
       },{
-        "title": "Experiment 10",
-        "excerpt":"This post solves a simple problem from the book Atomic Kotlin using structured and functional styles to compare their solutions. Introduction Intro - imperative vs declarative Problem Structural solution Functional solution Functional solution (refactored) Conclusion https://learn.microsoft.com/en-us/dotnet/standard/linq/functional-vs-imperative-programming https://www.educative.io/blog/declarative-vs-imperative-programming https://youtu.be/pFbDZQ9M76Y?t=75 Problem Implement everyFifthNonSpace() to display every fifth non-space character in the given...","categories": [],
-        "tags": ["atomic","kotlin","functional"],
-        "url": "/2022/12/01/atomic1.html",
-        "teaser": null
-      },{
         "title": "Experiment 11",
         "excerpt":"Introducing the Quantum Smalltalk series In this series I am going to introduce you to some of my favorite quantum experiments while modeling those experiments in Pharo Smalltalk. We will explore the quantum properties of superposition and entanglement. Our experimental model is rather simple - the optical devices typically used...","categories": [],
         "tags": ["quantum","smalltalk"],
