@@ -59,7 +59,7 @@ var store = [{
         "url": "/2022/11/01/inclusive.html",
         "teaser": null
       },{
-        "title": "Experiment 11",
+        "title": "Experiment 10",
         "excerpt":"Introducing the Quantum Smalltalk series In this series I am going to introduce you to some of my favorite quantum experiments while modeling those experiments in Pharo Smalltalk. We will explore the quantum properties of superposition and entanglement. Our experimental model is rather simple - the optical devices typically used...","categories": [],
         "tags": ["quantum","smalltalk"],
         "url": "/2024/02/01/quantum-smalltalk1.html",
