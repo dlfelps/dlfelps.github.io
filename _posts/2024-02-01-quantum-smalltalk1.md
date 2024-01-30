@@ -29,7 +29,7 @@ The purpose of the first experiment is to familiarize yourself with the:
  - Smalltalk DSL describing the experimental setup
 
 ### Basic optical components
-This section describes the optical components used in the first 2 experiments. Each component is described in common language as well as it's equivalent mathematical  transformation. Credit: All of the diagrams and mathematical notation used in this series follows from [MIT's Quantum Physics 1](https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016); this is an excellent course taught by Dr. Barton Zwiebach. 
+This section describes the optical components used in the first 2 experiments. Each component is described in common language as well as its equivalent mathematical  transformation. Credit: All of the diagrams and mathematical notation used in this series follows from [MIT's Quantum Physics 1](https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016); this is an excellent course taught by Dr. Barton Zwiebach. 
 
 ### Photon Emitter
 Luckily for us, all of the components have rather descriptive names. In this experiment, we will not be using a coherent laser as the source, but instead a single photon will traverse the optical path (or paths) of the experiment. When a photon is emitted on the upper beam it is represented by the following probability amplitudes:
@@ -248,7 +248,7 @@ If you shine a laser at a balanced beam splitter (the only kind we model here) t
   </mrow>
 </math>
 
-> You can convert a probabilty amplitude to a probability by taking its magnitude and squaring it. 
+> You can convert a probability amplitude to a probability by taking its magnitude and squaring it. 
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\lvert0+\sqrt{2}i\rvert^2=0.5" display="block">
   <msup data-latex="\rvert^2">
@@ -401,7 +401,7 @@ Photon finally detected with following probabilities: >> #(0.2499999999999999 0.
 The computed probabilities agree with our intuition!
 
 ## Summary
-Experiment 1 laid the groundwork for the quantum properties we want to explore in the rest of the series. It introduced  the optical components and how they are modeled mathematically. However, I have not yet shown the Smalltalk code because its not as important as the rest. If you want to better understand how to compute the probability amplitudes at an arbitrary point in the path then I would encourage you to consider watching the first few lectures of [MIT's Quantum Physics 1](https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016).
+Experiment 1 laid the groundwork for the quantum properties we want to explore in the rest of the series. It introduced  the optical components and how they are modeled mathematically. However, I have not yet shown the Smalltalk code because it is not as important as the rest. If you want to better understand how to compute the probability amplitudes at an arbitrary point in the path then I would encourage you to consider watching the first few lectures of [MIT's Quantum Physics 1](https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016).
 
 ## Appendix: The Smalltalk code
 I was surprised at how simple the Smalltalk DSL code turned out to be. It's almost anti-climactic at this point, but the code almost line-by-line describes the order of the components in the experiment. Please keep in mind that the mathematical complexity lies beneath this layer and is hidden from the user. The full Pharo package can be found at [dlfeps/MZI](https://github.com/dlfelps/MZI). 
