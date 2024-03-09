@@ -64,4 +64,10 @@ var store = [{
         "tags": ["quantum","smalltalk"],
         "url": "/2024/02/01/quantum-smalltalk1.html",
         "teaser": null
+      },{
+        "title": "Experiment 11",
+        "excerpt":"Introduction Experiment 11 introduces the concepts of quantum superposition by making a slight modification to Experiment 10. Experiment #11 Modify the setup from Experiment #10 by removing the block on the lower path. This allows the photon to now take one of four paths: State name Path at BS1 Path...","categories": [],
+        "tags": ["quantum","smalltalk"],
+        "url": "/2024/03/01/quantum-smalltalk2.html",
+        "teaser": null
       }]
