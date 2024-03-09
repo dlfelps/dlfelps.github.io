@@ -362,9 +362,9 @@ A block absorbs an incoming photon, preventing it from reaching any downstream c
 ### Photon Detector
 This component detects a single photon. Most of the experimental setups used in this series will involve 2 detectors: D0 measuring the upper path and D1 measuring the lower path. Just as the emitter emits a real photon, the detector detects a real photon (i.e. it does not measure probability amplitudes or probabilities). The mathematical equivalent of the photon detector would be to sample the probabilities of all possible end-states of the photon (they should add up to 1). We will forgo this step and instead just report the associated probabilities. 
 
-## Experiment #1
+## Experiment #10
 
-![Experiment #1](/assets/images/exp1.PNG "Experiment #1")
+![Experiment #10](/assets/images/exp1.PNG "Experiment #10")
 
 This experiment is relatively straightforward - its result is intuitive and agrees with a more classical interpretation. The setup includes:
  - 1 photon emitter
@@ -401,7 +401,7 @@ Photon finally detected with following probabilities: >> #(0.2499999999999999 0.
 The computed probabilities agree with our intuition!
 
 ## Summary
-Experiment 1 laid the groundwork for the quantum properties we want to explore in the rest of the series. It introduced  the optical components and how they are modeled mathematically. However, I have not yet shown the Smalltalk code because it is not as important as the rest. If you want to better understand how to compute the probability amplitudes at an arbitrary point in the path then I would encourage you to consider watching the first few lectures of [MIT's Quantum Physics 1](https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016).
+Experiment 10 laid the groundwork for the quantum properties we want to explore in the rest of the series. It introduced  the optical components and how they are modeled mathematically. However, I have not yet shown the Smalltalk code because it is not as important as the rest. If you want to better understand how to compute the probability amplitudes at an arbitrary point in the path then I would encourage you to consider watching the first few lectures of [MIT's Quantum Physics 1](https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016).
 
 ## Appendix: The Smalltalk code
 I was surprised at how simple the Smalltalk DSL code turned out to be. It's almost anti-climactic at this point, but the code almost line-by-line describes the order of the components in the experiment. Please keep in mind that the mathematical complexity lies beneath this layer and is hidden from the user. The full Pharo package can be found at [dlfeps/MZI](https://github.com/dlfelps/MZI). 
