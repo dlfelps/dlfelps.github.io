@@ -1,4 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-03-09T14:55:51+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 11</title><link href="https://dlfelps.github.io/2024/03/01/quantum-smalltalk2.html" rel="alternate" type="text/html" title="Experiment 11" /><published>2024-03-01T00:00:00+00:00</published><updated>2024-03-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/03/01/quantum-smalltalk2</id><content type="html" xml:base="https://dlfelps.github.io/2024/03/01/quantum-smalltalk2.html"><![CDATA[<h1 id="introduction">Introduction</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-03-10T11:47:14+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 12</title><link href="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html" rel="alternate" type="text/html" title="Experiment 12" /><published>2024-04-01T00:00:00+00:00</published><updated>2024-04-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/04/01/quantum-smalltalk3</id><content type="html" xml:base="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html"><![CDATA[<h1 id="introduction">Introduction</h1>
+<p>Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.</p>
+
+<h1 id="experiment-12">Experiment #12</h1>
+<p><img src="/assets/images/exp3.png" alt="Experiment #12" title="Experiment #12" /></p>
+
+<p>Modify the setup from Experiment #11 by removing the second beamsplitter. This allows the photon to take one of two paths:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">State name</th>
+      <th style="text-align: center">Path at BS1</th>
+      <th style="text-align: center">Detector</th>
+      <th style="text-align: center">Probability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">R</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">T</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">?</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We don’t yet know the outcome of the experiment, but based on our observations from Experiment 10 we might expect an equal distribution between D0 and D1. Let’s run the Smalltalk simulation.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
+Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon finally detected with following probabilities: &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+</code></pre></div></div>
+
+<p>Our intuition was correct! After the first beamsplitter the photon is equally likely to be on the upper and lower path, but this time the paths are not recombined using the second beamsplitter. So any photons that are reflected at BS1 end up at D0 and any photons that are transmitted at BS1 end up at D1. We always know which path the photon took.</p>
+
+<h2 id="the-wavefunction">The wavefunction</h2>
+
+<p>How does this affect the photon’s wavefunction? Initially, after interacting with the beamsplitter we do not know which path the photon is on. Therefore its wavefunction is a superposition of states of the upper and lower paths.  At the moment just before the photon would reach D0 or D1, its wavefunction predicts with 50% probability that the photon will be detected at D0 and 50% probabilty that the photon will be detected at D1. An instant later it is detected at either D0 or D1. But how does the wavefunction predict two equally likely locations in one instant and then the next instant, the probabilities are gone and the photon is detected at D0 or D1?</p>
+
+<h2 id="measurement-of-a-quantum-system">Measurement of a quantum system</h2>
+
+<p>Generally, when scientists say they are taking a “measurement” they are describing the action or process of observing something in order to gain information. But in quantum mechanics, the term “measurement” has both practical and philisophical implications. From a practical point of view, measuring a quantum system changes the quantum state that describes that system; this is sometimes described as causing the wavefunction to collapse (i.e. it is no longer in a superposition of states). From a philisophical point of view, how did the system know it was being measured? In other words, what caused the collapse? How are the probabilities converted into an actual, well-defined classical outcome? The answer to these questions depends on your interpretation of quantum mechanics and is beyond the scope of this post. For those interested, see <a href="https://en.wikipedia.org/wiki/Measurement_problem">the measurement problem</a>.</p>
+
+<h1 id="summary">Summary</h1>
+<p>Experiment 11 introduced the measurement problem and set us up for an experiment that challenges our everyday understanding of reality.</p>
+
+<h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
+<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.]]></summary></entry><entry><title type="html">Experiment 11</title><link href="https://dlfelps.github.io/2024/03/01/quantum-smalltalk2.html" rel="alternate" type="text/html" title="Experiment 11" /><published>2024-03-01T00:00:00+00:00</published><updated>2024-03-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/03/01/quantum-smalltalk2</id><content type="html" xml:base="https://dlfelps.github.io/2024/03/01/quantum-smalltalk2.html"><![CDATA[<h1 id="introduction">Introduction</h1>
 <p>Experiment 11 introduces the concepts of quantum superposition by making a slight modification to Experiment 10.</p>
 
 <h1 id="experiment-11">Experiment #11</h1>
@@ -96,12 +151,8 @@ Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999
 
 <p>Although we don’t know why it happens, we can describe the conditions when we observe it. In this case, it happened because the observers (e.g. you, me, or the universe) couldn’t tell which path the photon took. Each path was sufficiently ambiguous to allow the photon’s wavefunction to remain in superposition. In Experiment 10, when we blocked the lower path, the photon couldn’t be in superposition because we knew it must have taken the upper path to arrive at the detectors.</p>
 
-<h2 id="what-is-measurement">What is Measurement</h2>
-
-<p>Generally, when scientists say they are taking a “measurement” they are describing the action or process of observing something in order to gain information. But in quantum mechanics, measurement takes on a whole new meaning with practical and philisophical implications. From a practical point of view, measuring a quantum system changes the quantum state that describes that system; this is sometimes described as causing the wavefunction to collapse (i.e. it is no longer in a superposition of states). From a philisophical point of view, how did the system know it was being measured. In other words, what caused the collapse? How are the probabilities converted into an actual, well-defined classical outcome? The answer to these questions depends on your interpretation and is beyond the scope of this post. For those interested, see <a href="https://en.wikipedia.org/wiki/Measurement_problem">the measurement problem</a>.</p>
-
 <h1 id="summary">Summary</h1>
-<p>Experiment 11 introduced the concepts of superposition and briefly described the implications of measuring a quantum system. The next experiment explores what happens when we remove the second beam splitter.</p>
+<p>Experiment 11 introduced the concepts of superposition. The next experiment explores what happens when we remove the second beam splitter.</p>
 
 <h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
 <p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Experiment 11 introduces the concepts of quantum superposition by making a slight modification to Experiment 10.]]></summary></entry><entry><title type="html">Experiment 10</title><link href="https://dlfelps.github.io/2024/02/01/quantum-smalltalk1.html" rel="alternate" type="text/html" title="Experiment 10" /><published>2024-02-01T00:00:00+00:00</published><updated>2024-02-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/02/01/quantum-smalltalk1</id><content type="html" xml:base="https://dlfelps.github.io/2024/02/01/quantum-smalltalk1.html"><![CDATA[<h1 id="introducing-the-quantum-smalltalk-series">Introducing the Quantum Smalltalk series</h1>
@@ -2373,128 +2424,4 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
       <p>Continuous integration is the DevOps practice whereby code changes are regularly merged into a central repository and the entire project is automatically built and tested. Some common platforms for continuous integration are <a href="https://www.jetbrains.com/teamcity/">TeamCity</a>, <a href="https://www.jenkins.io/">Jenkins</a>, <a href="https://circleci.com/">CircleCI</a>, <a href="https://github.com/features/actions">Github Actions</a>, and <a href="https://gitlab.com/">Gitlab</a>. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><category term="docker" /><category term="ci/cd" /><summary type="html"><![CDATA[This post describes the approach that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.]]></summary></entry><entry><title type="html">Experiment 02</title><link href="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html" rel="alternate" type="text/html" title="Experiment 02" /><published>2022-06-20T00:00:00+00:00</published><updated>2022-06-20T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series</id><content type="html" xml:base="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html"><![CDATA[<p>The next few posts take step back to examine the benefits of creating reproducible software. We will explore:</p>
-<ul>
-  <li>the continuously reproducible mindset (this post)</li>
-  <li>foundational tools for reproducibility (<a href="/2022/06/25/Reproducible-Foundations.html">Exp 03</a>)</li>
-  <li>creating a continuously reproducible .NET project (<a href="/2022/07/06/Reproducible-Example.html">Exp 04</a>)</li>
-</ul>
-
-<h2 id="introduction">Introduction</h2>
-
-<p>Scientific experiments must be repeatable and reproducible to be considered scientific. Reproducibility in software is optional - software that works but is not reproducible is still successful software. I hope to convince you that the overhead required to create reproducible software is low compared to the benefits that it provides future developers, even if the only future developer is you.</p>
-
-<h2 id="defining-reproducible-software">Defining reproducible software</h2>
-
-<p>It is useful to clarify our definition of reproducibility within the context of software development. Let P<sub>0</sub> represent a stable, compiling build of a codebase that results in a <em>correct</em> program. The reproducibility test for P<sub>0</sub> is as follows:</p>
-
-<blockquote>
-  <p>Does the code/documentation for P<sub>0</sub> contain sufficient information to reproduce the <em>correct</em> program from a clean environment? (Yes/No)</p>
-</blockquote>
-
-<p>Next, let P<sub>1</sub> represent the code (in the new environment) that has undergone a substantial change that <em>modified the build environment.</em> We can reapply the reproducibilty test to P<sub>1</sub>. The number of times that code passes the reproducibility test can be defined as its reproducibility level [0..N].</p>
-
-<p>It may be useful to name a few of these levels.</p>
-
-<ul>
-  <li><em>Irreproducible</em> - Reproducibility level 0; P<sub>0</sub> failed the reproducibility test.</li>
-  <li><em>One-time reproducible</em> - Reproducibility level 1; P<sub>0</sub> passed the reproducibility test, but P<sub>1</sub> failed.</li>
-  <li><em>Continuously reproducible</em> - Reproducibility level 2+; If P<sub>0</sub> and P<sub>1</sub> pass the reproducibility test then it is indicitave that the code is written in a way that supports reproducibility for future generations of the code.</li>
-</ul>
-
-<h2 id="the-continuously-reproducible-mindset">The continuously reproducible mindset</h2>
-
-<p>How many times have you pulled a project from Github only to have it fail to compile?</p>
-
-<blockquote>
-  <p>It works on my machine ¯\_(ツ)_/¯</p>
-</blockquote>
-
-<p>We can reduce this problem by expanding our mindset to strive for <strong>continuously reproducible</strong> code. The key to creating continuously reproducible code is create a simple workflow that rebuilds the project from a clean environment (preferably Windows, Linux, and OSX). This allows you to isolate undocumented side-effects that can occur in your local development environment (e.g. relying on a tool available locally that is not installed during the build process).</p>
-
-<p>Continuosly reproducible code balances the need to solve the current problem with the need to redeploy the codebase to new systems. If this doesn’t seem worthwhile, then it might be helpful to imagine that your code (P<sub>0</sub>) will be extended by a different developer in a substantial way (P<sub>1</sub>) before it is returned to you for another round of development (P<sub>2</sub>). The time spent during the initial phase of development to create a build process that is easy to replicate across platforms (and modify as needed) will payoff in the long run.</p>
-
-<p>But what if you are the only developer that will ever use this code? I have  found the continuously reproducible mindset to be helpful in my personal projects for tracking down build-related problems and ensuring that my code works even after long pauses in active development.</p>
-
-<h2 id="measuring-the-longevity-of-a-build">Measuring the longevity of a build</h2>
-
-<p>If a specific build passes the reproducibility test then its longevity can be measured. Longevity is a measure of the period of time between the first time the build passes the reproducibility test and the last time it passes. All builds eventually fail because some dependency of the build process will fail (including the language itself - .NET Framework 3.5 was released in November  2007 but it is no longer available from Microsoft).</p>
-
-<p align="center">
-  <img width="600" height="400" src="/assets/images/fight_club.jpg" />
-</p>
-
-<p>Longevity is measured for a single build configuration. Namely, P<sub>0</sub> will have a certain longevity, but P<sub>1</sub>’s longevity may be shorter or longer depending on the changes made to its build configuration. Although true longevity can only be calculated after the build fails, developers can make conscious decisions to maximize the expected longevity of their code:</p>
-<ul>
-  <li>prefer dependencies that offer long term support (e.g. choose .NET 6 LTS even after .NET 7 is released) <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></li>
-  <li>prefer dependencies that minimize the number of <a href="https://fsprojects.github.io/Paket/faq.html#What-does-transitive-dependencies-mean">transitive dependencies</a></li>
-  <li>specify dependencies using <a href="https://fsprojects.github.io/Paket/nuget-dependencies.html#Pinned-version-constraint">pinned version constraints</a> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup></li>
-  <li>if using Docker, build from <a href="https://hub.docker.com/search?q=&amp;type=image&amp;image_filter=official">official base images</a></li>
-</ul>
-
-<h2 id="conclusion">Conclusion</h2>
-
-<p>Reproducibility is relatively easy with modern software development tools. The crux of the problem is giving future developers the ability to:</p>
-<ol>
-  <li>easily recreate the initial development environment across multiple platforms/architectures</li>
-  <li>continue to make changes to the code that does not break this process</li>
-</ol>
-
-<p>In the next few posts I will describe my approach to reproducibility and demonstrate how to apply them to an existing code base.</p>
-
-<h4 id="footnotes">Footnotes</h4>
-
-<!--
-
-1. Intro
-  - need for reproducibility
-  - in science
-  - in software
-  - in machine learning
-
-2. Basic tools
-  - Docker (links to learning resources)
-  - Gitlab/Github 
-  - CI/CD
-  - permissive licensing
-
-3. Producing reporducible builds
-  - choice of baseline (LTS)
-  - provide multiple options (multiple-platforms)
-    - local install w/ ci/cd
-    - docker-compose local (build)
-  - push build complexity to lowest level
-
-4. CI/CD
-  - Gitlab runner w/ docker
-  - (optional) docker registry
-
-5. Publishing
-  - code should be publish to allow someone (most likely yourself) to reproduce it
-  - but it shouldnt be required; also provide standalone executables
-
--->
-
-<!--
-https://www.nature.com/articles/s41562-016-0021
-
-
-The problem
-A hallmark of scientific creativity is the ability to see novel and unexpected patterns in data. John Snow's identification of links between cholera and water supply17, Paul Broca's work on language lateralization18 and Jocelyn Bell Burnell's discovery of pulsars19 are examples of breakthroughs achieved by interpreting observations in a new way. However, a major challenge for scientists is to be open to new and important insights while simultaneously avoiding being misled by our tendency to see structure in randomness. The combination of apophenia (the tendency to see patterns in random data), confirmation bias (the tendency to focus on evidence that is in line with our expectations or favoured explanation) and hindsight bias (the tendency to see an event as having been predictable only after it has occurred) can easily lead us to false conclusions20. Thomas Levenson documents the example of astronomers who became convinced they had seen the fictitious planet Vulcan because their contemporary theories predicted its existence21. Experimenter effects are an example of this kind of bias22.
-
-Over-interpretation of noise is facilitated by the extent to which data analysis is rapid, flexible and automated23. In a high-dimensional dataset, there may be hundreds or thousands of reasonable alternative approaches to analysing the same data24,25. For example, in a systematic review of functional magnetic resonance imaging (fMRI) studies, Carp showed that there were almost as many unique analytical pipelines as there were studies26. If several thousand potential analytical pipelines can be applied to high-dimensional data, the generation of false-positive findings is highly likely. For example, applying almost 7,000 analytical pipelines to a single fMRI dataset resulted in over 90% of brain voxels showing significant activation in at least one analysis27.
-
-During data analysis it can be difficult for researchers to recognize P-hacking28 or data dredging because confirmation and hindsight biases can encourage the acceptance of outcomes that fit expectations or desires as appropriate, and the rejection of outcomes that do not as the result of suboptimal designs or analyses. Hypotheses may emerge that fit the data and are then reported without indication or recognition of their post hoc origin7. This, unfortunately, is not scientific discovery, but self-deception29. Uncontrolled, it can dramatically increase the false discovery rate. We need measures to counter the natural tendency of enthusiastic scientists who are motivated by discovery to see patterns in noise.
-
-
--->
-<div class="footnotes" role="doc-endnotes">
-  <ol>
-    <li id="fn:1" role="doc-endnote">
-      <p>Microsoft patches .NET LTS releases for 3 years while current releases are only patched for 18 months. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-    <li id="fn:2" role="doc-endnote">
-      <p>While it may seem counterintuitive to limit the available versions of your dependencies, it improves control over the automatic dependency resolver. This is in line with the continuously reproducible mindset and future developers are always free to update the version if they encounter a conflict. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-  </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><summary type="html"><![CDATA[The next few posts take step back to examine the benefits of creating reproducible software. We will explore: the continuously reproducible mindset (this post) foundational tools for reproducibility (Exp 03) creating a continuously reproducible .NET project (Exp 04)]]></summary></entry></feed>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><category term="docker" /><category term="ci/cd" /><summary type="html"><![CDATA[This post describes the approach that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.]]></summary></entry></feed>

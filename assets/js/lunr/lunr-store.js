@@ -70,4 +70,10 @@ var store = [{
         "tags": ["quantum","smalltalk"],
         "url": "/2024/03/01/quantum-smalltalk2.html",
         "teaser": null
+      },{
+        "title": "Experiment 12",
+        "excerpt":"Introduction Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13. Experiment #12 Modify the setup from Experiment #11 by removing the second beamsplitter. This allows the photon to take one of two paths: State name Path at BS1 Detector Probability R...","categories": [],
+        "tags": ["quantum","smalltalk"],
+        "url": "/2024/04/01/quantum-smalltalk3.html",
+        "teaser": null
       }]

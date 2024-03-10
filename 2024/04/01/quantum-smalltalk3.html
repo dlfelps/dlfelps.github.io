@@ -1,0 +1,354 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 12 - .NET Experiments</title>
+<meta name="description" content="Introduction Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 12">
+<meta property="og:url" content="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html">
+
+
+  <meta property="og:description" content="Introduction Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2024-04-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Daniel Felps",
+      "url": "https://dlfelps.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/">Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 12">
+    <meta itemprop="description" content="IntroductionExperiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.">
+    <meta itemprop="datePublished" content="2024-04-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Experiment 12
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2024-04-01T00:00:00+00:00">April 1, 2024</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li><li><a href="#experiment-12">Experiment #12</a><ul><li><a href="#the-wavefunction">The wavefunction</a></li><li><a href="#measurement-of-a-quantum-system">Measurement of a quantum system</a></li></ul></li><li><a href="#summary">Summary</a></li><li><a href="#appendix-the-smalltalk-code">Appendix: The Smalltalk code</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h1 id="introduction">Introduction</h1>
+<p>Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.</p>
+
+<h1 id="experiment-12">Experiment #12</h1>
+<p><img src="/assets/images/exp3.png" alt="Experiment #12" title="Experiment #12" /></p>
+
+<p>Modify the setup from Experiment #11 by removing the second beamsplitter. This allows the photon to take one of two paths:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">State name</th>
+      <th style="text-align: center">Path at BS1</th>
+      <th style="text-align: center">Detector</th>
+      <th style="text-align: center">Probability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">R</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">T</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">?</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We don’t yet know the outcome of the experiment, but based on our observations from Experiment 10 we might expect an equal distribution between D0 and D1. Let’s run the Smalltalk simulation.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
+Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon finally detected with following probabilities: &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+</code></pre></div></div>
+
+<p>Our intuition was correct! After the first beamsplitter the photon is equally likely to be on the upper and lower path, but this time the paths are not recombined using the second beamsplitter. So any photons that are reflected at BS1 end up at D0 and any photons that are transmitted at BS1 end up at D1. We always know which path the photon took.</p>
+
+<h2 id="the-wavefunction">The wavefunction</h2>
+
+<p>How does this affect the photon’s wavefunction? Initially, after interacting with the beamsplitter we do not know which path the photon is on. Therefore its wavefunction is a superposition of states of the upper and lower paths.  At the moment just before the photon would reach D0 or D1, its wavefunction predicts with 50% probability that the photon will be detected at D0 and 50% probabilty that the photon will be detected at D1. An instant later it is detected at either D0 or D1. But how does the wavefunction predict two equally likely locations in one instant and then the next instant, the probabilities are gone and the photon is detected at D0 or D1?</p>
+
+<h2 id="measurement-of-a-quantum-system">Measurement of a quantum system</h2>
+
+<p>Generally, when scientists say they are taking a “measurement” they are describing the action or process of observing something in order to gain information. But in quantum mechanics, the term “measurement” has both practical and philisophical implications. From a practical point of view, measuring a quantum system changes the quantum state that describes that system; this is sometimes described as causing the wavefunction to collapse (i.e. it is no longer in a superposition of states). From a philisophical point of view, how did the system know it was being measured? In other words, what caused the collapse? How are the probabilities converted into an actual, well-defined classical outcome? The answer to these questions depends on your interpretation of quantum mechanics and is beyond the scope of this post. For those interested, see <a href="https://en.wikipedia.org/wiki/Measurement_problem">the measurement problem</a>.</p>
+
+<h1 id="summary">Summary</h1>
+<p>Experiment 11 introduced the measurement problem and set us up for an experiment that challenges our everyday understanding of reality.</p>
+
+<h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
+<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/quantum" class="page__taxonomy-item" rel="tag">quantum</a><span class="sep">, </span>
+    
+      <a href="/tags/smalltalk" class="page__taxonomy-item" rel="tag">smalltalk</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2024-04-01T00:00:00+00:00">April 1, 2024</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Experiment+12%20https%3A%2F%2Fdlfelps.github.io%2F2024%2F04%2F01%2Fquantum-smalltalk3.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2024%2F04%2F01%2Fquantum-smalltalk3.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fdlfelps.github.io%2F2024%2F04%2F01%2Fquantum-smalltalk3.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2024/03/01/quantum-smalltalk2.html" class="pagination--pager" title="Experiment 11
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2024 Daniel Felps. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
