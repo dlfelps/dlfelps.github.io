@@ -54,14 +54,9 @@ No one knows for sure and those that think they do can't agree.
 
 Although we don't know why it happens, we can describe the conditions when we observe it. In this case, it happened because the observers (e.g. you, me, or the universe) couldn't tell which path the photon took. Each path was sufficiently ambiguous to allow the photon's wavefunction to remain in superposition. In Experiment 10, when we blocked the lower path, the photon couldn't be in superposition because we knew it must have taken the upper path to arrive at the detectors.
 
-## What is Measurement
-
-Generally, when scientists say they are taking a "measurement" they are describing the action or process of observing something in order to gain information. But in quantum mechanics, measurement takes on a whole new meaning with practical and philisophical implications. From a practical point of view, measuring a quantum system changes the quantum state that describes that system; this is sometimes described as causing the wavefunction to collapse (i.e. it is no longer in a superposition of states). From a philisophical point of view, how did the system know it was being measured. In other words, what caused the collapse? How are the probabilities converted into an actual, well-defined classical outcome? The answer to these questions depends on your interpretation and is beyond the scope of this post. For those interested, see [the measurement problem](https://en.wikipedia.org/wiki/Measurement_problem).
-
-
 
 # Summary
-Experiment 11 introduced the concepts of superposition and briefly described the implications of measuring a quantum system. The next experiment explores what happens when we remove the second beam splitter.
+Experiment 11 introduced the concepts of superposition. The next experiment explores what happens when we remove the second beam splitter.
 
 # Appendix: The Smalltalk code
 The full Pharo package can be found at [dlfeps/MZI](https://github.com/dlfelps/MZI). 
