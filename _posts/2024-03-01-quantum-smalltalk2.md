@@ -56,7 +56,7 @@ Although we don't know why it happens, we can describe the conditions when we ob
 
 
 # Summary
-Experiment 11 introduced the concepts of superposition. The next experiment explores what happens when we remove the second beam splitter.
+Experiment 11 explored the wave-like nature of a photon demonstrated by the destructive interference that occurs between the two superposition states of the system. The next experiment explores what happens when we remove the second beam splitter.
 
 # Appendix: The Smalltalk code
 The full Pharo package can be found at [dlfeps/MZI](https://github.com/dlfelps/MZI). 

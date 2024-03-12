@@ -38,7 +38,7 @@ Generally, when scientists say they are taking a "measurement" they are describi
 
 
 # Summary
-Experiment 11 introduced the measurement problem and set us up for an experiment that challenges our everyday understanding of reality. 
+Experiment 12 explored the measurement problem - the instant that the photon becomes a particle (as described by the wavefunction). The next experiment challenges our everyday understanding of reality. 
 
 # Appendix: The Smalltalk code
 The full Pharo package can be found at [dlfeps/MZI](https://github.com/dlfelps/MZI). 
