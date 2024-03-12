@@ -1,4 +1,170 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-03-10T11:47:14+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 12</title><link href="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html" rel="alternate" type="text/html" title="Experiment 12" /><published>2024-04-01T00:00:00+00:00</published><updated>2024-04-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/04/01/quantum-smalltalk3</id><content type="html" xml:base="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html"><![CDATA[<h1 id="introduction">Introduction</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-03-12T01:18:56+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 13</title><link href="https://dlfelps.github.io/2024/05/01/quantum-smalltalk4.html" rel="alternate" type="text/html" title="Experiment 13" /><published>2024-05-01T00:00:00+00:00</published><updated>2024-05-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/05/01/quantum-smalltalk4</id><content type="html" xml:base="https://dlfelps.github.io/2024/05/01/quantum-smalltalk4.html"><![CDATA[<h1 id="introduction">Introduction</h1>
+<p>In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions:</p>
+<ul>
+  <li>Could the photon decide to travel as a wave or a particle depending on the experimental setup?</li>
+  <li>And if yes, when does the photon decide whether it is going to travel as a wave or as a particle?</li>
+</ul>
+
+<h1 id="experiment-13">Experiment #13</h1>
+<p><img src="/assets/images/exp4.gif" alt="Experiment #13" title="Experiment #13" /></p>
+
+<p>Combine the setups from Experiment #11 and #12 by randomly inserting the second beamsplitter AFTER the photon has interacted with the first beam splitter. This allows the photon to take one of six paths:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">State name</th>
+      <th style="text-align: center">Path at BS1</th>
+      <th style="text-align: center">BS2 present</th>
+      <th style="text-align: center">Path at BS2</th>
+      <th style="text-align: center">Detector</th>
+      <th style="text-align: center">Probability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">RX</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">TX</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">RR</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">RT</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">TR</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">TT</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">?</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We have seen both of the setups independently, but now the decision to add the second beamsplitter takes place during the experiment.</p>
+
+<h2 id="results">Results</h2>
+
+<p>Let’s examine two of the Smalltalk simulation runs. In the first example, the second beamsplitter was omitted from the setup.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
+Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Second beamsplitter omitted from setup. 
+Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon finally detected with following probabilities: &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+
+</code></pre></div></div>
+<p>We observe detection probabilities similar to those in Experiment #12. In the next example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
+Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Second beamsplitter inserted into setup after mirror. 
+Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon passing through a beam splitter. &gt;&gt; #(0.9999999999999996 0.0 )
+Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999996 0.0)
+</code></pre></div></div>
+
+<p>We observe detection probabilities simlar to those in Experiment #11. Filling in the results chart we notice that the table reads as if there were two different experiments going on (i.e. the total observation probability adds up to 2.0!)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">State name</th>
+      <th style="text-align: center">Path at BS1</th>
+      <th style="text-align: center">BS2 present</th>
+      <th style="text-align: center">Path at BS2</th>
+      <th style="text-align: center">Detector</th>
+      <th style="text-align: center">Probability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">RX</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">0.50</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">TX</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">0.50</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">RR/TT</td>
+      <td style="text-align: center">?</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">?</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">0.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">RT/TR</td>
+      <td style="text-align: center">?</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">?</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">1.0</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This is because there are two experiments happening - as soon as you insert the second beamsplitter you change the experiment.</p>
+
+<h1 id="interpretation">Interpretation</h1>
+<p>It is clear that the behavior of the photon in the interferometer depends on the choice of second beamsplitter, even when that choice is made after the photon enters the interferometer. In Wheeler’s words,</p>
+
+<blockquote>
+  <p>“we have a strange inversion of the normal order of time. We, now, by moving the mirror in or out have an unavoidable effect on what we have a right to say about the already past history of that photon”</p>
+</blockquote>
+
+<p>It may be tempting to interpret this experiment as a case of <a href="https://en.wikipedia.org/wiki/Retrocausality">retrocausality</a>, whereby the insertion of the second beamsplitter causes the photon to retroactively act like a wave instead of a particle. However, this is a leap too far.</p>
+
+<p>Experiment #13, also known as the <a href="https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment">delayed-choice experiment</a>, demonstrates a  subtle point of <a href="https://en.wikipedia.org/w/index.php?title=Wave%E2%80%93particle_duality">wave-particle duality</a>. Namely, a photon’s behavior is <em>always</em> governed by the Schrödinger equation, yet when measured, it is observed as a particle whose location is determined by the <a href="https://en.wikipedia.org/wiki/Born_rule">Born rule</a>.</p>
+
+<p>This is what is meant by a photon acting like a <em>wave</em> and a <em>particle</em>. But what about Experiments #10 and #12, where the photon acted only like a particle and not like a wave? WRONG. The photon was both, but the wavefunction merely predicted behavior that was particle-like.</p>
+
+<h1 id="summary">Summary</h1>
+<p>Experiment #13 presented John Wheeler’s <a href="https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment">delayed-choice experiment</a>. We won’t discuss it in this series, but if you found this interesting I encourage you to read about an extension of this experiment called the <a href="https://en.wikipedia.org/wiki/Delayed-choice_quantum_eraser">delayed-choice quantum eraser</a>.</p>
+
+<h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
+<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions: Could the photon decide to travel as a wave or a particle depending on the experimental setup? And if yes, when does the photon decide whether it is going to travel as a wave or as a particle?]]></summary></entry><entry><title type="html">Experiment 12</title><link href="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html" rel="alternate" type="text/html" title="Experiment 12" /><published>2024-04-01T00:00:00+00:00</published><updated>2024-04-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/04/01/quantum-smalltalk3</id><content type="html" xml:base="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html"><![CDATA[<h1 id="introduction">Introduction</h1>
 <p>Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.</p>
 
 <h1 id="experiment-12">Experiment #12</h1>
@@ -50,7 +216,7 @@ Photon finally detected with following probabilities: &gt;&gt; #(0.4999999999999
 <p>Generally, when scientists say they are taking a “measurement” they are describing the action or process of observing something in order to gain information. But in quantum mechanics, the term “measurement” has both practical and philisophical implications. From a practical point of view, measuring a quantum system changes the quantum state that describes that system; this is sometimes described as causing the wavefunction to collapse (i.e. it is no longer in a superposition of states). From a philisophical point of view, how did the system know it was being measured? In other words, what caused the collapse? How are the probabilities converted into an actual, well-defined classical outcome? The answer to these questions depends on your interpretation of quantum mechanics and is beyond the scope of this post. For those interested, see <a href="https://en.wikipedia.org/wiki/Measurement_problem">the measurement problem</a>.</p>
 
 <h1 id="summary">Summary</h1>
-<p>Experiment 11 introduced the measurement problem and set us up for an experiment that challenges our everyday understanding of reality.</p>
+<p>Experiment 12 explored the measurement problem - the instant that the photon becomes a particle (as described by the wavefunction). The next experiment challenges our everyday understanding of reality.</p>
 
 <h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
 <p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.]]></summary></entry><entry><title type="html">Experiment 11</title><link href="https://dlfelps.github.io/2024/03/01/quantum-smalltalk2.html" rel="alternate" type="text/html" title="Experiment 11" /><published>2024-03-01T00:00:00+00:00</published><updated>2024-03-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/03/01/quantum-smalltalk2</id><content type="html" xml:base="https://dlfelps.github.io/2024/03/01/quantum-smalltalk2.html"><![CDATA[<h1 id="introduction">Introduction</h1>
@@ -152,7 +318,7 @@ Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999
 <p>Although we don’t know why it happens, we can describe the conditions when we observe it. In this case, it happened because the observers (e.g. you, me, or the universe) couldn’t tell which path the photon took. Each path was sufficiently ambiguous to allow the photon’s wavefunction to remain in superposition. In Experiment 10, when we blocked the lower path, the photon couldn’t be in superposition because we knew it must have taken the upper path to arrive at the detectors.</p>
 
 <h1 id="summary">Summary</h1>
-<p>Experiment 11 introduced the concepts of superposition. The next experiment explores what happens when we remove the second beam splitter.</p>
+<p>Experiment 11 explored the wave-like nature of a photon demonstrated by the destructive interference that occurs between the two superposition states of the system. The next experiment explores what happens when we remove the second beam splitter.</p>
 
 <h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
 <p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Experiment 11 introduces the concepts of quantum superposition by making a slight modification to Experiment 10.]]></summary></entry><entry><title type="html">Experiment 10</title><link href="https://dlfelps.github.io/2024/02/01/quantum-smalltalk1.html" rel="alternate" type="text/html" title="Experiment 10" /><published>2024-02-01T00:00:00+00:00</published><updated>2024-02-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/02/01/quantum-smalltalk1</id><content type="html" xml:base="https://dlfelps.github.io/2024/02/01/quantum-smalltalk1.html"><![CDATA[<h1 id="introducing-the-quantum-smalltalk-series">Introducing the Quantum Smalltalk series</h1>
@@ -2356,72 +2522,4 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
       <p>NUKE supports many popular CI/CD platforms out of the box (i.e. AppVeyor, Azure Pipelines, Bitbucket, GitHub Actions, GitLab, Jenkins, Space Automation, and TeamCity). <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><category term="docker" /><category term="ci/cd" /><summary type="html"><![CDATA[In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow.]]></summary></entry><entry><title type="html">Experiment 03</title><link href="https://dlfelps.github.io/2022/06/25/Reproducible-Foundations.html" rel="alternate" type="text/html" title="Experiment 03" /><published>2022-06-25T00:00:00+00:00</published><updated>2022-06-25T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/06/25/Reproducible-Foundations</id><content type="html" xml:base="https://dlfelps.github.io/2022/06/25/Reproducible-Foundations.html"><![CDATA[<p>This post describes the approach that I use to make my code reproducible. NOTE: I have only tested this on <em>smallish</em> projects and there certainly are other ways to create reproducible software.</p>
-
-<h2 id="introduction">Introduction</h2>
-
-<p>The <a href="/2022/06/20/Reproducible-Dotnet-Series.html">first post</a> in this <a href="/tags/reproducible/">series</a> described the characteristics of reproducible code. This post describes my approach to meeting the following requirements of reproducible software:</p>
-
-<blockquote>
-  <ol>
-    <li>Build from a clean environment on any platform</li>
-    <li>Satisfy #1 in a standard, lightweight, repeatable way across codebases</li>
-  </ol>
-</blockquote>
-
-<p>My initial attempts at satisfying these requirements failed. Custom build tools (i.e. <a href="https://cakebuild.net/">CAKE</a>/<a href="https://fake.build/">FAKE</a>) were too cumbersome and assumed .NET was already installed (i.e. not a clean environment). Docker dev environments were a quick way to create one-time reproducible builds, but they also assumed Docker was installed. Installing from a purely clean environment seemed at odds with a lightweight build process. So I amended the requirements slightly:</p>
-
-<blockquote>
-  <ol>
-    <li>Build from any platform <strong>with the help of one pre-installed dependency</strong></li>
-    <li>Satisfy #1 in a standard, lightweight, repeatable way across codebases</li>
-  </ol>
-</blockquote>
-
-<p>This small change was sufficient for me to devise an approach for continuously reproducible code.</p>
-
-<h2 id="my-continuously-reproducible-approach">(My) Continuously reproducible approach</h2>
-
-<p>My approach is essentially continuous integration<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> plus the <a href="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html#the-continuously-reproducible-mindset">continuously reproducible mindset</a>. Continuous integration ensures that the build works now and the continuously reproducible mindset maximizes the chance that it will work even if left dormant for a period of time. I assume that the most recent LTS version of .NET is installed (this is currently .NET 6.0 which can be installed on any major platform); this assumption lets me use .NET to restore dependencies, build, and test the project. For projects outside of .NET, I assume that Docker is installed instead. I provide an example of both of these in the final post.</p>
-
-<p>By following this approach you can verify that your project builds from a (mostly) clean environment and have confidence that it will work continue to work for anyone else for <em>years</em> to come. If you have improvements or would like to share a different approach I would love to hear about it!</p>
-
-<h4 id="footnotes">Footnotes</h4>
-
-<!--
-
-1. Intro
-  - need for reproducibility
-  - in science
-  - in software
-  - in machine learning
-
-2. Basic tools
-  - Docker (links to learning resources)
-  - Gitlab/Github 
-  - CI/CD
-  - permissive licensing
-
-3. Producing reporducible builds
-  - choice of baseline (LTS)
-  - provide multiple options (multiple-platforms)
-    - local install w/ ci/cd
-    - docker-compose local (build)
-  - push build complexity to lowest level
-
-4. CI/CD
-  - Gitlab runner w/ docker
-  - (optional) docker registry
-
-5. Publishing
-  - code should be publish to allow someone (most likely yourself) to reproduce it
-  - but it shouldnt be required; also provide standalone executables
-
--->
-<div class="footnotes" role="doc-endnotes">
-  <ol>
-    <li id="fn:1" role="doc-endnote">
-      <p>Continuous integration is the DevOps practice whereby code changes are regularly merged into a central repository and the entire project is automatically built and tested. Some common platforms for continuous integration are <a href="https://www.jetbrains.com/teamcity/">TeamCity</a>, <a href="https://www.jenkins.io/">Jenkins</a>, <a href="https://circleci.com/">CircleCI</a>, <a href="https://github.com/features/actions">Github Actions</a>, and <a href="https://gitlab.com/">Gitlab</a>. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-  </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><category term="docker" /><category term="ci/cd" /><summary type="html"><![CDATA[This post describes the approach that I use to make my code reproducible. NOTE: I have only tested this on smallish projects and there certainly are other ways to create reproducible software.]]></summary></entry></feed>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><category term="docker" /><category term="ci/cd" /><summary type="html"><![CDATA[In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow.]]></summary></entry></feed>

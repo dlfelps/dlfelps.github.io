@@ -76,4 +76,10 @@ var store = [{
         "tags": ["quantum","smalltalk"],
         "url": "/2024/04/01/quantum-smalltalk3.html",
         "teaser": null
+      },{
+        "title": "Experiment 13",
+        "excerpt":"Introduction In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions: Could the photon...","categories": [],
+        "tags": ["quantum","smalltalk"],
+        "url": "/2024/05/01/quantum-smalltalk4.html",
+        "teaser": null
       }]

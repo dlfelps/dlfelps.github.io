@@ -1,0 +1,465 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 13 - .NET Experiments</title>
+<meta name="description" content="Introduction In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions:    Could the photon decide to travel as a wave or a particle depending on the experimental setup?   And if yes, when does the photon decide whether it is going to travel as a wave or as a particle?">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 13">
+<meta property="og:url" content="https://dlfelps.github.io/2024/05/01/quantum-smalltalk4.html">
+
+
+  <meta property="og:description" content="Introduction In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions:    Could the photon decide to travel as a wave or a particle depending on the experimental setup?   And if yes, when does the photon decide whether it is going to travel as a wave or as a particle?">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2024-05-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2024/05/01/quantum-smalltalk4.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Daniel Felps",
+      "url": "https://dlfelps.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/">Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 13">
+    <meta itemprop="description" content="IntroductionIn Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions:  Could the photon decide to travel as a wave or a particle depending on the experimental setup?  And if yes, when does the photon decide whether it is going to travel as a wave or as a particle?">
+    <meta itemprop="datePublished" content="2024-05-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Experiment 13
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2024-05-01T00:00:00+00:00">May 1, 2024</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          8 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li><li><a href="#experiment-13">Experiment #13</a><ul><li><a href="#results">Results</a></li></ul></li><li><a href="#interpretation">Interpretation</a></li><li><a href="#summary">Summary</a></li><li><a href="#appendix-the-smalltalk-code">Appendix: The Smalltalk code</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h1 id="introduction">Introduction</h1>
+<p>In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions:</p>
+<ul>
+  <li>Could the photon decide to travel as a wave or a particle depending on the experimental setup?</li>
+  <li>And if yes, when does the photon decide whether it is going to travel as a wave or as a particle?</li>
+</ul>
+
+<h1 id="experiment-13">Experiment #13</h1>
+<p><img src="/assets/images/exp4.gif" alt="Experiment #13" title="Experiment #13" /></p>
+
+<p>Combine the setups from Experiment #11 and #12 by randomly inserting the second beamsplitter AFTER the photon has interacted with the first beam splitter. This allows the photon to take one of six paths:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">State name</th>
+      <th style="text-align: center">Path at BS1</th>
+      <th style="text-align: center">BS2 present</th>
+      <th style="text-align: center">Path at BS2</th>
+      <th style="text-align: center">Detector</th>
+      <th style="text-align: center">Probability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">RX</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">TX</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">RR</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">RT</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">TR</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">TT</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">?</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We have seen both of the setups independently, but now the decision to add the second beamsplitter takes place during the experiment.</p>
+
+<h2 id="results">Results</h2>
+
+<p>Let’s examine two of the Smalltalk simulation runs. In the first example, the second beamsplitter was omitted from the setup.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
+Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Second beamsplitter omitted from setup. 
+Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon finally detected with following probabilities: &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+
+</code></pre></div></div>
+<p>We observe detection probabilities similar to those in Experiment #12. In the next example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
+Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Second beamsplitter inserted into setup after mirror. 
+Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon passing through a beam splitter. &gt;&gt; #(0.9999999999999996 0.0 )
+Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999996 0.0)
+</code></pre></div></div>
+
+<p>We observe detection probabilities simlar to those in Experiment #11. Filling in the results chart we notice that the table reads as if there were two different experiments going on (i.e. the total observation probability adds up to 2.0!)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">State name</th>
+      <th style="text-align: center">Path at BS1</th>
+      <th style="text-align: center">BS2 present</th>
+      <th style="text-align: center">Path at BS2</th>
+      <th style="text-align: center">Detector</th>
+      <th style="text-align: center">Probability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">RX</td>
+      <td style="text-align: center">Reflected</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">0.50</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">TX</td>
+      <td style="text-align: center">Transmitted</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">0.50</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">RR/TT</td>
+      <td style="text-align: center">?</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">?</td>
+      <td style="text-align: center">D1</td>
+      <td style="text-align: center">0.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">RT/TR</td>
+      <td style="text-align: center">?</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">?</td>
+      <td style="text-align: center">D0</td>
+      <td style="text-align: center">1.0</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This is because there are two experiments happening - as soon as you insert the second beamsplitter you change the experiment.</p>
+
+<h1 id="interpretation">Interpretation</h1>
+<p>It is clear that the behavior of the photon in the interferometer depends on the choice of second beamsplitter, even when that choice is made after the photon enters the interferometer. In Wheeler’s words,</p>
+
+<blockquote>
+  <p>“we have a strange inversion of the normal order of time. We, now, by moving the mirror in or out have an unavoidable effect on what we have a right to say about the already past history of that photon”</p>
+</blockquote>
+
+<p>It may be tempting to interpret this experiment as a case of <a href="https://en.wikipedia.org/wiki/Retrocausality">retrocausality</a>, whereby the insertion of the second beamsplitter causes the photon to retroactively act like a wave instead of a particle. However, this is a leap too far.</p>
+
+<p>Experiment #13, also known as the <a href="https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment">delayed-choice experiment</a>, demonstrates a  subtle point of <a href="https://en.wikipedia.org/w/index.php?title=Wave%E2%80%93particle_duality">wave-particle duality</a>. Namely, a photon’s behavior is <em>always</em> governed by the Schrödinger equation, yet when measured, it is observed as a particle whose location is determined by the <a href="https://en.wikipedia.org/wiki/Born_rule">Born rule</a>.</p>
+
+<p>This is what is meant by a photon acting like a <em>wave</em> and a <em>particle</em>. But what about Experiments #10 and #12, where the photon acted only like a particle and not like a wave? WRONG. The photon was both, but the wavefunction merely predicted behavior that was particle-like.</p>
+
+<h1 id="summary">Summary</h1>
+<p>Experiment #13 presented John Wheeler’s <a href="https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment">delayed-choice experiment</a>. We won’t discuss it in this series, but if you found this interesting I encourage you to read about an extension of this experiment called the <a href="https://en.wikipedia.org/wiki/Delayed-choice_quantum_eraser">delayed-choice quantum eraser</a>.</p>
+
+<h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
+<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/quantum" class="page__taxonomy-item" rel="tag">quantum</a><span class="sep">, </span>
+    
+      <a href="/tags/smalltalk" class="page__taxonomy-item" rel="tag">smalltalk</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2024-05-01T00:00:00+00:00">May 1, 2024</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Experiment+13%20https%3A%2F%2Fdlfelps.github.io%2F2024%2F05%2F01%2Fquantum-smalltalk4.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2024%2F05%2F01%2Fquantum-smalltalk4.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fdlfelps.github.io%2F2024%2F05%2F01%2Fquantum-smalltalk4.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2024/04/01/quantum-smalltalk3.html" class="pagination--pager" title="Experiment 12
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2024 Daniel Felps. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
