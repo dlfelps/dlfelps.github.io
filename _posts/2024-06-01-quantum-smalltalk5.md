@@ -67,7 +67,7 @@ Photon passing through a beam splitter. >> #(0.2499999999999999 0.24999999999999
 Photon finally detected with following probabilities: >> #(0.2499999999999999 0.2499999999999999)
 ```
 
-From the simulation we see that half of the time the EV bomb detonates. Therefore, we can deduce that there were 80 good bombs (because we observed 40 detonating) and 20 bad bombs (the remainder). The output probability for the photons that don't detonate is 25% at D0 and 25% at D1. This means that the 20 bombs we observed at D1 are good! The other 40 bombs that didn't detonate and that we observed at D0 have a 50% probability of being good, but we can't tell which is which.
+From the simulation we see that half of the time the EV bomb detonates. Therefore, we can deduce that there were 80 good bombs (because we observed 40 detonating) and 20 bad bombs (the remainder). The output probability for the bombs that don't detonate is 25% at D0 and 25% at D1. This means that the 20 bombs we observed at D1 are good! The other 40 bombs that didn't detonate and that we observed at D0 have a 50% probability of being good, but we can't tell which is which.
 
 | Count | Explosion | Photon detected at D0 | Photon detected at D1 | Bombs salvaged |
 |:-----:|:---------:|:---------------------:|:---------------------:|:--------------:|
