@@ -6,8 +6,8 @@ tags: quantum smalltalk
 
 # Introduction
 In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon's actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions: 
-  - Could the photon decide to travel as a wave or a particle depending on the experimental setup? 
-  - And if yes, when does the photon decide whether it is going to travel as a wave or as a particle?
+  - Does the photon decide to travel as a wave or a particle depending on the experimental setup? 
+  - And if yes, when does the photon decide?
 
 
 # Experiment #13
@@ -67,12 +67,12 @@ It is clear that the behavior of the photon in the interferometer depends on the
 
 It may be tempting to interpret this experiment as a case of [retrocausality](https://en.wikipedia.org/wiki/Retrocausality), whereby the insertion of the second beamsplitter causes the photon to retroactively act like a wave instead of a particle. However, this is a leap too far. 
 
-Experiment #13, also known as the [delayed-choice experiment](https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment), demonstrates a  subtle point of [wave-particle duality](https://en.wikipedia.org/w/index.php?title=Wave%E2%80%93particle_duality). Namely, a photon's behavior is *always* governed by the Schrödinger equation, yet when measured, it is observed as a particle whose location is determined by the [Born rule](https://en.wikipedia.org/wiki/Born_rule).
+Experiment #13, also known as the [delayed-choice experiment](https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment), demonstrates a  subtle point of [wave-particle duality](https://en.wikipedia.org/w/index.php?title=Wave%E2%80%93particle_duality) - a photon's behavior is *always* governed by the Schrödinger equation, yet when measured, it is observed as a particle whose location is determined by the [Born rule](https://en.wikipedia.org/wiki/Born_rule).
 
-This is what is meant by a photon acting like a *wave* and a *particle*. But what about Experiments #10 and #12, where the photon acted only like a particle and not like a wave? WRONG. The photon was both, but the wavefunction merely predicted behavior that was particle-like.
+This is what is meant by a photon acting like a *wave* and a *particle*. But what about Experiments #10 and #12, where the photon acted only like a particle and not like a wave? WRONG. The photon was both, but the wavefunction predicted behavior that did not have any interference (i.e. it is particle-like).
 
 # Summary
-Experiment #13 presented John Wheeler's [delayed-choice experiment](https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment). We won't discuss it in this series, but if you found this interesting I encourage you to read about an extension of this experiment called the [delayed-choice quantum eraser](https://en.wikipedia.org/wiki/Delayed-choice_quantum_eraser).
+Experiment #13 presented John Wheeler's [delayed-choice experiment](https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment). An interesting variation of this experiment is called the [delayed-choice quantum eraser](https://en.wikipedia.org/wiki/Delayed-choice_quantum_eraser).
 
 # Appendix: The Smalltalk code
 The full Pharo package can be found at [dlfeps/MZI](https://github.com/dlfelps/MZI). 
