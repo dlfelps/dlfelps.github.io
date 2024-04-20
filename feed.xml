@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-04-20T06:55:58+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 14</title><link href="https://dlfelps.github.io/2024/06/01/quantum-smalltalk5.html" rel="alternate" type="text/html" title="Experiment 14" /><published>2024-06-01T00:00:00+00:00</published><updated>2024-06-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/06/01/quantum-smalltalk5</id><content type="html" xml:base="https://dlfelps.github.io/2024/06/01/quantum-smalltalk5.html"><![CDATA[<h1 id="introduction">Introduction</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-04-20T22:12:56+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 14</title><link href="https://dlfelps.github.io/2024/06/01/quantum-smalltalk5.html" rel="alternate" type="text/html" title="Experiment 14" /><published>2024-06-01T00:00:00+00:00</published><updated>2024-06-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/06/01/quantum-smalltalk5</id><content type="html" xml:base="https://dlfelps.github.io/2024/06/01/quantum-smalltalk5.html"><![CDATA[<h1 id="introduction">Introduction</h1>
 <p>Our final post in the Quantum Smalltalk series explores a thought experiment proposed by Avshalom Elitzur and Lev Vaidman to demonstrate an unusual quantum feature - interaction-free measurement.</p>
 
 <h1 id="experiment-14">Experiment #14</h1>
@@ -14,7 +14,7 @@
 <p>The following rules describe an EV bomb:</p>
 <ol>
   <li>If the trigger is not defective, when a photon enters trigger tube the bomb explodes and you cannot salvage the bomb.</li>
-  <li>If the trigger is defective, when a photon enters the trigger tube the bomb does not exploed and the photon continues undisturbed out the trigger tube exit.</li>
+  <li>If the trigger is defective, when a photon enters the trigger tube the bomb does not explode and the photon continues undisturbed out the trigger tube exit.</li>
   <li>The distance from the bomb to the rest of the equipment is sufficiently large to protect the equipment; only the bomb is destroyed if an explosion occurs.</li>
 </ol>
 
@@ -48,7 +48,7 @@
   </tbody>
 </table>
 
-<p>We tested all of the bombs and determined with 100% accuracy which ones were defective and which ones were good. However, we failed to salvage any of the good bombs because they were blown up in the process. If it seems like this thought experiment has no solution, then you are likely restricting yourself to solutions that follow the principle of locality. (For extra details on locality see Appendix B &amp; C below.)</p>
+<p>We tested all the bombs and determined with 100% accuracy which ones were defective and which ones were good. However, we failed to salvage any of the good bombs because they were blown up in the process. If it seems like this thought experiment has no solution, then you are likely restricting yourself to solutions that follow the principle of locality. (For extra details on locality see Appendix B &amp; C below.)</p>
 
 <h2 id="attempt-2">Attempt #2</h2>
 <p><img src="/assets/images/exp15.png" alt="Experiment #15" title="Experiment #15" /></p>
@@ -112,7 +112,7 @@ Photon passing through a beam splitter. &gt;&gt; #(0.2499999999999999 0.24999999
 Photon finally detected with following probabilities: &gt;&gt; #(0.2499999999999999 0.2499999999999999)
 </code></pre></div></div>
 
-<p>From the simulation we see that half of the time the EV bomb detonates. Therefore, we can deduce that there were 80 good bombs (because we observed 40 detonating) and 20 bad bombs (the remainder). The output probability for the photons that don’t detonate is 25% at D0 and 25% at D1. This means that the 20 bombs we observed at D1 are good! The other 40 bombs that didn’t detonate and that we observed at D0 have a 50% probability of being good, but we can’t tell which is which.</p>
+<p>From the simulation we see that half of the time the EV bomb detonates. Therefore, we can deduce that there were 80 good bombs (because we observed 40 detonating) and 20 bad bombs (the remainder). The output probability for the bombs that don’t detonate is 25% at D0 and 25% at D1. This means that the 20 bombs we observed at D1 are good! The other 40 bombs that didn’t detonate and that we observed at D0 have a 50% probability of being good, but we can’t tell which is which.</p>
 
 <table>
   <thead>
@@ -281,7 +281,7 @@ Photon passing through a beam splitter. &gt;&gt; #(0.9999999999999996 0.0 )
 Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999996 0.0)
 </code></pre></div></div>
 
-<p>We observe detection probabilities simlar to those in Experiment #11. Filling in the results chart we notice that the table reads as if there were two different experiments going on (i.e. the total observation probability adds up to 2.0!)</p>
+<p>We observe detection probabilities similar to those in Experiment #11. Filling in the results chart we notice that the table reads as if there were two different experiments going on (i.e. the total observation probability adds up to 2.0!)</p>
 
 <table>
   <thead>
@@ -394,11 +394,11 @@ Photon finally detected with following probabilities: &gt;&gt; #(0.4999999999999
 
 <h2 id="the-wavefunction">The wavefunction</h2>
 
-<p>How does this affect the photon’s wavefunction? Initially, after interacting with the beamsplitter we do not know which path the photon is on. Therefore its wavefunction is a superposition of states of the upper and lower paths.  At the moment just before the photon would reach D0 or D1, its wavefunction predicts with 50% probability that the photon will be detected at D0 and 50% probabilty that the photon will be detected at D1. An instant later it is detected at either D0 or D1. But how does the wavefunction predict two equally likely locations in one instant and then the next instant, the probabilities are gone and the photon is detected at D0 or D1?</p>
+<p>How does this affect the photon’s wavefunction? Initially, after interacting with the beamsplitter we do not know which path the photon is on. Therefore its wavefunction is a superposition of states of the upper and lower paths.  At the moment just before the photon would reach D0 or D1, its wavefunction predicts with 50% probability that the photon will be detected at D0 and 50% probability that the photon will be detected at D1. An instant later it is detected at either D0 or D1. But how does the wavefunction predict two equally likely locations in one instant and then the next instant, the probabilities are gone and the photon is detected at D0 or D1?</p>
 
 <h2 id="measurement-of-a-quantum-system">Measurement of a quantum system</h2>
 
-<p>When scientists say they are taking a “measurement” they are describing the action or process of observing something in order to gain information. But in quantum mechanics, the term “measurement” has both practical and philisophical implications. From a practical point of view, measuring a quantum system changes the quantum state that describes that system; this is sometimes described as causing the wavefunction to collapse (i.e. it is no longer in a superposition of states). From a philisophical point of view, how did the system know it was being measured? In other words, what caused the collapse? How are the probabilities converted into an actual, well-defined classical outcome? The answer to these questions depends on your interpretation of quantum mechanics and is beyond the scope of this post. For those interested, I thoroughly enjoyed listening to this <a href="https://youtu.be/GdqC2bVLesQ?si=yhlTgSpCbw2Gfv74">panel discussion</a> on the topic.</p>
+<p>When scientists say they are taking a “measurement” they are describing the action or process of observing something in order to gain information. But in quantum mechanics, the term “measurement” has both practical and philosophical implications. From a practical point of view, measuring a quantum system changes the quantum state that describes that system; this is sometimes described as causing the wavefunction to collapse (i.e. it is no longer in a superposition of states). From a philosophical point of view, how did the system know it was being measured? In other words, what caused the collapse? How are the probabilities converted into an actual, well-defined classical outcome? The answer to these questions depends on your interpretation of quantum mechanics and is beyond the scope of this post. For those interested, I thoroughly enjoyed listening to this <a href="https://youtu.be/GdqC2bVLesQ?si=yhlTgSpCbw2Gfv74">panel discussion</a> on the topic.</p>
 
 <h1 id="summary">Summary</h1>
 <p>Experiment 12 explored the measurement problem - the instant that the photon becomes a particle (as described by the wavefunction). The next experiment challenges our everyday understanding of reality.</p>
@@ -518,7 +518,7 @@ Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999
 	beamSplitter;
 	detector.
 </code></pre></div></div>
-<p>A good DSL simplifies the code to allow you to focus on the concepts rather than the syntax. A great DSL is self explanatory, allowing a domain expert (in this case a physicist) to use it without any previous programming experience. I don’t know any physicists so this is at least a good DSL.</p>
+<p>A good DSL simplifies the code to allow you to focus on the concepts rather than the syntax. A great DSL is self-explanatory, allowing a domain expert (in this case a physicist) to use it without any previous programming experience. I don’t know any physicists so this is at least a good DSL.</p>
 
 <h2 id="the-mach-zehnder-setup">The Mach-Zehnder setup</h2>
 <p>All of the experiments in this series will be variations of the <a href="https://en.wikipedia.org/wiki/Mach%E2%80%93Zehnder_interferometer">Mach-Zehnder interferometer</a>. It was originally proposed in 1891 to measure phase shifts between the two paths caused by a sample, but it has since been adapted to study a variety of quantum effects. Why aren’t we using the double-slit experiment? It may be the most iconic quantum experiment, but it is also difficult to model because it requires differential equations. We can demonstrate multiple quantum properties (i.e. superposition and entanglement) using the much simpler Mach-Zehnder setup.</p>
