@@ -1,8 +1,193 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-03-12T01:18:56+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 13</title><link href="https://dlfelps.github.io/2024/05/01/quantum-smalltalk4.html" rel="alternate" type="text/html" title="Experiment 13" /><published>2024-05-01T00:00:00+00:00</published><updated>2024-05-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/05/01/quantum-smalltalk4</id><content type="html" xml:base="https://dlfelps.github.io/2024/05/01/quantum-smalltalk4.html"><![CDATA[<h1 id="introduction">Introduction</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-04-20T06:55:58+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 14</title><link href="https://dlfelps.github.io/2024/06/01/quantum-smalltalk5.html" rel="alternate" type="text/html" title="Experiment 14" /><published>2024-06-01T00:00:00+00:00</published><updated>2024-06-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/06/01/quantum-smalltalk5</id><content type="html" xml:base="https://dlfelps.github.io/2024/06/01/quantum-smalltalk5.html"><![CDATA[<h1 id="introduction">Introduction</h1>
+<p>Our final post in the Quantum Smalltalk series explores a thought experiment proposed by Avshalom Elitzur and Lev Vaidman to demonstrate an unusual quantum feature - interaction-free measurement.</p>
+
+<h1 id="experiment-14">Experiment #14</h1>
+<p>Elitzur and  Vaidman proposed the following thought experiment:</p>
+
+<blockquote>
+  <p>You are given 100 EV bombs. Due to a manufacturing problem that was caught too late, some of the triggers are defective. Your job is to try to salvage as many good bombs as possible.</p>
+</blockquote>
+
+<h2 id="what-is-an-ev-bomb">What is an EV Bomb?</h2>
+<p>This experiment requires us to add a new piece of equipment to our workbench - the EV bomb. This bomb is special because it has a very sensitive trigger: a photon detector. Turn out the lights now because a single photon can cause this bomb to explode!</p>
+
+<p>The following rules describe an EV bomb:</p>
+<ol>
+  <li>If the trigger is not defective, when a photon enters trigger tube the bomb explodes and you cannot salvage the bomb.</li>
+  <li>If the trigger is defective, when a photon enters the trigger tube the bomb does not exploed and the photon continues undisturbed out the trigger tube exit.</li>
+  <li>The distance from the bomb to the rest of the equipment is sufficiently large to protect the equipment; only the bomb is destroyed if an explosion occurs.</li>
+</ol>
+
+<h2 id="attempt-1">Attempt #1</h2>
+<p><img src="/assets/images/exp14.png" alt="Experiment #14" title="Experiment #14" /></p>
+
+<p>Our first attempt to salvage the good EV bombs isn’t very clever. Let’s just shoot some photons at it and see what happens.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Count</th>
+      <th style="text-align: center">Explosion</th>
+      <th style="text-align: center">Photon detected at D1</th>
+      <th style="text-align: center">Bombs salvaged</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">80</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">20</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">N/A</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We tested all of the bombs and determined with 100% accuracy which ones were defective and which ones were good. However, we failed to salvage any of the good bombs because they were blown up in the process. If it seems like this thought experiment has no solution, then you are likely restricting yourself to solutions that follow the principle of locality. (For extra details on locality see Appendix B &amp; C below.)</p>
+
+<h2 id="attempt-2">Attempt #2</h2>
+<p><img src="/assets/images/exp15.png" alt="Experiment #15" title="Experiment #15" /></p>
+
+<p>Our second attempt should look familiar by now - the Mach-Zehnder setup. We place the bomb on the path between the first beamsplitter and the lower mirror and observe the following results:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Count</th>
+      <th style="text-align: center">Explosion</th>
+      <th style="text-align: center">Photon detected at D0</th>
+      <th style="text-align: center">Photon detected at D1</th>
+      <th style="text-align: center">Bombs salvaged</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">40</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">40</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">20</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">?</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Clearly we can’t salvage any of the 40 good bombs that blew up. But what about the remaining 60 that didn’t explode? Were they all defective? To answer this question, let’s look at our simulation output. We first observe what happens to photons that pass through a defective EV bomb:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Emitting a photon from lower path. &gt;&gt; #(0 1)
+Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon passes through defective EV Bomb placed on the lower path. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon passing through a beam splitter. &gt;&gt; #(0.9999999999999996 0.0)
+Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999996 0.0 )
+
+</code></pre></div></div>
+
+<p>Defective EV bombs act as if they aren’t there (just like Experiment #11) so there is a 100% chance that it will be detected at D0. Good EV bombs give a different result:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
+Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon detonates EV Bomb on the lower path with 50% probability. &gt;&gt; #(0.4999999999999999 0)
+Photon bouncing off of a mirror. &gt;&gt; #(0.0 0.4999999999999999)
+Photon passing through a beam splitter. &gt;&gt; #(0.2499999999999999 0.2499999999999999)
+Photon finally detected with following probabilities: &gt;&gt; #(0.2499999999999999 0.2499999999999999)
+</code></pre></div></div>
+
+<p>From the simulation we see that half of the time the EV bomb detonates. Therefore, we can deduce that there were 80 good bombs (because we observed 40 detonating) and 20 bad bombs (the remainder). The output probability for the photons that don’t detonate is 25% at D0 and 25% at D1. This means that the 20 bombs we observed at D1 are good! The other 40 bombs that didn’t detonate and that we observed at D0 have a 50% probability of being good, but we can’t tell which is which.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Count</th>
+      <th style="text-align: center">Explosion</th>
+      <th style="text-align: center">Photon detected at D0</th>
+      <th style="text-align: center">Photon detected at D1</th>
+      <th style="text-align: center">Bombs salvaged</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">40</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">40</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">20</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">20</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="attempt-3-optional">Attempt #3 (optional)</h2>
+
+<p>It’s a shame that we were only able to recover 25% of the good bombs. We can achieve the theoretical limit of 50% (or 40 in our example) by using something called the <a href="https://en.wikipedia.org/wiki/Quantum_Zeno_effect?useskin=vector">Quantum Zeno Effect</a>. The details of how to extend our setup using this effect are left up to the reader. I recommend <a href="https://youtu.be/fus1nJ6JaTk?si=Y6ljo3NrULArOx5H&amp;t=375">this video</a>.</p>
+
+<p><img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*bjGo9HLPhqvxcVbdZGnuOA.gif" alt="Quantum Zeno effect" />
+<a href="https://medium.com/qiskit/building-quantum-bomb-testers-and-other-thought-experiments-with-quantum-computers-c160060fdde4">source</a></p>
+
+<h1 id="interaction-free-measurement">Interaction-free measurement</h1>
+
+<p>The EV bomb experiment demonstrates a non-local feature of quantum mechanics; we were able to learn something about a path that the photon didn’t take. Furthermore, we did so without any prior information. This is called an interaction-free measurement.</p>
+
+<p>This is in contrast to, for example, the case where it is known that an object is located in one of two boxes. Looking and <em>not</em> finding it in one box tells us that the object is located inside the other box. This is also an interaction-free measurement, but it does not violate non-locality because we used prior information.</p>
+
+<h1 id="summary">Summary</h1>
+<p>Experiment #14 presented another weird quantum feature of interaction-free measurements. Although our treatment was theoretical, know that these results have been duplicated in the <a href="https://www.oeaw.ac.at/fileadmin/Institute/IQOQI-Vienna/PDF/publications-zeilinger/1994_-_Fundamental_Problems_in_Quantum_Theory_-_Experimental_Realization_of_Interaction-Free_Measurement.pdf">lab</a>.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+<p>This post concludes the Quantum Smalltalk series. I am amazed at how much of the quantum world we were able to explore using the Mach-Zehnder setup. I hope that these posts piqued your interest in quantum mechanics. There are a lot of great resources available. As a next step, I recommend the book <a href="https://www.amazon.com/Through-Two-Doors-Once-Experiment/dp/1101986093">Through Two Doors at Once: The Elegant Experiment That Captures the Enigma of Our Quantum Reality</a> by Anil Ananthaswamy. Alternatively, if you find general relativity generally fascinating then you might want to explore more advanced topics like the <a href="https://en.wikipedia.org/wiki/Black_hole_information_paradox?useskin=vector">black hole information paradox</a>.</p>
+
+<h1 id="appendix-a-the-smalltalk-code">Appendix A: The Smalltalk code</h1>
+<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>
+
+<h1 id="appendix-b-einstein-and-locality">Appendix B: Einstein and locality</h1>
+<p>The principle of locality states that for one point to have an effect one another point, something must travel between the points to cause the effect. The special theory of relativity limits the speed of travel to the speed of light. Therefore an event at point <strong>A</strong> cannot cause a result at point <strong>B</strong> in a time less than <strong>D/c</strong>, where <strong>D</strong> is the distance between the points and <strong>c</strong> is the speed of light in vacuum.</p>
+
+<p>Einstein believed in locality. In one of his 1935 papers, Einstein (along with co-authors Podolsky and Rosen) describe a thought experiment that demonstrates a scenario where quantum mechanics violates locality and concluded that quantum theory does not provide a complete description of reality. The paper ends by saying:</p>
+
+<blockquote>
+  <p>“While we have thus shown that the wave function does not provide a complete description of the physical reality, we left open the question of whether or not such a description exists. We believe, however, that such a theory is possible.”</p>
+</blockquote>
+
+<p>Einstein believed that the solution to the paradox lay in introducing additional (possibly inaccessible) variables. Such a theory is known as a hidden variable theory.</p>
+
+<h1 id="appendix-c-bell-and-locality">Appendix C: Bell and locality</h1>
+<p>Almost 30 years after Einstein’s paper, John Stewart Bell proposed a theory that states that no theory of hidden local variables can ever reproduce all the predictions of quantum mechanics. To date, all such experiments have supported the theory of quantum physics and not the hypothesis of local hidden variables. The 2022 Nobel Prize in Physics was awarded to three scientists (John Clauser, Alain Aspect, and Anton Zeilinger) for their efforts to experimentally validate violations of the Bell inequalities. Bell’s test proves that quantum mechanics is either non-local itself or has non-local hidden variables.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Our final post in the Quantum Smalltalk series explores a thought experiment proposed by Avshalom Elitzur and Lev Vaidman to demonstrate an unusual quantum feature - interaction-free measurement.]]></summary></entry><entry><title type="html">Experiment 13</title><link href="https://dlfelps.github.io/2024/05/01/quantum-smalltalk4.html" rel="alternate" type="text/html" title="Experiment 13" /><published>2024-05-01T00:00:00+00:00</published><updated>2024-05-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/05/01/quantum-smalltalk4</id><content type="html" xml:base="https://dlfelps.github.io/2024/05/01/quantum-smalltalk4.html"><![CDATA[<h1 id="introduction">Introduction</h1>
 <p>In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions:</p>
 <ul>
-  <li>Could the photon decide to travel as a wave or a particle depending on the experimental setup?</li>
-  <li>And if yes, when does the photon decide whether it is going to travel as a wave or as a particle?</li>
+  <li>Does the photon decide to travel as a wave or a particle depending on the experimental setup?</li>
+  <li>And if yes, when does the photon decide?</li>
 </ul>
 
 <h1 id="experiment-13">Experiment #13</h1>
@@ -156,15 +341,15 @@ Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999
 
 <p>It may be tempting to interpret this experiment as a case of <a href="https://en.wikipedia.org/wiki/Retrocausality">retrocausality</a>, whereby the insertion of the second beamsplitter causes the photon to retroactively act like a wave instead of a particle. However, this is a leap too far.</p>
 
-<p>Experiment #13, also known as the <a href="https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment">delayed-choice experiment</a>, demonstrates a  subtle point of <a href="https://en.wikipedia.org/w/index.php?title=Wave%E2%80%93particle_duality">wave-particle duality</a>. Namely, a photon’s behavior is <em>always</em> governed by the Schrödinger equation, yet when measured, it is observed as a particle whose location is determined by the <a href="https://en.wikipedia.org/wiki/Born_rule">Born rule</a>.</p>
+<p>Experiment #13, also known as the <a href="https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment">delayed-choice experiment</a>, demonstrates a  subtle point of <a href="https://en.wikipedia.org/w/index.php?title=Wave%E2%80%93particle_duality">wave-particle duality</a> - a photon’s behavior is <em>always</em> governed by the Schrödinger equation, yet when measured, it is observed as a particle whose location is determined by the <a href="https://en.wikipedia.org/wiki/Born_rule">Born rule</a>.</p>
 
-<p>This is what is meant by a photon acting like a <em>wave</em> and a <em>particle</em>. But what about Experiments #10 and #12, where the photon acted only like a particle and not like a wave? WRONG. The photon was both, but the wavefunction merely predicted behavior that was particle-like.</p>
+<p>This is what is meant by a photon acting like a <em>wave</em> and a <em>particle</em>. But what about Experiments #10 and #12, where the photon acted only like a particle and not like a wave? WRONG. The photon was both, but the wavefunction predicted behavior that did not have any interference (i.e. it is particle-like).</p>
 
 <h1 id="summary">Summary</h1>
-<p>Experiment #13 presented John Wheeler’s <a href="https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment">delayed-choice experiment</a>. We won’t discuss it in this series, but if you found this interesting I encourage you to read about an extension of this experiment called the <a href="https://en.wikipedia.org/wiki/Delayed-choice_quantum_eraser">delayed-choice quantum eraser</a>.</p>
+<p>Experiment #13 presented John Wheeler’s <a href="https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment">delayed-choice experiment</a>. An interesting variation of this experiment is called the <a href="https://en.wikipedia.org/wiki/Delayed-choice_quantum_eraser">delayed-choice quantum eraser</a>.</p>
 
 <h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
-<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions: Could the photon decide to travel as a wave or a particle depending on the experimental setup? And if yes, when does the photon decide whether it is going to travel as a wave or as a particle?]]></summary></entry><entry><title type="html">Experiment 12</title><link href="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html" rel="alternate" type="text/html" title="Experiment 12" /><published>2024-04-01T00:00:00+00:00</published><updated>2024-04-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/04/01/quantum-smalltalk3</id><content type="html" xml:base="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html"><![CDATA[<h1 id="introduction">Introduction</h1>
+<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions: Does the photon decide to travel as a wave or a particle depending on the experimental setup? And if yes, when does the photon decide?]]></summary></entry><entry><title type="html">Experiment 12</title><link href="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html" rel="alternate" type="text/html" title="Experiment 12" /><published>2024-04-01T00:00:00+00:00</published><updated>2024-04-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/04/01/quantum-smalltalk3</id><content type="html" xml:base="https://dlfelps.github.io/2024/04/01/quantum-smalltalk3.html"><![CDATA[<h1 id="introduction">Introduction</h1>
 <p>Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.</p>
 
 <h1 id="experiment-12">Experiment #12</h1>
@@ -213,7 +398,7 @@ Photon finally detected with following probabilities: &gt;&gt; #(0.4999999999999
 
 <h2 id="measurement-of-a-quantum-system">Measurement of a quantum system</h2>
 
-<p>Generally, when scientists say they are taking a “measurement” they are describing the action or process of observing something in order to gain information. But in quantum mechanics, the term “measurement” has both practical and philisophical implications. From a practical point of view, measuring a quantum system changes the quantum state that describes that system; this is sometimes described as causing the wavefunction to collapse (i.e. it is no longer in a superposition of states). From a philisophical point of view, how did the system know it was being measured? In other words, what caused the collapse? How are the probabilities converted into an actual, well-defined classical outcome? The answer to these questions depends on your interpretation of quantum mechanics and is beyond the scope of this post. For those interested, see <a href="https://en.wikipedia.org/wiki/Measurement_problem">the measurement problem</a>.</p>
+<p>When scientists say they are taking a “measurement” they are describing the action or process of observing something in order to gain information. But in quantum mechanics, the term “measurement” has both practical and philisophical implications. From a practical point of view, measuring a quantum system changes the quantum state that describes that system; this is sometimes described as causing the wavefunction to collapse (i.e. it is no longer in a superposition of states). From a philisophical point of view, how did the system know it was being measured? In other words, what caused the collapse? How are the probabilities converted into an actual, well-defined classical outcome? The answer to these questions depends on your interpretation of quantum mechanics and is beyond the scope of this post. For those interested, I thoroughly enjoyed listening to this <a href="https://youtu.be/GdqC2bVLesQ?si=yhlTgSpCbw2Gfv74">panel discussion</a> on the topic.</p>
 
 <h1 id="summary">Summary</h1>
 <p>Experiment 12 explored the measurement problem - the instant that the photon becomes a particle (as described by the wavefunction). The next experiment challenges our everyday understanding of reality.</p>
@@ -2050,476 +2235,4 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
       <p>It is always possible to convert to and from any collection type. For example, you can convert a list <strong>to</strong> a sequence using <a href="https://fsharp.github.io/fsharp-core-docs/reference/fsharp-collections-listmodule.html#toSeq"><code class="language-plaintext highlighter-rouge">List.toSeq</code></a>. Conversely, you can create a list <strong>from</strong> a sequence using <a href="https://fsharp.github.io/fsharp-core-docs/reference/fsharp-collections-listmodule.html#ofSeq"><code class="language-plaintext highlighter-rouge">List.ofSeq</code></a>. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="net" /><category term="list" /><category term="seq" /><category term="collections" /><summary type="html"><![CDATA[When should you store data as a list, sequence, or an array? This post explains why you need all three in F#.]]></summary></entry><entry><title type="html">Experiment 04</title><link href="https://dlfelps.github.io/2022/07/06/Reproducible-Example.html" rel="alternate" type="text/html" title="Experiment 04" /><published>2022-07-06T00:00:00+00:00</published><updated>2022-07-06T00:00:00+00:00</updated><id>https://dlfelps.github.io/2022/07/06/Reproducible-Example</id><content type="html" xml:base="https://dlfelps.github.io/2022/07/06/Reproducible-Example.html"><![CDATA[<p>In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow.</p>
-
-<h2 id="introduction">Introduction</h2>
-
-<p>In the <a href="/2022/06/20/Reproducible-Dotnet-Series.html">first post</a> in this <a href="/tags/reproducible/">series</a> I described the characteristics of reproducible code. In the <a href="/2022/06/25/Reproducible-Foundations.html">second post</a> I described the foundational tools that I use in my approach to creating continuously reproducible code. This final post incorporates the approach into an existing repository.</p>
-
-<h2 id="example">Example</h2>
-
-<p>I selected <a href="https://github.com/fsprojects/FsHttp">FsHttp</a> as a demonstration codebase. FsHttp follows many recommendations of the continuously reproducible mindset (i.e. LTS releases, pinned dependencies), but it lacks continuous integration. I will show two different ways to adopt it.</p>
-
-<h2 id="approach-1-net-variant">Approach #1 (.NET variant)</h2>
-
-<p>The preferred way for .NET projects is to use .NET directly to verify the build. I forked the FsHttp repo and removed some parts that were unnecessary to this blog post. You can find that fork <a href="https://github.com/dlfelps/FsHttp-dotnet">here</a>.</p>
-
-<p>Since the repository is already on Github I will use Github Actions to implement continuous integration. If you use another continuous integration platform you will have to translate this example into that platform’s workflow syntax.</p>
-
-<p>Adding continuous integration is as easy as creating the <code class="language-plaintext highlighter-rouge">.github\workflows</code> folder at the base of the repository and then adding the workflow YAML file, which I named <a href="https://github.com/dlfelps/FsHttp-dotnet/blob/main/.github/workflows/dotnet.yml">dotnet.yml</a> to that folder. Here are the contents of that file:</p>
-
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-</pre></td><td class="code"><pre><span class="na">name</span><span class="pi">:</span> <span class="s">Dotnet CI</span>
-
-<span class="na">on</span><span class="pi">:</span>
-  <span class="na">workflow_dispatch</span><span class="pi">:</span>
-  <span class="na">push</span><span class="pi">:</span>
-    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">main</span> <span class="pi">]</span>
-  
-<span class="na">jobs</span><span class="pi">:</span>     
-  <span class="na">build</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-20.04</span>
-
-    <span class="na">steps</span><span class="pi">:</span>
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout main</span>
-      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
-
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Setup .NET</span>
-      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-dotnet@v2</span>
-      <span class="na">with</span><span class="pi">:</span>
-        <span class="na">dotnet-version</span><span class="pi">:</span> <span class="s">6.0.301</span>
-
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Restore dependencies</span>
-      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet restore</span>
-
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build</span>
-      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet build --no-restore</span>
-
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Test</span>
-      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet test --verbosity normal</span>
-</pre></td></tr></tbody></table></code></pre></figure>
-
-<p>Now let’s breakdown each step.</p>
-
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">name</span><span class="pi">:</span> <span class="s">Dotnet CI</span>
-<span class="na">on</span><span class="pi">:</span>
-  <span class="na">workflow_dispatch</span><span class="pi">:</span>
-  <span class="na">push</span><span class="pi">:</span>
-    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">main</span> <span class="pi">]</span>  </code></pre></figure>
-
-<p>The <code class="language-plaintext highlighter-rouge">name</code> keyword allows you to name the workflow - workflows will be grouped by name under the projects Action tab. The <code class="language-plaintext highlighter-rouge">on</code> keyword allows you to specify the conditions for which this workflow executes - here I only execute the workflow when I push to the <code class="language-plaintext highlighter-rouge">main</code> branch.</p>
-
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">jobs</span><span class="pi">:</span>     
-  <span class="na">build</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-20.04</span></code></pre></figure>
-
-<p>The next block defines the sequence of <code class="language-plaintext highlighter-rouge">jobs</code> to execute when the workflow conditions are met. In this workflow I have only one job named <code class="language-plaintext highlighter-rouge">build</code> (define additional jobs at the same indentation level as <code class="language-plaintext highlighter-rouge">build</code>). The <code class="language-plaintext highlighter-rouge">runs-on</code> keyword selects the type of machine to run the job on; other options include <code class="language-plaintext highlighter-rouge">windows-2022</code> and <code class="language-plaintext highlighter-rouge">macos-11</code>. The full list of available options is <a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idruns-on">here</a>. <em>NOTE</em>: prefer <code class="language-plaintext highlighter-rouge">ubuntu-20.04</code> to <code class="language-plaintext highlighter-rouge">ubuntu-latest</code> even though they are currently equivalent; <code class="language-plaintext highlighter-rouge">ubuntu-latest</code> will eventually point to <code class="language-plaintext highlighter-rouge">ubuntu-22.04</code> so it is better to pin the dependency now.</p>
-
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml">    <span class="na">steps</span><span class="pi">:</span>
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout main</span>
-      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span></code></pre></figure>
-
-<p>Each job consists of several <code class="language-plaintext highlighter-rouge">steps</code>; each step includes an optional name and then an action. The first step <code class="language-plaintext highlighter-rouge">uses</code> a Github Action to check out the <code class="language-plaintext highlighter-rouge">main</code> branch. There are several <a href="https://github.com/orgs/actions/repositories">official Github actions</a> and also over 14,000 user contributed actions available through the <a href="https://github.com/marketplace?type=actions">Github Marketplace</a>. I tend to stick to the official actions since there are potentially some <a href="https://www.youtube.com/watch?v=bDG40Y1nPEk">security concerns</a> when using them. Also notice the <code class="language-plaintext highlighter-rouge">@v3</code> appended to the end of the <code class="language-plaintext highlighter-rouge">actions/checkout</code> action - this pins the version of the action.</p>
-
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml">    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Setup .NET</span>
-      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-dotnet@v2</span>
-      <span class="na">with</span><span class="pi">:</span>
-        <span class="na">dotnet-version</span><span class="pi">:</span> <span class="s">6.0.301</span></code></pre></figure>
-
-<p>The next step users another official action to install .NET 6. This action is actually redundant since the <code class="language-plaintext highlighter-rouge">ubuntu-20.04</code> runner actually comes <a href="https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-Readme.md">pre-installed</a> with lots of useful software including .NET 6. However, I chose to add this step since this was an explicit dependency that the build relies upon. I can’t be sure that Github will always include it with the runner, so I want to explicitly install it.</p>
-
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml">    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Restore dependencies</span>
-      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet restore</span>
-
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build</span>
-      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet build --no-restore</span>
-
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Test</span>
-      <span class="na">run</span><span class="pi">:</span> <span class="s">dotnet test --verbosity normal</span></code></pre></figure>
-
-<p>The final three steps restore the project’s dependencies, build, and test the project.</p>
-
-<h3 id="visualizing-the-workflow">Visualizing the workflow</h3>
-
-<p>If you push this workflow file to the repo’s <code class="language-plaintext highlighter-rouge">main</code> branch it will execute for the first time. You can watch its progress by clicking on the <code class="language-plaintext highlighter-rouge">Actions</code> button from the repository’s main page. Then click on the most recent run, which will have the same name as the message of the most recent commit.</p>
-
-<p><img src="/assets/images/workflow1.png" alt="Github Actions screenshot #1" title="Github Actions screenshot #1" /></p>
-
-<p>Then you can visualize the jobs contained within the workflow (there was only a single job named <code class="language-plaintext highlighter-rouge">build</code> in <code class="language-plaintext highlighter-rouge">dotnet.yml</code>). Clicking the <code class="language-plaintext highlighter-rouge">build</code> box will provide details of each step.</p>
-
-<p><img src="/assets/images/workflow2.png" alt="Github Actions screenshot #2" title="Github Actions screenshot #2" /></p>
-
-<p>Here we see the names given to each of the steps along with some automatic setup and teardown steps.</p>
-
-<p><img src="/assets/images/workflow3.png" alt="Github Actions screenshot #3" title="Github Actions screenshot #3" /></p>
-
-<h3 id="results">Results</h3>
-
-<p>In the <a href="/2022/06/25/Reproducible-Foundations.html">previous post</a> we defined the following criteria for reproducible software:</p>
-
-<blockquote>
-  <ol>
-    <li>Build from any platform <strong>with the help of one pre-installed dependency</strong></li>
-    <li>Satisfy #1 in a standard and lightweight way across codebases</li>
-  </ol>
-</blockquote>
-
-<p>Did we satisfy them? Adding a Github workflow is certainly lightweight and repeatable since it will work for most .NET projects with little modification. But we didn’t explicity verify the first criteria since we only tested from Ubuntu. If you want to explicitly test additional platforms then I would recommend defining additional jobs that build in different environments:</p>
-
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">jobs</span><span class="pi">:</span>     
-  <span class="na">build-linux</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-20.04</span>
-    <span class="c1"># steps...</span>
-  
-  <span class="na">build-windows</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">windows-2022</span>
-    <span class="c1"># steps...</span>
-
-  <span class="na">build-macos</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">macos-11</span>
-    <span class="c1"># steps...</span></code></pre></figure>
-
-<p>But since I assume that .NET 6 is installed on the host platform I don’t really need to test the other operating systems - if it compiles on one platform it will compile on the others because .NET compiles to Common Intermediate Language. The runtimes for each platform differ, but that is an isolated component that I don’t feel the need to verify. I think this is a big win for Microsoft and one of the reasons that I ❤️ .NET!</p>
-
-<h2 id="approach-2-not-net-variant">Approach #2 (Not .NET variant)</h2>
-
-<p>How difficult is it to translate Approach #1 into another language? I was able to convert a popular Golang repo in about 5 minutes. You will notice the similarities in the workflow; the full repo is <a href="https://github.com/dlfelps/cobra-go">here</a>.</p>
-
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-</pre></td><td class="code"><pre><span class="na">name</span><span class="pi">:</span> <span class="s">Go CI</span>
-
-<span class="na">on</span><span class="pi">:</span>
-  <span class="na">workflow_dispatch</span><span class="pi">:</span>
-  <span class="na">push</span><span class="pi">:</span>
-    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">main</span> <span class="pi">]</span>
-  
-<span class="na">jobs</span><span class="pi">:</span>     
-  <span class="na">build-linux</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-20.04</span>
-
-    <span class="na">steps</span><span class="pi">:</span>
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout commit</span>
-      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
-
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Setup Go</span>
-      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-go@v3</span>
-      <span class="na">with</span><span class="pi">:</span>
-        <span class="na">go-version</span><span class="pi">:</span> <span class="m">1.18</span>
-
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build</span>
-      <span class="na">run</span><span class="pi">:</span> <span class="s">go build</span>
-
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Test</span>
-      <span class="na">run</span><span class="pi">:</span> <span class="s">go test .</span>
-
-  <span class="na">build-macos</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">macos-11</span>
-    <span class="c1"># steps...</span>
-
-  <span class="na">build-windows</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">windows-2022</span>
-    <span class="c1"># steps...</span>
-</pre></td></tr></tbody></table></code></pre></figure>
-
-<h3 id="results-1">Results</h3>
-
-<p>This variant also meets the necessary criteria with one gotcha - since Golang compiles directly to machine code you need to add additional build jobs to test other platforms. Definitely still doable since Github also includes Golang in its machine images.</p>
-
-<h2 id="approach-3-docker-variant">Approach #3 (Docker variant)</h2>
-
-<p><em>Basic knowledge of Docker required to follow this tutorial.</em></p>
-
-<p>I know a lot of developers that really love Docker and they use it for everything. I use Docker to deploy services, but not for my development environment. It tends to add an extra step that I don’t really want while I am coding. But I also don’t tend to work on multiple projects simultaneously (each using a different version of something). Still, its simple enough to integrate Docker into the continuous integration workflow. If I was required to build a Docker image for a project then this is probably how I would do it (rather than building it locally). Here is the full <a href="https://github.com/dlfelps/FsHttp-docker">repo</a> and here are the contents of its workflow YAML:</p>
-
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-</pre></td><td class="code"><pre><span class="na">name</span><span class="pi">:</span> <span class="s">Docker Image CI</span>
-
-<span class="na">on</span><span class="pi">:</span>
-  <span class="na">push</span><span class="pi">:</span>
-    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">main</span> <span class="pi">]</span>
-
-<span class="na">jobs</span><span class="pi">:</span>
-
-  <span class="na">build</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
-
-    <span class="na">steps</span><span class="pi">:</span>
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout commit</span>
-      <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
-
-    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build the Docker image</span>
-      <span class="na">run</span><span class="pi">:</span> <span class="s">docker build . --file Dockerfile --tag fshttp:$(date +%s)</span>
-</pre></td></tr></tbody></table></code></pre></figure>
-
-<p>The workflow only includes two steps - one to checkout the <code class="language-plaintext highlighter-rouge">main</code> branch and another to build the <code class="language-plaintext highlighter-rouge">Dockerfile</code>. The remaining steps are now inside the <code class="language-plaintext highlighter-rouge">Dockerfile</code>:</p>
-
-<figure class="highlight"><pre><code class="language-docker" data-lang="docker"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-</pre></td><td class="code"><pre><span class="k">FROM</span><span class="s"> mcr.microsoft.com/dotnet/sdk:6.0</span>
-<span class="k">WORKDIR</span><span class="s"> /app</span>
-
-<span class="k">COPY</span><span class="s"> . ./</span>
-<span class="k">RUN </span>dotnet restore 
-<span class="k">RUN </span>dotnet build <span class="nt">--no-restore</span>
-<span class="k">RUN </span>dotnet <span class="nb">test</span> <span class="nt">--verbosity</span> normal
-</pre></td></tr></tbody></table></code></pre></figure>
-
-<p>The Dockerfile uses the standard .NET 6 baseimage provided by Microsoft, copies the new commit into the /app folder, and then restore/build/test.</p>
-
-<h3 id="results-2">Results</h3>
-
-<p>This variant is still lightweight, but we must look closely to see if it is truly cross-platform. We have changed our dependency assumption from .NET to Docker - any platform that can run Docker can build this code. If this is a .NET project then any code that successfully compiles to the Common Intermediate Language and passes the test suite will work on any platform (.NET for the win)! But what if its a Golang project? In that case we would need a separate job and Dockerfile for each platform. But there is no such thing as a macOS Docker image! In conclusion, Approach #3 meets the reproducibility criteria for all .NET projects, but not <em>all</em> projects.</p>
-
-<h2 id="approach-4-nuke-variant">Approach #4 (NUKE variant)</h2>
-
-<p><em>Update 7/17/2022 - A reader suggested I also compare the NUKE build system.</em></p>
-
-<p>The <a href="https://nuke.build/">NUKE</a> build system has a unique way of creating continuous integration pipelines - unlike the previous three approaches, developers don’t manually create the YAML file. Instead they use the NUKE build tool to create a seperate .NET project and then specify the build process using NUKE’s extensive library. Running this project builds the primary solution and also generates any required artifacts (e.g. GitHub Actions YAML file). This makes NUKE’s build process sound complicated, but from a user’s perspective it is dead simple - they launch a single bootstrap script.</p>
-
-<p><img src="/assets/images/mermaid-diagram-2022-07-18-061249.svg" alt="NUKE flow diagram" title="NUKE flow diagram" /></p>
-
-<p>I appreciate this build strategy because it isolates the custom part of the build process to the build project and uses a standard bootstrap script across projects. Here are the contents of <code class="language-plaintext highlighter-rouge">Build.cs</code> from the build project:</p>
-
-<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-</pre></td><td class="code"><pre><span class="p">[</span><span class="nf">GitHubActions</span><span class="p">(</span>
-    <span class="s">"continuous"</span><span class="p">,</span>
-    <span class="n">GitHubActionsImage</span><span class="p">.</span><span class="n">UbuntuLatest</span><span class="p">,</span>
-    <span class="n">OnPushBranches</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span><span class="s">"main"</span><span class="p">},</span>
-    <span class="n">InvokedTargets</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="k">nameof</span><span class="p">(</span><span class="n">Test</span><span class="p">)</span> <span class="p">})]</span>
-<span class="k">class</span> <span class="nc">Build</span> <span class="p">:</span> <span class="n">NukeBuild</span>
-<span class="p">{</span>
-
-    <span class="p">[</span><span class="n">Solution</span><span class="p">]</span> <span class="k">readonly</span> <span class="n">Solution</span> <span class="n">Solution</span><span class="p">;</span>
-
-    <span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">Main</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Execute</span><span class="p">&lt;</span><span class="n">Build</span><span class="p">&gt;(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Test</span><span class="p">);</span>
-
-    <span class="p">[</span><span class="nf">Parameter</span><span class="p">(</span><span class="s">"Configuration to build - Default is 'Debug' (local) or 'Release' (server)"</span><span class="p">)]</span>
-    <span class="k">readonly</span> <span class="n">Configuration</span> <span class="n">Configuration</span> <span class="p">=</span> <span class="n">IsLocalBuild</span> <span class="p">?</span> <span class="n">Configuration</span><span class="p">.</span><span class="n">Debug</span> <span class="p">:</span> <span class="n">Configuration</span><span class="p">.</span><span class="n">Release</span><span class="p">;</span>
-
-    <span class="n">Target</span> <span class="n">Restore</span> <span class="p">=&gt;</span> <span class="n">_</span> <span class="p">=&gt;</span> <span class="n">_</span>
-        <span class="p">.</span><span class="nf">Executes</span><span class="p">(()</span> <span class="p">=&gt;</span>
-        <span class="p">{</span>
-          <span class="nf">DotNetRestore</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="n">_</span>
-            <span class="p">.</span><span class="nf">SetProjectFile</span><span class="p">(</span><span class="n">Solution</span><span class="p">));</span>
-        <span class="p">});</span>
-
-    <span class="n">Target</span> <span class="n">Compile</span> <span class="p">=&gt;</span> <span class="n">_</span> <span class="p">=&gt;</span> <span class="n">_</span>
-        <span class="p">.</span><span class="nf">DependsOn</span><span class="p">(</span><span class="n">Restore</span><span class="p">)</span>
-        <span class="p">.</span><span class="nf">Executes</span><span class="p">(()</span> <span class="p">=&gt;</span>
-        <span class="p">{</span>
-          <span class="nf">DotNetBuild</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="n">_</span>
-            <span class="p">.</span><span class="nf">SetProjectFile</span><span class="p">(</span><span class="n">Solution</span><span class="p">)</span>
-            <span class="p">.</span><span class="nf">EnableNoRestore</span><span class="p">());</span>
-        <span class="p">});</span>
-
-    <span class="n">Target</span> <span class="n">Test</span> <span class="p">=&gt;</span> <span class="n">_</span> <span class="p">=&gt;</span> <span class="n">_</span>
-      <span class="p">.</span><span class="nf">DependsOn</span><span class="p">(</span><span class="n">Compile</span><span class="p">)</span>
-      <span class="p">.</span><span class="nf">Executes</span><span class="p">(()</span> <span class="p">=&gt;</span>
-      <span class="p">{</span>
-        <span class="nf">DotNetTest</span><span class="p">();</span>
-      <span class="p">});</span>
-<span class="p">}</span>
-</pre></td></tr></tbody></table></code></pre></figure>
-
-<p>The first thing to notice is that this is proper C# code - <em>not</em> YAML. Starting from the top, the <code class="language-plaintext highlighter-rouge">GitHubActions</code> attribute before the <code class="language-plaintext highlighter-rouge">Build</code> class specifies which continuous integration platform YAML<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> NUKE should create as part of the build process. Then - like the previous approaches - we define seperate targets for <code class="language-plaintext highlighter-rouge">Restore</code>, <code class="language-plaintext highlighter-rouge">Compile</code>, and <code class="language-plaintext highlighter-rouge">Test</code>. But unlike previous approaches these targets are not strings; instead they are symbols that can be type checked and debugged. Targets can be further refined using NUKE’s <a href="https://nuke.build/docs/fundamentals/targets/">Fluent API</a>, but I kept things pretty simple here. When the project runs a valid GitHubActions YAML is created:</p>
-
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-</pre></td><td class="code"><pre><span class="na">name</span><span class="pi">:</span> <span class="s">continuous</span>
-
-<span class="na">on</span><span class="pi">:</span>
-  <span class="na">push</span><span class="pi">:</span>
-    <span class="na">branches</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">main</span>
-
-<span class="na">jobs</span><span class="pi">:</span>
-  <span class="na">ubuntu-latest</span><span class="pi">:</span>
-    <span class="na">name</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
-    <span class="na">steps</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
-      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Cache .nuke/temp, ~/.nuget/packages</span>
-        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/cache@v2</span>
-        <span class="na">with</span><span class="pi">:</span>
-          <span class="na">path</span><span class="pi">:</span> <span class="pi">|</span>
-            <span class="s">.nuke/temp</span>
-            <span class="s">~/.nuget/packages</span>
-          <span class="na">key</span><span class="pi">:</span> <span class="s">$-$</span>
-      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Run './build.cmd Test'</span>
-        <span class="na">run</span><span class="pi">:</span> <span class="s">./build.cmd Test</span>
-</pre></td></tr></tbody></table></code></pre></figure>
-
-<p>It is a simple YAML that checks out the code and launches the build script. If we push these updates to Github (e.g. <a href="https://github.com/dlfelps/FsHttp-nuke">FsHTTP-nuke</a>) then the GitHub Actions will automatically test the build:</p>
-
-<p><img src="/assets/images/nuke-github.png" alt="NUKE github actions" title="NUKE build on Github Actions" /></p>
-
-<h3 id="results-3">Results</h3>
-
-<p>NUKE was able to restore our original definition of reproducibility since it does not assume that .NET (or Docker) is installed:</p>
-
-<blockquote>
-  <ol>
-    <li>Build from a clean environment on any platform</li>
-    <li>Satisfy #1 in a standard, lightweight, repeatable way across codebases</li>
-  </ol>
-</blockquote>
-
-<p>NUKE’s approach is slightly more involved than the creating the YAML file directly, but for a little more work you get a build specification that can be type checked and debugged that is compatible with almost any continuous integration platform. And unlike CAKE/FAKE, NUKE has a very gradual learning curve - you can get started easily and master more over time. Sadly, NUKE is only for .NET projects so if you are using another language you will have to try <strong>Approach #2 or #3</strong>.</p>
-
-<h2 id="conclusion">Conclusion</h2>
-
-<p>You may choose whichever approach fits best within your current development workflow. My recommendations are as follows:</p>
-<ol>
-  <li>If this is your first attempt at creating a reproducible build then follow <strong>Approach #1</strong></li>
-  <li>If your project is <em>NOT</em> a .NET project then follow <strong>Approach #2</strong></li>
-  <li>Otherwise follow <strong>Approach #4</strong></li>
-</ol>
-
-<p>Finally, thanks for reading this series on continuously reproducible code and I hope I have helped you develop a more continuously reproducible mindset! As always, your feedback is appreciated!</p>
-
-<h4 id="footnotes">Footnotes</h4>
-
-<div class="footnotes" role="doc-endnotes">
-  <ol>
-    <li id="fn:1" role="doc-endnote">
-      <p>NUKE supports many popular CI/CD platforms out of the box (i.e. AppVeyor, Azure Pipelines, Bitbucket, GitHub Actions, GitLab, Jenkins, Space Automation, and TeamCity). <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-  </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="reproducible" /><category term="net" /><category term="docker" /><category term="ci/cd" /><summary type="html"><![CDATA[In the final post of the series I give a practical example of how to incorporate continuously reproducible strategies into your workflow.]]></summary></entry></feed>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="net" /><category term="list" /><category term="seq" /><category term="collections" /><summary type="html"><![CDATA[When should you store data as a list, sequence, or an array? This post explains why you need all three in F#.]]></summary></entry></feed>

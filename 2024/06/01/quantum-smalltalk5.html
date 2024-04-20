@@ -1,0 +1,484 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 14 - .NET Experiments</title>
+<meta name="description" content="Introduction Our final post in the Quantum Smalltalk series explores a thought experiment proposed by Avshalom Elitzur and Lev Vaidman to demonstrate an unusual quantum feature - interaction-free measurement.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 14">
+<meta property="og:url" content="https://dlfelps.github.io/2024/06/01/quantum-smalltalk5.html">
+
+
+  <meta property="og:description" content="Introduction Our final post in the Quantum Smalltalk series explores a thought experiment proposed by Avshalom Elitzur and Lev Vaidman to demonstrate an unusual quantum feature - interaction-free measurement.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2024-06-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2024/06/01/quantum-smalltalk5.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Daniel Felps",
+      "url": "https://dlfelps.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/">Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 14">
+    <meta itemprop="description" content="IntroductionOur final post in the Quantum Smalltalk series explores a thought experiment proposed by Avshalom Elitzur and Lev Vaidman to demonstrate an unusual quantum feature - interaction-free measurement.">
+    <meta itemprop="datePublished" content="2024-06-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Experiment 14
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2024-06-01T00:00:00+00:00">June 1, 2024</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          17 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li><li><a href="#experiment-14">Experiment #14</a><ul><li><a href="#what-is-an-ev-bomb">What is an EV Bomb?</a></li><li><a href="#attempt-1">Attempt #1</a></li><li><a href="#attempt-2">Attempt #2</a></li><li><a href="#attempt-3-optional">Attempt #3 (optional)</a></li></ul></li><li><a href="#interaction-free-measurement">Interaction-free measurement</a></li><li><a href="#summary">Summary</a></li><li><a href="#conclusion">Conclusion</a></li><li><a href="#appendix-a-the-smalltalk-code">Appendix A: The Smalltalk code</a></li><li><a href="#appendix-b-einstein-and-locality">Appendix B: Einstein and locality</a></li><li><a href="#appendix-c-bell-and-locality">Appendix C: Bell and locality</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h1 id="introduction">Introduction</h1>
+<p>Our final post in the Quantum Smalltalk series explores a thought experiment proposed by Avshalom Elitzur and Lev Vaidman to demonstrate an unusual quantum feature - interaction-free measurement.</p>
+
+<h1 id="experiment-14">Experiment #14</h1>
+<p>Elitzur and  Vaidman proposed the following thought experiment:</p>
+
+<blockquote>
+  <p>You are given 100 EV bombs. Due to a manufacturing problem that was caught too late, some of the triggers are defective. Your job is to try to salvage as many good bombs as possible.</p>
+</blockquote>
+
+<h2 id="what-is-an-ev-bomb">What is an EV Bomb?</h2>
+<p>This experiment requires us to add a new piece of equipment to our workbench - the EV bomb. This bomb is special because it has a very sensitive trigger: a photon detector. Turn out the lights now because a single photon can cause this bomb to explode!</p>
+
+<p>The following rules describe an EV bomb:</p>
+<ol>
+  <li>If the trigger is not defective, when a photon enters trigger tube the bomb explodes and you cannot salvage the bomb.</li>
+  <li>If the trigger is defective, when a photon enters the trigger tube the bomb does not exploed and the photon continues undisturbed out the trigger tube exit.</li>
+  <li>The distance from the bomb to the rest of the equipment is sufficiently large to protect the equipment; only the bomb is destroyed if an explosion occurs.</li>
+</ol>
+
+<h2 id="attempt-1">Attempt #1</h2>
+<p><img src="/assets/images/exp14.png" alt="Experiment #14" title="Experiment #14" /></p>
+
+<p>Our first attempt to salvage the good EV bombs isn’t very clever. Let’s just shoot some photons at it and see what happens.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Count</th>
+      <th style="text-align: center">Explosion</th>
+      <th style="text-align: center">Photon detected at D1</th>
+      <th style="text-align: center">Bombs salvaged</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">80</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">20</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">N/A</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We tested all of the bombs and determined with 100% accuracy which ones were defective and which ones were good. However, we failed to salvage any of the good bombs because they were blown up in the process. If it seems like this thought experiment has no solution, then you are likely restricting yourself to solutions that follow the principle of locality. (For extra details on locality see Appendix B &amp; C below.)</p>
+
+<h2 id="attempt-2">Attempt #2</h2>
+<p><img src="/assets/images/exp15.png" alt="Experiment #15" title="Experiment #15" /></p>
+
+<p>Our second attempt should look familiar by now - the Mach-Zehnder setup. We place the bomb on the path between the first beamsplitter and the lower mirror and observe the following results:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Count</th>
+      <th style="text-align: center">Explosion</th>
+      <th style="text-align: center">Photon detected at D0</th>
+      <th style="text-align: center">Photon detected at D1</th>
+      <th style="text-align: center">Bombs salvaged</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">40</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">40</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">?</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">20</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">?</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Clearly we can’t salvage any of the 40 good bombs that blew up. But what about the remaining 60 that didn’t explode? Were they all defective? To answer this question, let’s look at our simulation output. We first observe what happens to photons that pass through a defective EV bomb:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Emitting a photon from lower path. &gt;&gt; #(0 1)
+Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon passes through defective EV Bomb placed on the lower path. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon passing through a beam splitter. &gt;&gt; #(0.9999999999999996 0.0)
+Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999996 0.0 )
+
+</code></pre></div></div>
+
+<p>Defective EV bombs act as if they aren’t there (just like Experiment #11) so there is a 100% chance that it will be detected at D0. Good EV bombs give a different result:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
+Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
+Photon detonates EV Bomb on the lower path with 50% probability. &gt;&gt; #(0.4999999999999999 0)
+Photon bouncing off of a mirror. &gt;&gt; #(0.0 0.4999999999999999)
+Photon passing through a beam splitter. &gt;&gt; #(0.2499999999999999 0.2499999999999999)
+Photon finally detected with following probabilities: &gt;&gt; #(0.2499999999999999 0.2499999999999999)
+</code></pre></div></div>
+
+<p>From the simulation we see that half of the time the EV bomb detonates. Therefore, we can deduce that there were 80 good bombs (because we observed 40 detonating) and 20 bad bombs (the remainder). The output probability for the photons that don’t detonate is 25% at D0 and 25% at D1. This means that the 20 bombs we observed at D1 are good! The other 40 bombs that didn’t detonate and that we observed at D0 have a 50% probability of being good, but we can’t tell which is which.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Count</th>
+      <th style="text-align: center">Explosion</th>
+      <th style="text-align: center">Photon detected at D0</th>
+      <th style="text-align: center">Photon detected at D1</th>
+      <th style="text-align: center">Bombs salvaged</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">40</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">40</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">20</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes</td>
+      <td style="text-align: center">20</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="attempt-3-optional">Attempt #3 (optional)</h2>
+
+<p>It’s a shame that we were only able to recover 25% of the good bombs. We can achieve the theoretical limit of 50% (or 40 in our example) by using something called the <a href="https://en.wikipedia.org/wiki/Quantum_Zeno_effect?useskin=vector">Quantum Zeno Effect</a>. The details of how to extend our setup using this effect are left up to the reader. I recommend <a href="https://youtu.be/fus1nJ6JaTk?si=Y6ljo3NrULArOx5H&amp;t=375">this video</a>.</p>
+
+<p><img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*bjGo9HLPhqvxcVbdZGnuOA.gif" alt="Quantum Zeno effect" />
+<a href="https://medium.com/qiskit/building-quantum-bomb-testers-and-other-thought-experiments-with-quantum-computers-c160060fdde4">source</a></p>
+
+<h1 id="interaction-free-measurement">Interaction-free measurement</h1>
+
+<p>The EV bomb experiment demonstrates a non-local feature of quantum mechanics; we were able to learn something about a path that the photon didn’t take. Furthermore, we did so without any prior information. This is called an interaction-free measurement.</p>
+
+<p>This is in contrast to, for example, the case where it is known that an object is located in one of two boxes. Looking and <em>not</em> finding it in one box tells us that the object is located inside the other box. This is also an interaction-free measurement, but it does not violate non-locality because we used prior information.</p>
+
+<h1 id="summary">Summary</h1>
+<p>Experiment #14 presented another weird quantum feature of interaction-free measurements. Although our treatment was theoretical, know that these results have been duplicated in the <a href="https://www.oeaw.ac.at/fileadmin/Institute/IQOQI-Vienna/PDF/publications-zeilinger/1994_-_Fundamental_Problems_in_Quantum_Theory_-_Experimental_Realization_of_Interaction-Free_Measurement.pdf">lab</a>.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+<p>This post concludes the Quantum Smalltalk series. I am amazed at how much of the quantum world we were able to explore using the Mach-Zehnder setup. I hope that these posts piqued your interest in quantum mechanics. There are a lot of great resources available. As a next step, I recommend the book <a href="https://www.amazon.com/Through-Two-Doors-Once-Experiment/dp/1101986093">Through Two Doors at Once: The Elegant Experiment That Captures the Enigma of Our Quantum Reality</a> by Anil Ananthaswamy. Alternatively, if you find general relativity generally fascinating then you might want to explore more advanced topics like the <a href="https://en.wikipedia.org/wiki/Black_hole_information_paradox?useskin=vector">black hole information paradox</a>.</p>
+
+<h1 id="appendix-a-the-smalltalk-code">Appendix A: The Smalltalk code</h1>
+<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>
+
+<h1 id="appendix-b-einstein-and-locality">Appendix B: Einstein and locality</h1>
+<p>The principle of locality states that for one point to have an effect one another point, something must travel between the points to cause the effect. The special theory of relativity limits the speed of travel to the speed of light. Therefore an event at point <strong>A</strong> cannot cause a result at point <strong>B</strong> in a time less than <strong>D/c</strong>, where <strong>D</strong> is the distance between the points and <strong>c</strong> is the speed of light in vacuum.</p>
+
+<p>Einstein believed in locality. In one of his 1935 papers, Einstein (along with co-authors Podolsky and Rosen) describe a thought experiment that demonstrates a scenario where quantum mechanics violates locality and concluded that quantum theory does not provide a complete description of reality. The paper ends by saying:</p>
+
+<blockquote>
+  <p>“While we have thus shown that the wave function does not provide a complete description of the physical reality, we left open the question of whether or not such a description exists. We believe, however, that such a theory is possible.”</p>
+</blockquote>
+
+<p>Einstein believed that the solution to the paradox lay in introducing additional (possibly inaccessible) variables. Such a theory is known as a hidden variable theory.</p>
+
+<h1 id="appendix-c-bell-and-locality">Appendix C: Bell and locality</h1>
+<p>Almost 30 years after Einstein’s paper, John Stewart Bell proposed a theory that states that no theory of hidden local variables can ever reproduce all the predictions of quantum mechanics. To date, all such experiments have supported the theory of quantum physics and not the hypothesis of local hidden variables. The 2022 Nobel Prize in Physics was awarded to three scientists (John Clauser, Alain Aspect, and Anton Zeilinger) for their efforts to experimentally validate violations of the Bell inequalities. Bell’s test proves that quantum mechanics is either non-local itself or has non-local hidden variables.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/quantum" class="page__taxonomy-item" rel="tag">quantum</a><span class="sep">, </span>
+    
+      <a href="/tags/smalltalk" class="page__taxonomy-item" rel="tag">smalltalk</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2024-06-01T00:00:00+00:00">June 1, 2024</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Experiment+14%20https%3A%2F%2Fdlfelps.github.io%2F2024%2F06%2F01%2Fquantum-smalltalk5.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2024%2F06%2F01%2Fquantum-smalltalk5.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fdlfelps.github.io%2F2024%2F06%2F01%2Fquantum-smalltalk5.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2024/05/01/quantum-smalltalk4.html" class="pagination--pager" title="Experiment 13
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2024 Daniel Felps. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

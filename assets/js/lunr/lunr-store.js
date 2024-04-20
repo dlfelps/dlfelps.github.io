@@ -78,8 +78,14 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 13",
-        "excerpt":"Introduction In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions: Could the photon...","categories": [],
+        "excerpt":"Introduction In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions: Does the photon...","categories": [],
         "tags": ["quantum","smalltalk"],
         "url": "/2024/05/01/quantum-smalltalk4.html",
+        "teaser": null
+      },{
+        "title": "Experiment 14",
+        "excerpt":"Introduction Our final post in the Quantum Smalltalk series explores a thought experiment proposed by Avshalom Elitzur and Lev Vaidman to demonstrate an unusual quantum feature - interaction-free measurement. Experiment #14 Elitzur and Vaidman proposed the following thought experiment: You are given 100 EV bombs. Due to a manufacturing problem...","categories": [],
+        "tags": ["quantum","smalltalk"],
+        "url": "/2024/06/01/quantum-smalltalk5.html",
         "teaser": null
       }]
