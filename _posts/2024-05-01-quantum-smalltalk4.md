@@ -49,7 +49,7 @@ Photon passing through a beam splitter. >> #(0.9999999999999996 0.0 )
 Photon finally detected with following probabilities: >> #(0.9999999999999996 0.0)
 ```
 
-We observe detection probabilities simlar to those in Experiment #11. Filling in the results chart we notice that the table reads as if there were two different experiments going on (i.e. the total observation probability adds up to 2.0!)
+We observe detection probabilities similar to those in Experiment #11. Filling in the results chart we notice that the table reads as if there were two different experiments going on (i.e. the total observation probability adds up to 2.0!)
 
 | State name | Path at BS1 | BS2 present | Path at BS2 | Detector | Probability |
 |:----------:|:-----------:|:-----------:|:-----------:|:--------:|:-----------:|

@@ -16,7 +16,7 @@ Photon new
 	beamSplitter;
 	detector.
 ```
-A good DSL simplifies the code to allow you to focus on the concepts rather than the syntax. A great DSL is self explanatory, allowing a domain expert (in this case a physicist) to use it without any previous programming experience. I don't know any physicists so this is at least a good DSL.
+A good DSL simplifies the code to allow you to focus on the concepts rather than the syntax. A great DSL is self-explanatory, allowing a domain expert (in this case a physicist) to use it without any previous programming experience. I don't know any physicists so this is at least a good DSL.
 
 ## The Mach-Zehnder setup
 All of the experiments in this series will be variations of the [Mach-Zehnder interferometer](https://en.wikipedia.org/wiki/Mach%E2%80%93Zehnder_interferometer). It was originally proposed in 1891 to measure phase shifts between the two paths caused by a sample, but it has since been adapted to study a variety of quantum effects. Why aren't we using the double-slit experiment? It may be the most iconic quantum experiment, but it is also difficult to model because it requires differential equations. We can demonstrate multiple quantum properties (i.e. superposition and entanglement) using the much simpler Mach-Zehnder setup.

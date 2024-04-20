@@ -17,7 +17,7 @@ This experiment requires us to add a new piece of equipment to our workbench - t
 
 The following rules describe an EV bomb:
 1. If the trigger is not defective, when a photon enters trigger tube the bomb explodes and you cannot salvage the bomb.
-2. If the trigger is defective, when a photon enters the trigger tube the bomb does not exploed and the photon continues undisturbed out the trigger tube exit. 
+2. If the trigger is defective, when a photon enters the trigger tube the bomb does not explode and the photon continues undisturbed out the trigger tube exit. 
 3. The distance from the bomb to the rest of the equipment is sufficiently large to protect the equipment; only the bomb is destroyed if an explosion occurs. 
 
 ## Attempt #1 
@@ -30,7 +30,7 @@ Our first attempt to salvage the good EV bombs isn't very clever. Let's just sho
 |   80  |    Yes    |           No          |        0       |
 |   20  |     No    |          Yes          |       N/A      |
 
-We tested all of the bombs and determined with 100% accuracy which ones were defective and which ones were good. However, we failed to salvage any of the good bombs because they were blown up in the process. If it seems like this thought experiment has no solution, then you are likely restricting yourself to solutions that follow the principle of locality. (For extra details on locality see Appendix B & C below.)
+We tested all the bombs and determined with 100% accuracy which ones were defective and which ones were good. However, we failed to salvage any of the good bombs because they were blown up in the process. If it seems like this thought experiment has no solution, then you are likely restricting yourself to solutions that follow the principle of locality. (For extra details on locality see Appendix B & C below.)
 
 ## Attempt #2
 ![Experiment #15](/assets/images/exp15.png "Experiment #15")
