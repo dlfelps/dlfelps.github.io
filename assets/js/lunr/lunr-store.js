@@ -90,7 +90,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 15",
-        "excerpt":"This post explores DINOv2 - a foundational vision model from FAIR. Introduction Yann LeCun is one of the godfathers of deep learning1. He believes that on of the most critical challenges to solve in the current era is how to give AI systems common sense. Common sense is difficult to...","categories": [],
+        "excerpt":"This post explores DINOv2 - a foundational vision model from FAIR. Introduction Yann LeCun is one of the godfathers of deep learning1. He believes that one of the most critical challenges to solve in the current era is how to give AI systems common sense. Common sense is difficult to...","categories": [],
         "tags": ["vit","computer-vision","image-retrieval","ml-portfolio","self-supervised"],
         "url": "/2024/06/02/VIT-amster.html",
         "teaser": null
