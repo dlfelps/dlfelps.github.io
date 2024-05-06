@@ -7,9 +7,9 @@ This post explores DINOv2 - a foundational vision model from FAIR.
 
 ## Introduction
 
-Yann LeCun is one of the godfathers of deep learning[^1]. He believes that on of the most critical challenges to solve in the current era is how to give AI systems common sense. Common sense is difficult to define, but I believe that it keeps me alive and allows me to learn new skills helps with relatively few attempts (compared to deep learning). LeCun calls this elusive knowledge the dark matter of AI. 
+Yann LeCun is one of the godfathers of deep learning[^1]. He believes that one of the most critical challenges to solve in the current era is how to give AI systems common sense. Common sense is difficult to define, but I believe that it keeps me alive and allows me to learn new skills helps with relatively few attempts (compared to deep learning). LeCun calls this elusive knowledge the dark matter of AI. 
 
-How do we impart this knowledge to our AI systems? LeCun believes the solution lies in self-supervised learning. Self-supervised learning is a learning technique that uses unsupervised learning for tasks that conventionally require supervised learning. Self-supervised learning tasks use unlabeled input data as ground truth, allowing them to take advantage of massive amounts of data. If designed properly, the model will learn accurate, meaningful representations of the data. Large Language Models have been popular in the news lately due to their uncanny ability to achieve human-level performance on many tasks. Their sucess is due, in part, to their ability to leverage large amounts of unnannotated text through self-supervised learning. 
+How do we impart this knowledge to our AI systems? LeCun believes the solution lies in self-supervised learning. Self-supervised learning is a technique that adapts tasks that conventionally require labels into an unsupervised learning task (e.g. next word prediction). Self-supervised learning tasks can take advantage of massive amounts of data. If designed properly, the model will learn accurate, meaningful representations of the data. Large Language Models have been popular in the news lately due to their uncanny ability to achieve human-level performance on many tasks. Their sucess is due, in part, to their ability to leverage large amounts of unnannotated text through self-supervised learning. 
 
 It is no surprise that the most successful self-supervised computer vision models come from LeCun's lab (Fundamental AI Research team at Meta). They published [DINO (2021)](https://ai.meta.com/blog/dino-paws-computer-vision-with-self-supervised-transformers-and-10x-more-efficient-training/) and [DINOv2 (2023)](https://ai.meta.com/blog/dino-v2-computer-vision-self-supervised-learning/) as foundational image models. Foundational models are meant to serve as a resusable backbone for many tasks.
 
@@ -22,7 +22,7 @@ In their [paper](https://arxiv.org/abs/2304.07193), DINOv2 is benchmarked agains
 
 ### AmsterTime dataset
 
-The AmsterTime dataset offers a collection of 2,500 well-curated images matching the same scene from a street view matched to historical archival image data from Amsterdam city. This is a challenge dataset for image retrieval because the query and gallery sets were taken many years apart so there is often structural changes for the same location. 
+The AmsterTime dataset offers a collection of 2,500 well-curated images matching the same scene from a street view matched to historical archival image data from Amsterdam city. This is a challenging dataset for image retrieval because the query and gallery sets were taken many years apart so there is often structural changes for the same location. 
 
 ![AmsterTime](/assets/images/amstertime.PNG "AmsterTime")
 
@@ -34,12 +34,12 @@ Finding similar images with DINOv2 is simple. First, compute the embedding vecto
 
 #### The embedding vector 
 
-DINOv2 is a vision transformer model. As such, transforms an image into patches and processes those patches a sequence of patches. 
+DINOv2 is a vision transformer model. As such, it transforms an image into patches and processes those patches a sequence of patches. 
 
 ![vit](/assets/images/vit.png "vit")
 [source](https://arxiv.org/abs/2010.11929v2)
 
-The sequence is processed by the model and the embedding vector referenced here refers to the [CLS] token of the final layer (represented by the "*" in the figure above). Since the [CLS] token does not represent an actual token, the transformer learns to encode a general representation of the entire image into that token. One of the most desirable  features of DINOv2 is that the CLS token attention maps of the last layer tend to be well-aligned with salient foreground objects (i.e. the model is attending to the primary subject of the image). It is worth looking at the code to see how to extract the [CLS] token:
+The sequence is processed by the model and the embedding vector referenced here refers to the [CLS] token of the final layer (represented by the "*" in the figure above). Since the [CLS] token does not represent an actual token, the transformer learns to encode a general representation of the entire image into that token. One of the most desirable  features of DINOv2 is that the attention maps associated with the [CLS] token of the last layer tend to be aligned with salient foreground objects (i.e. the model is attending to the primary subject of the image). It is worth looking at the code to see how to extract the [CLS] token:
 
 ```
 def get_cls_token_for_images(images, processor, model):
@@ -68,7 +68,7 @@ Not bad considering the difficulty of the dataset. This means that 43% of the ti
 
 ![TP](/assets/images/match_on.png "TP")
 
-It is also informative to look at the cases where the approach failed. Below are the top-10 worst performing queries (largest distances between query and gallery). Each row contains the query image, the top result, and the correct result.
+It is also informative to look at the cases where the approach failed. Below are the top-10 worst performing queries (largest distances between query and gallery). Each row contains the query image, the top predicted result, and finally the correct result.
 
 ![FP](/assets/images/mismatch_on.png "FP")
 
