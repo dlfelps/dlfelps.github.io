@@ -1,0 +1,427 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.26.0 by Michael Rose
+  Copyright 2013-2024 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 15 - .NET Experiments</title>
+<meta name="description" content="This post explores DINOv2 - a foundational vision model from FAIR.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 15">
+<meta property="og:url" content="https://dlfelps.github.io/2024/06/02/VIT-amster.html">
+
+
+  <meta property="og:description" content="This post explores DINOv2 - a foundational vision model from FAIR.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2024-06-02T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2024/06/02/VIT-amster.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script type="text/javascript">
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/"
+                
+                
+              >Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 15">
+    <meta itemprop="description" content="This post explores DINOv2 - a foundational vision model from FAIR.">
+    <meta itemprop="datePublished" content="2024-06-02T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://dlfelps.github.io/2024/06/02/VIT-amster.html" itemprop="url">Experiment 15
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2024-06-02T00:00:00+00:00">June 2, 2024</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          11 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li><li><a href="#image-retrieval">Image retrieval</a><ul><li><a href="#amstertime-dataset">AmsterTime dataset</a></li><li><a href="#image-retrieval-with-dinov2">Image retrieval with DINOv2</a><ul><li><a href="#the-embedding-vector">The embedding vector</a></li></ul></li></ul></li><li><a href="#results">Results</a><ul><li><a href="#conclusion">Conclusion</a><ul><li><a href="#footnotes">Footnotes</a></li></ul></li></ul></li></ul>
+            </nav>
+          </aside>
+        
+        <p>This post explores DINOv2 - a foundational vision model from FAIR.</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Yann LeCun is one of the godfathers of deep learning<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. He believes that on of the most critical challenges to solve in the current era is how to give AI systems common sense. Common sense is difficult to define, but I believe that it keeps me alive and allows me to learn new skills helps with relatively few attempts (compared to deep learning). LeCun calls this elusive knowledge the dark matter of AI.</p>
+
+<p>How do we impart this knowledge to our AI systems? LeCun believes the solution lies in self-supervised learning. Self-supervised learning is a learning technique that uses unsupervised learning for tasks that conventionally require supervised learning. Self-supervised learning tasks use unlabeled input data as ground truth, allowing them to take advantage of massive amounts of data. If designed properly, the model will learn accurate, meaningful representations of the data. Large Language Models have been popular in the news lately due to their uncanny ability to achieve human-level performance on many tasks. Their sucess is due, in part, to their ability to leverage large amounts of unnannotated text through self-supervised learning.</p>
+
+<p>It is no surprise that the most successful self-supervised computer vision models come from LeCun’s lab (Fundamental AI Research team at Meta). They published <a href="https://ai.meta.com/blog/dino-paws-computer-vision-with-self-supervised-transformers-and-10x-more-efficient-training/">DINO (2021)</a> and <a href="https://ai.meta.com/blog/dino-v2-computer-vision-self-supervised-learning/">DINOv2 (2023)</a> as foundational image models. Foundational models are meant to serve as a resusable backbone for many tasks.</p>
+
+<p><img src="/assets/images/dinov2.png" alt="DINO" title="DINO" />
+<a href="https://aipapersacademy.com/dinov2-from-meta-ai-finally-a-foundational-model-in-computer-vision/">source</a></p>
+
+<h2 id="image-retrieval">Image retrieval</h2>
+
+<p>In their <a href="https://arxiv.org/abs/2304.07193">paper</a>, DINOv2 is benchmarked against many SOTA computer vision tasks. One of those tasks is image retrieval. Image retrieval uses images to search for other relevant images. It can help users discover new images guided by visual similarity. Popular benchmarks for image retrieval methods include the <a href="https://paperswithcode.com/dataset/oxford5k">Oxford building</a> and <a href="https://paperswithcode.com/dataset/google-landmarks-dataset-v2">Google Landmarks</a>. In this post I wanted to explore a dataset that was designed to retrieve images through time - the <a href="https://paperswithcode.com/dataset/amstertime">AmsterTime</a> dataset.</p>
+
+<h3 id="amstertime-dataset">AmsterTime dataset</h3>
+
+<p>The AmsterTime dataset offers a collection of 2,500 well-curated images matching the same scene from a street view matched to historical archival image data from Amsterdam city. This is a challenge dataset for image retrieval because the query and gallery sets were taken many years apart so there is often structural changes for the same location.</p>
+
+<p><img src="/assets/images/amstertime.PNG" alt="AmsterTime" title="AmsterTime" /></p>
+
+<h3 id="image-retrieval-with-dinov2">Image retrieval with DINOv2</h3>
+
+<p>Finding similar images with DINOv2 is simple. First, compute the embedding vector for each image in the gallery by passing it through the DINOv2 model. Then, given a query image, compare its embedding vector with those from the gallery using cosine similarity:</p>
+
+<p><img src="/assets/images/cosine.svg" alt="cosine" title="cosine" /></p>
+
+<h4 id="the-embedding-vector">The embedding vector</h4>
+
+<p>DINOv2 is a vision transformer model. As such, transforms an image into patches and processes those patches a sequence of patches.</p>
+
+<p><img src="/assets/images/vit.png" alt="vit" title="vit" />
+<a href="https://arxiv.org/abs/2010.11929v2">source</a></p>
+
+<p>The sequence is processed by the model and the embedding vector referenced here refers to the [CLS] token of the final layer (represented by the “*” in the figure above). Since the [CLS] token does not represent an actual token, the transformer learns to encode a general representation of the entire image into that token. One of the most desirable  features of DINOv2 is that the CLS token attention maps of the last layer tend to be well-aligned with salient foreground objects (i.e. the model is attending to the primary subject of the image). It is worth looking at the code to see how to extract the [CLS] token:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get_cls_token_for_images(images, processor, model):
+
+  collect = []
+
+  for i in tqdm(images):
+    inputs = processor(images=i, return_tensors="pt")
+    with torch.no_grad():
+      outputs = model(**inputs)
+    last_hidden_states = outputs.last_hidden_state
+    collect.append(last_hidden_states[:,0,:]) # cls token
+
+  return torch.cat(collect)
+</code></pre></div></div>
+
+<h2 id="results">Results</h2>
+
+<p>A common metric for reporting results in image retrieval is Recall@N. Here are the results for the AmsterTime dataset:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">query</th>
+      <th style="text-align: center">gallery</th>
+      <th style="text-align: center">recall@1</th>
+      <th style="text-align: center">recall@5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">AmsterTime</td>
+      <td style="text-align: center">archival</td>
+      <td style="text-align: center">streetview</td>
+      <td style="text-align: center">0.43</td>
+      <td style="text-align: center">0.68</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Not bad considering the difficulty of the dataset. This means that 43% of the time the top matching image is the correct one. Let’s look at some of the cases where this worked well (query image on left, correct result from gallery on right).</p>
+
+<p><img src="/assets/images/match_on.png" alt="TP" title="TP" /></p>
+
+<p>It is also informative to look at the cases where the approach failed. Below are the top-10 worst performing queries (largest distances between query and gallery). Each row contains the query image, the top result, and the correct result.</p>
+
+<p><img src="/assets/images/mismatch_on.png" alt="FP" title="FP" /></p>
+
+<p>We see that many of the correct results contain occlusions, preventing the structural features of the building from being matched. In most of the cases, it is difficult for even a human to match the images.</p>
+
+<p>Since the AmsterTime dataset contains pairs of images across time (1250 archival, 1250 streetview) we can also reverse the gallery and query sets. Interestingly, the results are worse.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">query</th>
+      <th style="text-align: center">gallery</th>
+      <th style="text-align: center">recall@1</th>
+      <th style="text-align: center">recall@5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">AmsterTime</td>
+      <td style="text-align: center">archival</td>
+      <td style="text-align: center">streetview</td>
+      <td style="text-align: center">0.43</td>
+      <td style="text-align: center">0.68</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">AmsterTime</td>
+      <td style="text-align: center">streetview</td>
+      <td style="text-align: center">archival</td>
+      <td style="text-align: center">0.35</td>
+      <td style="text-align: center">0.57</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>This post demonstrated the potential power of the DINOv2 foundational vision model. The results show that the model is capable of capturing the salient information in an image retrieval task without any prior training.</p>
+
+<h4 id="footnotes">Footnotes</h4>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Yoshua Bengio and Geoffrey Hinton are also given this title. In 2018 LeCun, Bengio, and Hinton won the <a href="https://www.acm.org/media-center/2019/march/turing-award-2018">Turing award</a> for their contributions in deep learing. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/computer-vision" class="page__taxonomy-item p-category" rel="tag">computer-vision</a><span class="sep">, </span>
+    
+      <a href="/tags/image-retrieval" class="page__taxonomy-item p-category" rel="tag">image-retrieval</a><span class="sep">, </span>
+    
+      <a href="/tags/ml-portfolio" class="page__taxonomy-item p-category" rel="tag">ml-portfolio</a><span class="sep">, </span>
+    
+      <a href="/tags/self-supervised" class="page__taxonomy-item p-category" rel="tag">self-supervised</a><span class="sep">, </span>
+    
+      <a href="/tags/vit" class="page__taxonomy-item p-category" rel="tag">vit</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2024-06-02T00:00:00+00:00">June 2, 2024</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Experiment+15%20https%3A%2F%2Fdlfelps.github.io%2F2024%2F06%2F02%2FVIT-amster.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2024%2F06%2F02%2FVIT-amster.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dlfelps.github.io/2024/06/02/VIT-amster.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2024/06/01/quantum-smalltalk5.html" class="pagination--pager" title="Experiment 14
+">Previous</a>
+    
+    
+      <a href="/2024/06/03/few-shot.html" class="pagination--pager" title="Experiment 16
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2024 <a href="https://dlfelps.github.io">.NET Experiments</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
