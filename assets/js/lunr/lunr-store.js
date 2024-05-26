@@ -96,7 +96,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 16",
-        "excerpt":"This post explores unique concepts in few-shot learning. Introduction Few-shot learning describes the situation where a classifier must generalize to new classes using only a small number of examples of each new class. It represents scenarios where data collection (or annotation) is costly for the classes you care about, but...","categories": [],
+        "excerpt":"This post explores unique concepts in few-shot learning. Introduction Few-shot learning describes the situation where a classifier must generalize to new classes using only a few examples of each new class. It represents scenarios where data collection (or annotation) is costly for the classes you care about, but you may...","categories": [],
         "tags": ["few-shot","computer-vision","ml-portfolio","meta-learning"],
         "url": "/2024/06/03/few-shot.html",
         "teaser": null
