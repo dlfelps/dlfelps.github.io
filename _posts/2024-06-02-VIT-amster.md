@@ -72,9 +72,9 @@ It is also informative to look at the cases where the approach failed. Below are
 
 ![FP](/assets/images/mismatch_on.png "FP")
 
-We see that many of the correct results contain occlusions, preventing the structural features of the building from being matched. In most of the cases, it is difficult for even a human to match the images.
+We see that many of the correct results contain occlusions or severe camera distortions, preventing the structural features of the building from being matched. In most of the cases, it is difficult for even a human to match the images.
 
-Since the AmsterTime dataset contains pairs of images across time (1250 archival, 1250 streetview) we can also reverse the gallery and query sets. Interestingly, the results are worse.
+Since the AmsterTime dataset contains pairs of images across time (1250 archival, 1250 streetview) we can also reverse the gallery and query sets. Surprisingly, its easier to predict the future than the past ;)
 
 |            |    query   |   gallery  | recall@1 | recall@5 |
 |:----------:|:----------:|:----------:|:--------:|:--------:|
@@ -83,7 +83,7 @@ Since the AmsterTime dataset contains pairs of images across time (1250 archival
 
 ### Conclusion
 
-This post demonstrated the potential power of the DINOv2 foundational vision model. The results show that the model is capable of capturing the salient information in an image retrieval task without any prior training. 
+This post demonstrated the potential power of the DINOv2 foundational vision model. The results show that the model is capable of capturing the salient information in an image retrieval task without any prior training. The code for this experiment can be found at my [ML portfolio website](https://github.com/dlfelps/ml_portfolio).
 
 
 #### Footnotes
