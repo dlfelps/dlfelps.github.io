@@ -106,4 +106,10 @@ var store = [{
         "tags": ["explainable","interpretable","computer-vision","ml-portfolio"],
         "url": "/2024/06/04/explainable.html",
         "teaser": null
+      },{
+        "title": "Experiment 18",
+        "excerpt":"This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.   Introduction   Conclusion   The code for this experiment can be found at my ML portfolio website.   ","categories": [],
+        "tags": ["adversarial","evasion","hyperspectral","computer-vision","ml-portfolio"],
+        "url": "/2024/07/01/adversarial.html",
+        "teaser": null
       }]
