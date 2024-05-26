@@ -96,8 +96,14 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 16",
-        "excerpt":"This post explores some of the   Introduction   Footnotes   ","categories": [],
+        "excerpt":"This post explores unique concepts in few-shot learning. Introduction Few-shot learning describes the situation where a classifier must generalize to new classes using only a small number of examples of each new class. It represents scenarios where data collection (or annotation) is costly for the classes you care about, but...","categories": [],
         "tags": ["few-shot","computer-vision","ml-portfolio","meta-learning"],
         "url": "/2024/06/03/few-shot.html",
+        "teaser": null
+      },{
+        "title": "Experiment 17",
+        "excerpt":"This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.   Introduction   Conclusion   The code for this experiment can be found at my ML portfolio website.   ","categories": [],
+        "tags": ["explainable","interpretable","computer-vision","ml-portfolio"],
+        "url": "/2024/06/04/explainable.html",
         "teaser": null
       }]
