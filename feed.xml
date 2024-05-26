@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-05-26T01:03:00+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 17</title><link href="https://dlfelps.github.io/2024/06/04/explainable.html" rel="alternate" type="text/html" title="Experiment 17" /><published>2024-06-04T00:00:00+00:00</published><updated>2024-06-04T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/06/04/explainable</id><content type="html" xml:base="https://dlfelps.github.io/2024/06/04/explainable.html"><![CDATA[<p>This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-05-26T14:26:51+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 17</title><link href="https://dlfelps.github.io/2024/06/04/explainable.html" rel="alternate" type="text/html" title="Experiment 17" /><published>2024-06-04T00:00:00+00:00</published><updated>2024-06-04T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/06/04/explainable</id><content type="html" xml:base="https://dlfelps.github.io/2024/06/04/explainable.html"><![CDATA[<p>This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.</p>
 
 <h2 id="introduction">Introduction</h2>
 
@@ -8,7 +8,7 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>Few-shot learning describes the situation where a classifier must generalize to new classes using only a small number of examples of each new class. It represents scenarios where data collection (or annotation) is costly for the classes you care about, but you have access to similar data. There are some unique terms associated with few-shot learning, which we will introduce next.</p>
+<p>Few-shot learning describes the situation where a classifier must generalize to new classes using only a small number of examples of each new class. It represents scenarios where data collection (or annotation) is costly for the classes you care about, but you may have access to related data. There are some unique terms associated with few-shot learning, which we will introduce next.</p>
 
 <p>In standard supervised learning, the training and testing sets contain the SAME classes. The classifier is tested for its ability to discriminate between KNOWN classes.</p>
 
@@ -22,47 +22,108 @@
 
 <p><a href="https://ieeexplore.ieee.org/document/10287966">image reference</a></p>
 
-<h2 id="episodic-training-meta-learning">Episodic training (meta-learning)</h2>
-<p>(comparison with transfer learning approach)
-https://arxiv.org/pdf/2204.11181
- To simulate generalization challenges at test times, such strategies build sequences of artificially balanced few-shot tasks (or episodes) during base training, each containing both query and support samples.</p>
+<h2 id="experiment">Experiment</h2>
 
-<p>https://arxiv.org/pdf/1703.05175
-Vinyals et al. [29] proposed matching networks, which uses an attention mechanism over a learned embedding of the
-labeled set of examples (the support set) to predict classes for the unlabeled points (the query set).
-Matching networks can be interpreted as a weighted nearest-neighbor classifier applied within an
-embedding space. Notably, this model utilizes sampled mini-batches called episodes during training,
-where each episode is designed to mimic the few-shot task by subsampling classes as well as data
-points. The use of episodes makes the training problem more faithful to the test environment and
-thereby improves generalization.</p>
+<p>This experiment will test a model in a 5-way 5-shot task (i.e. 5 new classes, 5 examples each). We will use a standard benchmark in few-shot learning -  <a href="https://www.vision.caltech.edu/datasets/cub_200_2011/">CUB-200-2011</a> dataset. It is a fine-grained image classification task with over 200 different species of birds. The large number of classes make it suitable for few-shot learning as several can be withheld for testing while maintaining a difficult baseline. We next explain our basic approach to few-shot learning (prototype models) and then compare the performance of three ways to train the model.</p>
 
-<h2 id="transductive-vs-inductive-learning-based-approaches">Transductive vs inductive learning-based approaches</h2>
-<p>https://arxiv.org/pdf/2204.11181
- In few-shot learning, transductive inference has access to exactly the same training and testing data as its inductive counterpart3 . The difference is that it classifies all the unlabeled query samples of each single few-shot task jointly, rather than one sample at a time.</p>
+<h3 id="few-shot-framework-prototype-model">Few-shot framework: Prototype model</h3>
 
-<p>https://arxiv.org/pdf/1805.10002
-One way to achieve larger improvements with limited amount of training
-data is to consider relationships between instances in the test set and thus predicting them as a whole,
-which is referred to as transduction, or transductive inference. In previous work (Joachims, 1999;
-Zhou et al., 2004; Vapnik, 1999), transductive inference has shown to outperform inductive methods
-which predict test examples one by one, especially in small training sets</p>
+<p>We adopt a single framework for all variations of our experiment - <a href="https://arxiv.org/abs/1703.05175">Prototypical networks</a>. The concept is based on the idea that there is a single prototype representation for each class. A prototype for each class is calculated from the mean of its support set in the embedding space of a neural network. Our three approaches explore three different ways to train this neural network. Classification in a prototypical model is simply a nearest neighbors using only the prototypes<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. This is an inductive method as test examples are classified one at a time.</p>
 
-<p>https://en.wikipedia.org/wiki/Transduction_(machine_learning)
- transductive inference is reasoning from observed, specific (training) cases to specific (test) cases. In contrast, induction is reasoning from observed training cases to general rules, which are then applied to the test cases</p>
+<p><img src="/assets/images/prototypical_network.jpeg" alt="prototypical network" title="prototypical network" /></p>
 
-<h1 id="experiment">Experiment</h1>
+<p><a href="https://www.sciencedirect.com/science/article/abs/pii/S0925231221001818">image reference</a></p>
 
-<h2 id="cub-dataset">CUB dataset</h2>
+<h3 id="approach-1-pretrained-model">Approach #1: Pretrained model</h3>
 
-<h2 id="prototype-model">Prototype model</h2>
+<p>The first approach adapts a pretrained model using transfer learning. The transfer learning process starts with a model that is trained on a large and general dataset (e.g. Imagenet). The purpose of this model is to rely on the learned feature maps - which should be robust - and adapt the later layers to classify your new classes (see image below).</p>
 
-<h3 id="relationship-to-image-retrieval">relationship to image retrieval</h3>
-<p>https://arxiv.org/pdf/1904.04232v2
-baseline++ prototype</p>
+<p><img src="/assets/images/transfer_learning.png" alt="transfer model" title="transfer model" /></p>
 
-<h3 id="conclusion">Conclusion</h3>
+<p><a href="https://www.nature.com/articles/s41598-024-54923-y">image reference</a></p>
 
-<p>The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="few-shot" /><category term="computer-vision" /><category term="ml-portfolio" /><category term="meta-learning" /><summary type="html"><![CDATA[This post explores unique concepts in few-shot learning.]]></summary></entry><entry><title type="html">Experiment 15</title><link href="https://dlfelps.github.io/2024/06/02/VIT-amster.html" rel="alternate" type="text/html" title="Experiment 15" /><published>2024-06-02T00:00:00+00:00</published><updated>2024-06-02T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/06/02/VIT-amster</id><content type="html" xml:base="https://dlfelps.github.io/2024/06/02/VIT-amster.html"><![CDATA[<p>This post explores DINOv2 - a foundational vision model from FAIR.</p>
+<p>This experiment uses a ResNet-18 model with pretrained weights from an Imagenet dataset. For each task in the evaluation phase, the support set is used to calculate the prototypes and the the query sets are classified from the prototypes.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model = resnet18(weights=ResNet18_Weights.DEFAULT)
+model.fc = nn.Flatten()
+few_shot_classifier = PrototypicalNetworks(model).to(DEVICE)
+</code></pre></div></div>
+
+<h3 id="approach-2-classical-model">Approach #2: Classical model</h3>
+
+<p>This approach uses a subset of the training data to generate a pretrained model. NOTE: the test data contains classes that were not included in the training data. This approach is not always viable since it requires prior knowledge of the few-shot task data distribution. However, it can be powerful if you work in a specific domain and have labeled data from that domain readily available. To simulate it here, we split the 200 species in CUB into 140 for training and 60 for testing. During test time, a 5-way 5-shot task is created by randomly sampling 5 classes from the 60 test classes. This process is repeated 500 times to get a statistically significant measure of generalization performance.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model = resnet18()
+model.fc = nn.Linear(512, 140)
+model.load_state_dict(torch.load('/content/easy-few-shot-learning/classical_model_18_acc_744.pt')) # pretrained just for you!
+few_shot_classifier = PrototypicalNetworks(model).to(DEVICE)
+</code></pre></div></div>
+
+<h3 id="approach-3-episodic-model">Approach #3: Episodic model</h3>
+
+<p>Episodic training (also called meta-learning) mirrors the few-shot tasks that will be used to test the final model during the training phase. Each “episode” is designed to mimic the few-shot task by subsampling classes as well as data points. The use of episodes makes the training problem more faithful to the test environment and thereby improves generalization. This strategy typically assumes prior knowledge of N and K that will be used at test time. <a href="https://arxiv.org/pdf/2204.11181">ref1</a> <a href="https://arxiv.org/pdf/1703.05175">ref2</a></p>
+
+<p>Episodic training can be performed following a classic training regime if additional data is available or using pretrained-weights if it is not. In this case we reserve the same 140 classes as in Approach #2 for training. But instead of performing classic training, which reduces cross entropy across all classes, we adjust weights based on many training episodes (5-way 5-shot). This process is slower as there is additional overhead required for each episode.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model = resnet18()
+model.fc = nn.Flatten()
+model.load_state_dict(torch.load('/content/easy-few-shot-learning/episodic_model_18_acc_779.pt')) # pretrained just for you!
+few_shot_classifier = PrototypicalNetworks(model).to(DEVICE)
+</code></pre></div></div>
+
+<h3 id="bonus-approach-pretrained-model-dinov2-backbone">BONUS Approach: Pretrained model (DINOv2 backbone)</h3>
+
+<p>The three primary variations above can be compared directly because they are all variations of Resnet-18 and use Prototypical models for evaluation. In this bonus approach, we replace the Resnet-18 backbone of the pretrained model (approach #1) with DINOv2. The rest of the setup is the same.</p>
+
+<h2 id="results">Results</h2>
+
+<p>For this purposes of this discussion we will focus on Approaches #1-#3. The accuracy improves with each successive approach, but the assumptions also increase. Namely, in moving from transfer learning to classic learning we assume knowledge of the domain of the test classes and also assume access to labeled examples from that domain (even if they aren’t the exact test cases). In moving from classic learning to episodic learning we further assume knowledge of the task itself (5-way 5-shot) and the distribution of the data within (i.e. uniformly sampled). This does not always reflect the real word - a <a href="https://arxiv.org/abs/2204.11181">study</a> showed that if these assumptions are incorrect they can have serious effects on performance.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Backbone</th>
+      <th style="text-align: center">Training approach</th>
+      <th style="text-align: center">Accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">Resnet-18</td>
+      <td style="text-align: center">transfer learning</td>
+      <td style="text-align: center">0.684</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Resnet-18</td>
+      <td style="text-align: center">classic</td>
+      <td style="text-align: center">0.773</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Resnet-18</td>
+      <td style="text-align: center">episodic</td>
+      <td style="text-align: center">0.779</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">DINOv2</td>
+      <td style="text-align: center">transfer learning</td>
+      <td style="text-align: center">0.964</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>We compared three approaches to few-shot learning and discussed the conditions and assumptions necessary to use them. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>
+
+<h3 id="footnotes">Footnotes</h3>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>There is some similarity between Prototypical models and Image retrieval tasks. Image retrieval can be viewed as a prototypical model where each image is its own prototype. And instead of returing a single class, the top-N closest prototypes are returned. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="few-shot" /><category term="computer-vision" /><category term="ml-portfolio" /><category term="meta-learning" /><summary type="html"><![CDATA[This post explores unique concepts in few-shot learning.]]></summary></entry><entry><title type="html">Experiment 15</title><link href="https://dlfelps.github.io/2024/06/02/VIT-amster.html" rel="alternate" type="text/html" title="Experiment 15" /><published>2024-06-02T00:00:00+00:00</published><updated>2024-06-02T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/06/02/VIT-amster</id><content type="html" xml:base="https://dlfelps.github.io/2024/06/02/VIT-amster.html"><![CDATA[<p>This post explores DINOv2 - a foundational vision model from FAIR.</p>
 
 <h2 id="introduction">Introduction</h2>
 
