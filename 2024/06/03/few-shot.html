@@ -209,7 +209,7 @@
 
 <h3 id="few-shot-framework-prototype-model">Few-shot framework: Prototype model</h3>
 
-<p>We adopt a single framework for all variations of our experiment - <a href="https://arxiv.org/abs/1703.05175">Prototypical networks</a>. The concept is based on the idea that there is a single prototype representation for each class. A prototype for each class is calculated from the mean of its support set in the embedding space of a neural network. Our three approaches explore three different ways to train this neural network. Classification in a prototypical model is simply a nearest neighbors using only the prototypes<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. This is an inductive method as test examples are classified one at a time.</p>
+<p>We adopt a single framework for all variations of our experiment - <a href="https://arxiv.org/abs/1703.05175">Prototypical networks</a>. The concept is based on the idea that there is a single prototype representation for each class. A prototype for each class is calculated from the mean of its support set in the embedding space of a neural network. Our three approaches explore three different ways to train this neural network. Classification in a prototypical model is simply a nearest neighbors using only the prototypes<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. The code uses models and task loaders from <a href="https://github.com/sicara/easy-few-shot-learning">Easy Few-shot learning</a>.</p>
 
 <p><img src="/assets/images/prototypical_network.jpeg" alt="prototypical network" title="prototypical network" /></p>
 

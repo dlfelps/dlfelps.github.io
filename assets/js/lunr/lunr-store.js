@@ -102,7 +102,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 17",
-        "excerpt":"This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.   Introduction   Conclusion   The code for this experiment can be found at my ML portfolio website.   ","categories": [],
+        "excerpt":"This post introduces Concept Bottleneck Models - an interpretable approach to machine learning. Introduction to Explainable AI Explainable machine learning models describe how and why a prediction was made. Experts in explainable AI (XAI) make a distinction between interpretabiliy and explainability: source Interpretability is the extraction of relevant sub-symbolic information...","categories": [],
         "tags": ["explainable","interpretable","computer-vision","ml-portfolio"],
         "url": "/2024/06/04/explainable.html",
         "teaser": null

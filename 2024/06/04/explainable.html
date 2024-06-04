@@ -166,7 +166,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          less than 1 minute read
+          20 minute read
         
       </span>
     
@@ -181,17 +181,207 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#introduction">Introduction</a><ul><li><a href="#conclusion">Conclusion</a></li></ul></li></ul>
+              <ul class="toc__menu"><li><a href="#introduction-to-explainable-ai">Introduction to Explainable AI</a></li><li><a href="#experimental-study">Experimental study</a></li><li><a href="#establishing-the-baseline">Establishing the baseline</a></li><li><a href="#concept-bottleneck-models">Concept Bottleneck Models</a><ul><li><a href="#training-a-concept-bottleneck-model">Training a Concept Bottleneck Model</a><ul><li><a href="#learning-the-concepts">Learning the concepts</a></li><li><a href="#learning-the-classes">Learning the classes</a></li></ul></li></ul></li><li><a href="#results">Results</a></li><li><a href="#discussion">Discussion</a><ul><li><a href="#limitations-of-cbms">Limitations of CBMs</a></li><li><a href="#limitations-of-resnet-18-backbone">Limitations of ResNet-18 backbone</a></li><li><a href="#alternative-approaches-to-interpretability">Alternative approaches to interpretability</a></li></ul></li><li><a href="#conclusion">Conclusion</a></li></ul>
             </nav>
           </aside>
         
         <p>This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.</p>
 
-<h2 id="introduction">Introduction</h2>
+<h2 id="introduction-to-explainable-ai">Introduction to Explainable AI</h2>
 
-<h3 id="conclusion">Conclusion</h3>
+<p>Explainable machine learning models describe how and why a prediction was made. Experts in explainable AI (XAI) make a distinction between interpretabiliy and explainability: <a href="https://www.sciencedirect.com/science/article/abs/pii/S1566253521002281">source</a></p>
 
-<p>The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>
+<ul>
+  <li>
+    <p>Interpretability is the extraction of relevant sub-symbolic information from a machine-learning model concerning relationships either contained in data or learned by the model</p>
+  </li>
+  <li>
+    <p>Explainability is the ability to translate this sub-symbolic information in a comprehensible manner through human-understandable language expressions</p>
+  </li>
+</ul>
+
+<p>This blog post answers the following questions:</p>
+<ol>
+  <li>How do you make a machine learning model more interpretable and explainable?</li>
+  <li>What are the tradeoffs and when should you do it?</li>
+</ol>
+
+<h2 id="experimental-study">Experimental study</h2>
+
+<p>In order to demonstrate the benefits of XAI we will use a standard image classification task on well-known benchmark - <a href="https://www.vision.caltech.edu/datasets/cub_200_2011/">CUB-200-2011</a>, which contains 11,788 images of birds. This dataset is typically used for fine-grained classification since it contains over 200 species of birds. Additionally, for each image, it captures meta-data about each bird (i.e. 28 features including bill shape, wing shape, head color, etc.). This information will be critical to creating an interpretable model.
+<img src="https://i0.wp.com/www.beyourownbirder.com/wp-content/uploads/2019/09/american-goldfinch-1.jpg" alt="American goldfinch" /></p>
+
+<p><a href="https://i0.wp.com/www.beyourownbirder.com/wp-content/uploads/2019/09/american-goldfinch-1.jpg">Image source</a></p>
+
+<h2 id="establishing-the-baseline">Establishing the baseline</h2>
+
+<p>Before we build an interpretable model, we will establish the performance of a non-interpretable model. For this dataset we will use a ResNet-18 pretrained model from the <a href="https://github.com/osmr/imgclsmob">pytorchcv</a> package.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from pytorchcv.model_provider import get_model 
+
+cub_model = get_model('resnet18_cub', pretrained=True)
+</code></pre></div></div>
+
+<p>This model has 74.4% accuracy on the test set, which is impressive given that there are 200 classes and the classes are all similar because they are all birds. We will next describe how to adapt this model to be interpretable.</p>
+
+<h2 id="concept-bottleneck-models">Concept Bottleneck Models</h2>
+
+<p>Deep learning models are powerful due to their ability to learn features that are discriminative to the prediction task. However, these features are not interpretable by humans, leading to the so-called <a href="https://news.mit.edu/2022/machine-learning-explainability-0505">“black box problem”</a>. In an effort to make deep learning models more transparent, Concept Bottleneck Models (CBMs) make use of a human-interpretable feature layer called the “concept layer”. This layer contains features that are meaningful to a human and representative of the features necessary for a human to perform the same kind of prediction. The final prediction is made based on the values of the concept layer. There are two primary advantages of this approach:</p>
+<ol>
+  <li>Users can understand the feature values immediately before the prediction layer</li>
+  <li>Users can update the feature values to improve accuracy (sometimes called intervention)</li>
+</ol>
+
+<p><img src="/assets/images/cbm_cub.jpeg" alt="concept bottleneck model" title="concept bottleneck model" /></p>
+
+<p><a href="https://arxiv.org/pdf/2007.04612">image reference</a></p>
+
+<h3 id="training-a-concept-bottleneck-model">Training a Concept Bottleneck Model</h3>
+<p>In the original <a href="https://arxiv.org/pdf/2007.04612">paper</a> the authors test three ways to train a Concept Bottleneck Model:</p>
+
+<ul>
+  <li>
+    <p>Independent: learn a concept predictor (L<sub>C</sub>) and learn a task predictor (L<sub>Y</sub>)</p>
+  </li>
+  <li>
+    <p>Sequential: learn a concept predictor (L<sub>C</sub>) then learn a task predictor (L<sub>Y</sub> <span>|</span> L<sub>C</sub>)</p>
+  </li>
+  <li>
+    <p>Joint: simultaneously learn concept predictor (L<sub>C</sub>) and task predictor (L<sub>Y</sub> <span>|</span> L<sub>C</sub>)</p>
+  </li>
+</ul>
+
+<p>The joint approach offered the best performance on the CUB dataset. However, because the concept and task predictors are trained simultaneously using a dual loss function is it prone to side-channel leaks, in which the task predictor drives the concept predictor to leak additional information about features that are not strictly related to the concepts. The extent to which this occurs affects the overall interpretability of the model.</p>
+
+<p>Independent and sequential approaches offered similar performance on CUB and do not suffer from the side-channel leak problem. The independent approach is recommended for systems that anticipate high intervention rates because its task predictor is trained using ground truth concept values. The sequential approach is recommended when intervention is not likely and the concepts are difficult to predict. This allows the task predictor to learn to ignore concepts that may be difficult to predict.</p>
+
+<h4 id="learning-the-concepts">Learning the concepts</h4>
+<p>There are 28 concepts in the CUB-200 dataset. These are expert-selected concepts relevant to the problem of bird species identification.</p>
+
+<p><img src="/assets/images/cub_attributes.jpeg" alt="bird attributes" title="bird attributes" /></p>
+
+<p><a href="https://authors.library.caltech.edu/records/cvm3y-5hh21/files/CUB_200_2011.pdf?download=1">image reference</a></p>
+
+<p>We will use the training data to learn to predict these features by creating one classifier per concept. The embedding features from the baseline ResNet-18 model serve as the input to each concept classifier. As you can see in the figure below, the ability to predict each concept varies greatly. This is partially due to the fact that the embedding space is optimized to differentiate at the class level (global prediction) rather than the individual concepts (local predictions).</p>
+
+<p><img src="/assets/images/concept_plot.png" alt="concept predictions" title="concept predictions" /></p>
+
+<p>Let’s take a closer look at a few examples:</p>
+
+<ul>
+  <li>Head Pattern (33% accuracy) - this concept is difficult to predict from the embedded features; the classifier only performs marginally better than the base rate (+7% better)</li>
+  <li>Eye Color (80% accuracy) - this concept is the most accurately predicted concept; but it does not perform better than the base rate, suggesting that this feature is not informative and predicts that birds have black eyes regardless of input</li>
+  <li>Crown color (55% accuracy) - although this concept is not among the most accurately predicted, it does perform significantly higher than the base rate (+30% better) suggesting that the embedded features at least partially capture this information</li>
+</ul>
+
+<h4 id="learning-the-classes">Learning the classes</h4>
+<p>Because the performance of the concept predictors was relatively low, we will use a sequential training approach. After learning one concept predictor per concept L<sub>C<sub>i</sub></sub>, we use the predicted concepts (rather than the ground truth concepts) to learn the task predictor.</p>
+
+<h2 id="results">Results</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">Backbone</th>
+      <th style="text-align: center">Interpretable features</th>
+      <th style="text-align: center">Concept labels required</th>
+      <th style="text-align: center">Accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">CBM</td>
+      <td style="text-align: center">ResNet-18</td>
+      <td style="text-align: center">Y</td>
+      <td style="text-align: center">Y</td>
+      <td style="text-align: center">0.594</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Baseline</td>
+      <td style="text-align: center">ResNet-18</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">0.744</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We added interpretability to our model at the cost of about 25 points of accuracy. This would be an unacceptable tradeoff for most real-world applications. Even though the overall accuracy is low, if either the accuracy of the concept predictor or task predictor is interpedently high then they can still be useful in certain contexts.</p>
+<ul>
+  <li><strong>Expert time-saver</strong>:   This scenario assumes the system is being used by a highly trained user (e.g. ornithologist for CUB). The concept predictor (with high accuracy) can save the expert time by pre-populating values for the concept features. The expert then performs a final review of the concept features and assigns the final class label (e.g. species of bird for CUB).</li>
+  <li><strong>Novice assistant</strong>: This scenario assumes the system is being used by non-skilled users (e.g. Mechanical Turk workers). The worker is able to make simple observations about the image (e.g. what is the color of the bird’s wing, which of the following shapes most closely matches the bird’s beak, etc.). The task predictor (with high accuracy) then assigns the species of bird given the observations.</li>
+</ul>
+
+<h2 id="discussion">Discussion</h2>
+
+<h3 id="limitations-of-cbms">Limitations of CBMs</h3>
+
+<p>We have already observed the first limitation of Concept Bottleneck Models - they don’t tend to be as accurate as non-interpretable models for real-world applications. This gap can be reduced using a residual modeling technique such as the one proposed in <a href="https://arxiv.org/abs/2205.15480">Yuksekgonul, Wang, &amp; Zou, (2022)</a>, which splits the model’s predictions into an interpretable part and a non-interpretable part.</p>
+
+<p>Another limitation is the assumption of the concept labels themselves. The data labeling cost for such a dataset is significantly higher than one that only collects the task labels. Furthermore, the concepts themselves are difficult to get right without expert input. One solution, proposed in <a href="https://arxiv.org/abs/2304.06129">Oikarinen et. al (2023)</a>, uses a combination of a large language model (GPT-3) and a multimodal foundation model (CLIP) to extract concepts for any task. See <a href="https://arxiv.org/abs/2304.06129">paper</a> for details. The reported accuracy of their approach is included in the table below.</p>
+
+<h3 id="limitations-of-resnet-18-backbone">Limitations of ResNet-18 backbone</h3>
+
+<p>I have made it tradition to incorporate DINOv2 into my ml-portfolio series posts. In this post, I replaced the ResNet-18 backbone with DINOv2 and the accuracy improves 15 points. I can’t think of many applications that would prefer an interpretable model with 60% accuracy over a non-interpretable model with 90% accuracy. NOTE: Although the DINOv2 features were better for overall task accuracy, they did not significantly improve concept accuracy.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">Backbone</th>
+      <th style="text-align: center">Interpretable features</th>
+      <th style="text-align: center">Concept labels required</th>
+      <th style="text-align: center">Accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">CBM</td>
+      <td style="text-align: center">ResNet-18</td>
+      <td style="text-align: center">Y</td>
+      <td style="text-align: center">Y</td>
+      <td style="text-align: center">0.594</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Label-free CBM</td>
+      <td style="text-align: center">ResNet-18</td>
+      <td style="text-align: center">*Y</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">0.743</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Baseline</td>
+      <td style="text-align: center">ResNet-18</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">0.744</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Baseline</td>
+      <td style="text-align: center">DINOv2</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">0.905</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>*Features in this space take on continuous values correlated with human relatable concepts.</p>
+
+<h3 id="alternative-approaches-to-interpretability">Alternative approaches to interpretability</h3>
+
+<p>Saliency/attention maps are a common post-hoc interpretability technique that can be applied to any deep learning model. The purpose of these maps is to show the user which input features the model used for to perform most of their computations (i.e. paid the most attention to). They have one advantage over Concept Bottleneck Models in that they do not affect accuracy.</p>
+
+<p><img src="/assets/images/dino_attention_map.png" alt="attention map" title="attention map" /></p>
+
+<p><a href="https://arxiv.org/pdf/2309.16588">image reference</a></p>
+
+<p>But for the purposes of interpretability, I find that the approach falls short. At best it confirms for the user that the expected parts of the input were used to make a decision and not a spurious object (i.e. a common example is that the class “frisbee” is assigned to images containing large amounts of green grass). But attention maps fail to explain anything about the internal features of the model and its decision process. DINOv2 attention maps tend to highlight a single, main subject in an image. But it doesn’t do that because it knows the difference between a cow and a blue heron; it was trained in a totally unsupervised way! Furthermore, attention maps do not provide a mechanism for intervention.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this post I demonstrated how to make a machine learning model more interpretable and explainable. I also discussed the tradeoffs and alternative uses for such models when their accuracies do not perform at practical levels. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>
 
 
         
