@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.26.1 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.26.2 by Michael Rose
   Copyright 2013-2024 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -307,7 +307,7 @@ cub_model = get_model('resnet18_cub', pretrained=True)
   </tbody>
 </table>
 
-<p>We added interpretability to our model at the cost of about 25 points of accuracy. This would be an unacceptable tradeoff for most real-world applications. Even though the overall accuracy is low, if either the accuracy of the concept predictor or task predictor is interpedently high then they can still be useful in certain contexts.</p>
+<p>We added interpretability to our model at the cost of about 25 points of accuracy. This would be an unacceptable tradeoff for most real-world applications. Even though the overall accuracy is low, if either the accuracy of the concept predictor or task predictor is independently high then they can still be useful in certain contexts.</p>
 <ul>
   <li><strong>Expert assistant</strong>:   This scenario assumes the system is being used by a highly trained user (e.g. ornithologist for CUB). The concept predictor (with high accuracy) can save the expert time by pre-populating values for the concept features. The expert then performs a final review of the concept features and assigns the final class label (e.g. species of bird for CUB).</li>
   <li><strong>Psuedo-expert</strong>: This scenario assumes the system is being used by non-skilled users (e.g. Mechanical Turk workers). The worker is able to make simple observations about the image (e.g. what is the color of the bird’s wing, which of the following shapes most closely matches the bird’s beak, etc.). The task predictor (with high accuracy) then assigns the species of bird given the observations.</li>
