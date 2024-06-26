@@ -87,7 +87,7 @@ Because the performance of the concept predictors was relatively low, we will us
 |    CBM   | ResNet-18 |            Y           |            Y            |   0.594  |
 | Baseline | ResNet-18 |            N           |           N/A           |   0.744  |
 
-We added interpretability to our model at the cost of about 25 points of accuracy. This would be an unacceptable tradeoff for most real-world applications. Even though the overall accuracy is low, if either the accuracy of the concept predictor or task predictor is interpedently high then they can still be useful in certain contexts.
+We added interpretability to our model at the cost of about 25 points of accuracy. This would be an unacceptable tradeoff for most real-world applications. Even though the overall accuracy is low, if either the accuracy of the concept predictor or task predictor is independently high then they can still be useful in certain contexts.
 - **Expert assistant**:   This scenario assumes the system is being used by a highly trained user (e.g. ornithologist for CUB). The concept predictor (with high accuracy) can save the expert time by pre-populating values for the concept features. The expert then performs a final review of the concept features and assigns the final class label (e.g. species of bird for CUB).  
 - **Psuedo-expert**: This scenario assumes the system is being used by non-skilled users (e.g. Mechanical Turk workers). The worker is able to make simple observations about the image (e.g. what is the color of the bird's wing, which of the following shapes most closely matches the bird's beak, etc.). The task predictor (with high accuracy) then assigns the species of bird given the observations. 
 
