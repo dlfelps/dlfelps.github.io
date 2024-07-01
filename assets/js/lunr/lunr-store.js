@@ -109,7 +109,13 @@ var store = [{
       },{
         "title": "Experiment 18",
         "excerpt":"This post describes simple approaches to attack and defend machine learning models. Introduction to adversarial machine learning Adversarial machine learning refers to a set of techniques that adversaries use to attack machine learning systems. These attacks exploit vulnerabilities in ML models, aiming to manipulate their behavior or compromise their performance....","categories": [],
-        "tags": ["adversarial","evasion","hyperspectral","computer-vision","ml-portfolio"],
+        "tags": ["adversarial","evasion","computer-vision","ml-portfolio"],
         "url": "/2024/07/01/adversarial.html",
+        "teaser": null
+      },{
+        "title": "Experiment 19",
+        "excerpt":"This post describes the stable diffusion architecture.   The code for this experiment can be found at my ML portfolio website.   ","categories": [],
+        "tags": ["generative","diffusion","computer-vision","ml-portfolio"],
+        "url": "/2024/08/01/generative.html",
         "teaser": null
       }]
