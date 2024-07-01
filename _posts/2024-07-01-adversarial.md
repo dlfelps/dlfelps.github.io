@@ -1,6 +1,6 @@
 ---
 title: Experiment 18
-tags: adversarial evasion hyperspectral computer-vision ml-portfolio
+tags: adversarial evasion computer-vision ml-portfolio
 ---
 
 This post describes simple approaches to attack and defend machine learning models.
