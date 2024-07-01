@@ -11,7 +11,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>Experiment 18 - .NET Experiments</title>
-<meta name="description" content="This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.">
+<meta name="description" content="This post describes simple approaches to attack and defend machine learning models.">
 
 
   <meta name="author" content="Daniel Felps">
@@ -27,7 +27,7 @@
 <meta property="og:url" content="https://dlfelps.github.io/2024/07/01/adversarial.html">
 
 
-  <meta property="og:description" content="This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.">
+  <meta property="og:description" content="This post describes simple approaches to attack and defend machine learning models.">
 
 
 
@@ -134,7 +134,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Experiment 18">
-    <meta itemprop="description" content="This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.">
+    <meta itemprop="description" content="This post describes simple approaches to attack and defend machine learning models.">
     <meta itemprop="datePublished" content="2024-07-01T00:00:00+00:00">
     
 
@@ -166,7 +166,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          less than 1 minute read
+          23 minute read
         
       </span>
     
@@ -181,17 +181,428 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#introduction">Introduction</a><ul><li><a href="#conclusion">Conclusion</a></li></ul></li></ul>
+              <ul class="toc__menu"><li><a href="#introduction-to-adversarial-machine-learning">Introduction to adversarial machine learning</a><ul><li><a href="#types-of-adversarial-attacks">Types of Adversarial Attacks</a></li><li><a href="#threat-models">Threat models</a></li><li><a href="#experimental-setup">Experimental setup</a></li></ul></li><li><a href="#scenario-1-attacking-a-model-with-non-adversarial-methods">Scenario 1: Attacking a model with non-adversarial methods</a><ul><li><a href="#results">Results</a></li><li><a href="#discussion">Discussion</a></li></ul></li><li><a href="#scenario-2-attacking-a-model-with-adversarial-methods">Scenario 2: Attacking a model with adversarial methods</a><ul><li><a href="#pgd">PGD</a><ul><li><a href="#example">Example</a></li></ul></li><li><a href="#carlini-wagner">Carlini-Wagner</a><ul><li><a href="#example-with-l0-norm">Example with L0 norm</a></li><li><a href="#example-with-linf-norm">Example with LInf norm</a></li></ul></li></ul></li><li><a href="#scenario-3-defending-a-model-with-non-adversarial-methods">Scenario 3: Defending a model with non-adversarial methods</a><ul><li><a href="#results-1">Results</a><ul><li><a href="#pgd-1">PGD</a></li><li><a href="#cw-l0">CW-L0</a></li><li><a href="#cw-linf">CW-LInf</a></li></ul></li><li><a href="#discussion-1">Discussion</a></li></ul></li><li><a href="#scenario-4-defending-a-model-with-adversarial-methods">Scenario 4: Defending a model with adversarial methods</a><ul><li><a href="#comparing-detection-and-adversarial-training">Comparing detection and adversarial training</a></li></ul></li><li><a href="#conclusion">Conclusion</a></li></ul>
             </nav>
           </aside>
         
-        <p>This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.</p>
+        <p>This post describes simple approaches to attack and defend machine learning models.</p>
 
-<h2 id="introduction">Introduction</h2>
+<h1 id="introduction-to-adversarial-machine-learning">Introduction to adversarial machine learning</h1>
+<p>Adversarial machine learning refers to a set of techniques that adversaries use to attack machine learning systems. These attacks exploit vulnerabilities in ML models, aiming to manipulate their behavior or compromise their performance. Adversarial attacks can be used against any system that employs machine learning, including finance, security, and autonomous systems.</p>
 
-<h3 id="conclusion">Conclusion</h3>
+<h2 id="types-of-adversarial-attacks">Types of Adversarial Attacks</h2>
+<p>There are several types of known attacks against machine learning models. Please see the NIST  <a href="https://csrc.nist.gov/pubs/ai/100/2/e2023/final">taxonomy</a> for a comprehensive breakdown with references. The remainder of the post focuses on the evasion attack, which modifies the input in a way that alters the prediction of the model under attack.</p>
 
-<p>The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center"><strong>Poisoning</strong></th>
+      <th style="text-align: center"><strong>Evasion</strong></th>
+      <th style="text-align: center"><strong>Extraction</strong></th>
+      <th style="text-align: center"><strong>Inference</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><em>during</em></td>
+      <td style="text-align: center">Training</td>
+      <td style="text-align: center">Inference</td>
+      <td style="text-align: center">Inference</td>
+      <td style="text-align: center">Inference</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><em>purpose</em></td>
+      <td style="text-align: center">Mistrain the model</td>
+      <td style="text-align: center">Decieve the model</td>
+      <td style="text-align: center">Steal the model</td>
+      <td style="text-align: center">Infer training data</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="threat-models">Threat models</h2>
+
+<p>An important consideration when attacking/defending a machine learning model is the threat model. The two primary threat models are white-box and black-box attacks.</p>
+
+<p><img src="/assets/images/white_box-Photoroom.png" alt="white box" /></p>
+
+<blockquote>
+  <p><strong>White-Box Attack:</strong> The attacker has <strong>full knowledge</strong> of the ML model’s architecture, parameters, and training data. e.g. <a href="https://arxiv.org/pdf/1412.6572v3.pdf">L-BFGS Attack</a>, <a href="https://arxiv.org/abs/1312.6199">Fast Gradient Sign Method</a></p>
+</blockquote>
+
+<p><img src="/assets/images/black_box-Photoroom.png" alt="black box" /></p>
+
+<blockquote>
+  <p><strong>Black-Box Attacks:</strong> The attacker has <strong>limited information</strong> about the ML model (e.g., input-output interactions).  e.g. <a href="https://arxiv.org/abs/1809.02861">Transfer Attack</a>, <a href="https://arxiv.org/abs/1708.03999">Score-based Black-Box Attacks</a>, <a href="https://arxiv.org/abs/1712.04248">Decision-based Attack</a></p>
+</blockquote>
+
+<p>Note that adversarial exmaples can be used under either threat model, however they are much more effective when an adversary has access to the internals of your model (i.e. white-box) and can verify that the attack works prior to deploying it.</p>
+
+<h2 id="experimental-setup">Experimental setup</h2>
+
+<p>As with a number of my previous posts, I will be using a pretrained <a href="https://github.com/osmr/imgclsmob/tree/master/pytorch#cub-200-2011">ResNet-18 model</a> trained on the <a href="https://www.vision.caltech.edu/visipedia/CUB-200-2011.html">CUB2011 dataset</a>; this will serve as the model under attack.</p>
+
+<h1 id="scenario-1-attacking-a-model-with-non-adversarial-methods">Scenario 1: Attacking a model with non-adversarial methods</h1>
+<p>This “attack” can also be seen as a model hardening test. I recommend running it on all computer vision models prior to deploying them. It tests the extent to which the model can handle common image transformations in the wild. Depending on the results, we might discover a cheap form of the evasion attack (applies to both black-box and white-box settings).</p>
+
+<p>The attack works as follows:</p>
+<ol>
+  <li>Select a common image transform (e.g. rotation, brightness, contrast)</li>
+  <li>Select a random test image</li>
+  <li>Run the test image through the model and save the predicted class</li>
+  <li>Run the transformed test image through the model and save the predicted class</li>
+  <li>If #3 and #4 are different then increase counter</li>
+  <li>Repeat steps 2-5 100 times to estimate the effect of the transform</li>
+</ol>
+
+<h2 id="results">Results</h2>
+<p>The following plots visually demonstrate the effect of a single transform. The results (represented by the blue bar to the right of each image) represent the average performance of 100 test images. A higher bar signifies that the model is robust to that transform (i.e. the counter in step#5 was low).</p>
+
+<p><img src="/assets/images/blur.png" alt="blur" /></p>
+
+<p><img src="/assets/images/hue.png" alt="hue" /></p>
+
+<p><img src="/assets/images/rotate.png" alt="rotate" /></p>
+
+<p><img src="/assets/images/brightness.png" alt="brightness" /></p>
+
+<p><img src="/assets/images/contrast.png" alt="contrast" /></p>
+
+<p><img src="/assets/images/gamma.png" alt="gamma" /></p>
+
+<p><img src="/assets/images/saturation.png" alt="saturation" /></p>
+
+<h2 id="discussion">Discussion</h2>
+<p>The model under attack was relatively robust to sublte image transforms and should be expected to perform well in the wild. Hue was the only transform that significantly impacted performance and that is expected since color is a differentiating factor in bird species. Can we use hue as a cheap form of adversarial attack? No, because the hue transform would also fool a human. In other words, the hue transform fundamentally changes the input so it isn’t “fooling” anything. We next turn to more advanced methods.</p>
+
+<h1 id="scenario-2-attacking-a-model-with-adversarial-methods">Scenario 2: Attacking a model with adversarial methods</h1>
+
+<p>The goal of an evasion attack is to minimally modify an input (i.e. image) in such a way that the model alters its class prediction, but a human still percieves the original class. It’s this combination that makes the evasion attack so potent - humans don’t know anything is wrong and the machine is fooled. The attack succeeds because the altered image lies outside of the training distribution.</p>
+
+<h2 id="pgd">PGD</h2>
+<p>The Projected Gradient Descent (PGD) attack <a href="https://arxiv.org/abs/1706.06083">(Madry et. al, 2017)</a> is an iterative optimization technique that seeks to find the most adversarial perturbation within a predefined constraint set. Here is psuedocode for the algorithm:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    1. Select an unmodified image as the target
+    2. Select a random point within the allowed perturbation region of the target image
+    3. Perform gradient descent on the model's loss function
+    4. Project the perturbed input back into the feasible set after each iteration
+</code></pre></div></div>
+<p>This iterative process ensures that the adversarial perturbation remains within the defined constraints around the original input, making the adversarial example both effective and imperceptible to human observers.</p>
+
+<p>However, the PGD attack has certain limitations that make it less practical for real-world applications:</p>
+<ul>
+  <li>Over-optimization against one constraint</li>
+  <li>Potential for unstable optimization</li>
+  <li>Limited transferability to other models</li>
+</ul>
+
+<h3 id="example">Example</h3>
+
+<p><img src="/assets/images/pgd_400.png" alt="pgd_400" /></p>
+<blockquote>
+  <p>A successful example of a PGD attack (left). The modified image was classified differently than the original image, but the modifications are barely visible to the human eye. The modifications added to the original image are magnified 10x in the (right) image.</p>
+</blockquote>
+
+<h2 id="carlini-wagner">Carlini-Wagner</h2>
+<p>The Carlini &amp; Wagner (C&amp;W) attack is a powerful adversarial evasion attack that aims to generate adversarial examples that are misclassified by a target model. Adversarial examples are created by formulating an optimization problem, where the goal is to minimize the perturbation while ensuring the classifier mislabels the adversarial example. C&amp;W is particularly notable for its ability to generate adversarial examples that are transferable across different models and defenses, making it a significant threat to the security of machine learning systems.</p>
+
+<p>However, the C&amp;W attack has certain limitations that make it less practical for real-world applications:</p>
+<ul>
+  <li>Computational cost</li>
+  <li>Requires domain-specific adaptations to shape the perturbations and the optimization problem depending on the type of data being manipulated</li>
+</ul>
+
+<h3 id="example-with-l0-norm">Example with L0 norm</h3>
+
+<p><img src="/assets/images/carliniL0_392.png" alt="carliniL0_392" /></p>
+<blockquote>
+  <p>A successful example of a C&amp;W attack (left). The modified image was classified differently than the original image. Although the modifications are mostly imperceptible, a small eye-like patch is visible in the magnitude-magnified image (right).</p>
+</blockquote>
+
+<h3 id="example-with-linf-norm">Example with LInf norm</h3>
+
+<p><img src="/assets/images/carliniLinf_3207.png" alt="carliniLinf_3207" /></p>
+<blockquote>
+  <p>A successful example of a C&amp;W attack (left). The modified image was classified differently than the original image. The modifications in this case are noticable and global in the original image and magnitude-magnified image (right).</p>
+</blockquote>
+
+<h1 id="scenario-3-defending-a-model-with-non-adversarial-methods">Scenario 3: Defending a model with non-adversarial methods</h1>
+<p>This scenario explores the exent to which non-adversarial methods can be used to defend a model from a strong adversarial attack (e.g. PGD or Carlini-Wagner). The defense exploits the fact that the evasion attack itself is typically brittle. In other words, the attack noise was calculated to minimize the amount of change in the input space to achieve the desired result. Therefore, it stands to reason that the attack may not be able to withstand additional transformations. We constrain the suite of transformations considered in Scenario #1 to only those transformations that maintained greater than 99% performance on natural images. This allows us to limit the amount of false positives in our adversarial detector to less than 1%.</p>
+
+<h2 id="results-1">Results</h2>
+<p>In the tables below we report the prediction rates for the best parameter combination per transformation type (e.g. rotation, brightness).</p>
+
+<h3 id="pgd-1">PGD</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Transformation</th>
+      <th style="text-align: center">Parameter</th>
+      <th style="text-align: center">Performance on natural images</th>
+      <th style="text-align: center">Performance on adversarial images</th>
+      <th style="text-align: center">Differential</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">rotate</td>
+      <td style="text-align: center">7</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.049505</td>
+      <td style="text-align: center">0.950495</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">brightness</td>
+      <td style="text-align: center">1.75</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.283019</td>
+      <td style="text-align: center">0.716981</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">saturation</td>
+      <td style="text-align: center">0.5</td>
+      <td style="text-align: center">0.995305</td>
+      <td style="text-align: center">0.441441</td>
+      <td style="text-align: center">0.553864</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">contrast</td>
+      <td style="text-align: center">1.5</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.454545</td>
+      <td style="text-align: center">0.545455</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gamma</td>
+      <td style="text-align: center">1.5</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.555556</td>
+      <td style="text-align: center">0.444444</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">blur</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">hue</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="cw-l0">CW-L0</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Transformation</th>
+      <th style="text-align: center">Parameter</th>
+      <th style="text-align: center">Performance on natural images</th>
+      <th style="text-align: center">Performance on adversarial images</th>
+      <th style="text-align: center">Differential</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">rotate</td>
+      <td style="text-align: center">7</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.114286</td>
+      <td style="text-align: center">0.885714</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">brightness</td>
+      <td style="text-align: center">1.6</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.558442</td>
+      <td style="text-align: center">0.441558</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">saturation</td>
+      <td style="text-align: center">0.5</td>
+      <td style="text-align: center">0.995305</td>
+      <td style="text-align: center">0.561905</td>
+      <td style="text-align: center">0.4334</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gamma</td>
+      <td style="text-align: center">1.5</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.741935</td>
+      <td style="text-align: center">0.258065</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">contrast</td>
+      <td style="text-align: center">0.75</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.815126</td>
+      <td style="text-align: center">0.184874</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">blur</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">hue</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="cw-linf">CW-LInf</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Transformation</th>
+      <th style="text-align: center">Parameter</th>
+      <th style="text-align: center">Performance on natural images</th>
+      <th style="text-align: center">Performance on adversarial images</th>
+      <th style="text-align: center">Differential</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">rotate</td>
+      <td style="text-align: center">7</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.819444</td>
+      <td style="text-align: center">0.180556</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">brightness</td>
+      <td style="text-align: center">1.75</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.910256</td>
+      <td style="text-align: center">0.089744</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gamma</td>
+      <td style="text-align: center">1.5</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.939394</td>
+      <td style="text-align: center">0.060606</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">contrast</td>
+      <td style="text-align: center">1.5</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.943182</td>
+      <td style="text-align: center">0.056818</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">saturation</td>
+      <td style="text-align: center">1.5</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0.944444</td>
+      <td style="text-align: center">0.055556</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">blur</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">hue</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="discussion-1">Discussion</h2>
+
+<p><img src="/assets/images/adv-flowchart.png" alt="adv-flowchart" /></p>
+
+<p>The highest average difference between performance on natural images and adversarial images is achieved by rotating images by 7 degrees. This transformation is ideal from a false-positive point of view as all natural images are unphased by it. NOTE: this does not mean that the predicted class is correct, only that the predicted class is not altered by rotating the image 7 degrees. Our ability to detect adversarial examples depends on the attack:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">TP rate</th>
+      <th style="text-align: center">FP rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">PGD</td>
+      <td style="text-align: center">0.95</td>
+      <td style="text-align: center">0.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">CW-L0</td>
+      <td style="text-align: center">0.885</td>
+      <td style="text-align: center">0.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">CW-LInf</td>
+      <td style="text-align: center">0.18</td>
+      <td style="text-align: center">0.0</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The results are quite promising for PGD and CW-L0, but the CW-LInf attack proved to be more resilient (to all tested transformations). The results appear to confirm our hypothesis about the fragility of the evasion attacks - more subtle attacks are more easily detected precisely because they are more subtle. In other words, if the attack has a low signal-to-noise ratio then rotating the image has a better chance to render it ineffective.</p>
+
+<h1 id="scenario-4-defending-a-model-with-adversarial-methods">Scenario 4: Defending a model with adversarial methods</h1>
+
+<p>Adversarial training is a technique used to enhance the robustness of machine learning models against adversarial examples. The simplest way to perform adversarial training is to include adversarial examples in the training set.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Train a model with the original training data
+2. Use the model to generate adversarial examples
+3. Add the adversarial examples (with correct labels) to the training data
+4. Retrain the model
+</code></pre></div></div>
+<p>A more sophisticated approach called Robust training <a href="https://arxiv.org/abs/1706.06083">(Madry et. al, 2017)</a> alters the optimization process itself in order to make models more resilient to adversarial perturbations. These perturbations are carefully crafted to deceive the model into making incorrect predictions.</p>
+
+<h2 id="comparing-detection-and-adversarial-training">Comparing detection and adversarial training</h2>
+
+<p>Adversarial training strengthens models intrinsically, while detection approaches focus on identifying adversarial examples during inference. Both play crucial roles in addressing the challenges posed by adversarial attacks.</p>
+
+<ul>
+  <li>advantages of adversarial detection
+    <ul>
+      <li>can defend against white-box and black-box threat models</li>
+      <li>can be used to protect existing/pretrained models</li>
+      <li>may work against UNKNOWN attacks</li>
+    </ul>
+  </li>
+  <li>advantages of adversarial training
+    <ul>
+      <li>moderate success against all KNOWN attacks</li>
+    </ul>
+  </li>
+</ul>
+
+<p>NOTE: If you are training your own model then you can do BOTH!</p>
+
+<h1 id="conclusion">Conclusion</h1>
+<p>This was a long post, so I will summarize the results here:</p>
+<ol>
+  <li>It is good practice to test your model’s performance against non-adversarial image transformations.</li>
+  <li>Evasion attacks (e.g. PGD and CW) can be used to alter the predictions of a model.</li>
+  <li>Some evasion attacks (e.g. PGD and CW-L0) can be detected at inference time due to their lack of robustness against non-adversarial image transformations.</li>
+  <li>Other evasion attacks (e.g. CW-LInf) may be rendered inneffective using adversarial training.</li>
+</ol>
+
+<p>As ML adoption grows, understanding and addressing these vulnerabilities become crucial for maintaining system integrity and security. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>
 
 
         
