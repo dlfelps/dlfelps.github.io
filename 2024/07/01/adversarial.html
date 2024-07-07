@@ -244,17 +244,15 @@
 <p>As with a number of my previous posts, I will be using a pretrained <a href="https://github.com/osmr/imgclsmob/tree/master/pytorch#cub-200-2011">ResNet-18 model</a> trained on the <a href="https://www.vision.caltech.edu/visipedia/CUB-200-2011.html">CUB2011 dataset</a>; this will serve as the model under attack.</p>
 
 <h1 id="scenario-1-attacking-a-model-with-non-adversarial-methods">Scenario 1: Attacking a model with non-adversarial methods</h1>
-<p>This “attack” can also be seen as a model hardening test. I recommend running it on all computer vision models prior to deploying them. It tests the extent to which the model can handle common image transformations in the wild. Depending on the results, we might discover a cheap form of the evasion attack (applies to both black-box and white-box settings).</p>
+<p>This “attack” can also be seen as a model hardening test. I recommend running it on all computer vision models prior to deploying them. It tests the extent to which the model can handle common image transformations in the wild. Depending on the results, we might discover a cheap form of the evasion attack (applies to both black-box and white-box settings). The attack works as follows:</p>
 
-<p>The attack works as follows:</p>
-<ol>
-  <li>Select a common image transform (e.g. rotation, brightness, contrast)</li>
-  <li>Select a random test image</li>
-  <li>Run the test image through the model and save the predicted class</li>
-  <li>Run the transformed test image through the model and save the predicted class</li>
-  <li>If #3 and #4 are different then increase counter</li>
-  <li>Repeat steps 2-5 100 times to estimate the effect of the transform</li>
-</ol>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  1. Select a common image transform (e.g. rotation, brightness, contrast)
+  2. Select a random test image
+  3. Run the test image through the model and save the predicted class
+  4. Run the transformed test image through the model and save the predicted class
+  5. If #3 and #4 are different then increase counter
+  6. Repeat steps 2-5 100 times to estimate the effect of the transform
+</code></pre></div></div>
 
 <h2 id="results">Results</h2>
 <p>The following plots visually demonstrate the effect of a single transform. The results (represented by the blue bar to the right of each image) represent the average performance of 100 test images. A higher bar signifies that the model is robust to that transform (i.e. the counter in step#5 was low).</p>
@@ -282,10 +280,10 @@
 
 <h2 id="pgd">PGD</h2>
 <p>The Projected Gradient Descent (PGD) attack <a href="https://arxiv.org/abs/1706.06083">(Madry et. al, 2017)</a> is an iterative optimization technique that seeks to find the most adversarial perturbation within a predefined constraint set. Here is psuedocode for the algorithm:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    1. Select an unmodified image as the target
-    2. Select a random point within the allowed perturbation region of the target image
-    3. Perform gradient descent on the model's loss function
-    4. Project the perturbed input back into the feasible set after each iteration
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  1. Select an unmodified image as the target
+  2. Select a random point within the allowed perturbation region of the target image
+  3. Perform gradient descent on the model's loss function
+  4. Project the perturbed input back into the feasible set after each iteration
 </code></pre></div></div>
 <p>This iterative process ensures that the adversarial perturbation remains within the defined constraints around the original input, making the adversarial example both effective and imperceptible to human observers.</p>
 
@@ -327,6 +325,9 @@
 </blockquote>
 
 <h1 id="scenario-3-defending-a-model-with-non-adversarial-methods">Scenario 3: Defending a model with non-adversarial methods</h1>
+
+<p><img src="/assets/images/adv-flowchart.png" alt="adv-flowchart" /></p>
+
 <p>This scenario explores the exent to which non-adversarial methods can be used to defend a model from a strong adversarial attack (e.g. PGD or Carlini-Wagner). The defense exploits the fact that the evasion attack itself is typically brittle. In other words, the attack noise was calculated to minimize the amount of change in the input space to achieve the desired result. Therefore, it stands to reason that the attack may not be able to withstand additional transformations. We constrain the suite of transformations considered in Scenario #1 to only those transformations that maintained greater than 99% performance on natural images. This allows us to limit the amount of false positives in our adversarial detector to less than 1%.</p>
 
 <h2 id="results-1">Results</h2>
@@ -528,8 +529,6 @@
 </table>
 
 <h2 id="discussion-1">Discussion</h2>
-
-<p><img src="/assets/images/adv-flowchart.png" alt="adv-flowchart" /></p>
 
 <p>The highest average difference between performance on natural images and adversarial images is achieved by rotating images by 7 degrees. This transformation is ideal from a false-positive point of view as all natural images are unphased by it. NOTE: this does not mean that the predicted class is correct, only that the predicted class is not altered by rotating the image 7 degrees. Our ability to detect adversarial examples depends on the attack:</p>
 
