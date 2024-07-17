@@ -114,7 +114,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 19",
-        "excerpt":"This post describes the stable diffusion architecture.   The code for this experiment can be found at my ML portfolio website.   ","categories": [],
+        "excerpt":"This post UNDER CONSTRUCTION. Please come back soon. In the meantime visit another one of the posts featured on my ML portfolio website.   ","categories": [],
         "tags": ["generative","diffusion","computer-vision","ml-portfolio"],
         "url": "/2024/08/01/generative.html",
         "teaser": null
