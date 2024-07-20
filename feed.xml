@@ -1,4 +1,144 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-07-17T21:50:10+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 19</title><link href="https://dlfelps.github.io/2024/08/01/generative.html" rel="alternate" type="text/html" title="Experiment 19" /><published>2024-08-01T00:00:00+00:00</published><updated>2024-08-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/08/01/generative</id><content type="html" xml:base="https://dlfelps.github.io/2024/08/01/generative.html"><![CDATA[<p>This post UNDER CONSTRUCTION. Please come back soon. In the meantime visit another one of the posts featured on my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="generative" /><category term="diffusion" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post UNDER CONSTRUCTION. Please come back soon. In the meantime visit another one of the posts featured on my ML portfolio website.]]></summary></entry><entry><title type="html">Experiment 18</title><link href="https://dlfelps.github.io/2024/07/01/adversarial.html" rel="alternate" type="text/html" title="Experiment 18" /><published>2024-07-01T00:00:00+00:00</published><updated>2024-07-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/07/01/adversarial</id><content type="html" xml:base="https://dlfelps.github.io/2024/07/01/adversarial.html"><![CDATA[<p>This post describes simple approaches to attack and defend machine learning models.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-07-20T19:16:24+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 19</title><link href="https://dlfelps.github.io/2024/08/01/generative.html" rel="alternate" type="text/html" title="Experiment 19" /><published>2024-08-01T00:00:00+00:00</published><updated>2024-08-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/08/01/generative</id><content type="html" xml:base="https://dlfelps.github.io/2024/08/01/generative.html"><![CDATA[<p>This post describes the stable diffusion architecture for generative AI.</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>I am going to introduce this post with a real conversation I had with Microsoft’s <a href="https://copilot.microsoft.com/">Copilot</a>:</p>
+
+<blockquote>
+  <p style="text-align: right;">Me:</p>
+  <p style="text-align: right;">Can you explain Generative AI to me like I am 5 years old?</p>
+
+  <p>Copilot:</p>
+
+  <p>Certainly! Imagine you have a magical drawing book. When you open it, it creates new pictures all by itself! That’s what generative AI does—it makes up things like drawings, stories, or even songs without anyone telling it exactly what to create. It’s like having a creative friend who invents cool stuff just by thinking about it! 🎨✨</p>
+
+  <p style="text-align: right;">Me:</p>
+  <p style="text-align: right;">Are you an example of a Generative AI?</p>
+
+  <p>Copilot:</p>
+
+  <p>Indeed! I’m like a friendly digital artist. When you ask me for something, I use my magical algorithms to create new sentences, poems, or even drawings. Just like a painter mixes colors to create beautiful pictures, I mix words and ideas to make interesting content! 🎨✨</p>
+
+  <p style="text-align: right;">Me:</p>
+  <p style="text-align: right;">Can you generate an image of an Eastern Bluebird drinking a milkshake?</p>
+
+  <p>Copilot:</p>
+
+  <p><img src="/assets/images/bluebird_milkshake_dalle.PNG" alt="bluebird milkshake" /></p>
+</blockquote>
+
+<p>END OF CONVERSATION</p>
+
+<p>I was impressed by the generated images. Behind the scenes, Copilot uses an OpenAI product called <a href="https://openai.com/dall-e-3/">DALLE-3</a> to generate images. Unfortunately DALLE-3 is not publicly available. So, for the remainder of this post, we will instead examine a closely related model called Stable Diffusion. How do they compare? Here is the output of Stable Diffusion for the same prompt above:</p>
+
+<p><img src="/assets/images/bluebird_milkshake_stable.webp" alt="stable diffusion" width="400" /></p>
+
+<p>Generally Stable Diffusion tends to produce images that are more photorealistic whereas DALLE-3 creates images that feel like computer-generated art.</p>
+
+<h1 id="unconditional-image-generation-denoising-diffusion-probabilistic-models">Unconditional Image Generation (Denoising Diffusion Probabilistic Models)</h1>
+
+<p>I will explain Stable Diffusion through a series of increasingly complex models. The first - and most foundational model -  is the Denoising Diffusion Probabilistic Model (DDPM), which serves as the core technology behind Stable Diffusion and DALLE-3.</p>
+
+<p>DDPMs are a class of generative models that work by iteratively denoising a diffusion process, which involves adding noise to an image and then trying to remove it. The underlying theory of DDPMs is based on the idea that transforming a simple distribution, such as a Gaussian, through a series of diffusion steps can result in a complex and expressive image data distribution. This allows the model to generate new images by reversing the diffusion process, starting from the full Gaussian distribution and ending up with the image distribution.</p>
+
+<p><img src="https://huggingface.co/blog/assets/78_annotated-diffusion/diffusion_figure.png" alt="forward diffusion" /></p>
+
+<p>To further demonstrate the contribution of each step I will show what kind of generative images are possible using the CUB-2011 dataset. Our final goal will be to produce fully synthetic birds. In this first step we will only be able to generate small bird-like shapes using the DDPM architecture alone.</p>
+
+<p><img src="/assets/images/generative_figure1.png" alt="ddpm" width="400" /></p>
+
+<p>Figure adapted from https://huggingface.co/blog/stable_diffusion</p>
+
+<p>The output of training the model is shown below. Here I take a snapshot of the sample images every 10 epochs to show the learning progression of the model.</p>
+
+<p><img src="/assets/images/ddpm-64.gif" alt="ddpm animation" /></p>
+
+<p>You can see birds if you squint, but the low resolution (64x64) makes these images less useful. DDPMs top out around (256x256) and become increasingly slow to train on a single GPU. We next explore two options for increasing the resolution.</p>
+
+<h1 id="generating-higher-resolution-images">Generating Higher Resolution Images</h1>
+
+<p>The following two sections offer alternatives to increasing the resolution of the generated images.</p>
+
+<h2 id="upscaling">Upscaling</h2>
+
+<p>The first approach uses image upscaling to increase the resolution of an image. Traditional upscaling methods, such as interpolation, don’t increase the inherent resolution of the image. The upscaler used here actually fills in missing details to increase resolution (NOTE: the upscaler itself is based on stable diffusion architecture). The architecture for the approach is outlined below:</p>
+
+<p><img src="/assets/images/generative_figure2.png" alt="upscaling" width="400" /></p>
+
+<p>Figure adapted from https://huggingface.co/blog/stable_diffusion</p>
+
+<p>The benefit of this approach is that it uses the same DDPM from step 1 (which produces images of 64x64) and then the upscaler increases the resolution to 256x256.</p>
+
+<p>The disadvantage of this approach is that the upscaler is not tuned specifically for your data (although it could be with additional training). It also makes a slow process (sampling the DDPM) even slower because you are performing two indepdenent steps (sampling then upscaling).</p>
+
+<h2 id="latent-model">Latent model</h2>
+
+<p>The second approach to increasing resolution was introduced in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>. This idea behind this approach is to surround the DDPM with a pretrained variational autoencoder<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. The DDPM then learns to denoise the latent space (which also happens to be 64x64) instead of the image space. To create a new sample:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. generate random noise in the shape of the latent space
+2. use the DDPM to denoise the input
+3. use the decoder to transform the latent space back into image space (512x512)
+</code></pre></div></div>
+
+<p><img src="/assets/images/generative_figure3.png" alt="latent" width="400" /></p>
+
+<p>Figure adapted from https://huggingface.co/blog/stable_diffusion</p>
+
+<p>Unfortunately I did not have enough Colab credits to fully train this variant<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. Although the model outputs images that are 512x512, I admit that they don’t look very bird-like. Here is a single full image created after 50 epochs of training:</p>
+
+<p><img src="/assets/images/latent_bird.png" alt="latent image" /></p>
+
+<h1 id="conditional-image-generation-stable-diffusion">Conditional Image Generation (Stable Diffusion)</h1>
+
+<p>The final piece needed to build Stable Diffusion is control. Up to this point we have not had any control over what kind of bird gets synthesized. The final step is to condition the DDPM on another input (usually text, but it could also be another image). NOTE: In order to train such a model, the training data would require both text and captions. The CUB-2011 dataset does not provide captions and I also discovered that significantly more compute is needed to train the latent models so I will use a pretrained Stable Diffusion model from Huggingface.</p>
+
+<p><img src="/assets/images/generative_figure4.png" alt="stable diffusion" width="600" /></p>
+
+<p>Figure adapted from https://huggingface.co/blog/stable_diffusion</p>
+
+<p>Here is an example output:</p>
+
+<p><img src="/assets/images/eastern_bluebird_stable.png" alt="stable diffusion output" /></p>
+
+<p>I generated the image above with the implementation provided by Lyumin Zhang called <a href="https://github.com/lllyasviel/Fooocus">Fooocus</a>. It is a pre-tuned version of <a href="https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0">StabilityAI’s Stable Diffusion XL model</a>. You can generate your own images using the provided Colab notebook -&gt; 
+<a target="_blank" href="https://colab.research.google.com/github/https://colab.research.google.com/github/lllyasviel/Fooocus/blob/main/fooocus_colab.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" />
+</a></p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Generative AI is currently experiencing a boom, with new research and products coming out every day. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>. I would like to leave you with a final conversation from Microsoft’s <a href="https://copilot.microsoft.com/">Copilot</a>:</p>
+
+<blockquote>
+  <p style="text-align: right;">Me:</p>
+  <p style="text-align: right;">Can you write a poem about generative ai?</p>
+
+  <p>Copilot:</p>
+
+  <p>Sure, I’d love to! Here’s a poem about generative AI:</p>
+
+  <p>In circuits deep, where data flows, A spark ignites, a thought that grows. From silicon dreams, a mind takes flight, Crafting worlds in the dead of night.</p>
+
+  <p>With algorithms as its guiding star, It reaches realms both near and far. From pixels bright to words that sing, Generative AI creates everything.</p>
+
+  <p>It learns from patterns, vast and wide, In every byte, where secrets hide. A painter’s brush, a poet’s pen, It brings to life what once was then.</p>
+
+  <p>Yet in its core, a humble start, A tool to aid the human heart. For in each line and crafted scene, It mirrors dreams, both bold and serene.</p>
+
+  <p>So here’s to code that dreams and dares, To generative AI, with whom we share, A future bright, where minds entwine, In harmony, both yours and mine.</p>
+</blockquote>
+
+<p>END OF CONVERSATION</p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>This particular autoencoder preserves spatial information by compressing a 512x512x3 image into a latent space of 64x64x4. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>As a comparison, in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>, they trained a latent model on FFHQ for 283 hours on an A100. This would cost an equivalent of $370 in Colab compute units so you will have to forgive me for stopping early! <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="generative" /><category term="stable-diffusion" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post describes the stable diffusion architecture for generative AI.]]></summary></entry><entry><title type="html">Experiment 18</title><link href="https://dlfelps.github.io/2024/07/01/adversarial.html" rel="alternate" type="text/html" title="Experiment 18" /><published>2024-07-01T00:00:00+00:00</published><updated>2024-07-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/07/01/adversarial</id><content type="html" xml:base="https://dlfelps.github.io/2024/07/01/adversarial.html"><![CDATA[<p>This post describes simple approaches to attack and defend machine learning models.</p>
 
 <h1 id="introduction-to-adversarial-machine-learning">Introduction to adversarial machine learning</h1>
 <p>Adversarial machine learning refers to a set of techniques that adversaries use to attack machine learning systems. These attacks exploit vulnerabilities in ML models, aiming to manipulate their behavior or compromise their performance. Adversarial attacks can be used against any system that employs machine learning, including finance, security, and autonomous systems.</p>

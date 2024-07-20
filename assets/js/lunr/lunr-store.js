@@ -114,8 +114,8 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 19",
-        "excerpt":"This post UNDER CONSTRUCTION. Please come back soon. In the meantime visit another one of the posts featured on my ML portfolio website.   ","categories": [],
-        "tags": ["generative","diffusion","computer-vision","ml-portfolio"],
+        "excerpt":"This post describes the stable diffusion architecture for generative AI. Introduction I am going to introduce this post with a real conversation I had with Microsoft’s Copilot: Me: Can you explain Generative AI to me like I am 5 years old? Copilot: Certainly! Imagine you have a magical drawing book....","categories": [],
+        "tags": ["generative","stable-diffusion","computer-vision","ml-portfolio"],
         "url": "/2024/08/01/generative.html",
         "teaser": null
       }]
