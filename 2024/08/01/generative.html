@@ -166,7 +166,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          16 minute read
+          15 minute read
         
       </span>
     
@@ -260,7 +260,7 @@
 
 <h2 id="latent-model">Latent model</h2>
 
-<p>The second approach to increasing resolution was introduced in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>. This idea behind this approach is to surround the DDPM with a pretrained variational autoencoder<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. The DDPM then learns to denoise the latent space (which also happens to be 64x64) instead of the image space. To create a new sample:</p>
+<p>The second approach to increasing resolution was introduced in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>. The idea behind this approach is to surround the DDPM with a pretrained variational autoencoder<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. The DDPM then learns to denoise the latent space (which also happens to be 64x64) instead of the image space. To create a new sample:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. generate random noise in the shape of the latent space
 2. use the DDPM to denoise the input
 3. use the decoder to transform the latent space back into image space (512x512)
@@ -276,7 +276,7 @@
 
 <h1 id="conditional-image-generation-stable-diffusion">Conditional Image Generation (Stable Diffusion)</h1>
 
-<p>The final piece needed to build Stable Diffusion is control. Up to this point we have not had any control over what kind of bird gets synthesized. The final step is to condition the DDPM on another input (usually text, but it could also be another image). NOTE: In order to train such a model, the training data would require both text and captions. The CUB-2011 dataset does not provide captions and I also discovered that significantly more compute is needed to train the latent models so I will use a pretrained Stable Diffusion model from Huggingface.</p>
+<p>Up to this point we have not had any control over what kind of bird gets synthesized. The final step is to condition the DDPM on another input (usually text, but it could also be another image). NOTE: In order to train such a model, the training data would require both text and captions. The CUB-2011 dataset does not provide captions and I also discovered that significantly more compute is needed to train the latent models so I will use a pretrained Stable Diffusion model.</p>
 
 <p><img src="/assets/images/generative_figure4.png" alt="stable diffusion" width="600" /></p>
 
