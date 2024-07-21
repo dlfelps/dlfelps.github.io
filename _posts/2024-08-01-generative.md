@@ -79,7 +79,7 @@ The disadvantage of this approach is that the upscaler is not tuned specifically
 
 ## Latent model
 
-The second approach to increasing resolution was introduced in ["High-Resolution Image Synthesis with Latent Diffusion Models"](https://arxiv.org/abs/2112.10752). This idea behind this approach is to surround the DDPM with a pretrained variational autoencoder[^1]. The DDPM then learns to denoise the latent space (which also happens to be 64x64) instead of the image space. To create a new sample: 
+The second approach to increasing resolution was introduced in ["High-Resolution Image Synthesis with Latent Diffusion Models"](https://arxiv.org/abs/2112.10752). The idea behind this approach is to surround the DDPM with a pretrained variational autoencoder[^1]. The DDPM then learns to denoise the latent space (which also happens to be 64x64) instead of the image space. To create a new sample: 
 ```
 1. generate random noise in the shape of the latent space
 2. use the DDPM to denoise the input
@@ -97,7 +97,7 @@ Unfortunately I did not have enough Colab credits to fully train this variant[^2
 
 # Conditional Image Generation (Stable Diffusion)
 
-The final piece needed to build Stable Diffusion is control. Up to this point we have not had any control over what kind of bird gets synthesized. The final step is to condition the DDPM on another input (usually text, but it could also be another image). NOTE: In order to train such a model, the training data would require both text and captions. The CUB-2011 dataset does not provide captions and I also discovered that significantly more compute is needed to train the latent models so I will use a pretrained Stable Diffusion model from Huggingface.
+Up to this point we have not had any control over what kind of bird gets synthesized. The final step is to condition the DDPM on another input (usually text, but it could also be another image). NOTE: In order to train such a model, the training data would require both text and captions. The CUB-2011 dataset does not provide captions and I also discovered that significantly more compute is needed to train the latent models so I will use a pretrained Stable Diffusion model.
 
 <img src="/assets/images/generative_figure4.png" alt="stable diffusion" width="600"/>
 
