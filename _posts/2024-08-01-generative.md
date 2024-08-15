@@ -108,7 +108,7 @@ Here is an example output:
 ![stable diffusion output](/assets/images/eastern_bluebird_stable.png)
 
 I generated the image above with the implementation provided by Lyumin Zhang called [Fooocus](https://github.com/lllyasviel/Fooocus). It is a pre-tuned version of [StabilityAI's Stable Diffusion XL model](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0). You can generate your own images using the provided Colab notebook -> 
-<a target="_blank" href="https://colab.research.google.com/github/https://colab.research.google.com/github/lllyasviel/Fooocus/blob/main/fooocus_colab.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/lllyasviel/Fooocus/blob/main/fooocus_colab.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
