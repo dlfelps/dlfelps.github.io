@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-08-15T23:25:33+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 19</title><link href="https://dlfelps.github.io/2024/08/01/generative.html" rel="alternate" type="text/html" title="Experiment 19" /><published>2024-08-01T00:00:00+00:00</published><updated>2024-08-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/08/01/generative</id><content type="html" xml:base="https://dlfelps.github.io/2024/08/01/generative.html"><![CDATA[<p>This post describes the stable diffusion architecture for generative AI.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-08-15T23:34:19+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 19</title><link href="https://dlfelps.github.io/2024/08/01/generative.html" rel="alternate" type="text/html" title="Experiment 19" /><published>2024-08-01T00:00:00+00:00</published><updated>2024-08-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/08/01/generative</id><content type="html" xml:base="https://dlfelps.github.io/2024/08/01/generative.html"><![CDATA[<p>This post describes the stable diffusion architecture for generative AI.</p>
 
 <h1 id="introduction">Introduction</h1>
 
@@ -100,7 +100,7 @@
 <p><img src="/assets/images/eastern_bluebird_stable.png" alt="stable diffusion output" /></p>
 
 <p>I generated the image above with the implementation provided by Lyumin Zhang called <a href="https://github.com/lllyasviel/Fooocus">Fooocus</a>. It is a pre-tuned version of <a href="https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0">StabilityAI’s Stable Diffusion XL model</a>. You can generate your own images using the provided Colab notebook -&gt; 
-<a target="_blank" href="https://colab.research.google.com/github/https://colab.research.google.com/github/lllyasviel/Fooocus/blob/main/fooocus_colab.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/lllyasviel/Fooocus/blob/main/fooocus_colab.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" />
 </a></p>
 
@@ -225,7 +225,7 @@
 <p><img src="/assets/images/saturation.png" alt="saturation" /></p>
 
 <h2 id="discussion">Discussion</h2>
-<p>The model under attack was relatively robust to sublte image transforms and should be expected to perform well in the wild. Hue was the only transform that significantly impacted performance and that is expected since color is a differentiating factor in bird species. Can we use hue as a cheap form of adversarial attack? No, because the hue transform would also fool a human. In other words, the hue transform fundamentally changes the input so it isn’t “fooling” anything. We next turn to more advanced methods.</p>
+<p>The model under attack was relatively robust to subtle image transforms and should be expected to perform well in the wild. Hue was the only transform that significantly impacted performance and that is expected since color is a differentiating factor in bird species. Can we use hue as a cheap form of adversarial attack? No, because the hue transform would also fool a human. In other words, the hue transform fundamentally changes the input so it isn’t “fooling” anything. We next turn to more advanced methods.</p>
 
 <h1 id="scenario-2-attacking-a-model-with-adversarial-methods">Scenario 2: Attacking a model with adversarial methods</h1>
 
