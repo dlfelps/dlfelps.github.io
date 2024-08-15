@@ -14,7 +14,7 @@ There are several types of known attacks against machine learning models. Please
 |           |    **Poisoning**   |    **Evasion**    |  **Extraction** |    **Inference**    |
 |:---------:|:------------------:|:-----------------:|:---------------:|:-------------------:|
 |  _during_ |      Training      |     Inference     |    Inference    |      Inference      |
-| _purpose_ | Mistrain the model | Decieve the model | Steal the model | Infer training data |
+| _purpose_ | Mistrain the model | Deceive the model | Steal the model | Infer training data |
 
 ## Threat models
 
