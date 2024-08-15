@@ -68,7 +68,7 @@ The following plots visually demonstrate the effect of a single transform. The r
 
 
 ## Discussion
-The model under attack was relatively robust to sublte image transforms and should be expected to perform well in the wild. Hue was the only transform that significantly impacted performance and that is expected since color is a differentiating factor in bird species. Can we use hue as a cheap form of adversarial attack? No, because the hue transform would also fool a human. In other words, the hue transform fundamentally changes the input so it isn't "fooling" anything. We next turn to more advanced methods.
+The model under attack was relatively robust to subtle image transforms and should be expected to perform well in the wild. Hue was the only transform that significantly impacted performance and that is expected since color is a differentiating factor in bird species. Can we use hue as a cheap form of adversarial attack? No, because the hue transform would also fool a human. In other words, the hue transform fundamentally changes the input so it isn't "fooling" anything. We next turn to more advanced methods.
 
 # Scenario 2: Attacking a model with adversarial methods
 
