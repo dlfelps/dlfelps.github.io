@@ -211,7 +211,7 @@
 
 <h2 id="my-continuously-reproducible-approach">(My) Continuously reproducible approach</h2>
 
-<p>My approach is essentially continuous integration<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> plus the <a href="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html#the-continuously-reproducible-mindset">continuously reproducible mindset</a>. Continuous integration ensures that the build works now and the continuously reproducible mindset maximizes the chance that it will work even if left dormant for a period of time. I assume that the most recent LTS version of .NET is installed (this is currently .NET 6.0 which can be installed on any major platform); this assumption lets me use .NET to restore dependencies, build, and test the project. For projects outside of .NET, I assume that Docker is installed instead. I provide an example of both of these in the final post.</p>
+<p>My approach is essentially continuous integration<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup> plus the <a href="https://dlfelps.github.io/2022/06/20/Reproducible-Dotnet-Series.html#the-continuously-reproducible-mindset">continuously reproducible mindset</a>. Continuous integration ensures that the build works now and the continuously reproducible mindset maximizes the chance that it will work even if left dormant for a period of time. I assume that the most recent LTS version of .NET is installed (this is currently .NET 6.0 which can be installed on any major platform); this assumption lets me use .NET to restore dependencies, build, and test the project. For projects outside of .NET, I assume that Docker is installed instead. I provide an example of both of these in the final post.</p>
 
 <p>By following this approach you can verify that your project builds from a (mostly) clean environment and have confidence that it will work continue to work for anyone else for <em>years</em> to come. If you have improvements or would like to share a different approach I would love to hear about it!</p>
 
@@ -249,7 +249,7 @@
 -->
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>Continuous integration is the DevOps practice whereby code changes are regularly merged into a central repository and the entire project is automatically built and tested. Some common platforms for continuous integration are <a href="https://www.jetbrains.com/teamcity/">TeamCity</a>, <a href="https://www.jenkins.io/">Jenkins</a>, <a href="https://circleci.com/">CircleCI</a>, <a href="https://github.com/features/actions">Github Actions</a>, and <a href="https://gitlab.com/">Gitlab</a>. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

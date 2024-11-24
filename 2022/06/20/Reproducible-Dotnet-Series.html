@@ -238,9 +238,9 @@
 
 <p>Longevity is measured for a single build configuration. Namely, P<sub>0</sub> will have a certain longevity, but P<sub>1</sub>’s longevity may be shorter or longer depending on the changes made to its build configuration. Although true longevity can only be calculated after the build fails, developers can make conscious decisions to maximize the expected longevity of their code:</p>
 <ul>
-  <li>prefer dependencies that offer long term support (e.g. choose .NET 6 LTS even after .NET 7 is released) <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></li>
+  <li>prefer dependencies that offer long term support (e.g. choose .NET 6 LTS even after .NET 7 is released) <sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></li>
   <li>prefer dependencies that minimize the number of <a href="https://fsprojects.github.io/Paket/faq.html#What-does-transitive-dependencies-mean">transitive dependencies</a></li>
-  <li>specify dependencies using <a href="https://fsprojects.github.io/Paket/nuget-dependencies.html#Pinned-version-constraint">pinned version constraints</a> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup></li>
+  <li>specify dependencies using <a href="https://fsprojects.github.io/Paket/nuget-dependencies.html#Pinned-version-constraint">pinned version constraints</a> <sup id="fnref:2"><a href="#fn:2" class="footnote" rel="footnote" role="doc-noteref">2</a></sup></li>
   <li>if using Docker, build from <a href="https://hub.docker.com/search?q=&amp;type=image&amp;image_filter=official">official base images</a></li>
 </ul>
 
@@ -302,10 +302,10 @@ During data analysis it can be difficult for researchers to recognize P-hacking2
 -->
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>Microsoft patches .NET LTS releases for 3 years while current releases are only patched for 18 months. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2" role="doc-endnote">
+    <li id="fn:2">
       <p>While it may seem counterintuitive to limit the available versions of your dependencies, it improves control over the automatic dependency resolver. This is in line with the continuously reproducible mindset and future developers are always free to update the version if they encounter a conflict. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

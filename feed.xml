@@ -1,4 +1,194 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-10-26T10:48:24+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 19</title><link href="https://dlfelps.github.io/2024/08/01/generative.html" rel="alternate" type="text/html" title="Experiment 19" /><published>2024-08-01T00:00:00+00:00</published><updated>2024-08-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/08/01/generative</id><content type="html" xml:base="https://dlfelps.github.io/2024/08/01/generative.html"><![CDATA[<p>This post describes the stable diffusion architecture for generative AI.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-11-24T12:59:37+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 20</title><link href="https://dlfelps.github.io/2024/12/01/scraper.html" rel="alternate" type="text/html" title="Experiment 20" /><published>2024-12-01T00:00:00+00:00</published><updated>2024-12-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/12/01/scraper</id><content type="html" xml:base="https://dlfelps.github.io/2024/12/01/scraper.html"><![CDATA[<p>This post describes a command line tool I created that scrapes a website and generates reports.</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>It is greatly rewarding to build a tool that solves a real problem. The scale of the problem dictates the number of potential users your tool can help. This project solves a small problem - improving the registration process for my son’s summer camps. The problem is mostly created by a poor website design that doesn’t allow parents to easily find the correct camps.</p>
+
+<p>I built this tool to scrape the camp data on <a href="https://fairfax.usedirect.com/FairfaxFCPAWeb/Default.aspx">Fairfax County Park Authority</a> (FCPA) website and generate useful camp options. I also added new functionality like calculating the estimated commute times to each camp.</p>
+
+<h2 id="goals">Goals</h2>
+<p>The goals of this project are to:</p>
+<ul>
+  <li>Improve user experience registering for camps hosted by FCPA</li>
+  <li>Demonstrate the use of developing a command line tool</li>
+  <li>Demonstrate the 3rd party API (Google MAP API)</li>
+  <li>Demonstrate report creation</li>
+</ul>
+
+<h2 id="fcpa-site-limitations">FCPA site limitations</h2>
+<p>Why is this tool needed? Because FCPA offers hundreds of potential camps to register for and their filter options are rather limited. Here is a screenshot of the FCPA camp search site:</p>
+
+<p><img src="/assets/images/fcpa_search.jpeg" alt="" /></p>
+
+<p>At first glance the fields look reasonable. We should be able to narrow down the list of available camps and register for one. Let’s see what happens if I try to find a camp for my 6 year old son for the two days after New Years Day (Jan 2-3).</p>
+
+<p><img src="/assets/images/fcpa_results.jpeg" alt="" /></p>
+
+<p>Due to the broad age range filter (6-12 yrs old), only one of the first six camps listed in the results are appropriate for a 6 year old. Unfortunately that camp is for the wrong dates (January 20). This happens because the date filter only allows you to specify the date “starting on or after”. So the best I can do is limit results from a starting date to the end of that month. This is especially frustrating when trying to book camps over the summer break. Typically I want to book one camp per week for the entire summer. To do this on the FCPA website I can change the “starting on or after” date, but for the first week in a month I get all camps in that month (which could be more than 100 sessions!).</p>
+
+<h2 id="desired-capabilities">Desired capabilities</h2>
+
+<p>I would like to build a tool that can output a tailored report to facilitate selecting and registring for camps. Ideally I would be able to quickly update the data based on the current openings as classes can fill up quickly. So I need a way to:</p>
+<ol>
+  <li>Automatically scrape the camp data from the FCPA website</li>
+  <li>Select camps by various criteria</li>
+  <li>Generate a custom report</li>
+</ol>
+
+<h1 id="installation">Installation</h1>
+<ol>
+  <li>Clone the repo (git clone https://github.com/dlfelps/camp-little-scrape.git)</li>
+  <li>Install dependencies (pip install -r requirements.txt)</li>
+  <li>Install Chrome (https://www.google.com/chrome/)</li>
+  <li>Sign up for a Google Maps API key (https://developers.google.com/maps)</li>
+</ol>
+
+<h1 id="usage">Usage</h1>
+
+<h2 id="process-overview">Process overview</h2>
+
+<p>The overall process is described in the flowchart below. I will demonstrate each step below in detail, but at a high level, the tool completes a series of steps to:</p>
+<ol>
+  <li>Scrape camp links</li>
+  <li>Scrape camp details</li>
+  <li>(optional) Calculate commute times to each camp</li>
+  <li>Filter camps and generate report</li>
+</ol>
+
+<p><img src="/assets/images/camp%20scraper-2024-11-21-162211.svg" alt="" /></p>
+
+<h2 id="step-1---scrape-camp-links">Step 1 - Scrape camp links</h2>
+<p>The first step in the process uses <a href="https://selenium-python.readthedocs.io/">Selenium</a> to semi-automatically scrape the camp session links from the FCPA website.</p>
+<ol>
+  <li>launch jupyter lab</li>
+  <li>open step1.ipynb</li>
+  <li>Follow instructions in step1.ipynb to open remote Chrome browser</li>
+  <li>Go to FCPA website and search for ALL camps</li>
+  <li>Follow instructions in step1.ipynb to scrape each page</li>
+</ol>
+
+<p>This step produces a <code class="language-plaintext highlighter-rouge">links.txt</code> file containing all the camp session links.</p>
+
+<h2 id="step-2---scrape-camp-details">Step 2 - Scrape camp details</h2>
+<p>Steps 2-4 all use the command line gui provided by the camp.py file. It is built using <a href="https://typer.tiangolo.com/">Typer</a>. View the list of possible commands by calling <code class="language-plaintext highlighter-rouge">python camp.py --help</code></p>
+
+<p><img src="/assets/images/gui_help.PNG" alt="" /></p>
+
+<p>Step 2 is initiated by calling <code class="language-plaintext highlighter-rouge">python camp.py details</code>. This step scrapes the camp details (e.g. location, dates, times) for each camp found in the <code class="language-plaintext highlighter-rouge">links.txt</code>.</p>
+
+<h2 id="step-3---optional-calculate-commutes">Step 3 - (optional) Calculate commutes</h2>
+
+<p>The third step uses Google Maps API to calculate the typical daily commute to each camp. This calculation is the sum of the following distances between home (user specified) and camp location:</p>
+<ul>
+  <li>morning dropoff (arriving by 9 AM)</li>
+  <li>morning return (departing at 9 AM)</li>
+  <li>afternoon pickup (arriving by 4 PM)</li>
+  <li>afternooon return (departing at 4 PM)</li>
+</ul>
+
+<p>Commute time is one of the most important factors when selecting camps. Since full day camps are only 7 hours, it would not be time efficient to spend 2 hours in the car, which is shockingly easy to do even staying within Fairfax county (where all FCPA camps are located). This step does require a Google Map API key, which can be created at https://developers.google.com/maps. The code retrieves your individial key from the environment variable <code class="language-plaintext highlighter-rouge">MAP_API_KEY</code>. Here is a <a href="https://lazyprogrammer.me/how-to-set-environment-variables-permanently-in-windows-linux-and-mac/">guide</a> if you need help.</p>
+
+<h2 id="step-4---filter-camps-and-generate-report">Step 4 - Filter camps and generate report</h2>
+
+<p>The final step filters the available camps to generate a report. We can see the full list of available options by looking at the report help command <code class="language-plaintext highlighter-rouge">python camp.py report --help</code>.</p>
+
+<p><img src="/assets/images/gui_report_help.PNG" alt="" /></p>
+
+<p>The filtering options for this step are as follows:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Parameter</th>
+      <th style="text-align: center">Required?</th>
+      <th style="text-align: center">Default value</th>
+      <th style="text-align: center">Description</th>
+      <th style="text-align: center">Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">first_day</td>
+      <td style="text-align: center">Y</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">The camp must start on this date</td>
+      <td style="text-align: center">“01/02/2025”</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">last_day</td>
+      <td style="text-align: center">Y</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">The camp must end on this date</td>
+      <td style="text-align: center">“01/03/2025”</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">min_age</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">5 (years)</td>
+      <td style="text-align: center">The camp must accept kids of this age</td>
+      <td style="text-align: center">–min-age=5</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">max_commute</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">120 (minutes)</td>
+      <td style="text-align: center">The camp must not have an estimated daily commute greater than this many minutes</td>
+      <td style="text-align: center">–max-commute=120</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">remove_half_day</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">True</td>
+      <td style="text-align: center">Half day camps (from 9-noon) are not shown</td>
+      <td style="text-align: center">–remove-half-day</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">remove_schools</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">True</td>
+      <td style="text-align: center">Camps located at schools are not shown</td>
+      <td style="text-align: center">–remove-schools</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">show_full</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">False</td>
+      <td style="text-align: center">Camps that are already fully registered are not shown</td>
+      <td style="text-align: center">–no-show-full</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>If your desired parameters are different from default, then change them when you call the report command, e.g. <code class="language-plaintext highlighter-rouge">python camp.py report "01/02/2025" "01/03/2025" --min-age=7</code>.</p>
+
+<p>This will produce an HTML file in the reports directory with all matching camps:</p>
+
+<p><img src="/assets/images/report.PNG" alt="" /></p>
+
+<p>The report is generated using the <a href="https://www.yattag.org/">yattag</a> library to procedurally generate the HTML report from python code.
+A few highlights of the report:</p>
+<ul>
+  <li>The camps are sorted by shortest commute first</li>
+  <li>The report highlights which camps include a swimming break</li>
+  <li>Each camp includes a session link for easy registration</li>
+</ul>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Overall I found this side project to be quite rewarding. I learned how to:</p>
+<ul>
+  <li>scrape data from websites (selenium and httpx)</li>
+  <li>parse structured data from websites (beautifulsoup)</li>
+  <li>keep API keys secret using environment variables</li>
+  <li>use 3rd party APIs</li>
+  <li>generate HTML from Python</li>
+</ul>
+
+<p>Finally I found the tool to actually make finding and registering my son for camp much easier!</p>
+
+<h2 id="possible-improvements">Possible improvements</h2>
+
+<p>I was not able to find a way for <a href="https://typer.tiangolo.com/">Typer</a> to hide commands that were not yet applicable. Ideally, only the <code class="language-plaintext highlighter-rouge">details</code> command would be initially available (taking in the links.txt that was produced during the semi-manual scraping step). Then after creating “camps.pkl” and “places.txt” the <code class="language-plaintext highlighter-rouge">commute</code> command would be available. Finally the <code class="language-plaintext highlighter-rouge">report</code> command could be used.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="scraper" /><category term="cli" /><category term="selenium" /><category term="httpx" /><category term="yattag" /><category term="typer" /><category term="backend" /><summary type="html"><![CDATA[This post describes a command line tool I created that scrapes a website and generates reports.]]></summary></entry><entry><title type="html">Experiment 19</title><link href="https://dlfelps.github.io/2024/08/01/generative.html" rel="alternate" type="text/html" title="Experiment 19" /><published>2024-08-01T00:00:00+00:00</published><updated>2024-08-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/08/01/generative</id><content type="html" xml:base="https://dlfelps.github.io/2024/08/01/generative.html"><![CDATA[<p>This post describes the stable diffusion architecture for generative AI.</p>
 
 <h1 id="introduction">Introduction</h1>
 
@@ -73,7 +263,7 @@
 
 <h2 id="latent-model">Latent model</h2>
 
-<p>The second approach to increasing resolution was introduced in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>. The idea behind this approach is to surround the DDPM with a pretrained variational autoencoder<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. The DDPM then learns to denoise the latent space (which also happens to be 64x64) instead of the image space. To create a new sample:</p>
+<p>The second approach to increasing resolution was introduced in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>. The idea behind this approach is to surround the DDPM with a pretrained variational autoencoder<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>. The DDPM then learns to denoise the latent space (which also happens to be 64x64) instead of the image space. To create a new sample:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. generate random noise in the shape of the latent space
 2. use the DDPM to denoise the input
 3. use the decoder to transform the latent space back into image space (512x512)
@@ -83,7 +273,7 @@
 
 <p>Figure adapted from https://huggingface.co/blog/stable_diffusion</p>
 
-<p>Unfortunately I did not have enough Colab credits to fully train this variant<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. Although the model outputs images that are 512x512, I admit that they don’t look very bird-like. Here is a single full image created after 50 epochs of training:</p>
+<p>Unfortunately I did not have enough Colab credits to fully train this variant<sup id="fnref:2"><a href="#fn:2" class="footnote" rel="footnote" role="doc-noteref">2</a></sup>. Although the model outputs images that are 512x512, I admit that they don’t look very bird-like. Here is a single full image created after 50 epochs of training:</p>
 
 <p><img src="/assets/images/latent_bird.png" alt="latent image" /></p>
 
@@ -131,10 +321,10 @@
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>This particular autoencoder preserves spatial information by compressing a 512x512x3 image into a latent space of 64x64x4. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2" role="doc-endnote">
+    <li id="fn:2">
       <p>As a comparison, in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>, they trained a latent model on FFHQ for 283 hours on an A100. This would cost an equivalent of $370 in Colab compute units so you will have to forgive me for stopping early! <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
@@ -774,7 +964,7 @@ cub_model = get_model('resnet18_cub', pretrained=True)
 
 <h3 id="few-shot-framework-prototype-model">Few-shot framework: Prototype model</h3>
 
-<p>We adopt a single framework for all variations of our experiment - <a href="https://arxiv.org/abs/1703.05175">Prototypical networks</a>. The concept is based on the idea that there is a single prototype representation for each class. A prototype for each class is calculated from the mean of its support set in the embedding space of a neural network. Our three approaches explore three different ways to train this neural network. Classification in a prototypical model is simply a nearest neighbors using only the prototypes<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. The code uses models and task loaders from <a href="https://github.com/sicara/easy-few-shot-learning">Easy Few-shot learning</a>.</p>
+<p>We adopt a single framework for all variations of our experiment - <a href="https://arxiv.org/abs/1703.05175">Prototypical networks</a>. The concept is based on the idea that there is a single prototype representation for each class. A prototype for each class is calculated from the mean of its support set in the embedding space of a neural network. Our three approaches explore three different ways to train this neural network. Classification in a prototypical model is simply a nearest neighbors using only the prototypes<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>. The code uses models and task loaders from <a href="https://github.com/sicara/easy-few-shot-learning">Easy Few-shot learning</a>.</p>
 
 <p><img src="/assets/images/prototypical_network.jpeg" alt="prototypical network" title="prototypical network" /></p>
 
@@ -865,7 +1055,7 @@ few_shot_classifier = PrototypicalNetworks(model).to(DEVICE)
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>There is some similarity between Prototypical models and Image retrieval tasks. Image retrieval can be viewed as a prototypical model where each image is its own prototype. And instead of returing a single class, the top-N closest prototypes are returned. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
@@ -873,7 +1063,7 @@ few_shot_classifier = PrototypicalNetworks(model).to(DEVICE)
 
 <h2 id="introduction">Introduction</h2>
 
-<p>Yann LeCun is one of the godfathers of deep learning<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. He believes that one of the most critical challenges to solve in the current era is how to give AI systems common sense. Common sense is difficult to define, but I believe that it keeps me alive and allows me to learn new skills helps with relatively few attempts (compared to deep learning). LeCun calls this elusive knowledge the dark matter of AI.</p>
+<p>Yann LeCun is one of the godfathers of deep learning<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>. He believes that one of the most critical challenges to solve in the current era is how to give AI systems common sense. Common sense is difficult to define, but I believe that it keeps me alive and allows me to learn new skills helps with relatively few attempts (compared to deep learning). LeCun calls this elusive knowledge the dark matter of AI.</p>
 
 <p>How do we impart this knowledge to our AI systems? LeCun believes the solution lies in self-supervised learning. Self-supervised learning is a technique that adapts tasks that conventionally require labels into an unsupervised learning task (e.g. next word prediction). Self-supervised learning tasks can take advantage of massive amounts of data. If designed properly, the model will learn accurate, meaningful representations of the data. Large Language Models have been popular in the news lately due to their uncanny ability to achieve human-level performance on many tasks. Their sucess is due, in part, to their ability to leverage large amounts of unnannotated text through self-supervised learning.</p>
 
@@ -994,7 +1184,7 @@ few_shot_classifier = PrototypicalNetworks(model).to(DEVICE)
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>Yoshua Bengio and Geoffrey Hinton are also given this title. In 2018 LeCun, Bengio, and Hinton won the <a href="https://www.acm.org/media-center/2019/march/turing-award-2018">Turing award</a> for their contributions in deep learing. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
@@ -1506,457 +1696,4 @@ Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999
 <p>Experiment 11 explored the wave-like nature of a photon demonstrated by the destructive interference that occurs between the two superposition states of the system. The next experiment explores what happens when we remove the second beam splitter.</p>
 
 <h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
-<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Experiment 11 introduces the concepts of quantum superposition by making a slight modification to Experiment 10.]]></summary></entry><entry><title type="html">Experiment 10</title><link href="https://dlfelps.github.io/2024/02/01/quantum-smalltalk1.html" rel="alternate" type="text/html" title="Experiment 10" /><published>2024-02-01T00:00:00+00:00</published><updated>2024-02-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/02/01/quantum-smalltalk1</id><content type="html" xml:base="https://dlfelps.github.io/2024/02/01/quantum-smalltalk1.html"><![CDATA[<h1 id="introducing-the-quantum-smalltalk-series">Introducing the Quantum Smalltalk series</h1>
-<p>In this series I am going to introduce you to some of my favorite quantum experiments while modeling those experiments in <a href="https://pharo.org/">Pharo Smalltalk</a>. We will explore the quantum properties of superposition and entanglement. Our experimental model is rather simple - the optical devices typically used in such experiments (i.e. beam splitters, polarizers, mirrors) will be modeled using complex-valued linear transformations. Although the results of matrix multiplication may not surprise you, I hope that the results of these experiments will. I could have called this the “Complex-valued matrix multiplication with Smalltalk series,” but that doesn’t have quite the same ring.</p>
-
-<h2 id="why-smalltalk">Why Smalltalk?</h2>
-<p>I chose Smalltalk for this series because it allows me to quickly implement an internal (or embedded) domain specific language (DSL) to describe the quantum experiments. You will become more familiar with the DSL as we progress, but here is a sample:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Photon new
-	beamSplitter;
-	blockLowerPath;
-	mirror;
-	beamSplitter;
-	detector.
-</code></pre></div></div>
-<p>A good DSL simplifies the code to allow you to focus on the concepts rather than the syntax. A great DSL is self-explanatory, allowing a domain expert (in this case a physicist) to use it without any previous programming experience. I don’t know any physicists so this is at least a good DSL.</p>
-
-<h2 id="the-mach-zehnder-setup">The Mach-Zehnder setup</h2>
-<p>All of the experiments in this series will be variations of the <a href="https://en.wikipedia.org/wiki/Mach%E2%80%93Zehnder_interferometer">Mach-Zehnder interferometer</a>. It was originally proposed in 1891 to measure phase shifts between the two paths caused by a sample, but it has since been adapted to study a variety of quantum effects. Why aren’t we using the double-slit experiment? It may be the most iconic quantum experiment, but it is also difficult to model because it requires differential equations. We can demonstrate multiple quantum properties (i.e. superposition and entanglement) using the much simpler Mach-Zehnder setup.</p>
-
-<blockquote>
-  <p>Feynman once claimed that any question in quantum mechanics could be answered using the double-slit experiment. (But of course he said it as only he could, “You remember the experiment with the two holes? It’s the same thing.”)</p>
-</blockquote>
-
-<p>The purpose of the first experiment is to familiarize yourself with the:</p>
-<ul>
-  <li>experimental setup and optical components used</li>
-  <li>modeling approach (i.e. matrix multiplication)</li>
-  <li>Smalltalk DSL describing the experimental setup</li>
-</ul>
-
-<h3 id="basic-optical-components">Basic optical components</h3>
-<p>This section describes the optical components used in the first 2 experiments. Each component is described in common language as well as its equivalent mathematical  transformation. Credit: All of the diagrams and mathematical notation used in this series follows from <a href="https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016">MIT’s Quantum Physics 1</a>; this is an excellent course taught by Dr. Barton Zwiebach.</p>
-
-<h3 id="photon-emitter">Photon Emitter</h3>
-<p>Luckily for us, all of the components have rather descriptive names. In this experiment, we will not be using a coherent laser as the source, but instead a single photon will traverse the optical path (or paths) of the experiment. When a photon is emitted on the upper beam it is represented by the following probability amplitudes:</p>
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="lower_{path}=\begin{bmatrix}0\\1\end{bmatrix}, upper_{path}=\begin{bmatrix}1\\0\end{bmatrix}" display="block">
-  <mrow>
-    <mrow>
-      <mi data-latex="l">l</mi>
-      <mo>&#x2062;</mo>
-      <mi data-latex="o">o</mi>
-      <mo>&#x2062;</mo>
-      <mi data-latex="w">w</mi>
-      <mo>&#x2062;</mo>
-      <mi data-latex="e">e</mi>
-      <mo>&#x2062;</mo>
-      <msub data-latex="r_{p a t h}">
-        <mi data-latex="r">r</mi>
-        <mrow data-mjx-texclass="ORD" data-latex="{p a t h}">
-          <mi data-latex="p">p</mi>
-          <mo>&#x2062;</mo>
-          <mi data-latex="a">a</mi>
-          <mo>&#x2062;</mo>
-          <mi data-latex="t">t</mi>
-          <mo>&#x2062;</mo>
-          <mi data-latex="h">h</mi>
-        </mrow>
-      </msub>
-    </mrow>
-    <mo data-latex="=">=</mo>
-    <mrow data-mjx-texclass="INNER" data-latex-item="{bmatrix}" data-latex="{bmatrix}">
-      <mo data-mjx-texclass="OPEN">[</mo>
-      <mtable columnspacing="1em" rowspacing="4pt">
-        <mtr>
-          <mtd>
-            <mn data-latex="0">0</mn>
-          </mtd>
-        </mtr>
-        <mtr>
-          <mtd>
-            <mn data-latex="1">1</mn>
-          </mtd>
-        </mtr>
-      </mtable>
-      <mo data-mjx-texclass="CLOSE">]</mo>
-    </mrow>
-  </mrow>
-  <mo data-latex=",">,</mo>
-  <mrow>
-    <mrow>
-      <mi data-latex="u">u</mi>
-      <mo>&#x2062;</mo>
-      <mi data-latex="p">p</mi>
-      <mo>&#x2062;</mo>
-      <mi data-latex="p">p</mi>
-      <mo>&#x2062;</mo>
-      <mi data-latex="e">e</mi>
-      <mo>&#x2062;</mo>
-      <msub data-latex="r_{p a t h}">
-        <mi data-latex="r">r</mi>
-        <mrow data-mjx-texclass="ORD" data-latex="{p a t h}">
-          <mi data-latex="p">p</mi>
-          <mo>&#x2062;</mo>
-          <mi data-latex="a">a</mi>
-          <mo>&#x2062;</mo>
-          <mi data-latex="t">t</mi>
-          <mo>&#x2062;</mo>
-          <mi data-latex="h">h</mi>
-        </mrow>
-      </msub>
-    </mrow>
-    <mo data-latex="=">=</mo>
-    <mrow data-mjx-texclass="INNER" data-latex-item="{bmatrix}" data-latex="{bmatrix}">
-      <mo data-mjx-texclass="OPEN">[</mo>
-      <mtable columnspacing="1em" rowspacing="4pt">
-        <mtr>
-          <mtd>
-            <mn data-latex="1">1</mn>
-          </mtd>
-        </mtr>
-        <mtr>
-          <mtd>
-            <mn data-latex="0">0</mn>
-          </mtd>
-        </mtr>
-      </mtable>
-      <mo data-mjx-texclass="CLOSE">]</mo>
-    </mrow>
-  </mrow>
-</math>
-
-<h3 id="beamsplitter">Beamsplitter</h3>
-<p><img src="/assets/images/beamSplitter.PNG" alt="Beamsplitter" title="Beamsplitter" /></p>
-
-<p>If you shine a laser at a balanced beam splitter (the only kind we model here) then exactly 50% of the light is transmitted and the remaining 50% is reflected (also undergoing a phase shift of PI). What happens if you send a single photon instead of a laser? Hopefully you will be able to answer that after the second experiment, but for now assume that there is a 50% chance that it gets reflected and a 50% chance that it gets transmitted. This is represented mathematically by:</p>
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\frac{1}{\sqrt{2}}\begin{bmatrix}1 &amp; i\\i &amp; 1\end{bmatrix}" display="block">
-  <mfrac data-latex="\frac{1}{\sqrt{2}}">
-    <mn data-latex="1">1</mn>
-    <msqrt data-latex="\sqrt{2}">
-      <mn data-latex="2">2</mn>
-    </msqrt>
-  </mfrac>
-  <mo>&#x2062;</mo>
-  <mrow data-mjx-texclass="INNER" data-latex-item="{bmatrix}" data-latex="{bmatrix}">
-    <mo data-mjx-texclass="OPEN">[</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr>
-        <mtd>
-          <mn data-latex="1">1</mn>
-        </mtd>
-        <mtd>
-          <mi data-latex="i">i</mi>
-        </mtd>
-      </mtr>
-      <mtr>
-        <mtd>
-          <mi data-latex="i">i</mi>
-        </mtd>
-        <mtd>
-          <mn data-latex="1">1</mn>
-        </mtd>
-      </mtr>
-    </mtable>
-    <mo data-mjx-texclass="CLOSE">]</mo>
-  </mrow>
-</math>
-
-<blockquote>
-  <h3 id="an-aside-on-probabilities">An aside on probabilities</h3>
-  <p>The careful reader will notice that the result of a photon passing through a beamsplitter yields 1/sqrt(2) instead of 1/2. That is because this number represents a <strong>probability amplitude</strong>.</p>
-</blockquote>
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\frac{1}{\sqrt{2}}\begin{bmatrix}1 &amp; i\\i &amp; 1\end{bmatrix}\begin{bmatrix}0\\1\end{bmatrix}=\begin{bmatrix}0+\sqrt{2}i\\\sqrt{2}+0i\end{bmatrix}" display="block">
-  <mrow>
-    <mfrac data-latex="\frac{1}{\sqrt{2}}">
-      <mn data-latex="1">1</mn>
-      <msqrt data-latex="\sqrt{2}">
-        <mn data-latex="2">2</mn>
-      </msqrt>
-    </mfrac>
-    <mo>&#x2062;</mo>
-    <mrow data-mjx-texclass="INNER" data-latex-item="{bmatrix}" data-latex="{bmatrix}">
-      <mo data-mjx-texclass="OPEN">[</mo>
-      <mtable columnspacing="1em" rowspacing="4pt">
-        <mtr>
-          <mtd>
-            <mn data-latex="1">1</mn>
-          </mtd>
-          <mtd>
-            <mi data-latex="i">i</mi>
-          </mtd>
-        </mtr>
-        <mtr>
-          <mtd>
-            <mi data-latex="i">i</mi>
-          </mtd>
-          <mtd>
-            <mn data-latex="1">1</mn>
-          </mtd>
-        </mtr>
-      </mtable>
-      <mo data-mjx-texclass="CLOSE">]</mo>
-    </mrow>
-    <mo>&#x2062;</mo>
-    <mrow data-mjx-texclass="INNER" data-latex-item="{bmatrix}" data-latex="{bmatrix}">
-      <mo data-mjx-texclass="OPEN">[</mo>
-      <mtable columnspacing="1em" rowspacing="4pt">
-        <mtr>
-          <mtd>
-            <mn data-latex="0">0</mn>
-          </mtd>
-        </mtr>
-        <mtr>
-          <mtd>
-            <mn data-latex="1">1</mn>
-          </mtd>
-        </mtr>
-      </mtable>
-      <mo data-mjx-texclass="CLOSE">]</mo>
-    </mrow>
-  </mrow>
-  <mo data-latex="=">=</mo>
-  <mrow data-mjx-texclass="INNER" data-latex-item="{bmatrix}" data-latex="{bmatrix}">
-    <mo data-mjx-texclass="OPEN">[</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr>
-        <mtd>
-          <mrow>
-            <mn data-latex="0">0</mn>
-            <mo data-latex="+">+</mo>
-            <mrow>
-              <msqrt data-latex="\sqrt{2}">
-                <mn data-latex="2">2</mn>
-              </msqrt>
-              <mo>&#x2062;</mo>
-              <mi data-latex="i">i</mi>
-            </mrow>
-          </mrow>
-        </mtd>
-      </mtr>
-      <mtr>
-        <mtd>
-          <mrow>
-            <msqrt data-latex="\sqrt{2}">
-              <mn data-latex="2">2</mn>
-            </msqrt>
-            <mo data-latex="+">+</mo>
-            <mrow>
-              <mn data-latex="0">0</mn>
-              <mo>&#x2062;</mo>
-              <mi data-latex="i">i</mi>
-            </mrow>
-          </mrow>
-        </mtd>
-      </mtr>
-    </mtable>
-    <mo data-mjx-texclass="CLOSE">]</mo>
-  </mrow>
-</math>
-
-<blockquote>
-  <p>You can convert a probability amplitude to a probability by taking its magnitude and squaring it.</p>
-</blockquote>
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\lvert0+\sqrt{2}i\rvert^2=0.5" display="block">
-  <msup data-latex="\rvert^2">
-    <mrow>
-      <mo data-mjx-texclass="OPEN" fence="false" stretchy="false" data-latex="\lvert">|</mo>
-      <mrow>
-        <mn data-latex="0">0</mn>
-        <mo data-latex="+">+</mo>
-        <mrow>
-          <msqrt data-latex="\sqrt{2}">
-            <mn data-latex="2">2</mn>
-          </msqrt>
-          <mo>&#x2062;</mo>
-          <mi data-latex="i">i</mi>
-        </mrow>
-      </mrow>
-      <mo data-mjx-texclass="CLOSE" fence="false" stretchy="false" data-latex="\rvert">|</mo>
-    </mrow>
-    <mn data-latex="2">2</mn>
-  </msup>
-  <mo data-latex="=">=</mo>
-  <mn data-latex=".5">0.5</mn>
-</math>
-
-<h3 id="mirror">Mirror</h3>
-<p><img src="/assets/images/mirror.PNG" alt="Mirror" title="Mirror" /></p>
-
-<p>A mirror reflects an incoming photon while undergoing a phase shift of <em>pi</em>.</p>
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\begin{bmatrix}0 &amp; 1\\1 &amp; 0\end{bmatrix}" display="block">
-  <mrow data-mjx-texclass="INNER" data-latex-item="{bmatrix}" data-latex="\begin{bmatrix}0 &amp; 1\\1 &amp; 0\end{bmatrix}">
-    <mo data-mjx-texclass="OPEN">[</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr>
-        <mtd>
-          <mn data-latex="0">0</mn>
-        </mtd>
-        <mtd>
-          <mn data-latex="1">1</mn>
-        </mtd>
-      </mtr>
-      <mtr>
-        <mtd>
-          <mn data-latex="1">1</mn>
-        </mtd>
-        <mtd>
-          <mn data-latex="0">0</mn>
-        </mtd>
-      </mtr>
-    </mtable>
-    <mo data-mjx-texclass="CLOSE">]</mo>
-  </mrow>
-</math>
-
-<h3 id="block">Block</h3>
-
-<p><img src="/assets/images/blockLower.PNG" alt="Block" title="Block" /></p>
-
-<p>A block absorbs an incoming photon, preventing it from reaching any downstream components. In the diagram above, the beamsplitter produces a 50% chance that the photon is absorbed by the block and a 50% chance that the photon is allowed to continue on the upper path.</p>
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="block_{lower}=\begin{bmatrix}1 &amp; 0\\0 &amp; 0\end{bmatrix}" display="block">
-  <mrow>
-    <mi data-latex="b">b</mi>
-    <mo>&#x2062;</mo>
-    <mi data-latex="l">l</mi>
-    <mo>&#x2062;</mo>
-    <mi data-latex="o">o</mi>
-    <mo>&#x2062;</mo>
-    <mi data-latex="c">c</mi>
-    <mo>&#x2062;</mo>
-    <msub data-latex="k_{l o w e r}">
-      <mi data-latex="k">k</mi>
-      <mrow data-mjx-texclass="ORD" data-latex="{l o w e r}">
-        <mi data-latex="l">l</mi>
-        <mo>&#x2062;</mo>
-        <mi data-latex="o">o</mi>
-        <mo>&#x2062;</mo>
-        <mi data-latex="w">w</mi>
-        <mo>&#x2062;</mo>
-        <mi data-latex="e">e</mi>
-        <mo>&#x2062;</mo>
-        <mi data-latex="r">r</mi>
-      </mrow>
-    </msub>
-  </mrow>
-  <mo data-latex="=">=</mo>
-  <mrow data-mjx-texclass="INNER" data-latex-item="{bmatrix}" data-latex="{bmatrix}">
-    <mo data-mjx-texclass="OPEN">[</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr>
-        <mtd>
-          <mn data-latex="1">1</mn>
-        </mtd>
-        <mtd>
-          <mn data-latex="0">0</mn>
-        </mtd>
-      </mtr>
-      <mtr>
-        <mtd>
-          <mn data-latex="0">0</mn>
-        </mtd>
-        <mtd>
-          <mn data-latex="0">0</mn>
-        </mtd>
-      </mtr>
-    </mtable>
-    <mo data-mjx-texclass="CLOSE">]</mo>
-  </mrow>
-</math>
-
-<h3 id="photon-detector">Photon Detector</h3>
-<p>This component detects a single photon. Most of the experimental setups used in this series will involve 2 detectors: D0 measuring the upper path and D1 measuring the lower path. Just as the emitter emits a real photon, the detector detects a real photon (i.e. it does not measure probability amplitudes or probabilities). The mathematical equivalent of the photon detector would be to sample the probabilities of all possible end-states of the photon (they should add up to 1). We will forgo this step and instead just report the associated probabilities.</p>
-
-<h2 id="experiment-10">Experiment #10</h2>
-
-<p><img src="/assets/images/exp1.PNG" alt="Experiment #10" title="Experiment #10" /></p>
-
-<p>This experiment is relatively straightforward - its result is intuitive and agrees with a more classical interpretation. The setup includes:</p>
-<ul>
-  <li>1 photon emitter</li>
-  <li>1 block</li>
-  <li>2 beam-splitters</li>
-  <li>2 mirrors</li>
-  <li>2 detectors</li>
-</ul>
-
-<p>Before we do the math, let’s guess what might happen if we run this experiment 100 times. If the beamsplitters act like a random coin (heads the photon transmits, tails it reflects) then one might expect the following outcome:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">Photon outcome</th>
-      <th style="text-align: center">counts</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">Detected at D0</td>
-      <td style="text-align: center">25</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Detected at D1</td>
-      <td style="text-align: center">25</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Absorbed by block</td>
-      <td style="text-align: center">50</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>Next let’s run the experiment and see if the calculated probabilities agree with our intuition (I’ll defer the Smalltalk code for now and just show the output report).</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
-Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Photon's path blocked on lower path. &gt;&gt; #(0.4999999999999999 0)
-Photon bouncing off of a mirror. &gt;&gt; #(0.0 0.4999999999999999)
-Photon passing through a beam splitter. &gt;&gt; #(0.2499999999999999 0.2499999999999999)
-Photon finally detected with following probabilities: &gt;&gt; #(0.2499999999999999 0.2499999999999999)
-</code></pre></div></div>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">Photon outcome</th>
-      <th style="text-align: center">probability</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">Detected at D0</td>
-      <td style="text-align: center">0.25</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Detected at D1</td>
-      <td style="text-align: center">0.25</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Absorbed by block</td>
-      <td style="text-align: center">0.50</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>The computed probabilities agree with our intuition!</p>
-
-<h2 id="summary">Summary</h2>
-<p>Experiment 10 laid the groundwork for the quantum properties we want to explore in the rest of the series. It introduced  the optical components and how they are modeled mathematically. However, I have not yet shown the Smalltalk code because it is not as important as the rest. If you want to better understand how to compute the probability amplitudes at an arbitrary point in the path then I would encourage you to consider watching the first few lectures of <a href="https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016">MIT’s Quantum Physics 1</a>.</p>
-
-<h2 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h2>
-<p>I was surprised at how simple the Smalltalk DSL code turned out to be. It’s almost anti-climactic at this point, but the code almost line-by-line describes the order of the components in the experiment. Please keep in mind that the mathematical complexity lies beneath this layer and is hidden from the user. The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>
-
-<p><img src="/assets/images/exp1-annotated.PNG" alt="Experiment #1" title="Experiment #1" /></p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 Photon new
-2   beamSplitter;
-3   blockLowerPath;
-4   mirror;
-5   beamSplitter;
-6   detector.
-</code></pre></div></div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introducing the Quantum Smalltalk series In this series I am going to introduce you to some of my favorite quantum experiments while modeling those experiments in Pharo Smalltalk. We will explore the quantum properties of superposition and entanglement. Our experimental model is rather simple - the optical devices typically used in such experiments (i.e. beam splitters, polarizers, mirrors) will be modeled using complex-valued linear transformations. Although the results of matrix multiplication may not surprise you, I hope that the results of these experiments will. I could have called this the “Complex-valued matrix multiplication with Smalltalk series,” but that doesn’t have quite the same ring.]]></summary></entry></feed>
+<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Experiment 11 introduces the concepts of quantum superposition by making a slight modification to Experiment 10.]]></summary></entry></feed>

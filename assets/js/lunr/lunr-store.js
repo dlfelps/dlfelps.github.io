@@ -118,4 +118,10 @@ var store = [{
         "tags": ["generative","stable-diffusion","computer-vision","ml-portfolio"],
         "url": "/2024/08/01/generative.html",
         "teaser": null
+      },{
+        "title": "Experiment 20",
+        "excerpt":"This post describes a command line tool I created that scrapes a website and generates reports. Introduction It is greatly rewarding to build a tool that solves a real problem. The scale of the problem dictates the number of potential users your tool can help. This project solves a small...","categories": [],
+        "tags": ["scraper","cli","selenium","httpx","yattag","typer","backend"],
+        "url": "/2024/12/01/scraper.html",
+        "teaser": null
       }]

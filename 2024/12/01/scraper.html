@@ -1,0 +1,491 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.26.2 by Michael Rose
+  Copyright 2013-2024 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 20 - .NET Experiments</title>
+<meta name="description" content="This post describes a command line tool I created that scrapes a website and generates reports.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 20">
+<meta property="og:url" content="https://dlfelps.github.io/2024/12/01/scraper.html">
+
+
+  <meta property="og:description" content="This post describes a command line tool I created that scrapes a website and generates reports.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2024-12-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2024/12/01/scraper.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script type="text/javascript">
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/"
+                
+                
+              >Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 20">
+    <meta itemprop="description" content="This post describes a command line tool I created that scrapes a website and generates reports.">
+    <meta itemprop="datePublished" content="2024-12-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://dlfelps.github.io/2024/12/01/scraper.html" itemprop="url">Experiment 20
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2024-12-01T00:00:00+00:00">December 1, 2024</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          15 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a><ul><li><a href="#goals">Goals</a></li><li><a href="#fcpa-site-limitations">FCPA site limitations</a></li><li><a href="#desired-capabilities">Desired capabilities</a></li></ul></li><li><a href="#installation">Installation</a></li><li><a href="#usage">Usage</a><ul><li><a href="#process-overview">Process overview</a></li><li><a href="#step-1---scrape-camp-links">Step 1 - Scrape camp links</a></li><li><a href="#step-2---scrape-camp-details">Step 2 - Scrape camp details</a></li><li><a href="#step-3---optional-calculate-commutes">Step 3 - (optional) Calculate commutes</a></li><li><a href="#step-4---filter-camps-and-generate-report">Step 4 - Filter camps and generate report</a></li></ul></li><li><a href="#conclusion">Conclusion</a><ul><li><a href="#possible-improvements">Possible improvements</a></li></ul></li></ul>
+            </nav>
+          </aside>
+        
+        <p>This post describes a command line tool I created that scrapes a website and generates reports.</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>It is greatly rewarding to build a tool that solves a real problem. The scale of the problem dictates the number of potential users your tool can help. This project solves a small problem - improving the registration process for my son’s summer camps. The problem is mostly created by a poor website design that doesn’t allow parents to easily find the correct camps.</p>
+
+<p>I built this tool to scrape the camp data on <a href="https://fairfax.usedirect.com/FairfaxFCPAWeb/Default.aspx">Fairfax County Park Authority</a> (FCPA) website and generate useful camp options. I also added new functionality like calculating the estimated commute times to each camp.</p>
+
+<h2 id="goals">Goals</h2>
+<p>The goals of this project are to:</p>
+<ul>
+  <li>Improve user experience registering for camps hosted by FCPA</li>
+  <li>Demonstrate the use of developing a command line tool</li>
+  <li>Demonstrate the 3rd party API (Google MAP API)</li>
+  <li>Demonstrate report creation</li>
+</ul>
+
+<h2 id="fcpa-site-limitations">FCPA site limitations</h2>
+<p>Why is this tool needed? Because FCPA offers hundreds of potential camps to register for and their filter options are rather limited. Here is a screenshot of the FCPA camp search site:</p>
+
+<p><img src="/assets/images/fcpa_search.jpeg" alt="" /></p>
+
+<p>At first glance the fields look reasonable. We should be able to narrow down the list of available camps and register for one. Let’s see what happens if I try to find a camp for my 6 year old son for the two days after New Years Day (Jan 2-3).</p>
+
+<p><img src="/assets/images/fcpa_results.jpeg" alt="" /></p>
+
+<p>Due to the broad age range filter (6-12 yrs old), only one of the first six camps listed in the results are appropriate for a 6 year old. Unfortunately that camp is for the wrong dates (January 20). This happens because the date filter only allows you to specify the date “starting on or after”. So the best I can do is limit results from a starting date to the end of that month. This is especially frustrating when trying to book camps over the summer break. Typically I want to book one camp per week for the entire summer. To do this on the FCPA website I can change the “starting on or after” date, but for the first week in a month I get all camps in that month (which could be more than 100 sessions!).</p>
+
+<h2 id="desired-capabilities">Desired capabilities</h2>
+
+<p>I would like to build a tool that can output a tailored report to facilitate selecting and registring for camps. Ideally I would be able to quickly update the data based on the current openings as classes can fill up quickly. So I need a way to:</p>
+<ol>
+  <li>Automatically scrape the camp data from the FCPA website</li>
+  <li>Select camps by various criteria</li>
+  <li>Generate a custom report</li>
+</ol>
+
+<h1 id="installation">Installation</h1>
+<ol>
+  <li>Clone the repo (git clone https://github.com/dlfelps/camp-little-scrape.git)</li>
+  <li>Install dependencies (pip install -r requirements.txt)</li>
+  <li>Install Chrome (https://www.google.com/chrome/)</li>
+  <li>Sign up for a Google Maps API key (https://developers.google.com/maps)</li>
+</ol>
+
+<h1 id="usage">Usage</h1>
+
+<h2 id="process-overview">Process overview</h2>
+
+<p>The overall process is described in the flowchart below. I will demonstrate each step below in detail, but at a high level, the tool completes a series of steps to:</p>
+<ol>
+  <li>Scrape camp links</li>
+  <li>Scrape camp details</li>
+  <li>(optional) Calculate commute times to each camp</li>
+  <li>Filter camps and generate report</li>
+</ol>
+
+<p><img src="/assets/images/camp%20scraper-2024-11-21-162211.svg" alt="" /></p>
+
+<h2 id="step-1---scrape-camp-links">Step 1 - Scrape camp links</h2>
+<p>The first step in the process uses <a href="https://selenium-python.readthedocs.io/">Selenium</a> to semi-automatically scrape the camp session links from the FCPA website.</p>
+<ol>
+  <li>launch jupyter lab</li>
+  <li>open step1.ipynb</li>
+  <li>Follow instructions in step1.ipynb to open remote Chrome browser</li>
+  <li>Go to FCPA website and search for ALL camps</li>
+  <li>Follow instructions in step1.ipynb to scrape each page</li>
+</ol>
+
+<p>This step produces a <code class="language-plaintext highlighter-rouge">links.txt</code> file containing all the camp session links.</p>
+
+<h2 id="step-2---scrape-camp-details">Step 2 - Scrape camp details</h2>
+<p>Steps 2-4 all use the command line gui provided by the camp.py file. It is built using <a href="https://typer.tiangolo.com/">Typer</a>. View the list of possible commands by calling <code class="language-plaintext highlighter-rouge">python camp.py --help</code></p>
+
+<p><img src="/assets/images/gui_help.PNG" alt="" /></p>
+
+<p>Step 2 is initiated by calling <code class="language-plaintext highlighter-rouge">python camp.py details</code>. This step scrapes the camp details (e.g. location, dates, times) for each camp found in the <code class="language-plaintext highlighter-rouge">links.txt</code>.</p>
+
+<h2 id="step-3---optional-calculate-commutes">Step 3 - (optional) Calculate commutes</h2>
+
+<p>The third step uses Google Maps API to calculate the typical daily commute to each camp. This calculation is the sum of the following distances between home (user specified) and camp location:</p>
+<ul>
+  <li>morning dropoff (arriving by 9 AM)</li>
+  <li>morning return (departing at 9 AM)</li>
+  <li>afternoon pickup (arriving by 4 PM)</li>
+  <li>afternooon return (departing at 4 PM)</li>
+</ul>
+
+<p>Commute time is one of the most important factors when selecting camps. Since full day camps are only 7 hours, it would not be time efficient to spend 2 hours in the car, which is shockingly easy to do even staying within Fairfax county (where all FCPA camps are located). This step does require a Google Map API key, which can be created at https://developers.google.com/maps. The code retrieves your individial key from the environment variable <code class="language-plaintext highlighter-rouge">MAP_API_KEY</code>. Here is a <a href="https://lazyprogrammer.me/how-to-set-environment-variables-permanently-in-windows-linux-and-mac/">guide</a> if you need help.</p>
+
+<h2 id="step-4---filter-camps-and-generate-report">Step 4 - Filter camps and generate report</h2>
+
+<p>The final step filters the available camps to generate a report. We can see the full list of available options by looking at the report help command <code class="language-plaintext highlighter-rouge">python camp.py report --help</code>.</p>
+
+<p><img src="/assets/images/gui_report_help.PNG" alt="" /></p>
+
+<p>The filtering options for this step are as follows:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Parameter</th>
+      <th style="text-align: center">Required?</th>
+      <th style="text-align: center">Default value</th>
+      <th style="text-align: center">Description</th>
+      <th style="text-align: center">Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">first_day</td>
+      <td style="text-align: center">Y</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">The camp must start on this date</td>
+      <td style="text-align: center">“01/02/2025”</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">last_day</td>
+      <td style="text-align: center">Y</td>
+      <td style="text-align: center">N/A</td>
+      <td style="text-align: center">The camp must end on this date</td>
+      <td style="text-align: center">“01/03/2025”</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">min_age</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">5 (years)</td>
+      <td style="text-align: center">The camp must accept kids of this age</td>
+      <td style="text-align: center">–min-age=5</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">max_commute</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">120 (minutes)</td>
+      <td style="text-align: center">The camp must not have an estimated daily commute greater than this many minutes</td>
+      <td style="text-align: center">–max-commute=120</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">remove_half_day</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">True</td>
+      <td style="text-align: center">Half day camps (from 9-noon) are not shown</td>
+      <td style="text-align: center">–remove-half-day</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">remove_schools</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">True</td>
+      <td style="text-align: center">Camps located at schools are not shown</td>
+      <td style="text-align: center">–remove-schools</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">show_full</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">False</td>
+      <td style="text-align: center">Camps that are already fully registered are not shown</td>
+      <td style="text-align: center">–no-show-full</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>If your desired parameters are different from default, then change them when you call the report command, e.g. <code class="language-plaintext highlighter-rouge">python camp.py report "01/02/2025" "01/03/2025" --min-age=7</code>.</p>
+
+<p>This will produce an HTML file in the reports directory with all matching camps:</p>
+
+<p><img src="/assets/images/report.PNG" alt="" /></p>
+
+<p>The report is generated using the <a href="https://www.yattag.org/">yattag</a> library to procedurally generate the HTML report from python code.
+A few highlights of the report:</p>
+<ul>
+  <li>The camps are sorted by shortest commute first</li>
+  <li>The report highlights which camps include a swimming break</li>
+  <li>Each camp includes a session link for easy registration</li>
+</ul>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Overall I found this side project to be quite rewarding. I learned how to:</p>
+<ul>
+  <li>scrape data from websites (selenium and httpx)</li>
+  <li>parse structured data from websites (beautifulsoup)</li>
+  <li>keep API keys secret using environment variables</li>
+  <li>use 3rd party APIs</li>
+  <li>generate HTML from Python</li>
+</ul>
+
+<p>Finally I found the tool to actually make finding and registering my son for camp much easier!</p>
+
+<h2 id="possible-improvements">Possible improvements</h2>
+
+<p>I was not able to find a way for <a href="https://typer.tiangolo.com/">Typer</a> to hide commands that were not yet applicable. Ideally, only the <code class="language-plaintext highlighter-rouge">details</code> command would be initially available (taking in the links.txt that was produced during the semi-manual scraping step). Then after creating “camps.pkl” and “places.txt” the <code class="language-plaintext highlighter-rouge">commute</code> command would be available. Finally the <code class="language-plaintext highlighter-rouge">report</code> command could be used.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/backend" class="page__taxonomy-item p-category" rel="tag">backend</a><span class="sep">, </span>
+    
+      <a href="/tags/cli" class="page__taxonomy-item p-category" rel="tag">cli</a><span class="sep">, </span>
+    
+      <a href="/tags/httpx" class="page__taxonomy-item p-category" rel="tag">httpx</a><span class="sep">, </span>
+    
+      <a href="/tags/scraper" class="page__taxonomy-item p-category" rel="tag">scraper</a><span class="sep">, </span>
+    
+      <a href="/tags/selenium" class="page__taxonomy-item p-category" rel="tag">selenium</a><span class="sep">, </span>
+    
+      <a href="/tags/typer" class="page__taxonomy-item p-category" rel="tag">typer</a><span class="sep">, </span>
+    
+      <a href="/tags/yattag" class="page__taxonomy-item p-category" rel="tag">yattag</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2024-12-01T00:00:00+00:00">December 1, 2024</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Experiment+20%20https%3A%2F%2Fdlfelps.github.io%2F2024%2F12%2F01%2Fscraper.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2024%2F12%2F01%2Fscraper.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dlfelps.github.io/2024/12/01/scraper.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2024/08/01/generative.html" class="pagination--pager" title="Experiment 19
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2024 <a href="https://dlfelps.github.io">.NET Experiments</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

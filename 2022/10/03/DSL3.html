@@ -193,7 +193,7 @@
 
 <h2 id="parser-combinators">Parser combinators</h2>
 
-<p>The most common way to load text data is a delimted text loader, but this only works if your input is structured (i.e. every column of data is aligned). For this post, I want to use a more powerful tool - parser combinators. Parser combinators implement a formal grammar over the input, which we need to interpret a domain specific language. But this post is not a full parser combinator tutorial. In fact, we will use the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from the <a href="https://github.com/stephan-tolksdorf/fparsec">FParsec</a> library instead of the more tradional (and recommended) parser combinator symbols (e.g <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&lt;&lt;.</code>, … ). For a deeper dive, see these tutorials <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. To demonstrate the power of this approach, I will use a parser that can interpret the syntax from either data model 2a or 2b from <a href="/2022/10/02/DSL2.html">post #2</a> in this series. Here are a few examples of valid inputs:</p>
+<p>The most common way to load text data is a delimted text loader, but this only works if your input is structured (i.e. every column of data is aligned). For this post, I want to use a more powerful tool - parser combinators. Parser combinators implement a formal grammar over the input, which we need to interpret a domain specific language. But this post is not a full parser combinator tutorial. In fact, we will use the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from the <a href="https://github.com/stephan-tolksdorf/fparsec">FParsec</a> library instead of the more tradional (and recommended) parser combinator symbols (e.g <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&lt;&lt;.</code>, … ). For a deeper dive, see these tutorials <sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup> <sup id="fnref:2"><a href="#fn:2" class="footnote" rel="footnote" role="doc-noteref">2</a></sup>. To demonstrate the power of this approach, I will use a parser that can interpret the syntax from either data model 2a or 2b from <a href="/2022/10/02/DSL2.html">post #2</a> in this series. Here are a few examples of valid inputs:</p>
 
 <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="go">Buy 4 SharesOf MSFT At 258.32 AllOrNone
 Sell 3 SharesOf META At 158.71 
@@ -224,11 +224,11 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
   <li>file encoding  <code class="language-plaintext highlighter-rouge">System.Text.Encoding.ASCII</code></li>
 </ul>
 
-<p>The parser argument combines two functions: the built-in <code class="language-plaintext highlighter-rouge">FParsec</code> function <code class="language-plaintext highlighter-rouge">many</code><sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup> and our custom parser <code class="language-plaintext highlighter-rouge">parseTrade</code>, which we describe in the next section.  If the file is parsed successfully then we can extract our list of trades from the <code class="language-plaintext highlighter-rouge">ParseResult</code> type.</p>
+<p>The parser argument combines two functions: the built-in <code class="language-plaintext highlighter-rouge">FParsec</code> function <code class="language-plaintext highlighter-rouge">many</code><sup id="fnref:3"><a href="#fn:3" class="footnote" rel="footnote" role="doc-noteref">3</a></sup> and our custom parser <code class="language-plaintext highlighter-rouge">parseTrade</code>, which we describe in the next section.  If the file is parsed successfully then we can extract our list of trades from the <code class="language-plaintext highlighter-rouge">ParseResult</code> type.</p>
 
 <h2 id="step-2-parsetrade">Step 2: parseTrade</h2>
 
-<p>The basic idea with this parser is that we are composing<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup> many simple parsers into a more complex parser that captures the grammar/rules of our domain specific language. Here is the finished parser:</p>
+<p>The basic idea with this parser is that we are composing<sup id="fnref:4"><a href="#fn:4" class="footnote" rel="footnote" role="doc-noteref">4</a></sup> many simple parsers into a more complex parser that captures the grammar/rules of our domain specific language. Here is the finished parser:</p>
 
 <figure class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="n">parseTrade</span> <span class="p">=</span>
   <span class="n">parse</span> <span class="p">{</span>
@@ -249,7 +249,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <p>Each call parses a different part of the transaction. We will examine a few of these parsers more closely in the following section, but for now just try to understand how this works at a high level.</p>
 
-<p><code class="language-plaintext highlighter-rouge">parseTrade</code> proceeds by parsing (or ignoring) the necessary values to create a <code class="language-plaintext highlighter-rouge">Trade</code> type and return it<sup id="fnref:5" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">5</a></sup>.</p>
+<p><code class="language-plaintext highlighter-rouge">parseTrade</code> proceeds by parsing (or ignoring) the necessary values to create a <code class="language-plaintext highlighter-rouge">Trade</code> type and return it<sup id="fnref:5"><a href="#fn:5" class="footnote" rel="footnote" role="doc-noteref">5</a></sup>.</p>
 
 <h2 id="step-1-individual-token-parsers">Step 1: individual token parsers</h2>
 
@@ -289,11 +289,11 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
   <li><code class="language-plaintext highlighter-rouge">Line 10</code> If successful, convert the string to its corresponding type (e.g. <code class="language-plaintext highlighter-rouge">Buy</code> type) and return</li>
 </ul>
 
-<p>Now let’s revist any new syntax. The <code class="language-plaintext highlighter-rouge">do</code> keyword in F# requires the following expression to return <code class="language-plaintext highlighter-rouge">unit</code>. Similarly, the <code class="language-plaintext highlighter-rouge">do!</code> notation on <code class="language-plaintext highlighter-rouge">Line 08</code> is used in a computation expression when the following expression returns a “unit-like” value<sup id="fnref:6" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">6</a></sup>.</p>
+<p>Now let’s revist any new syntax. The <code class="language-plaintext highlighter-rouge">do</code> keyword in F# requires the following expression to return <code class="language-plaintext highlighter-rouge">unit</code>. Similarly, the <code class="language-plaintext highlighter-rouge">do!</code> notation on <code class="language-plaintext highlighter-rouge">Line 08</code> is used in a computation expression when the following expression returns a “unit-like” value<sup id="fnref:6"><a href="#fn:6" class="footnote" rel="footnote" role="doc-noteref">6</a></sup>.</p>
 
 <p><code class="language-plaintext highlighter-rouge">Line 09</code> uses two new commands. <code class="language-plaintext highlighter-rouge">pstring</code> creates a parser that succeeds if it encounters its argument (i.e. “Buy” or “Sell”) and fails otherwise. <code class="language-plaintext highlighter-rouge">choice</code> composes these two parsers in a way such that it returns the value of the first successful parser. If both fail then the <code class="language-plaintext highlighter-rouge">choice</code> parser fails.</p>
 
-<p>The difference between <code class="language-plaintext highlighter-rouge">let</code> and <code class="language-plaintext highlighter-rouge">let!</code> is analogous to <code class="language-plaintext highlighter-rouge">do</code> and <code class="language-plaintext highlighter-rouge">do!</code> - <code class="language-plaintext highlighter-rouge">let!</code> binds a name to an value that is within a computation expression context <sup id="fnref:7" role="doc-noteref"><a href="#fn:7" class="footnote" rel="footnote">7</a></sup>.</p>
+<p>The difference between <code class="language-plaintext highlighter-rouge">let</code> and <code class="language-plaintext highlighter-rouge">let!</code> is analogous to <code class="language-plaintext highlighter-rouge">do</code> and <code class="language-plaintext highlighter-rouge">do!</code> - <code class="language-plaintext highlighter-rouge">let!</code> binds a name to an value that is within a computation expression context <sup id="fnref:7"><a href="#fn:7" class="footnote" rel="footnote" role="doc-noteref">7</a></sup>.</p>
 
 <h3 id="pint32-pfloat"><code class="language-plaintext highlighter-rouge">pint32</code>, <code class="language-plaintext highlighter-rouge">pfloat</code></h3>
 
@@ -340,7 +340,7 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
   <li><code class="language-plaintext highlighter-rouge">Line 04</code> Creates a parser for the function argument <code class="language-plaintext highlighter-rouge">str</code> and skips it if found and returns <em>without</em> wrapping in a parser context</li>
 </ul>
 
-<p>This function is used to create parsers for our placeholder types (i.e. <code class="language-plaintext highlighter-rouge">SharesOf</code> and <code class="language-plaintext highlighter-rouge">At</code>). <code class="language-plaintext highlighter-rouge">skipMany</code> will apply the parser 0 or more times and throw away any tokens found. The careful reader will also notice the use of <code class="language-plaintext highlighter-rouge">return!</code> instead of <code class="language-plaintext highlighter-rouge">return</code>. The simple rule is use <code class="language-plaintext highlighter-rouge">return</code> if you need to wrap a value in the context of the computation expression (i.e. a parser) and use <code class="language-plaintext highlighter-rouge">return!</code> if the value already has the correct context<sup id="fnref:8" role="doc-noteref"><a href="#fn:8" class="footnote" rel="footnote">8</a></sup>.</p>
+<p>This function is used to create parsers for our placeholder types (i.e. <code class="language-plaintext highlighter-rouge">SharesOf</code> and <code class="language-plaintext highlighter-rouge">At</code>). <code class="language-plaintext highlighter-rouge">skipMany</code> will apply the parser 0 or more times and throw away any tokens found. The careful reader will also notice the use of <code class="language-plaintext highlighter-rouge">return!</code> instead of <code class="language-plaintext highlighter-rouge">return</code>. The simple rule is use <code class="language-plaintext highlighter-rouge">return</code> if you need to wrap a value in the context of the computation expression (i.e. a parser) and use <code class="language-plaintext highlighter-rouge">return!</code> if the value already has the correct context<sup id="fnref:8"><a href="#fn:8" class="footnote" rel="footnote" role="doc-noteref">8</a></sup>.</p>
 
 <h3 id="many1-asciiupper"><code class="language-plaintext highlighter-rouge">many1</code>, <code class="language-plaintext highlighter-rouge">asciiUpper</code></h3>
 
@@ -493,28 +493,28 @@ Sell 6 GOOGL 106.08</span></code></pre></figure>
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p><a href="http://www.quanttec.com/fparsec/tutorial.html">FParsec Tutorial</a> <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2" role="doc-endnote">
+    <li id="fn:2">
       <p><a href="https://fsharpforfunandprofit.com/posts/understanding-parser-combinators/">fsharpforfunandprofit </a> <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:3" role="doc-endnote">
+    <li id="fn:3">
       <p><code class="language-plaintext highlighter-rouge">many</code> indicates that we expect to run <code class="language-plaintext highlighter-rouge">parseTrade</code> zero or more times (depending on the number of lines in our input file). <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:4" role="doc-endnote">
+    <li id="fn:4">
       <p>Instead of using the more traditional parser combinator functions (e.g. <code class="language-plaintext highlighter-rouge">&lt;|&gt;</code>, <code class="language-plaintext highlighter-rouge">.&gt;&gt;.</code>, …) I elected to use a more familiar syntax with the <code class="language-plaintext highlighter-rouge">parse</code> computation expression from FParsec. <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:5" role="doc-endnote">
+    <li id="fn:5">
       <p>Within a computation expression, <code class="language-plaintext highlighter-rouge">return</code> performs an operation that is the opposite of <code class="language-plaintext highlighter-rouge">let!</code> - it wraps the value within a context specified by the computation expression. In this case the value has a <code class="language-plaintext highlighter-rouge">Trade</code> type, so <code class="language-plaintext highlighter-rouge">parseTrade</code> actually returns a value of type <code class="language-plaintext highlighter-rouge">Parser&lt;Trade, unit&gt;</code>. <a href="#fnref:5" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:6" role="doc-endnote">
+    <li id="fn:6">
       <p>The function <a href="https://www.quanttec.com/fparsec/reference/charparsers.html#members.spaces"><code class="language-plaintext highlighter-rouge">spaces</code></a> has type <code class="language-plaintext highlighter-rouge">Parser&lt;unit,'u&gt;</code>, which is unit-like within this context. <a href="#fnref:6" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:7" role="doc-endnote">
+    <li id="fn:7">
       <p>In this case the context is <code class="language-plaintext highlighter-rouge">ParserResult&lt;T&gt;</code>; <code class="language-plaintext highlighter-rouge">let!</code> binds the type <code class="language-plaintext highlighter-rouge">T</code>. This pattern is commonly used with the <code class="language-plaintext highlighter-rouge">async {}</code> computation expression. <a href="#fnref:7" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:8" role="doc-endnote">
+    <li id="fn:8">
       <p>Note that <code class="language-plaintext highlighter-rouge">parseTrade</code> calls this function with <code class="language-plaintext highlighter-rouge">do!</code> since it returns a unit-like parser. <a href="#fnref:8" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

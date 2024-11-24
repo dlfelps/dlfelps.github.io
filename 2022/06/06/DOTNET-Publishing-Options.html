@@ -265,7 +265,7 @@ dotnet publish -c "exp_1a_self-contained" -r win-x64 --self-contained true
   </tbody>
 </table>
 
-<p>The difference does appear to be approximately the size of a binary installation of .NET 6.0 (for Windows is 68.1 MB). But 68 MB barely registers on a 500 GB hard drive. My bigger concern is that self-contained distributions limit the systems that can use it since they are platform specific. In the next experiment we look at platforms besides Windows. <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
+<p>The difference does appear to be approximately the size of a binary installation of .NET 6.0 (for Windows is 68.1 MB). But 68 MB barely registers on a 500 GB hard drive. My bigger concern is that self-contained distributions limit the systems that can use it since they are platform specific. In the next experiment we look at platforms besides Windows. <sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <h3 id="varying-the-platform-of-self-contained-releases">Varying the platform of self-contained releases</h3>
 
@@ -374,7 +374,7 @@ dotnet publish -c "exp_1c_osx12_arm"  -r osx.12-arm64 --self-contained true -p:P
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>By default the framework-dependent mode creates both a cross-platform binary and a platform-specific executable that targets the current platform. In my case the publish folder included a platform-specific file called WaveFunctionCollapse.exe (since I use Windows). This unnecessary  file was removed before the folder size was measured. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

@@ -573,7 +573,7 @@
 <span class="p">}</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
-<p>The first thing to notice is that this is proper C# code - <em>not</em> YAML. Starting from the top, the <code class="language-plaintext highlighter-rouge">GitHubActions</code> attribute before the <code class="language-plaintext highlighter-rouge">Build</code> class specifies which continuous integration platform YAML<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> NUKE should create as part of the build process. Then - like the previous approaches - we define seperate targets for <code class="language-plaintext highlighter-rouge">Restore</code>, <code class="language-plaintext highlighter-rouge">Compile</code>, and <code class="language-plaintext highlighter-rouge">Test</code>. But unlike previous approaches these targets are not strings; instead they are symbols that can be type checked and debugged. Targets can be further refined using NUKE’s <a href="https://nuke.build/docs/fundamentals/targets/">Fluent API</a>, but I kept things pretty simple here. When the project runs a valid GitHubActions YAML is created:</p>
+<p>The first thing to notice is that this is proper C# code - <em>not</em> YAML. Starting from the top, the <code class="language-plaintext highlighter-rouge">GitHubActions</code> attribute before the <code class="language-plaintext highlighter-rouge">Build</code> class specifies which continuous integration platform YAML<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup> NUKE should create as part of the build process. Then - like the previous approaches - we define seperate targets for <code class="language-plaintext highlighter-rouge">Restore</code>, <code class="language-plaintext highlighter-rouge">Compile</code>, and <code class="language-plaintext highlighter-rouge">Test</code>. But unlike previous approaches these targets are not strings; instead they are symbols that can be type checked and debugged. Targets can be further refined using NUKE’s <a href="https://nuke.build/docs/fundamentals/targets/">Fluent API</a>, but I kept things pretty simple here. When the project runs a valid GitHubActions YAML is created:</p>
 
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
@@ -653,7 +653,7 @@
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>NUKE supports many popular CI/CD platforms out of the box (i.e. AppVeyor, Azure Pipelines, Bitbucket, GitHub Actions, GitLab, Jenkins, Space Automation, and TeamCity). <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

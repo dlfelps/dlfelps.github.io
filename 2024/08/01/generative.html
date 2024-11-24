@@ -260,7 +260,7 @@
 
 <h2 id="latent-model">Latent model</h2>
 
-<p>The second approach to increasing resolution was introduced in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>. The idea behind this approach is to surround the DDPM with a pretrained variational autoencoder<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. The DDPM then learns to denoise the latent space (which also happens to be 64x64) instead of the image space. To create a new sample:</p>
+<p>The second approach to increasing resolution was introduced in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>. The idea behind this approach is to surround the DDPM with a pretrained variational autoencoder<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>. The DDPM then learns to denoise the latent space (which also happens to be 64x64) instead of the image space. To create a new sample:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. generate random noise in the shape of the latent space
 2. use the DDPM to denoise the input
 3. use the decoder to transform the latent space back into image space (512x512)
@@ -270,7 +270,7 @@
 
 <p>Figure adapted from https://huggingface.co/blog/stable_diffusion</p>
 
-<p>Unfortunately I did not have enough Colab credits to fully train this variant<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. Although the model outputs images that are 512x512, I admit that they don’t look very bird-like. Here is a single full image created after 50 epochs of training:</p>
+<p>Unfortunately I did not have enough Colab credits to fully train this variant<sup id="fnref:2"><a href="#fn:2" class="footnote" rel="footnote" role="doc-noteref">2</a></sup>. Although the model outputs images that are 512x512, I admit that they don’t look very bird-like. Here is a single full image created after 50 epochs of training:</p>
 
 <p><img src="/assets/images/latent_bird.png" alt="latent image" /></p>
 
@@ -318,10 +318,10 @@
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>This particular autoencoder preserves spatial information by compressing a 512x512x3 image into a latent space of 64x64x4. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2" role="doc-endnote">
+    <li id="fn:2">
       <p>As a comparison, in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>, they trained a latent model on FFHQ for 283 hours on an A100. This would cost an equivalent of $370 in Colab compute units so you will have to forgive me for stopping early! <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
@@ -380,7 +380,8 @@
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/2024/12/01/scraper.html" class="pagination--pager" title="Experiment 20
+">Next</a>
     
   </nav>
 

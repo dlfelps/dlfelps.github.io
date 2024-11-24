@@ -189,7 +189,7 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>Python, C++, Java, and C# are 4 out of the top 10 most popular languages on any survey/poll/list, and they have one thing in common - they are all primarily object-oriented languages. This paradigm is characterized by<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>:</p>
+<p>Python, C++, Java, and C# are 4 out of the top 10 most popular languages on any survey/poll/list, and they have one thing in common - they are all primarily object-oriented languages. This paradigm is characterized by<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>:</p>
 
 <ul>
   <li>Data/operations are encapsulated in objects</li>
@@ -198,7 +198,7 @@
   <li>Classes are organized in inheritance hierarchies</li>
 </ul>
 
-<p>But even these classic languages are now including new features to support a more functional programming style; some people see this as a sign of an upcoming paradigm shift<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. My thoughts are more in line with Richard Feldman who argued in his talk <a href="https://youtu.be/QyJZzq0v7Z4?t=2319">“Why isn’t functional programming the norm?”</a> that we are currently undergoing an intermediate phase where we are starting to apply functional programming techniques within object-oriented languages. This post uses 5 criteria to find suitable languages to be used for this purpose.</p>
+<p>But even these classic languages are now including new features to support a more functional programming style; some people see this as a sign of an upcoming paradigm shift<sup id="fnref:2"><a href="#fn:2" class="footnote" rel="footnote" role="doc-noteref">2</a></sup>. My thoughts are more in line with Richard Feldman who argued in his talk <a href="https://youtu.be/QyJZzq0v7Z4?t=2319">“Why isn’t functional programming the norm?”</a> that we are currently undergoing an intermediate phase where we are starting to apply functional programming techniques within object-oriented languages. This post uses 5 criteria to find suitable languages to be used for this purpose.</p>
 
 <h2 id="inclusive-programming-criteria">Inclusive programming criteria</h2>
 
@@ -220,13 +220,13 @@
   <p>O3. subtype polymorphism (subtyping)</p>
 </blockquote>
 
-<p>Encapsulation and subtyping<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup> are necessary to apply common design patterns; they also allow programmers to adhere to guiding principles that are well-known within their community. For example, subtyping enables both the “O” and “L” in <a href="https://stackify.com/solid-design-principles/">S<strong>OL</strong>ID design principles</a>.</p>
+<p>Encapsulation and subtyping<sup id="fnref:3"><a href="#fn:3" class="footnote" rel="footnote" role="doc-noteref">3</a></sup> are necessary to apply common design patterns; they also allow programmers to adhere to guiding principles that are well-known within their community. For example, subtyping enables both the “O” and “L” in <a href="https://stackify.com/solid-design-principles/">S<strong>OL</strong>ID design principles</a>.</p>
 
 <p>This relatively minimal subset of language features doesn’t narrow our options much yet; let’s discuss the elements critical to functional programming.</p>
 
 <h3 id="criteria-to-support-a-functional-paradigm">Criteria to support a functional paradigm</h3>
 
-<p>The two most defining features of the functional programming style are pure functions<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup> <sup id="fnref:5" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">5</a></sup>and immutable data. But these strategies do not require any special language features. One criteria that is often needed to support functional programming is that functions are treated as first-class citizens<sup id="fnref:6" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">6</a></sup>.</p>
+<p>The two most defining features of the functional programming style are pure functions<sup id="fnref:4"><a href="#fn:4" class="footnote" rel="footnote" role="doc-noteref">4</a></sup> <sup id="fnref:5"><a href="#fn:5" class="footnote" rel="footnote" role="doc-noteref">5</a></sup>and immutable data. But these strategies do not require any special language features. One criteria that is often needed to support functional programming is that functions are treated as first-class citizens<sup id="fnref:6"><a href="#fn:6" class="footnote" rel="footnote" role="doc-noteref">6</a></sup>.</p>
 
 <blockquote>
   <p>F1. functions are first-class</p>
@@ -259,7 +259,7 @@
   <p>C1. mutable variables must be designated as such</p>
 </blockquote>
 
-<p>This final criteria drastically narrows down the field. The remaining<sup id="fnref:7" role="doc-noteref"><a href="#fn:7" class="footnote" rel="footnote">7</a></sup> contenders that make our list of inclusive languages are: Kotlin, Scala, Rust, Swift. Let’s briefly examine how each language meets the criteria.</p>
+<p>This final criteria drastically narrows down the field. The remaining<sup id="fnref:7"><a href="#fn:7" class="footnote" rel="footnote" role="doc-noteref">7</a></sup> contenders that make our list of inclusive languages are: Kotlin, Scala, Rust, Swift. Let’s briefly examine how each language meets the criteria.</p>
 
 <h2 id="inclusive-languages">Inclusive languages</h2>
 
@@ -328,7 +328,7 @@
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Junior programmer&#39;s bookshelf: 90% APIs and programming languages; Senior programmer&#39;s bookshelf: 80% applied psychology.</p>&mdash; ☕ J. B. Rainsberger (@jbrains) <a href="https://twitter.com/jbrains/status/616228270841962496?ref_src=twsrc%5Etfw">July 1, 2015</a></blockquote>
 <script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<p>I believe inclusive languages offer benefits on both of these fronts. On the technical side, neither style is universally superior. The object-oriented approach is usually better if your system operates on things and new features typically involve adding new things (rather than new operations). On the other hand, if new features typically require new operations then a functional style may be a better fit<sup id="fnref:8" role="doc-noteref"><a href="#fn:8" class="footnote" rel="footnote">8</a></sup>.</p>
+<p>I believe inclusive languages offer benefits on both of these fronts. On the technical side, neither style is universally superior. The object-oriented approach is usually better if your system operates on things and new features typically involve adding new things (rather than new operations). On the other hand, if new features typically require new operations then a functional style may be a better fit<sup id="fnref:8"><a href="#fn:8" class="footnote" rel="footnote" role="doc-noteref">8</a></sup>.</p>
 
 <p>They can also be used in conjunction; <a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">clean architecture</a> may be a good model. Following this approach, you can model your domain and write all of your core business logic using functional code and follow an object-oriented style at the adapter and interface layers.</p>
 
@@ -375,28 +375,28 @@
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p><a href="https://homes.cs.aau.dk/~normark/prog3-03/html/notes/paradigms_themes-paradigm-overview-section.html#paradigms_oo-paradigm-overview_title_1">Object-oriented paradigm</a> <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2" role="doc-endnote">
+    <li id="fn:2">
       <p>“Why Functional Programming Should Be the Future of Software Development,” IEEE Spectrum, Oct. 23, 2022.  [Online]. Available: https://spectrum.ieee.org/functional-programming. [Accessed: Nov. 14, 2022] <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:3" role="doc-endnote">
+    <li id="fn:3">
       <p>Subtyping is also known as interface inheritance, whereas subclassing is known as implementation inheritance or code inheritance (see <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Liskov substitution principle</a>). <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:4" role="doc-endnote">
+    <li id="fn:4">
       <p>A pure function is a function that, given the same input, will always return the same output and does not have any observable side effect (from <a href="https://mostly-adequate.gitbook.io/mostly-adequate-guide/ch03">Professor Frisby’s Mostly Adequate Guide to Functional Programming</a>) <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:5" role="doc-endnote">
+    <li id="fn:5">
       <p>A side effect is a change of system state or observable interaction with the outside world that occurs during the calculation of a result. Examples include: reading a file, inserting a record into a database, making an http call, printing to the screen, or getting user input. <a href="#fnref:5" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:6" role="doc-endnote">
+    <li id="fn:6">
       <p>This means the language supports passing functions as arguments to other functions, returning them as the values from other functions, and assigning them to variables or storing them in data structures <a href="#fnref:6" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:7" role="doc-endnote">
+    <li id="fn:7">
       <p>Several languages just missed the cut. C#, C++, Java, and Go meet all the conditions except that mutable variables are not designated. F# and OCaml actually met all the criteria, but I do not believe that the average object-oriented programmer would be comfortable using them. <a href="#fnref:7" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:8" role="doc-endnote">
+    <li id="fn:8">
       <p>Philip Wadler named this the <a href="http://homepages.inf.ed.ac.uk/wadler/papers/expression/expression.txt">expression problem</a>. Another good reference <a href="https://www.cs.cornell.edu/courses/cs3110/2015fa/l/25-expression/lec.pdf">here</a>. <a href="#fnref:8" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
