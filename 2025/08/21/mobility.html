@@ -166,7 +166,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          16 minute read
+          19 minute read
         
       </span>
     
@@ -181,7 +181,7 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#introduction">Introduction</a><ul><li><a href="#the-challenge-making-sense-of-mobility-data">The Challenge: Making Sense of Mobility Data</a></li><li><a href="#introducing-lymob-4cities-a-rich-mobility-dataset">Introducing LYMob-4Cities: A Rich Mobility Dataset</a></li><li><a href="#the-architecture-hybrid-transformer-lstm-for-mobility">The Architecture: Hybrid Transformer-LSTM for Mobility</a><ul><li><a href="#core-components">Core Components</a></li><li><a href="#why-this-architecture-works">Why This Architecture Works</a></li></ul></li><li><a href="#the-complete-pipeline">The Complete Pipeline</a><ul><li><a href="#stage-1-model-training">Stage 1: Model Training</a></li><li><a href="#stage-2-embedding-generation">Stage 2: Embedding Generation</a></li><li><a href="#stage-3-interactive-exploration">Stage 3: Interactive Exploration</a></li></ul></li><li><a href="#remarkable-results-what-the-embeddings-reveal">Remarkable Results: What the Embeddings Reveal</a></li><li><a href="#real-world-applications">Real-World Applications</a><ul><li><a href="#️-urban-planning">🏙️ Urban Planning</a></li><li><a href="#-personalized-services">📱 Personalized Services</a></li><li><a href="#-anomaly-detection">🚨 Anomaly Detection</a></li><li><a href="#-business-intelligence">📊 Business Intelligence</a></li><li><a href="#-research-applications">🔬 Research Applications</a></li></ul></li><li><a href="#privacy-and-ethics-a-responsible-approach">Privacy and Ethics: A Responsible Approach</a></li><li><a href="#technical-innovation-why-this-matters">Technical Innovation: Why This Matters</a></li><li><a href="#getting-started-try-it-yourself">Getting Started: Try It Yourself</a></li><li><a href="#the-future-of-mobility-intelligence">The Future of Mobility Intelligence</a></li><li><a href="#conclusion-from-data-to-intelligence">Conclusion: From Data to Intelligence</a></li><li><a href="#about-the-dataset">About the Dataset</a></li></ul></li></ul>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a><ul><li><a href="#the-challenge-making-sense-of-mobility-data">The Challenge: Making Sense of Mobility Data</a></li><li><a href="#introducing-lymob-4cities-a-rich-mobility-dataset">Introducing LYMob-4Cities: A Rich Mobility Dataset</a></li><li><a href="#the-architecture-hybrid-transformer-lstm-for-mobility">The Architecture: Hybrid Transformer-LSTM for Mobility</a><ul><li><a href="#core-components">Core Components</a></li><li><a href="#why-this-architecture-works">Why This Architecture Works</a></li></ul></li><li><a href="#the-complete-pipeline">The Complete Pipeline</a><ul><li><a href="#stage-1-model-training">Stage 1: Model Training</a></li><li><a href="#stage-2-embedding-generation">Stage 2: Embedding Generation</a></li><li><a href="#stage-3-interactive-exploration">Stage 3: Interactive Exploration</a></li></ul></li><li><a href="#remarkable-results-what-the-embeddings-reveal">Remarkable Results: What the Embeddings Reveal</a></li><li><a href="#real-world-applications">Real-World Applications</a><ul><li><a href="#️-urban-planning">🏙️ Urban Planning</a></li><li><a href="#-personalized-services">📱 Personalized Services</a></li><li><a href="#-anomaly-detection">🚨 Anomaly Detection</a></li><li><a href="#-business-intelligence">📊 Business Intelligence</a></li><li><a href="#-research-applications">🔬 Research Applications</a></li></ul></li><li><a href="#privacy-and-ethics-a-responsible-approach">Privacy and Ethics: A Responsible Approach</a></li><li><a href="#technical-innovation-why-this-matters">Technical Innovation: Why This Matters</a></li><li><a href="#getting-started-try-it-yourself">Getting Started: Try It Yourself</a></li><li><a href="#the-future-of-mobility-intelligence">The Future of Mobility Intelligence</a></li><li><a href="#conclusion-from-data-to-intelligence">Conclusion: From Data to Intelligence</a></li><li><a href="#about-the-dataset">About the Dataset</a></li><li><a href="#claude-gotchas">Claude Gotchas</a></li></ul></li></ul>
             </nav>
           </aside>
         
@@ -435,6 +435,16 @@ python interactive_plot.py
 </ul>
 
 <p>The responsible use of such datasets, with proper anonymization and ethical oversight, enables breakthrough research while protecting individual privacy—a balance that’s essential as we advance mobility intelligence.</p>
+
+<h2 id="claude-gotchas">Claude Gotchas</h2>
+
+<p>I was impressed by Claude Code’s ability to assist and expedite with the exploration of this dataset and creation of the LSTM model. I wanted to document a few gotchas that I came across during the development process that would have been difficult for a non-developer / non-ML person to identify since they didn’t cause any errors:</p>
+
+<ul>
+  <li>I described the task as one of predicting the final location given the previous stops in a trajectory sequence. My first clue that something was wrong with the model was very fast loss convergence and excellent performance on test datasets. Upon closer inspection, I realized that the model was actually predicting the final location from the full trajectory (i.e. including the final location).</li>
+  <li>The model also initially treated the user_id variable as a continuous variable instead of a categorical variable. When I pointed out the mistake Claude had a good suggestion to use an embedding layer.</li>
+  <li>For the dashboard I analyze the first two PCA dimensions of the trajectory embeddings. When describing this step I asked Claude to normalize the matrix before applying PCA. The normalization algorithm that it selected was a matrix L2 norm instead of the traditional zero-mean, unit-variance normalization method. I was able to ask it directly to switch and it chose the correct method.</li>
+</ul>
 
         
       </section>
