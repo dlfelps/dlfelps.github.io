@@ -124,4 +124,10 @@ var store = [{
         "tags": ["scraper","cli","selenium","httpx","yattag","typer","backend"],
         "url": "/2024/12/01/scraper.html",
         "teaser": null
+      },{
+        "title": "Experiment 21",
+        "excerpt":"This post converts GPS trajectory data into learned embedded features to reveal human mobility patterns, enabling applications in urban planning, personalized services, and behavioral analysis. Introduction Human mobility patterns tell fascinating stories. Where we go, when we travel, and how we move through space reveals insights about urban planning, social...","categories": [],
+        "tags": ["claude","gps","mobility"],
+        "url": "/2025/08/21/mobility.html",
+        "teaser": null
       }]

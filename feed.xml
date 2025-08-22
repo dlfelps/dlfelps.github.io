@@ -1,4 +1,253 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2024-11-24T12:59:37+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 20</title><link href="https://dlfelps.github.io/2024/12/01/scraper.html" rel="alternate" type="text/html" title="Experiment 20" /><published>2024-12-01T00:00:00+00:00</published><updated>2024-12-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/12/01/scraper</id><content type="html" xml:base="https://dlfelps.github.io/2024/12/01/scraper.html"><![CDATA[<p>This post describes a command line tool I created that scrapes a website and generates reports.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-08-22T18:37:49+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 21</title><link href="https://dlfelps.github.io/2025/08/21/mobility.html" rel="alternate" type="text/html" title="Experiment 21" /><published>2025-08-21T00:00:00+00:00</published><updated>2025-08-21T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/08/21/mobility</id><content type="html" xml:base="https://dlfelps.github.io/2025/08/21/mobility.html"><![CDATA[<p>This post converts GPS trajectory data into learned embedded features to reveal human mobility patterns, enabling applications in urban planning, personalized services, and behavioral analysis.</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>Human mobility patterns tell fascinating stories. Where we go, when we travel, and how we move through space reveals insights about urban planning, social behavior, economic activity, and even public health. But extracting meaningful patterns from raw GPS trajectories is challenging—until now.</p>
+
+<p>In this post, I’ll walk you through an exciting deep learning project that transforms complex mobility data into intelligent embeddings using a hybrid transformer-LSTM architecture. We’ll explore how this approach can revolutionize everything from urban planning to personalized location services.</p>
+
+<h2 id="the-challenge-making-sense-of-mobility-data">The Challenge: Making Sense of Mobility Data</h2>
+
+<p>GPS trajectories are deceptively complex. A single user’s movement data contains:</p>
+<ul>
+  <li><strong>Spatial information</strong>: Latitude and longitude coordinates</li>
+  <li><strong>Temporal patterns</strong>: When movements occur, day-of-week effects</li>
+  <li><strong>Sequential dependencies</strong>: How current location influences future destinations</li>
+  <li><strong>Individual behaviors</strong>: Personal routines and preferences</li>
+</ul>
+
+<p>Traditional analysis methods struggle to capture these multi-dimensional relationships. That’s where deep learning comes in.</p>
+
+<h2 id="introducing-lymob-4cities-a-rich-mobility-dataset">Introducing LYMob-4Cities: A Rich Mobility Dataset</h2>
+
+<p>Our project leverages the <strong>LYMob-4Cities dataset</strong>, a comprehensive collection of anonymized mobility traces from four major cities. This dataset provides:</p>
+
+<ul>
+  <li><strong>Multi-city coverage</strong>: Diverse urban environments with different characteristics</li>
+  <li><strong>Temporal depth</strong>: Extended observation periods capturing seasonal and weekly patterns</li>
+  <li><strong>User diversity</strong>: Thousands of anonymized users with varying mobility behaviors</li>
+  <li><strong>High resolution</strong>: Detailed GPS coordinates with timestamp information</li>
+</ul>
+
+<p>The dataset structure includes:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">uid</code>: Anonymized user identifier</li>
+  <li><code class="language-plaintext highlighter-rouge">d</code>: Day number in the observation period</li>
+  <li>Geographic coordinates (latitude/longitude)</li>
+  <li>Temporal metadata including timestamps and day-of-week indicators</li>
+</ul>
+
+<p>This rich dataset enables us to build models that generalize across different urban contexts while respecting user privacy through anonymization.</p>
+
+<h2 id="the-architecture-hybrid-transformer-lstm-for-mobility">The Architecture: Hybrid Transformer-LSTM for Mobility</h2>
+
+<p>Our approach combines the best of both worlds: transformers for attention-based pattern recognition and LSTMs for sequential modeling.</p>
+
+<h3 id="core-components">Core Components</h3>
+
+<p><strong>1. Multi-Modal Embeddings</strong></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Spatial embedding: lat/lon → dense vector
+</span><span class="n">spatial_emb</span> <span class="o">=</span> <span class="nc">SpatialEmbedding</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+
+<span class="c1"># Temporal embedding: time features → dense vector  
+</span><span class="n">temporal_emb</span> <span class="o">=</span> <span class="nc">TemporalEmbedding</span><span class="p">(</span><span class="n">timestamps</span><span class="p">,</span> <span class="n">weekend_flags</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>2. Cross-Attention Mechanism</strong>
+The model learns how spatial and temporal features interact through dedicated attention layers, capturing patterns like “this user typically visits restaurants on Friday evenings.”</p>
+
+<p><strong>3. Transformer Blocks</strong>
+Multi-head self-attention processes the entire trajectory sequence simultaneously, identifying important locations and movement patterns.</p>
+
+<p><strong>4. Bidirectional LSTM</strong>
+Sequential processing captures temporal dependencies and generates the final 512-dimensional embedding that summarizes the entire trajectory.</p>
+
+<h3 id="why-this-architecture-works">Why This Architecture Works</h3>
+
+<ul>
+  <li><strong>Transformers</strong> excel at identifying important locations through attention</li>
+  <li><strong>LSTMs</strong> capture sequential dependencies in movement</li>
+  <li><strong>Cross-attention</strong> learns spatio-temporal interactions</li>
+  <li><strong>Bidirectional processing</strong> considers both past and future context</li>
+</ul>
+
+<h2 id="the-complete-pipeline">The Complete Pipeline</h2>
+
+<h3 id="stage-1-model-training">Stage 1: Model Training</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python train_s2s.py
+</code></pre></div></div>
+
+<p>The training process:</p>
+<ul>
+  <li>Loads mobility data from multiple cities</li>
+  <li>Applies data augmentation (Gaussian noise) for robustness</li>
+  <li>Trains the hybrid model with early stopping</li>
+  <li>Saves the best checkpoint for inference</li>
+</ul>
+
+<p><strong>Key Innovation</strong>: The model uses only users with ID &lt; 4000 for training, reserving higher IDs for testing—ensuring true out-of-sample evaluation.</p>
+
+<h3 id="stage-2-embedding-generation">Stage 2: Embedding Generation</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python inference.py
+</code></pre></div></div>
+
+<p>This stage:</p>
+<ul>
+  <li>Processes test users to generate trajectory embeddings</li>
+  <li>Applies PCA to reduce dimensionality for visualization</li>
+  <li>Creates analysis outputs including scatter plots and statistical summaries</li>
+</ul>
+
+<p><strong>Technical Detail</strong>: The 512-dimensional embeddings come from a bidirectional LSTM with 256 hidden units, effectively doubling the representation capacity.</p>
+
+<h3 id="stage-3-interactive-exploration">Stage 3: Interactive Exploration</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python interactive_plot.py
+</code></pre></div></div>
+
+<p>The crown jewel: a Dash web application that enables:</p>
+<ul>
+  <li>Interactive exploration of embedding space</li>
+  <li>Point selection and trajectory heatmap generation</li>
+  <li>Real-time analysis of mobility patterns</li>
+</ul>
+
+<p><img src="/assets/images/Screenshot_20-8-2025_15056_127.0.0.1.jpeg" alt="Interactive Dashboard" />
+<em>Interactive dashboard showing PCA projections (left) and trajectory heatmaps (right)</em></p>
+
+<h2 id="remarkable-results-what-the-embeddings-reveal">Remarkable Results: What the Embeddings Reveal</h2>
+
+<p>The PCA analysis reveals fascinating insights:</p>
+
+<p><strong>Clustering by Behavior</strong>: Users with similar mobility patterns cluster together in embedding space, even across different cities.</p>
+
+<p><strong>Spatial Preservation</strong>: Geographic relationships are maintained—users who frequent similar areas have similar embeddings.</p>
+
+<p><strong>Temporal Patterns</strong>: Weekend vs. weekday behaviors create distinct embedding regions.</p>
+
+<p><strong>Generalization</strong>: The model successfully captures mobility patterns for completely unseen users.</p>
+
+<h2 id="real-world-applications">Real-World Applications</h2>
+
+<p>This technology opens doors to numerous applications:</p>
+
+<h3 id="️-urban-planning">🏙️ <strong>Urban Planning</strong></h3>
+<ul>
+  <li><strong>Traffic optimization</strong>: Predict congestion patterns before infrastructure changes</li>
+  <li><strong>Public transit</strong>: Design routes based on actual movement patterns</li>
+  <li><strong>Zoning decisions</strong>: Understand how people actually use urban spaces</li>
+</ul>
+
+<h3 id="-personalized-services">📱 <strong>Personalized Services</strong></h3>
+<ul>
+  <li><strong>Location recommendations</strong>: “Users with similar patterns also enjoyed…”</li>
+  <li><strong>Predictive routing</strong>: Anticipate destinations based on historical behavior</li>
+  <li><strong>Context-aware apps</strong>: Adapt interfaces based on movement patterns</li>
+</ul>
+
+<h3 id="-anomaly-detection">🚨 <strong>Anomaly Detection</strong></h3>
+<ul>
+  <li><strong>Security applications</strong>: Identify unusual movement patterns</li>
+  <li><strong>Public health</strong>: Track population mobility during emergencies</li>
+  <li><strong>Fraud detection</strong>: Verify location-based claims</li>
+</ul>
+
+<h3 id="-business-intelligence">📊 <strong>Business Intelligence</strong></h3>
+<ul>
+  <li><strong>Retail analytics</strong>: Understand customer foot traffic patterns</li>
+  <li><strong>Real estate</strong>: Evaluate locations based on mobility data</li>
+  <li><strong>Marketing</strong>: Target audiences based on movement behaviors</li>
+</ul>
+
+<h3 id="-research-applications">🔬 <strong>Research Applications</strong></h3>
+<ul>
+  <li><strong>Social science</strong>: Study human behavior at scale</li>
+  <li><strong>Transportation research</strong>: Validate mobility models</li>
+  <li><strong>Economic analysis</strong>: Understand commuting and economic patterns</li>
+</ul>
+
+<h2 id="privacy-and-ethics-a-responsible-approach">Privacy and Ethics: A Responsible Approach</h2>
+
+<p>Our implementation prioritizes privacy:</p>
+<ul>
+  <li><strong>Anonymized data</strong>: No personally identifiable information</li>
+  <li><strong>Aggregated insights</strong>: Focus on population-level patterns</li>
+  <li><strong>Secure processing</strong>: Local analysis without data sharing</li>
+  <li><strong>Transparent methods</strong>: Open-source implementation for scrutiny</li>
+</ul>
+
+<h2 id="technical-innovation-why-this-matters">Technical Innovation: Why This Matters</h2>
+
+<p>This project demonstrates several key advances:</p>
+
+<p><strong>1. Multi-Modal Learning</strong>: Successfully combining spatial and temporal information in a unified architecture.</p>
+
+<p><strong>2. Scalable Embeddings</strong>: 512-dimensional representations that capture complex mobility patterns while remaining computationally tractable.</p>
+
+<p><strong>3. Interactive Analysis</strong>: Real-time exploration tools that make complex AI accessible to domain experts.</p>
+
+<p><strong>4. Generalization</strong>: Models that work across different cities and user populations.</p>
+
+<h2 id="getting-started-try-it-yourself">Getting Started: Try It Yourself</h2>
+
+<p>The complete implementation is available with detailed documentation:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install dependencies</span>
+pip <span class="nb">install </span>torch pandas scikit-learn plotly dash
+
+<span class="c"># Train the model</span>
+python train_s2s.py
+
+<span class="c"># Generate embeddings</span>
+python inference.py
+
+<span class="c"># Launch interactive dashboard</span>
+python interactive_plot.py
+</code></pre></div></div>
+
+<p>The modular design makes it easy to:</p>
+<ul>
+  <li>Adapt to your own mobility datasets</li>
+  <li>Experiment with different architectures</li>
+  <li>Add new visualization components</li>
+  <li>Integrate with existing systems</li>
+</ul>
+
+<h2 id="the-future-of-mobility-intelligence">The Future of Mobility Intelligence</h2>
+
+<p>This project represents just the beginning. Future directions include:</p>
+
+<ul>
+  <li><strong>Federated learning</strong>: Training on distributed datasets while preserving privacy</li>
+  <li><strong>Multi-modal integration</strong>: Incorporating weather, events, and social data</li>
+  <li><strong>Real-time processing</strong>: Streaming analysis for live mobility insights</li>
+  <li><strong>Causal modeling</strong>: Understanding why people move, not just where</li>
+</ul>
+
+<h2 id="conclusion-from-data-to-intelligence">Conclusion: From Data to Intelligence</h2>
+
+<p>Human mobility data contains incredible insights waiting to be unlocked. By combining modern deep learning architectures with thoughtful data science, we can transform raw GPS coordinates into intelligent representations that reveal the hidden patterns of human behavior.</p>
+
+<p>The implications extend far beyond technology—this work can inform better cities, more personalized services, and deeper understanding of human society. As we continue to generate more location data through our digital lives, tools like these become essential for making sense of our increasingly connected world.</p>
+
+<p>Whether you’re an urban planner designing the cities of tomorrow, a data scientist exploring new applications, or simply curious about the intersection of AI and human behavior, this project demonstrates the power of applying modern machine learning to one of humanity’s most fundamental activities: movement through space and time.</p>
+
+<hr />
+
+<p><em>Want to explore the code? Check out the <a href="https://github.com/dlfelps/lstm-trajectory">GitHub repository</a> for complete implementation details, documentation, and examples.</em></p>
+
+<h2 id="about-the-dataset">About the Dataset</h2>
+
+<p>The LYMob-4Cities dataset used in this project represents a significant contribution to mobility research, providing researchers with access to large-scale, anonymized mobility data from diverse urban environments. This type of dataset is crucial for developing and validating mobility models that can generalize across different cities and cultures.</p>
+
+<p>For researchers interested in working with similar data, consider exploring:</p>
+<ul>
+  <li>Academic partnerships with transportation authorities</li>
+  <li>Open mobility datasets from cities with data sharing initiatives</li>
+  <li>Synthetic mobility data generation techniques</li>
+  <li>Privacy-preserving data collection methods</li>
+</ul>
+
+<p>The responsible use of such datasets, with proper anonymization and ethical oversight, enables breakthrough research while protecting individual privacy—a balance that’s essential as we advance mobility intelligence.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="gps" /><category term="mobility" /><summary type="html"><![CDATA[This post converts GPS trajectory data into learned embedded features to reveal human mobility patterns, enabling applications in urban planning, personalized services, and behavioral analysis.]]></summary></entry><entry><title type="html">Experiment 20</title><link href="https://dlfelps.github.io/2024/12/01/scraper.html" rel="alternate" type="text/html" title="Experiment 20" /><published>2024-12-01T00:00:00+00:00</published><updated>2024-12-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/12/01/scraper</id><content type="html" xml:base="https://dlfelps.github.io/2024/12/01/scraper.html"><![CDATA[<p>This post describes a command line tool I created that scrapes a website and generates reports.</p>
 
 <h1 id="introduction">Introduction</h1>
 
@@ -1594,106 +1843,4 @@ Photon finally detected with following probabilities: &gt;&gt; #(0.4999999999999
 <p>Experiment 12 explored the measurement problem - the instant that the photon becomes a particle (as described by the wavefunction). The next experiment challenges our everyday understanding of reality.</p>
 
 <h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
-<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.]]></summary></entry><entry><title type="html">Experiment 11</title><link href="https://dlfelps.github.io/2024/03/01/quantum-smalltalk2.html" rel="alternate" type="text/html" title="Experiment 11" /><published>2024-03-01T00:00:00+00:00</published><updated>2024-03-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/03/01/quantum-smalltalk2</id><content type="html" xml:base="https://dlfelps.github.io/2024/03/01/quantum-smalltalk2.html"><![CDATA[<h1 id="introduction">Introduction</h1>
-<p>Experiment 11 introduces the concepts of quantum superposition by making a slight modification to Experiment 10.</p>
-
-<h1 id="experiment-11">Experiment #11</h1>
-<p><img src="/assets/images/exp2.PNG" alt="Experiment #11" title="Experiment #11" /></p>
-
-<p>Modify the setup from Experiment #10 by removing the block on the lower path. This allows the photon to now take one of four paths:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">State name</th>
-      <th style="text-align: center">Path at BS1</th>
-      <th style="text-align: center">Path at BS2</th>
-      <th style="text-align: center">Detector</th>
-      <th style="text-align: center">Probability</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">RR</td>
-      <td style="text-align: center">Reflected</td>
-      <td style="text-align: center">Reflected</td>
-      <td style="text-align: center">D1</td>
-      <td style="text-align: center">?</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">RT</td>
-      <td style="text-align: center">Reflected</td>
-      <td style="text-align: center">Transmitted</td>
-      <td style="text-align: center">D0</td>
-      <td style="text-align: center">?</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">TR</td>
-      <td style="text-align: center">Transmitted</td>
-      <td style="text-align: center">Reflected</td>
-      <td style="text-align: center">D0</td>
-      <td style="text-align: center">?</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">TT</td>
-      <td style="text-align: center">Transmitted</td>
-      <td style="text-align: center">Transmitted</td>
-      <td style="text-align: center">D1</td>
-      <td style="text-align: center">?</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>We don’t yet know the outcome of the experiment, but based on our observations from Experiment 10 we might expect an equal distribution between D0 and D1. However, that is not what we observe. Let’s run the Smalltalk simulation.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
-Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Photon passing through a beam splitter. &gt;&gt; #(0.9999999999999996 0.0)
-Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999996 0.0)
-</code></pre></div></div>
-
-<p>After the first beamsplitter the photon is equally likely to be on the upper and lower path (i.e. 50/50) - the same as in Experiment 10. But this time the lower path is not blocked and the second beam splitter sends all of the photons to D0. How is this possible?</p>
-
-<h2 id="what-is-superposition">WHAT is Superposition</h2>
-
-<p>Quantum mechanics explains this phenomenon by saying that the wavefunction of the photon was in a superposition of two states (i.e. one state going through the upper path and one state going through the lower path). NOTE: this is different that saying that it went through both paths or neither path.</p>
-
-<p>The experiment was designed in such a way that the wavefunction for state RR lags behind state TT by half a wavelength, resulting in destructive interference. The probability amplitude goes to zero and there are no photons at D1. States described by RT and TR arrive with their waves in sync, resulting in constructive interference. The probability amplitude doubles and all the light reaches D0.</p>
-
-<p>The photon itself doesn’t split because it can’t. The wavefunction of the photon captures the fact that the photon could be in two equally likely states (lower path and upper path). Then using this wavefunction you can calculate the probability that the photon is detected at D0 and D1 and you get:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">Photon outcome</th>
-      <th style="text-align: center">probability</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">Detected at D0</td>
-      <td style="text-align: center">1.0</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Detected at D1</td>
-      <td style="text-align: center">0</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>But importantly, we cannot say whether the photon was in state TR (upper path) or RT (lower path) only that it was detected at D0. This is an example of particle-wave duality - the photon’s wavefunction acts like a wave (destructive and constructive interference), but is ultimately measured as a single photon.</p>
-
-<h2 id="why-is-superposition">WHY is Superposition</h2>
-
-<p>No one knows for sure and those that think they do can’t agree.</p>
-
-<h2 id="when-is-superposition">WHEN is Superposition</h2>
-
-<p>Although we don’t know why it happens, we can describe the conditions when we observe it. In this case, it happened because the observers (e.g. you, me, or the universe) couldn’t tell which path the photon took. Each path was sufficiently ambiguous to allow the photon’s wavefunction to remain in superposition. In Experiment 10, when we blocked the lower path, the photon couldn’t be in superposition because we knew it must have taken the upper path to arrive at the detectors.</p>
-
-<h1 id="summary">Summary</h1>
-<p>Experiment 11 explored the wave-like nature of a photon demonstrated by the destructive interference that occurs between the two superposition states of the system. The next experiment explores what happens when we remove the second beam splitter.</p>
-
-<h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
-<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Experiment 11 introduces the concepts of quantum superposition by making a slight modification to Experiment 10.]]></summary></entry></feed>
+<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Experiment #12 doesn’t introduce any new concepts, but it prepares us for a surprising result in Experiment #13.]]></summary></entry></feed>
