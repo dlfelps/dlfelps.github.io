@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-08-27T15:41:46+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 22</title><link href="https://dlfelps.github.io/2025/09/01/cobad.html" rel="alternate" type="text/html" title="Experiment 22" /><published>2025-09-01T00:00:00+00:00</published><updated>2025-09-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/09/01/cobad</id><content type="html" xml:base="https://dlfelps.github.io/2025/09/01/cobad.html"><![CDATA[<p>The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-08-27T15:53:29+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 22</title><link href="https://dlfelps.github.io/2025/09/01/cobad.html" rel="alternate" type="text/html" title="Experiment 22" /><published>2025-09-01T00:00:00+00:00</published><updated>2025-09-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/09/01/cobad</id><content type="html" xml:base="https://dlfelps.github.io/2025/09/01/cobad.html"><![CDATA[<p>The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.</p>
 
 <h2 id="introduction-beyond-individual-anomalies">Introduction: Beyond Individual Anomalies</h2>
 
@@ -321,25 +321,26 @@ Features: [norm_x, norm_y, is_weekend, start_time, duration, placeholder] (6D)
   <li><strong>Subscore data</strong>: <code class="language-plaintext highlighter-rouge">subscore_*.npy</code> files for each subscore type</li>
 </ul>
 
-<h3 id="running-cobad">Running CoBAD</h3>
+<h2 id="conclusion">Conclusion</h2>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install dependencies</span>
-uv <span class="nb">sync</span>
+<p>CoBAD represents a significant advancement in collective anomaly detection for human mobility data. By shifting focus from individual trajectories to collective behaviors and employing deep learning techniques for pattern recognition, CoBAD enables the detection of complex group anomalies that traditional methods miss.</p>
 
-<span class="c"># Train new paper-accurate CoBAD model</span>
-uv run python cobad_paper_accurate.py
+<p>The approach’s strength lies in its comprehensive analysis framework—providing not just binary anomaly classifications, but detailed explanations, feature attributions, and relationship networks that enable deeper understanding of anomalous collective behaviors.</p>
 
-<span class="c"># Run inference with pre-trained model</span>
-uv run python cobad_paper_accurate.py <span class="nt">--load-model</span> cobad_paper_accurate.pth <span class="nt">--skip-training</span>
-
-<span class="c"># Run comprehensive trajectory analysis dashboard</span>
-uv run python trajectory_analysis_dashboard.py <span class="nt">--model</span> cobad_paper_accurate.pth <span class="nt">--save-html</span> <span class="nt">--save-results</span>
-
-<span class="c"># Adjust batch size for memory-constrained systems</span>
-uv run python cobad_paper_accurate.py <span class="nt">--batch-size</span> 8
-</code></pre></div></div>
+<p>As urban populations grow and mobility data becomes increasingly available, tools like CoBAD become essential for understanding and responding to collective human behavior patterns in smart city environments.</p>
 
 <hr />
+
+<p><em>Want to explore the code? Check out the <a href="https://github.com/dlfelps/cobad">GitHub repository</a> for complete implementation details, documentation, and examples.</em></p>
+
+<h2 id="claude-gotchas">Claude Gotchas</h2>
+
+<ol>
+  <li>ISSUE - Claude initially implemented an autoencoder-based version of the CoBAD algorithm. Although it trained, and produced results, it did not implement the approach as described in the paper. <strong>RESOLUTION - I described the correct implementation using text from the CoBAD paper. Claude then made a faithful reimplementation of the attention-based model.</strong></li>
+  <li>ISSUE - Claude produced an optimized, but incorrect version of my data-loader. I implemented the original data-loader manually, however when I scaled to +1M point CSV files my implementation was too slow. I asked Claude to optimize the loading function for performance. It produced a fast loading function, but it did not produce equivalent output to my function. <strong>RESOLUTION -  I manually inspected the output of the new loading function and noticed that the output was incorrect. I then asked Claude to produce a unit-test to verify the equivalence of the new function with my function. It did and then when it failed the test it fixed the optimized function.</strong></li>
+  <li>ISSUE - Claude suggested a naive way to split the training/test data that was not optimal for the approach. When questioned it was too agreeable. <strong>RESOLUTION - I asked Claude about sorting the data before performing a split. It suggested the best way was to sort by time. I replied that that wouldn’t test the approach against unknown users and that withholding never-before seen users would produce a stronger test case. It agreed and implemented the latter.</strong></li>
+  <li>ISSUE - Claude littered the code with import statements throughout the code. <strong>RESOLUTION - It is preferred style to have all import statements at the top of the file. Although it works to import code in the middle of a function it looks quite messy and it also imports the code each time the function is called. I asked Claude to move all import statements to the top and it did.</strong></li>
+</ol>
 
 <h2 id="future-directions-and-applications">Future Directions and Applications</h2>
 
@@ -375,25 +376,6 @@ uv run python cobad_paper_accurate.py <span class="nt">--batch-size</span> 8
 <p><strong>Hierarchical Anomaly Detection</strong>: Developing multi-scale approaches that detect anomalies at different spatial and temporal resolutions simultaneously.</p>
 
 <p><strong>Causal Anomaly Analysis</strong>: Moving beyond correlation to understand causal relationships between anomalous collective behaviors and external factors.</p>
-
-<hr />
-
-<h2 id="conclusion">Conclusion</h2>
-
-<p>CoBAD represents a significant advancement in collective anomaly detection for human mobility data. By shifting focus from individual trajectories to collective behaviors and employing deep learning techniques for pattern recognition, CoBAD enables the detection of complex group anomalies that traditional methods miss.</p>
-
-<p>The approach’s strength lies in its comprehensive analysis framework—providing not just binary anomaly classifications, but detailed explanations, feature attributions, and relationship networks that enable deeper understanding of anomalous collective behaviors.</p>
-
-<p>As urban populations grow and mobility data becomes increasingly available, tools like CoBAD become essential for understanding and responding to collective human behavior patterns in smart city environments.</p>
-
-<h2 id="claude-gotchas">Claude Gotchas</h2>
-
-<ol>
-  <li>ISSUE - Claude initially implemented an autoencoder-based version of the CoBAD algorithm. Although it trained, and produced results, it did not implement the approach as described in the paper. <strong>RESOLUTION - I described the correct implementation using text from the CoBAD paper. Claude then made a faithful reimplementation of the attention-based model.</strong></li>
-  <li>ISSUE - Claude produced an optimized, but incorrect version of my data-loader. I implemented the original data-loader manually, however when I scaled to +1M point CSV files my implementation was too slow. I asked Claude to optimize the loading function for performance. It produced a fast loading function, but it did not produce equivalent output to my function. <strong>RESOLUTION -  I manually inspected the output of the new loading function and noticed that the output was incorrect. I then asked Claude to produce a unit-test to verify the equivalence of the new function with my function. It did and then when it failed the test it fixed the optimized function.</strong></li>
-  <li>ISSUE - Claude suggested a naive way to split the training/test data that was not optimal for the approach. When questioned it was too agreeable. <strong>RESOLUTION - I asked Claude about sorting the data before performing a split. It suggested the best way was to sort by time. I replied that that wouldn’t test the approach against unknown users and that withholding never-before seen users would produce a stronger test case. It agreed and implemented the latter.</strong></li>
-  <li>ISSUE - Claude littered the code with import statements throughout the code. <strong>RESOLUTION - It is preferred style to have all import statements at the top of the file. Although it works to import code in the middle of a function it looks quite messy and it also imports the code each time the function is called. I asked Claude to move all import statements to the top and it did.</strong></li>
-</ol>
 
 <h2 id="references">References</h2>
 
