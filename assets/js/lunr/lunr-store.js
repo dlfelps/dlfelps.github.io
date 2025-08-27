@@ -130,4 +130,10 @@ var store = [{
         "tags": ["claude","gps","mobility"],
         "url": "/2025/08/21/mobility.html",
         "teaser": null
+      },{
+        "title": "Experiment 22",
+        "excerpt":"The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories. Introduction: Beyond Individual Anomalies Traditional anomaly detection in human mobility has predominantly focused on identifying individual outliers—detecting...","categories": [],
+        "tags": ["claude","gps","mobility","cobad"],
+        "url": "/2025/09/01/cobad.html",
+        "teaser": null
       }]

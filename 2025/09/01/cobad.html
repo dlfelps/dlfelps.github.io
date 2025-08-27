@@ -1,0 +1,734 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.3 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 22 - .NET Experiments</title>
+<meta name="description" content="The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 22">
+<meta property="og:url" content="https://dlfelps.github.io/2025/09/01/cobad.html">
+
+
+  <meta property="og:description" content="The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-09-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2025/09/01/cobad.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/"
+                
+                
+              >Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 22">
+    <meta itemprop="description" content="The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.">
+    <meta itemprop="datePublished" content="2025-09-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://dlfelps.github.io/2025/09/01/cobad.html" itemprop="url">Experiment 22
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-09-01T00:00:00+00:00">September 1, 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          32 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction-beyond-individual-anomalies">Introduction: Beyond Individual Anomalies</a><ul><li><a href="#the-paradigm-shift-from-individual-to-collective">The Paradigm Shift: From Individual to Collective</a></li><li><a href="#theoretical-foundations">Theoretical Foundations</a></li></ul></li><li><a href="#cobad-a-novel-approach-to-collective-behavior-anomaly-detection">CoBAD: A Novel Approach to Collective Behavior Anomaly Detection</a><ul><li><a href="#core-innovation-stay-point-centric-analysis">Core Innovation: Stay Point-Centric Analysis</a></li><li><a href="#algorithm-architecture">Algorithm Architecture</a><ul><li><a href="#stage-1-stay-point-extraction">Stage 1: Stay Point Extraction</a></li><li><a href="#stage-2-spatial-temporal-clustering">Stage 2: Spatial-Temporal Clustering</a></li><li><a href="#stage-3-collective-feature-engineering">Stage 3: Collective Feature Engineering</a></li><li><a href="#stage-4-paper-accurate-cobad-architecture">Stage 4: Paper-Accurate CoBAD Architecture</a></li></ul></li><li><a href="#what-makes-cobad-unique">What Makes CoBAD Unique</a><ul><li><a href="#1-multi-resolution-anomaly-analysis">1. Multi-Resolution Anomaly Analysis</a></li><li><a href="#2-dynamic-threshold-adaptation">2. Dynamic Threshold Adaptation</a></li><li><a href="#3-trajectory-level-pattern-analysis">3. Trajectory-Level Pattern Analysis</a></li><li><a href="#4-embedding-space-analysis-and-clustering">4. Embedding Space Analysis and Clustering</a></li></ul></li><li><a href="#scalability-and-performance">Scalability and Performance</a></li></ul></li><li><a href="#case-study-anomaly-detection-in-urban-mobility">Case Study: Anomaly Detection in Urban Mobility</a><ul><li><a href="#dataset-characteristics">Dataset Characteristics</a></li><li><a href="#key-findings">Key Findings</a><ul><li><a href="#anomaly-detection-results">Anomaly Detection Results</a></li><li><a href="#detailed-anomaly-analysis">Detailed Anomaly Analysis</a></li><li><a href="#link-analysis-results">Link Analysis Results</a></li></ul></li><li><a href="#feature-attribution-insights">Feature Attribution Insights</a></li></ul></li><li><a href="#implementation-and-reproducibility">Implementation and Reproducibility</a><ul><li><a href="#technical-stack">Technical Stack</a></li><li><a href="#key-outputs">Key Outputs</a><ul><li><a href="#1-interactive-visualizations">1. Interactive Visualizations</a></li><li><a href="#2-detailed-text-reports">2. Detailed Text Reports</a></li><li><a href="#3-numerical-data-exports">3. Numerical Data Exports</a></li></ul></li><li><a href="#running-cobad">Running CoBAD</a></li></ul></li><li><a href="#future-directions-and-applications">Future Directions and Applications</a><ul><li><a href="#potential-applications">Potential Applications</a></li><li><a href="#technical-enhancements">Technical Enhancements</a></li></ul></li><li><a href="#conclusion">Conclusion</a></li><li><a href="#claude-gotchas">Claude Gotchas</a></li><li><a href="#references">References</a></li></ul>
+            </nav>
+          </aside>
+        
+        <p>The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.</p>
+
+<h2 id="introduction-beyond-individual-anomalies">Introduction: Beyond Individual Anomalies</h2>
+
+<p>Traditional anomaly detection in human mobility has predominantly focused on identifying individual outliers—detecting when a single person deviates from their typical movement patterns. While effective for personal applications like location privacy or individual behavior analysis, this individual-centric approach misses a critical dimension of human behavior: <strong>collective dynamics</strong>.</p>
+
+<h3 id="the-paradigm-shift-from-individual-to-collective">The Paradigm Shift: From Individual to Collective</h3>
+
+<p>Individual anomaly detection, as established by foundational works like Hawkins (1980) <sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup> and more recently applied to mobility by Zheng et al. (2008) <sup id="fnref:2"><a href="#fn:2" class="footnote" rel="footnote" role="doc-noteref">2</a></sup>, typically examines single trajectories against learned normal patterns. These approaches excel at detecting when <em>one person</em> visits an unusual location or travels at an atypical time.</p>
+
+<p>However, human behavior is inherently social. Consider these scenarios that individual anomaly detection would miss:</p>
+
+<ul>
+  <li><strong>Flash mob gatherings</strong>: Each individual trajectory might appear normal, but the collective convergence at a specific location and time is highly anomalous</li>
+  <li><strong>Emergency evacuations</strong>: Individual movements may follow normal route patterns, but the simultaneous mass exodus represents a collective anomaly</li>
+  <li><strong>Coordinated activities</strong>: Groups meeting at unusual times or locations that would be undetectable when analyzing individual patterns in isolation</li>
+</ul>
+
+<p>This limitation led researchers to explore <strong>collective anomaly detection</strong>—identifying when groups of entities exhibit anomalous behavior as a cohesive unit, even if individual behaviors appear normal.</p>
+
+<h3 id="theoretical-foundations">Theoretical Foundations</h3>
+
+<p>The concept of collective anomalies was formalized by Chandola et al. (2009) <sup id="fnref:3"><a href="#fn:3" class="footnote" rel="footnote" role="doc-noteref">3</a></sup>, who distinguished between:</p>
+
+<ul>
+  <li><strong>Point anomalies</strong>: Individual data points that deviate from normal patterns</li>
+  <li><strong>Contextual anomalies</strong>: Data points that are anomalous in specific contexts but normal otherwise</li>
+  <li><strong>Collective anomalies</strong>: Collections of data points that are anomalous when considered together</li>
+</ul>
+
+<p>In mobility analysis, collective anomaly detection has gained traction through works like:</p>
+
+<ul>
+  <li><strong>Ge et al. (2010)</strong> <sup id="fnref:4"><a href="#fn:4" class="footnote" rel="footnote" role="doc-noteref">4</a></sup>: Early work on detecting abnormal crowd behaviors in video surveillance</li>
+  <li><strong>Liu et al. (2013)</strong> <sup id="fnref:5"><a href="#fn:5" class="footnote" rel="footnote" role="doc-noteref">5</a></sup>: Collective outlier detection in spatial data using density-based approaches</li>
+  <li><strong>Araujo et al. (2014)</strong> <sup id="fnref:6"><a href="#fn:6" class="footnote" rel="footnote" role="doc-noteref">6</a></sup>: Group anomaly detection in social networks and mobility patterns</li>
+</ul>
+
+<p>However, existing collective anomaly detection methods face significant challenges when applied to large-scale human mobility data:</p>
+
+<ol>
+  <li><strong>Scalability</strong>: Many algorithms struggle with the volume and dimensionality of modern mobility datasets</li>
+  <li><strong>Temporal dynamics</strong>: Most approaches fail to capture the evolving nature of collective behaviors over time</li>
+  <li><strong>Spatial complexity</strong>: Urban mobility involves complex spatial relationships that simple clustering approaches miss</li>
+  <li><strong>Ground truth</strong>: Validating collective anomalies is inherently more challenging than individual anomalies</li>
+</ol>
+
+<hr />
+
+<h2 id="cobad-a-novel-approach-to-collective-behavior-anomaly-detection">CoBAD: A Novel Approach to Collective Behavior Anomaly Detection</h2>
+
+<p><strong>CoBAD (Collective Behavior Anomaly Detection)</strong> addresses these challenges through a fundamentally different approach that focuses on <strong>stay point events</strong> and <strong>collective behavior modeling</strong> using deep learning techniques.</p>
+
+<h3 id="core-innovation-stay-point-centric-analysis">Core Innovation: Stay Point-Centric Analysis</h3>
+
+<p>Unlike traditional trajectory-based approaches that analyze continuous movement paths, CoBAD operates on <strong>stay points</strong>—locations where individuals or groups remain for significant durations. This paradigm shift offers several advantages:</p>
+
+<ol>
+  <li><strong>Semantic relevance</strong>: Stay points correspond to meaningful activities (meetings, events, gatherings)</li>
+  <li><strong>Noise reduction</strong>: Filters out transitional movements that may not represent intentional collective behavior</li>
+  <li><strong>Computational efficiency</strong>: Reduces data dimensionality while preserving behavioral significance</li>
+  <li><strong>Collective focus</strong>: Natural aggregation point for identifying group behaviors</li>
+</ol>
+
+<h3 id="algorithm-architecture">Algorithm Architecture</h3>
+
+<p>CoBAD employs a multi-stage pipeline that transforms raw trajectory data into collective behavior patterns:</p>
+
+<h4 id="stage-1-stay-point-extraction">Stage 1: Stay Point Extraction</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Raw trajectory data → Stay point events
+Features: (user_id, location, duration, temporal_context, weekend_flag)
+</code></pre></div></div>
+
+<p>The system converts GPS trajectories into discrete stay events, capturing not just <em>where</em> people are, but <em>how long</em> they stay and <em>when</em> these stays occur.</p>
+
+<h4 id="stage-2-spatial-temporal-clustering">Stage 2: Spatial-Temporal Clustering</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Stay points → Collective behaviors via DBSCAN
+Spatial proximity + Temporal alignment → Group identification
+</code></pre></div></div>
+
+<p>Using density-based clustering (DBSCAN), CoBAD identifies groups of people who are:</p>
+<ul>
+  <li><strong>Spatially co-located</strong> (within configurable distance threshold)</li>
+  <li><strong>Temporally synchronized</strong> (occurring in the same time window)</li>
+  <li><strong>Sufficiently numerous</strong> (meeting minimum collective size threshold)</li>
+</ul>
+
+<h4 id="stage-3-collective-feature-engineering">Stage 3: Collective Feature Engineering</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Group clusters → 8-dimensional feature vectors
+Features: [time_window, center_x, center_y, spread_x, spread_y, 
+          relative_size, weekend_ratio, avg_stay_duration]
+</code></pre></div></div>
+
+<p>Each collective behavior is characterized by an 8-dimensional feature vector capturing:</p>
+<ul>
+  <li><strong>Temporal context</strong>: When the collective behavior occurs</li>
+  <li><strong>Spatial characteristics</strong>: Location and spatial spread of the group</li>
+  <li><strong>Group dynamics</strong>: Size and composition metrics</li>
+  <li><strong>Activity patterns</strong>: Duration and weekend/weekday distinctions</li>
+</ul>
+
+<h4 id="stage-4-paper-accurate-cobad-architecture">Stage 4: Paper-Accurate CoBAD Architecture</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Individual trajectories → Cross-time attention → Graph transformer → Anomaly scoring
+Features: [norm_x, norm_y, is_weekend, start_time, duration, placeholder] (6D)
+</code></pre></div></div>
+
+<p>The paper-accurate CoBAD implementation employs a sophisticated neural architecture:</p>
+<ol>
+  <li><strong>Cross-time attention</strong>: Captures temporal dependencies within individual trajectory sequences</li>
+  <li><strong>Graph transformer</strong>: Models collective behaviors through cross-people attention mechanisms</li>
+  <li><strong>Dual reconstruction</strong>: Reconstructs both event attributes and co-occurrence link patterns</li>
+  <li><strong>Masked pretraining</strong>: Uses BERT-style masking for robust pattern learning</li>
+  <li><strong>Multi-component scoring</strong>: Combines learned patterns, event reconstruction, and link reconstruction errors</li>
+</ol>
+
+<h3 id="what-makes-cobad-unique">What Makes CoBAD Unique</h3>
+
+<h4 id="1-multi-resolution-anomaly-analysis">1. <strong>Multi-Resolution Anomaly Analysis</strong></h4>
+<p>The paper-accurate CoBAD provides detailed anomaly interpretation through <strong>eight trajectory-level subscore types</strong>:</p>
+
+<ul>
+  <li><strong>Spatial dispersion</strong>: Unusual location variance within trajectories</li>
+  <li><strong>Temporal pattern</strong>: Rare timing patterns (weekend vs weekday, start times)</li>
+  <li><strong>Duration anomaly</strong>: Atypical stay duration patterns</li>
+  <li><strong>Mobility anomaly</strong>: Unusual movement patterns and distances</li>
+  <li><strong>Length anomaly</strong>: Trajectory complexity outliers</li>
+  <li><strong>Event reconstruction</strong>: Neural network event attribute reconstruction errors</li>
+  <li><strong>Link reconstruction</strong>: Co-occurrence pattern reconstruction errors</li>
+  <li><strong>Pattern learned</strong>: Learned anomaly patterns from the neural scorer</li>
+</ul>
+
+<p><img src="/assets/images/cobad_radar.jpeg" alt="Radar chart" />
+<em>Subscore radar chart showing breakdown of top anomalies</em></p>
+
+<h4 id="2-dynamic-threshold-adaptation">2. <strong>Dynamic Threshold Adaptation</strong></h4>
+<p>CoBAD implements multiple robust threshold adjustment methods to handle dataset distribution shifts:</p>
+
+<ul>
+  <li><strong>Percentile-based</strong>: Maintains target anomaly rates (default 5%) across datasets</li>
+  <li><strong>Statistical outlier</strong>: Mean + 2σ approach for statistical anomaly boundaries</li>
+  <li><strong>IQR-based</strong>: Q3 + 1.5×IQR for robust outlier detection</li>
+  <li><strong>Adaptive</strong>: Automatically uses median of all three methods and detects distribution shifts</li>
+  <li><strong>Test-time adaptation</strong>: Recalculates thresholds when significant distribution shifts are detected</li>
+</ul>
+
+<h4 id="3-trajectory-level-pattern-analysis">3. <strong>Trajectory-Level Pattern Analysis</strong></h4>
+<p>Each detected anomaly includes detailed pattern analysis explaining the anomalous behavior:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Example trajectory anomaly breakdown:
+🚨 RANK 1 - TRAJECTORY #4521:
+📊 Anomaly Score: 42.3847
+📏 Trajectory Length: 18 points
+🗺️  Spatial Range: X[0.234, 0.891], Y[0.123, 0.567]  
+📅 Weekend Activity: 85.2%
+⏱️  Average Duration: 0.82
+
+🔍 Sub-score Breakdown:
+   spatial_dispersion  :  8.2341 (98.2nd percentile)
+   temporal_pattern   :  6.7834 (94.1st percentile)
+   mobility_anomaly    :  5.9123 (91.5th percentile)
+
+🎯 Key anomaly drivers: Extreme spatial dispersion, High temporal pattern
+</code></pre></div></div>
+
+<p>This detailed analysis enables analysts to understand <em>why</em> specific trajectories are flagged as anomalous and what makes them unusual.</p>
+
+<h4 id="4-embedding-space-analysis-and-clustering">4. <strong>Embedding Space Analysis and Clustering</strong></h4>
+<p>The paper-accurate CoBAD performs sophisticated embedding space analysis:</p>
+<ul>
+  <li><strong>Dimensionality reduction</strong>: PCA and t-SNE visualization of trajectory embeddings</li>
+  <li><strong>Trajectory clustering</strong>: K-means and DBSCAN clustering of learned embeddings</li>
+  <li><strong>Cluster characterization</strong>: Analysis of anomaly rates and patterns per cluster</li>
+  <li><strong>Cross-cluster anomaly analysis</strong>: Understanding how different trajectory types produce different anomaly patterns</li>
+</ul>
+
+<p><img src="/assets/images/cobad_tsne.jpeg" alt="t-SNE chart" />
+<em>t-SNE visualization showing trajectory clusters colored by anomaly scores</em></p>
+
+<h3 id="scalability-and-performance">Scalability and Performance</h3>
+
+<p>The paper-accurate CoBAD is designed for large-scale trajectory datasets with CPU-friendly optimizations:</p>
+
+<ul>
+  <li><strong>Mini-batch processing</strong>: Configurable batch sizes (default 32) for memory-constrained systems</li>
+  <li><strong>Lazy loading</strong>: Efficient data streaming without loading entire datasets into memory</li>
+  <li><strong>Batched inference</strong>: Both training and inference use batched processing to prevent memory overflow</li>
+  <li><strong>Dynamic batching</strong>: Automatic progress reporting and memory cleanup during processing</li>
+  <li><strong>Checkpointing</strong>: Automatic model saving with best model tracking and early stopping</li>
+  <li><strong>Validation splitting</strong>: Built-in train/validation splits with adaptive threshold setting</li>
+</ul>
+
+<hr />
+
+<h2 id="case-study-anomaly-detection-in-urban-mobility">Case Study: Anomaly Detection in Urban Mobility</h2>
+
+<p>To demonstrate CoBAD’s capabilities, we present results from analyzing the <strong>LYMob-4Cities dataset</strong> <sup id="fnref:7"><a href="#fn:7" class="footnote" rel="footnote" role="doc-noteref">7</a></sup>—a comprehensive mobility dataset containing trajectory data from four Japanese metropolitan areas over a 75-day period.</p>
+
+<h3 id="dataset-characteristics">Dataset Characteristics</h3>
+<ul>
+  <li><strong>Scale</strong>: 151,000+ individuals across 4 cities</li>
+  <li><strong>Temporal coverage</strong>: 75 days with 30-minute intervals</li>
+  <li><strong>Spatial resolution</strong>: 500m × 500m grid cells (200×200 grid)</li>
+  <li><strong>Total records</strong>: 111+ million location records</li>
+</ul>
+
+<h3 id="key-findings">Key Findings</h3>
+
+<p><img src="/assets/images/cobad_temporal.jpeg" alt="temporal chart" />
+<em>Interactive dashboard showing temporal distribution of anomalies</em></p>
+
+<h4 id="anomaly-detection-results">Anomaly Detection Results</h4>
+<p>CoBAD successfully identified <strong>20 collective anomalies</strong> from <strong>393 collective behaviors</strong> (5.09% anomaly rate), revealing several interesting patterns:</p>
+
+<p><strong>Top Anomaly Categories:</strong></p>
+<ol>
+  <li><strong>Duration anomalies</strong> (mean score: 2.11 ± 3.40): Groups with extremely long or short stay durations</li>
+  <li><strong>Temporal anomalies</strong> (mean score: 0.94 ± 0.01): Collective activities at unusual hours</li>
+  <li><strong>Spatial anomalies</strong> (mean score: 0.88 ± 0.19): Groups gathering in rare locations</li>
+</ol>
+
+<p><img src="/assets/images/cobad_spatial.jpeg" alt="spatial chart" />
+<em>Plot showing spatial distribution of detected anomalies</em></p>
+
+<h4 id="detailed-anomaly-analysis">Detailed Anomaly Analysis</h4>
+
+<p><strong>Rank 1 Anomaly</strong> - Score: 29.27</p>
+<ul>
+  <li><strong>Location</strong>: (0.023, 0.550) - Peripheral urban area</li>
+  <li><strong>Time</strong>: 5:00 AM - Off-peak collective activity</li>
+  <li><strong>Duration</strong>: 0.84 time units - Extended stay duration</li>
+  <li><strong>Primary contributors</strong>:
+    <ul>
+      <li>Stay duration (16.68) - Extremely long collective gathering</li>
+      <li>Temporal pattern (11.71) - Very unusual timing</li>
+      <li>Spatial spread (10.71) - Unusual spatial arrangement</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Rank 2 Anomaly</strong> - Score: 5.41</p>
+<ul>
+  <li><strong>Location</strong>: (0.458, 0.041) - Urban edge location</li>
+  <li><strong>Time</strong>: 2:00 PM - Moderate temporal anomaly</li>
+  <li><strong>Primary contributors</strong>:
+    <ul>
+      <li>Spatial location (6.75) - Rare meeting location</li>
+      <li>Stay duration (6.59) - Unusual duration pattern</li>
+      <li>Weekend activity (5.71) - Unexpected weekday pattern</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="link-analysis-results">Link Analysis Results</h4>
+<p>The network analysis revealed:</p>
+<ul>
+  <li><strong>8 anomaly communities</strong>: Distinct groups of related anomalous behaviors</li>
+  <li><strong>30 connections</strong>: Links between similar anomalous patterns</li>
+  <li><strong>Largest community</strong>: 6 related anomalies suggesting coordinated activities</li>
+</ul>
+
+<p><img src="/assets/images/cobad_network.jpeg" alt="cluster chart" />
+<em>Network graph showing anomaly relationships and communities</em></p>
+
+<h3 id="feature-attribution-insights">Feature Attribution Insights</h3>
+
+<p>Across all detected anomalies, the most significant contributing features were:</p>
+<ol>
+  <li><strong>Average stay duration</strong> (2.36): Unusual activity lengths</li>
+  <li><strong>Weekend ratio</strong> (3.17): Unexpected temporal patterns</li>
+  <li><strong>Spatial coordinates</strong> (2.54-3.55): Rare location choices</li>
+  <li><strong>Temporal windows</strong> (2.83): Off-peak collective activities</li>
+</ol>
+
+<p>These patterns suggest that anomalous collective behaviors are primarily characterized by <strong>temporal unusualness</strong> (when and how long) rather than just spatial rareness.</p>
+
+<hr />
+
+<h2 id="implementation-and-reproducibility">Implementation and Reproducibility</h2>
+
+<p>CoBAD is implemented in Python using modern machine learning frameworks and is designed for reproducibility and extensibility:</p>
+
+<h3 id="technical-stack">Technical Stack</h3>
+<ul>
+  <li><strong>PyTorch</strong>: Deep learning framework for transformer-based architecture</li>
+  <li><strong>Scikit-learn</strong>: Dimensionality reduction, clustering, and preprocessing utilities</li>
+  <li><strong>Plotly</strong>: Interactive visualization dashboards with trajectory analysis</li>
+  <li><strong>NumPy/Pandas</strong>: Efficient data processing and manipulation</li>
+  <li><strong>tqdm</strong>: Progress tracking for long-running trajectory analysis</li>
+</ul>
+
+<h3 id="key-outputs">Key Outputs</h3>
+<p>The CoBAD analysis pipeline generates comprehensive outputs for further investigation:</p>
+
+<h4 id="1-interactive-visualizations">1. Interactive Visualizations</h4>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">trajectory_overview_dashboard.html</code></strong>: 6-panel comprehensive analysis with score distributions, subscore correlations, temporal patterns, and spatial distributions</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">trajectory_embedding_analysis.html</code></strong>: t-SNE, PCA, and clustering visualizations of trajectory embeddings</li>
+  <li>Real-time filtering and zooming capabilities</li>
+  <li>Hover tooltips with detailed trajectory information</li>
+</ul>
+
+<h4 id="2-detailed-text-reports">2. Detailed Text Reports</h4>
+<ul>
+  <li>Console output with comprehensive anomaly reports including:
+    <ul>
+      <li>Top-N trajectory anomalies with detailed breakdowns</li>
+      <li>Subscore analysis and percentile rankings</li>
+      <li>Pattern analysis with human-readable explanations</li>
+      <li>Cluster analysis with anomaly rates per cluster</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="3-numerical-data-exports">3. Numerical Data Exports</h4>
+<ul>
+  <li><strong>Anomaly scores</strong>: <code class="language-plaintext highlighter-rouge">anomaly_scores.npy</code></li>
+  <li><strong>Binary classifications</strong>: <code class="language-plaintext highlighter-rouge">anomaly_labels.npy</code></li>
+  <li><strong>Pattern scores</strong>: <code class="language-plaintext highlighter-rouge">pattern_scores.npy</code></li>
+  <li><strong>Reconstruction errors</strong>: <code class="language-plaintext highlighter-rouge">event_recon_errors.npy</code>, <code class="language-plaintext highlighter-rouge">link_recon_errors.npy</code></li>
+  <li><strong>Embeddings</strong>: <code class="language-plaintext highlighter-rouge">embeddings.npy</code></li>
+  <li><strong>Subscore data</strong>: <code class="language-plaintext highlighter-rouge">subscore_*.npy</code> files for each subscore type</li>
+</ul>
+
+<h3 id="running-cobad">Running CoBAD</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install dependencies</span>
+uv <span class="nb">sync</span>
+
+<span class="c"># Train new paper-accurate CoBAD model</span>
+uv run python cobad_paper_accurate.py
+
+<span class="c"># Run inference with pre-trained model</span>
+uv run python cobad_paper_accurate.py <span class="nt">--load-model</span> cobad_paper_accurate.pth <span class="nt">--skip-training</span>
+
+<span class="c"># Run comprehensive trajectory analysis dashboard</span>
+uv run python trajectory_analysis_dashboard.py <span class="nt">--model</span> cobad_paper_accurate.pth <span class="nt">--save-html</span> <span class="nt">--save-results</span>
+
+<span class="c"># Adjust batch size for memory-constrained systems</span>
+uv run python cobad_paper_accurate.py <span class="nt">--batch-size</span> 8
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="future-directions-and-applications">Future Directions and Applications</h2>
+
+<h3 id="potential-applications">Potential Applications</h3>
+
+<p><strong>Urban Planning</strong>: Identifying unusual gathering patterns that may indicate:</p>
+<ul>
+  <li>Infrastructure bottlenecks requiring attention</li>
+  <li>Emergency situation responses</li>
+  <li>Public event impact assessment</li>
+</ul>
+
+<p><strong>Public Safety</strong>: Detecting coordinated activities that warrant investigation:</p>
+<ul>
+  <li>Unusual crowd formations</li>
+  <li>Synchronized movement patterns</li>
+  <li>Off-hours collective activities</li>
+</ul>
+
+<p><strong>Transportation Analysis</strong>: Understanding collective mobility patterns:</p>
+<ul>
+  <li>Mass transit disruption impacts</li>
+  <li>Event-driven mobility changes</li>
+  <li>Seasonal or periodic collective behavior variations</li>
+</ul>
+
+<h3 id="technical-enhancements">Technical Enhancements</h3>
+
+<p><strong>Streaming Anomaly Detection</strong>: Extending CoBAD for real-time analysis of incoming mobility streams with concept drift adaptation.</p>
+
+<p><strong>Multi-Modal Integration</strong>: Incorporating additional data sources (social media, weather, events) to improve context understanding.</p>
+
+<p><strong>Hierarchical Anomaly Detection</strong>: Developing multi-scale approaches that detect anomalies at different spatial and temporal resolutions simultaneously.</p>
+
+<p><strong>Causal Anomaly Analysis</strong>: Moving beyond correlation to understand causal relationships between anomalous collective behaviors and external factors.</p>
+
+<hr />
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>CoBAD represents a significant advancement in collective anomaly detection for human mobility data. By shifting focus from individual trajectories to collective behaviors and employing deep learning techniques for pattern recognition, CoBAD enables the detection of complex group anomalies that traditional methods miss.</p>
+
+<p>The approach’s strength lies in its comprehensive analysis framework—providing not just binary anomaly classifications, but detailed explanations, feature attributions, and relationship networks that enable deeper understanding of anomalous collective behaviors.</p>
+
+<p>As urban populations grow and mobility data becomes increasingly available, tools like CoBAD become essential for understanding and responding to collective human behavior patterns in smart city environments.</p>
+
+<h2 id="claude-gotchas">Claude Gotchas</h2>
+
+<ol>
+  <li>ISSUE - Claude initially implemented an autoencoder-based version of the CoBAD algorithm. Although it trained, and produced results, it did not implement the approach as described in the paper. <strong>RESOLUTION - I described the correct implementation using text from the CoBAD paper. Claude then made a faithful reimplementation of the attention-based model.</strong></li>
+  <li>ISSUE - Claude produced an optimized, but incorrect version of my data-loader. I implemented the original data-loader manually, however when I scaled to +1M point CSV files my implementation was too slow. I asked Claude to optimize the loading function for performance. It produced a fast loading function, but it did not produce equivalent output to my function. <strong>RESOLUTION -  I manually inspected the output of the new loading function and noticed that the output was incorrect. I then asked Claude to produce a unit-test to verify the equivalence of the new function with my function. It did and then when it failed the test it fixed the optimized function.</strong></li>
+  <li>ISSUE - Claude suggested a naive way to split the training/test data that was not optimal for the approach. When questioned it was too agreeable. <strong>RESOLUTION - I asked Claude about sorting the data before performing a split. It suggested the best way was to sort by time. I replied that that wouldn’t test the approach against unknown users and that withholding never-before seen users would produce a stronger test case. It agreed and implemented the latter.</strong></li>
+  <li>ISSUE - Claude littered the code with import statements throughout the code. <strong>RESOLUTION - It is preferred style to have all import statements at the top of the file. Although it works to import code in the middle of a function it looks quite messy and it also imports the code each time the function is called. I asked Claude to move all import statements to the top and it did.</strong></li>
+</ol>
+
+<h2 id="references">References</h2>
+
+<hr />
+
+<p><em>This research contributes to the growing field of collective behavior analysis in urban computing and demonstrates the potential of deep learning approaches for understanding complex mobility patterns in smart city applications.</em></p>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1">
+      <p>Hawkins, D. M. (1980). <em>Identification of Outliers</em>. Chapman and Hall. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>Zheng, Y., Zhang, L., Xie, X., &amp; Ma, W. Y. (2009). Mining interesting locations and travel sequences from GPS trajectories. In <em>Proceedings of the 18th international conference on World wide web</em> (pp. 791-800). <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p>Chandola, V., Banerjee, A., &amp; Kumar, V. (2009). Anomaly detection: A survey. <em>ACM computing surveys</em>, 41(3), 1-58. <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:4">
+      <p>Ge, W., Collins, R. T., &amp; Ruback, R. B. (2012). Vision-based analysis of small groups in pedestrian crowds. <em>IEEE transactions on pattern analysis and machine intelligence</em>, 34(5), 1003-1016. <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:5">
+      <p>Liu, F. T., Ting, K. M., &amp; Zhou, Z. H. (2008). Isolation forest. In <em>2008 eighth ieee international conference on data mining</em> (pp. 413-422). <a href="#fnref:5" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:6">
+      <p>Araujo, M., Günnemann, S., Mateos, G., &amp; Christakis, N. A. (2014). Discrete signal processing on graphs: Frequency analysis. <em>IEEE transactions on signal processing</em>, 62(12), 3042-3054. <a href="#fnref:6" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:7">
+      <p>LYMob-4Cities Dataset. (2024). Available at: https://zenodo.org/records/14219563 <a href="#fnref:7" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/claude" class="page__taxonomy-item p-category" rel="tag">claude</a><span class="sep">, </span>
+    
+      <a href="/tags/cobad" class="page__taxonomy-item p-category" rel="tag">cobad</a><span class="sep">, </span>
+    
+      <a href="/tags/gps" class="page__taxonomy-item p-category" rel="tag">gps</a><span class="sep">, </span>
+    
+      <a href="/tags/mobility" class="page__taxonomy-item p-category" rel="tag">mobility</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-09-01T00:00:00+00:00">September 1, 2025</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  <h4 class="page__share-title">Share on</h4>
+
+  <a href="https://x.com/intent/tweet?text=Experiment+22%20https%3A%2F%2Fdlfelps.github.io%2F2025%2F09%2F01%2Fcobad.html" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
+    <i class="fab fa-fw fa-x-twitter" aria-hidden="true"></i><span> X</span>
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2025%2F09%2F01%2Fcobad.html" class="btn btn--facebook" aria-label="Share on Facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook">
+    <i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span>
+  </a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dlfelps.github.io/2025/09/01/cobad.html" class="btn btn--linkedin" aria-label="Share on LinkedIn" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn">
+    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
+  </a>
+
+  <a href="https://bsky.app/intent/compose?text=Experiment+22%20https%3A%2F%2Fdlfelps.github.io%2F2025%2F09%2F01%2Fcobad.html" class="btn btn--bluesky" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Bluesky">
+    <i class="fab fa-fw fa-bluesky" aria-hidden="true"></i><span> Bluesky</span>
+  </a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2025/08/21/mobility.html" class="pagination--pager" title="Experiment 21">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2025 <a href="https://dlfelps.github.io">.NET Experiments</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
