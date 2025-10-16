@@ -245,8 +245,6 @@
   <li>5 full view satellite images with known excavators present</li>
 </ul>
 
-<p>###</p>
-
 <h2 id="conclusion">Conclusion</h2>
 
 <p>This project demonstrates that effective zero-shot object detection in overhead imagery is achievable through careful architectural modifications and domain-specific adaptations. By removing the trainable region propagation network, we eliminate the need for training data while relying on strong pretrained features from DINOv3. The rotation-aware prototype generation strategy directly addresses the orientation challenge inherent to overhead imagery, and the SVM ensemble provides robust confidence filtering to maintain detection precision.</p>
@@ -264,7 +262,6 @@
   <li>PROTIP #2: After using CLAUDE to implement a new feature (or in this case replace an existing module with something else), ask CLAUDE to write a simple script to demonstrate/test the new feature. Optional: treat this as a temporary test - you don’t have to add it to git.</li>
   <li>PROTIP #3: If there is a problem that “feels small” and I think I have a good idea how to fix it, I just give CLAUDE the error and CLAUDE will usually fix it.</li>
   <li>PROTIP #4: If there is a problem that “feels big” and I don’t understand it or know how to fix it, I ask CLAUDE to write a debugging script to log values up to the point at which the error occurs. Then I review the output. Next I ask CLAUDE to fix the problem and then run the debugging script again. If all goes well and values make sense I rerun the original code.</li>
-  <li>PROTIP #5</li>
 </ol>
 
 

@@ -166,7 +166,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          31 minute read
+          24 minute read
         
       </span>
     
@@ -181,7 +181,7 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#comparing-scene-graph-extraction-methods-from-fine-tuned-t5-to-few-shot-llms">Comparing Scene Graph Extraction Methods: From Fine-tuned T5 to Few-Shot LLMs</a><ul><li><a href="#introduction">Introduction</a><ul><li><a href="#what-is-scene-graph-parsing">What is Scene Graph Parsing?</a></li><li><a href="#why-scene-graphs-matter">Why Scene Graphs Matter</a></li><li><a href="#the-challenge">The Challenge</a></li></ul></li><li><a href="#experiment-1-t5-baseline-performance">Experiment 1: T5 Baseline Performance</a><ul><li><a href="#objective">Objective</a></li><li><a href="#methodology">Methodology</a></li><li><a href="#results">Results</a></li><li><a href="#key-findings">Key Findings</a></li><li><a href="#analysis">Analysis</a></li></ul></li><li><a href="#experiment-2-langextract-proof-of-concept">Experiment 2: LangExtract Proof of Concept</a><ul><li><a href="#objective-1">Objective</a></li><li><a href="#methodology-1">Methodology</a></li><li><a href="#results-1">Results</a></li><li><a href="#key-findings-1">Key Findings</a></li><li><a href="#analysis-1">Analysis</a></li></ul></li><li><a href="#experiment-3-format-optimization">Experiment 3: Format Optimization</a><ul><li><a href="#objective-2">Objective</a></li><li><a href="#methodology-2">Methodology</a></li><li><a href="#results-2">Results</a></li><li><a href="#key-findings-2">Key Findings</a></li><li><a href="#analysis-2">Analysis</a></li></ul></li><li><a href="#experiment-4-backend-comparison-langextract-vs-native-gemini">Experiment 4: Backend Comparison (LangExtract vs Native Gemini)</a><ul><li><a href="#objective-3">Objective</a></li><li><a href="#methodology-3">Methodology</a></li><li><a href="#initial-results-before-dataset-standardization">Initial Results (Before Dataset Standardization)</a></li><li><a href="#final-results-with-consistent-dataset">Final Results (With Consistent Dataset)</a></li><li><a href="#key-findings-3">Key Findings</a></li><li><a href="#critical-discovery">Critical Discovery</a></li><li><a href="#analysis-3">Analysis</a></li></ul></li><li><a href="#experiment-4b-targeted-improvement-with-analysis-driven-examples">Experiment 4b: Targeted Improvement with Analysis-Driven Examples</a><ul><li><a href="#objective-4">Objective</a></li><li><a href="#methodology-4">Methodology</a></li><li><a href="#results-3">Results</a></li><li><a href="#key-findings-4">Key Findings</a></li><li><a href="#analysis-4">Analysis</a></li></ul></li><li><a href="#comprehensive-comparison">Comprehensive Comparison</a><ul><li><a href="#overall-results-across-all-experiments">Overall Results Across All Experiments</a></li><li><a href="#performance-vs-speed-trade-off">Performance vs Speed Trade-off</a></li><li><a href="#key-insights">Key Insights</a></li></ul></li><li><a href="#conclusions-and-recommendations">Conclusions and Recommendations</a><ul><li><a href="#key-takeaways">Key Takeaways</a></li><li><a href="#recommendations-by-use-case">Recommendations by Use Case</a><ul><li><a href="#choose-t5-fine-tuned-model-if">Choose T5 Fine-tuned Model if:</a></li><li><a href="#choose-improved-langextract-if">Choose Improved LangExtract if:</a></li><li><a href="#choose-native-gemini-if">Choose Native Gemini if:</a></li></ul></li><li><a href="#future-work">Future Work</a></li><li><a href="#final-thoughts">Final Thoughts</a></li></ul></li><li><a href="#appendix-reproduction">Appendix: Reproduction</a></li></ul></li></ul>
+              <ul class="toc__menu"><li><a href="#comparing-scene-graph-extraction-methods-from-fine-tuned-t5-to-few-shot-llms">Comparing Scene Graph Extraction Methods: From Fine-tuned T5 to Few-Shot LLMs</a><ul><li><a href="#introduction">Introduction</a><ul><li><a href="#what-is-scene-graph-parsing">What is Scene Graph Parsing?</a></li><li><a href="#why-scene-graphs-matter">Why Scene Graphs Matter</a></li><li><a href="#the-challenge">The Challenge</a></li></ul></li><li><a href="#experiment-1-t5-baseline-performance">Experiment 1: T5 Baseline Performance</a><ul><li><a href="#results">Results</a></li><li><a href="#analysis">Analysis</a></li></ul></li><li><a href="#experiment-2-langextract-proof-of-concept">Experiment 2: LangExtract Proof of Concept</a><ul><li><a href="#results-1">Results</a></li><li><a href="#analysis-1">Analysis</a></li></ul></li><li><a href="#experiment-3-format-optimization">Experiment 3: Format Optimization</a><ul><li><a href="#results-2">Results</a></li><li><a href="#analysis-2">Analysis</a></li></ul></li><li><a href="#experiment-4-backend-comparison-langextract-vs-native-gemini">Experiment 4: Backend Comparison (LangExtract vs Native Gemini)</a><ul><li><a href="#results-3">Results</a></li><li><a href="#analysis-3">Analysis</a></li></ul></li><li><a href="#experiment-4b-targeted-improvement-with-analysis-driven-examples">Experiment 4b: Targeted Improvement with Analysis-Driven Examples</a><ul><li><a href="#results-4">Results</a></li><li><a href="#analysis-4">Analysis</a></li></ul></li><li><a href="#comprehensive-comparison">Comprehensive Comparison</a><ul><li><a href="#overall-results-across-all-experiments">Overall Results Across All Experiments</a></li></ul></li><li><a href="#conclusions-and-recommendations">Conclusions and Recommendations</a><ul><li><a href="#key-takeaways">Key Takeaways</a></li><li><a href="#recommendations-by-use-case">Recommendations by Use Case</a><ul><li><a href="#choose-t5-fine-tuned-model-if">Choose T5 Fine-tuned Model if:</a></li><li><a href="#choose-improved-langextract-if">Choose Improved LangExtract if:</a></li></ul></li><li><a href="#future-work">Future Work</a></li><li><a href="#final-thoughts">Final Thoughts</a></li></ul></li><li><a href="#appendix-reproduction">Appendix: Reproduction</a></li></ul></li></ul>
             </nav>
           </aside>
         
@@ -249,10 +249,8 @@
 
 <h2 id="experiment-1-t5-baseline-performance">Experiment 1: T5 Baseline Performance</h2>
 
-<h3 id="objective">Objective</h3>
 <p>Establish baseline performance using a fine-tuned T5 model pre-trained on the FACTUAL dataset.</p>
 
-<h3 id="methodology">Methodology</h3>
 <ul>
   <li><strong>Model</strong>: <code class="language-plaintext highlighter-rouge">flan-t5-base-VG-factual-sg</code> (220M parameters)</li>
   <li><strong>Test Set</strong>: 100 complex samples (captions with &gt;20 words)</li>
@@ -305,35 +303,16 @@
 
 <p><strong>Inference Speed</strong>: 4.64 seconds per sample</p>
 
-<h3 id="key-findings">Key Findings</h3>
-
-<p>✅ <strong>Strengths:</strong></p>
-<ul>
-  <li>Strong overall performance (0.784 macro F1)</li>
-  <li>Excellent relationship extraction (0.662 F1)</li>
-  <li>Consistent across all components</li>
-</ul>
-
-<p>❌ <strong>Weaknesses:</strong></p>
-<ul>
-  <li>Slow inference (4.6s per sample)</li>
-  <li>Requires loading a 500MB model</li>
-  <li>Domain-specific: doesn’t generalize beyond FACTUAL-style data</li>
-  <li>Requires fine-tuning for new domains</li>
-</ul>
-
 <h3 id="analysis">Analysis</h3>
 
-<p>The T5 baseline demonstrates that fine-tuning on domain-specific data yields strong performance, particularly for relationship extraction. However, the 4.6-second inference time and lack of flexibility make it less practical for production use cases requiring fast inference or cross-domain generalization.</p>
+<p>The T5 baseline demonstrates that fine-tuning on domain-specific data yields strong performance, particularly for relationship extraction. However, the 4.6-second inference time and lack of flexibility make it less practical for production use cases requiring fast inference or cross-domain generalization. The high performance on the FACTUAL dataset is to be expected since this model was specifically trained using FACTUAL data. In the following experiments we only provide a handful of examples to the LLM during the prompt to achieve a similar level of performance.</p>
 
 <hr />
 
 <h2 id="experiment-2-langextract-proof-of-concept">Experiment 2: LangExtract Proof of Concept</h2>
 
-<h3 id="objective-1">Objective</h3>
 <p>Validate whether LangExtract with Gemini can extract scene graphs with reasonable accuracy using few-shot learning (no fine-tuning required).</p>
 
-<h3 id="methodology-1">Methodology</h3>
 <ul>
   <li><strong>Framework</strong>: Google LangExtract with Gemini 2.5 Flash</li>
   <li><strong>Test Set</strong>: 30 diverse samples (subset of Experiment 1)</li>
@@ -388,23 +367,6 @@
 
 <p><strong>Inference Speed</strong>: 0.045 seconds per sample (103x faster than T5)</p>
 
-<h3 id="key-findings-1">Key Findings</h3>
-
-<p>✅ <strong>Strengths:</strong></p>
-<ul>
-  <li>Excellent entity extraction (0.944 F1, surpassing T5)</li>
-  <li>Strong attribute extraction (0.893 F1, surpassing T5)</li>
-  <li><strong>103x faster inference</strong> than T5</li>
-  <li>No fine-tuning required</li>
-  <li>Success rate: 100% (all extractions successful)</li>
-</ul>
-
-<p>❌ <strong>Weaknesses:</strong></p>
-<ul>
-  <li>Poor relationship extraction (0.174 F1, far below T5’s 0.662)</li>
-  <li>Overall performance 17% below T5 baseline</li>
-</ul>
-
 <h3 id="analysis-1">Analysis</h3>
 
 <p>LangExtract demonstrates the power of few-shot learning: with just 5 examples, it matches or exceeds T5’s performance on entities and attributes while being dramatically faster. However, relationship extraction is significantly weaker, suggesting the few-shot examples need improvement or the task requires more sophisticated prompting.</p>
@@ -413,10 +375,8 @@
 
 <h2 id="experiment-3-format-optimization">Experiment 3: Format Optimization</h2>
 
-<h3 id="objective-2">Objective</h3>
 <p>Identify the optimal output format for LangExtract to maximize extraction accuracy.</p>
 
-<h3 id="methodology-2">Methodology</h3>
 <ul>
   <li><strong>Framework</strong>: LangExtract + Gemini 2.5 Flash</li>
   <li><strong>Test Set</strong>: 50 diverse samples (subset of Experiment 1)</li>
@@ -476,23 +436,6 @@
 
 <p><strong>Winner</strong>: JSON Structured (0.660 macro F1)</p>
 
-<h3 id="key-findings-2">Key Findings</h3>
-
-<p>✅ <strong>JSON Structured format performs best:</strong></p>
-<ul>
-  <li>Clearest semantic structure for LLMs</li>
-  <li>Explicitly separates entities, attributes, and relationships</li>
-  <li>Better attribute extraction due to nested structure</li>
-  <li>Slight edge in relationship extraction</li>
-</ul>
-
-<p>📊 <strong>Format Impact</strong>:</p>
-<ul>
-  <li>All formats show similar patterns (strong entities/attributes, weak relationships)</li>
-  <li>JSON format’s advantage comes from clearer semantic boundaries</li>
-  <li>Difference between best and worst: only 3.4% macro F1</li>
-</ul>
-
 <h3 id="analysis-2">Analysis</h3>
 
 <p>While JSON Structured emerges as the winner, the relatively small differences between formats (0.626-0.660) suggest that representation format is not the primary bottleneck. The consistent weakness in relationship extraction across all formats points to a deeper issue with the few-shot examples or prompting strategy.</p>
@@ -501,10 +444,8 @@
 
 <h2 id="experiment-4-backend-comparison-langextract-vs-native-gemini">Experiment 4: Backend Comparison (LangExtract vs Native Gemini)</h2>
 
-<h3 id="objective-3">Objective</h3>
 <p>Compare LangExtract framework against native Gemini structured output using the winning JSON format.</p>
 
-<h3 id="methodology-3">Methodology</h3>
 <ul>
   <li><strong>Approaches</strong>:
     <ol>
@@ -516,15 +457,7 @@
   <li><strong>Format</strong>: JSON Structured (winner from Experiment 3)</li>
 </ul>
 
-<h3 id="initial-results-before-dataset-standardization">Initial Results (Before Dataset Standardization)</h3>
-
-<p>In the initial run with inconsistent test data:</p>
-<ul>
-  <li>Native Gemini: 0.523 macro F1</li>
-  <li>LangExtract: 0.422 macro F1</li>
-</ul>
-
-<h3 id="final-results-with-consistent-dataset">Final Results (With Consistent Dataset)</h3>
+<h3 id="results-3">Results</h3>
 
 <p>After implementing centralized dataset loading to ensure all experiments use identical test data:</p>
 
@@ -559,37 +492,6 @@
   </tbody>
 </table>
 
-<h3 id="key-findings-3">Key Findings</h3>
-
-<p>✅ <strong>LangExtract Advantages:</strong></p>
-<ul>
-  <li>Superior entity extraction (+20.4% over Native Gemini)</li>
-  <li>Superior attribute extraction (+25.3% over Native Gemini)</li>
-  <li><strong>83x faster</strong> inference (0.045s vs 3.76s)</li>
-  <li>Higher overall performance (+6.5% macro F1)</li>
-</ul>
-
-<p>✅ <strong>Native Gemini Advantages:</strong></p>
-<ul>
-  <li>Better relationship extraction (0.392 vs 0.174, +125%)</li>
-  <li>More structured prompt control via response_schema</li>
-</ul>
-
-<h3 id="critical-discovery">Critical Discovery</h3>
-
-<p>The results completely reversed when using consistent test data:</p>
-<ul>
-  <li><strong>Initial (inconsistent data)</strong>: Native Gemini won</li>
-  <li><strong>Final (consistent data)</strong>: LangExtract won</li>
-</ul>
-
-<p>This highlights the importance of:</p>
-<ol>
-  <li>Consistent test data across experiments</li>
-  <li>Careful dataset management</li>
-  <li>Not drawing conclusions from single runs on different data</li>
-</ol>
-
 <h3 id="analysis-3">Analysis</h3>
 
 <p>LangExtract’s framework optimizations for batch processing and few-shot learning make it more effective than raw Gemini API calls for entity and attribute extraction. However, Native Gemini’s structured schema enforcement provides better relationship extraction. The dramatic speed difference (83x) favors LangExtract for production use cases.</p>
@@ -598,10 +500,7 @@
 
 <h2 id="experiment-4b-targeted-improvement-with-analysis-driven-examples">Experiment 4b: Targeted Improvement with Analysis-Driven Examples</h2>
 
-<h3 id="objective-4">Objective</h3>
 <p>Improve LangExtract’s relationship extraction by analyzing specific failures and creating targeted few-shot examples.</p>
-
-<h3 id="methodology-4">Methodology</h3>
 
 <p><strong>Step 1: Failure Analysis</strong></p>
 <ul>
@@ -638,7 +537,7 @@ Added 5 new examples specifically demonstrating “sitting on” → “sit on�
   <li>Now with 7 total examples (2 original + 5 targeted)</li>
 </ul>
 
-<h3 id="results-3">Results</h3>
+<h3 id="results-4">Results</h3>
 
 <table>
   <thead>
@@ -686,33 +585,6 @@ Added 5 new examples specifically demonstrating “sitting on” → “sit on�
 <ul>
   <li>Relationships: 0.174 → 0.450 (+159% improvement!)</li>
   <li>Macro F1: 0.670 → 0.750 (+12% improvement)</li>
-</ul>
-
-<h3 id="key-findings-4">Key Findings</h3>
-
-<p>✅ <strong>Dramatic Improvements:</strong></p>
-<ul>
-  <li>Relationship F1 increased by <strong>+159%</strong> (0.174 → 0.450)</li>
-  <li>Overall macro F1 improved by <strong>+12%</strong> (0.670 → 0.750)</li>
-  <li>Now <strong>best overall approach</strong> among all LLM-based methods</li>
-</ul>
-
-<p>✅ <strong>Analysis-Driven Success:</strong></p>
-<ul>
-  <li>By analyzing 52 specific failures, we identified a single pattern accounting for 92% of errors</li>
-  <li>Creating just 5 targeted examples addressing this pattern dramatically improved performance</li>
-  <li>Demonstrates the power of <strong>iterative few-shot learning</strong></li>
-</ul>
-
-<p>✅ <strong>Speed Maintained:</strong></p>
-<ul>
-  <li>Still 0.045s per sample (103x faster than T5, 83x faster than Native Gemini)</li>
-</ul>
-
-<p>📊 <strong>Trade-offs:</strong></p>
-<ul>
-  <li>Slight decrease in entity F1 (-0.043) as model focuses more on relationships</li>
-  <li>Net benefit is strongly positive (+0.080 macro F1)</li>
 </ul>
 
 <h3 id="analysis-4">Analysis</h3>
@@ -785,58 +657,6 @@ Added 5 new examples specifically demonstrating “sitting on” → “sit on�
   </tbody>
 </table>
 
-<h3 id="performance-vs-speed-trade-off">Performance vs Speed Trade-off</h3>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                    High Performance (0.78+ F1)
-                            │
-    T5 Baseline ─────────── │ ──────────── Improved LangExtract
-       (0.784 F1)           │                  (0.750 F1)
-       4.64s/sample         │                  0.045s/sample
-                            │
-                            │
-                            │         Native Gemini
-                            │           (0.630 F1)
-                            │           3.76s/sample
-                            │
-                    Low Performance (0.63 F1)
-
-    Slow ──────────────────────────────────────────── Fast
-         (&gt;3s/sample)            (~0.05s/sample)
-</code></pre></div></div>
-
-<h3 id="key-insights">Key Insights</h3>
-
-<ol>
-  <li><strong>Fine-tuning vs Few-shot</strong>:
-    <ul>
-      <li>T5 (fine-tuned): 0.784 macro F1, 4.64s/sample</li>
-      <li>Improved LangExtract (7 examples): 0.750 macro F1, 0.045s/sample</li>
-      <li><strong>Gap</strong>: Only 4.3% lower performance with 103x faster inference</li>
-    </ul>
-  </li>
-  <li><strong>Component Strengths</strong>:
-    <ul>
-      <li><strong>Entities</strong>: LLMs excel (0.90+ F1 with few-shot)</li>
-      <li><strong>Attributes</strong>: LLMs excel (0.90 F1 vs T5’s 0.78)</li>
-      <li><strong>Relationships</strong>: Fine-tuning wins (T5: 0.66 F1 vs LangExtract: 0.45)</li>
-    </ul>
-  </li>
-  <li><strong>Speed Matters</strong>:
-    <ul>
-      <li>LangExtract: 0.045s = 22 samples/second</li>
-      <li>T5: 4.64s = 0.2 samples/second</li>
-      <li><strong>110x throughput advantage</strong> for LangExtract</li>
-    </ul>
-  </li>
-  <li><strong>Iterative Improvement Works</strong>:
-    <ul>
-      <li>Original LangExtract: 0.174 relationship F1</li>
-      <li>After analysis + 5 targeted examples: 0.450 relationship F1</li>
-      <li><strong>+159% improvement</strong> with minimal effort</li>
-    </ul>
-  </li>
-</ol>
-
 <hr />
 
 <h2 id="conclusions-and-recommendations">Conclusions and Recommendations</h2>
@@ -884,22 +704,24 @@ Added 5 new examples specifically demonstrating “sitting on” → “sit on�
 <h3 id="recommendations-by-use-case">Recommendations by Use Case</h3>
 
 <h4 id="choose-t5-fine-tuned-model-if">Choose <strong>T5 Fine-tuned Model</strong> if:</h4>
-<p>✅ You need the absolute best relationship extraction (0.662 F1)
-✅ Inference speed is not a constraint
-✅ You’re working with FACTUAL-style data
-✅ You have computational resources for model loading</p>
+<p>✅ You need the absolute best relationship extraction (0.662 F1)</p>
+
+<p>✅ Inference speed is not a constraint</p>
+
+<p>✅ You’re working with FACTUAL-style data</p>
+
+<p>✅ You have computational resources for model loading</p>
 
 <h4 id="choose-improved-langextract-if">Choose <strong>Improved LangExtract</strong> if:</h4>
-<p>✅ You need fast inference (22 samples/second)
-✅ You want excellent entity/attribute extraction (0.90 F1)
-✅ You need flexibility to adapt to new domains (just change examples)
-✅ You want good all-around performance without fine-tuning
-✅ <strong>Recommended for most production use cases</strong></p>
+<p>✅ You need fast inference (22 samples/second)</p>
 
-<h4 id="choose-native-gemini-if">Choose <strong>Native Gemini</strong> if:</h4>
-<p>⚠️ You need more control over structured output schema
-⚠️ You’re building custom pipelines beyond LangExtract’s capabilities
-❌ Generally not recommended for this task (slower and less accurate than LangExtract)</p>
+<p>✅ You want excellent entity/attribute extraction (0.90 F1)</p>
+
+<p>✅ You need flexibility to adapt to new domains (just change examples)</p>
+
+<p>✅ You want good all-around performance without fine-tuning</p>
+
+<p>✅ <strong>Recommended for most production use cases</strong></p>
 
 <h3 id="future-work">Future Work</h3>
 
@@ -984,7 +806,7 @@ uv run compare_all_experiments.py
 
 <p>Dataset: <a href="https://huggingface.co/datasets/lizhuang144/FACTUAL_Scene_Graph">FACTUAL Scene Graph Dataset</a></p>
 
-<p>Code: Available in this repository</p>
+<p>Code: Available in this <a href="https://github.com/dlfelps/semantic-extraction">repository</a></p>
 
 
         
