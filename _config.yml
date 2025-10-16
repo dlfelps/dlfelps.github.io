@@ -59,7 +59,7 @@ author:
   name: "Daniel Felps"
   email: dlfelps@gmail.com
   avatar: "/assets/images/headshot.jpg"
-  bio: "Electrical engineering undergrad, machine learning phd, programming language enthusiast currently enthralled with F# and Smalltalk." 
+  bio: "Electrical engineering undergrad, machine learning phd, programming language enthusiast currently enthralled with Golang and Python." 
   location: "Fairfax VA"
   links:
     - label: "LinkedIn"

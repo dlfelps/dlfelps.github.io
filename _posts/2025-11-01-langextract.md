@@ -55,10 +55,10 @@ All experiments use the **FACTUAL Scene Graph dataset**, which contains 50,000+ 
 
 ## Experiment 1: T5 Baseline Performance
 
-### Objective
+
 Establish baseline performance using a fine-tuned T5 model pre-trained on the FACTUAL dataset.
 
-### Methodology
+
 - **Model**: `flan-t5-base-VG-factual-sg` (220M parameters)
 - **Test Set**: 100 complex samples (captions with >20 words)
 - **Evaluation**: Precision, Recall, and F1 for entities, attributes, and relationships
@@ -74,31 +74,19 @@ Establish baseline performance using a fine-tuned T5 model pre-trained on the FA
 
 **Inference Speed**: 4.64 seconds per sample
 
-### Key Findings
-
-✅ **Strengths:**
-- Strong overall performance (0.784 macro F1)
-- Excellent relationship extraction (0.662 F1)
-- Consistent across all components
-
-❌ **Weaknesses:**
-- Slow inference (4.6s per sample)
-- Requires loading a 500MB model
-- Domain-specific: doesn't generalize beyond FACTUAL-style data
-- Requires fine-tuning for new domains
 
 ### Analysis
 
-The T5 baseline demonstrates that fine-tuning on domain-specific data yields strong performance, particularly for relationship extraction. However, the 4.6-second inference time and lack of flexibility make it less practical for production use cases requiring fast inference or cross-domain generalization.
+The T5 baseline demonstrates that fine-tuning on domain-specific data yields strong performance, particularly for relationship extraction. However, the 4.6-second inference time and lack of flexibility make it less practical for production use cases requiring fast inference or cross-domain generalization. The high performance on the FACTUAL dataset is to be expected since this model was specifically trained using FACTUAL data. In the following experiments we only provide a handful of examples to the LLM during the prompt to achieve a similar level of performance.
 
 ---
 
 ## Experiment 2: LangExtract Proof of Concept
 
-### Objective
+
 Validate whether LangExtract with Gemini can extract scene graphs with reasonable accuracy using few-shot learning (no fine-tuning required).
 
-### Methodology
+
 - **Framework**: Google LangExtract with Gemini 2.5 Flash
 - **Test Set**: 30 diverse samples (subset of Experiment 1)
 - **Format**: Flat Entities (separate classes for entity, attribute, relationship)
@@ -116,18 +104,6 @@ Validate whether LangExtract with Gemini can extract scene graphs with reasonabl
 
 **Inference Speed**: 0.045 seconds per sample (103x faster than T5)
 
-### Key Findings
-
-✅ **Strengths:**
-- Excellent entity extraction (0.944 F1, surpassing T5)
-- Strong attribute extraction (0.893 F1, surpassing T5)
-- **103x faster inference** than T5
-- No fine-tuning required
-- Success rate: 100% (all extractions successful)
-
-❌ **Weaknesses:**
-- Poor relationship extraction (0.174 F1, far below T5's 0.662)
-- Overall performance 17% below T5 baseline
 
 ### Analysis
 
@@ -137,10 +113,10 @@ LangExtract demonstrates the power of few-shot learning: with just 5 examples, i
 
 ## Experiment 3: Format Optimization
 
-### Objective
+
 Identify the optimal output format for LangExtract to maximize extraction accuracy.
 
-### Methodology
+
 - **Framework**: LangExtract + Gemini 2.5 Flash
 - **Test Set**: 50 diverse samples (subset of Experiment 1)
 - **Formats Tested**:
@@ -160,18 +136,6 @@ Identify the optimal output format for LangExtract to maximize extraction accura
 
 **Winner**: JSON Structured (0.660 macro F1)
 
-### Key Findings
-
-✅ **JSON Structured format performs best:**
-- Clearest semantic structure for LLMs
-- Explicitly separates entities, attributes, and relationships
-- Better attribute extraction due to nested structure
-- Slight edge in relationship extraction
-
-📊 **Format Impact**:
-- All formats show similar patterns (strong entities/attributes, weak relationships)
-- JSON format's advantage comes from clearer semantic boundaries
-- Difference between best and worst: only 3.4% macro F1
 
 ### Analysis
 
@@ -181,23 +145,18 @@ While JSON Structured emerges as the winner, the relatively small differences be
 
 ## Experiment 4: Backend Comparison (LangExtract vs Native Gemini)
 
-### Objective
+
 Compare LangExtract framework against native Gemini structured output using the winning JSON format.
 
-### Methodology
+
 - **Approaches**:
   1. **LangExtract**: Framework with 2 few-shot examples
   2. **Native Gemini**: Direct API with `response_schema` + same 2 examples
 - **Test Set**: 50 samples (same as Experiment 3)
 - **Format**: JSON Structured (winner from Experiment 3)
 
-### Initial Results (Before Dataset Standardization)
 
-In the initial run with inconsistent test data:
-- Native Gemini: 0.523 macro F1
-- LangExtract: 0.422 macro F1
-
-### Final Results (With Consistent Dataset)
+### Results 
 
 After implementing centralized dataset loading to ensure all experiments use identical test data:
 
@@ -206,28 +165,7 @@ After implementing centralized dataset loading to ensure all experiments use ide
 | **LangExtract** | **0.944** | **0.893** | 0.174 | **0.670** | **0.045** |
 | Native Gemini | 0.784 | 0.713 | **0.392** | 0.630 | 3.762 |
 
-### Key Findings
 
-✅ **LangExtract Advantages:**
-- Superior entity extraction (+20.4% over Native Gemini)
-- Superior attribute extraction (+25.3% over Native Gemini)
-- **83x faster** inference (0.045s vs 3.76s)
-- Higher overall performance (+6.5% macro F1)
-
-✅ **Native Gemini Advantages:**
-- Better relationship extraction (0.392 vs 0.174, +125%)
-- More structured prompt control via response_schema
-
-### Critical Discovery
-
-The results completely reversed when using consistent test data:
-- **Initial (inconsistent data)**: Native Gemini won
-- **Final (consistent data)**: LangExtract won
-
-This highlights the importance of:
-1. Consistent test data across experiments
-2. Careful dataset management
-3. Not drawing conclusions from single runs on different data
 
 ### Analysis
 
@@ -237,10 +175,10 @@ LangExtract's framework optimizations for batch processing and few-shot learning
 
 ## Experiment 4b: Targeted Improvement with Analysis-Driven Examples
 
-### Objective
+
 Improve LangExtract's relationship extraction by analyzing specific failures and creating targeted few-shot examples.
 
-### Methodology
+
 
 **Step 1: Failure Analysis**
 - Compared detailed results from LangExtract vs Native Gemini
@@ -285,24 +223,6 @@ Added 5 new examples specifically demonstrating "sitting on" → "sit on" normal
 - Relationships: 0.174 → 0.450 (+159% improvement!)
 - Macro F1: 0.670 → 0.750 (+12% improvement)
 
-### Key Findings
-
-✅ **Dramatic Improvements:**
-- Relationship F1 increased by **+159%** (0.174 → 0.450)
-- Overall macro F1 improved by **+12%** (0.670 → 0.750)
-- Now **best overall approach** among all LLM-based methods
-
-✅ **Analysis-Driven Success:**
-- By analyzing 52 specific failures, we identified a single pattern accounting for 92% of errors
-- Creating just 5 targeted examples addressing this pattern dramatically improved performance
-- Demonstrates the power of **iterative few-shot learning**
-
-✅ **Speed Maintained:**
-- Still 0.045s per sample (103x faster than T5, 83x faster than Native Gemini)
-
-📊 **Trade-offs:**
-- Slight decrease in entity F1 (-0.043) as model focuses more on relationships
-- Net benefit is strongly positive (+0.080 macro F1)
 
 ### Analysis
 
@@ -327,47 +247,6 @@ The result: Improved LangExtract now **outperforms all other approaches** includ
 | Native Gemini | 50 | 0.784 | 0.713 | 0.392 | 0.630 | 3.762 |
 | **LangExtract Improved** | 50 | 0.901 | **0.900** | 0.450 | **0.750** | **0.045** |
 
-### Performance vs Speed Trade-off
-
-```
-                    High Performance (0.78+ F1)
-                            │
-    T5 Baseline ─────────── │ ──────────── Improved LangExtract
-       (0.784 F1)           │                  (0.750 F1)
-       4.64s/sample         │                  0.045s/sample
-                            │
-                            │
-                            │         Native Gemini
-                            │           (0.630 F1)
-                            │           3.76s/sample
-                            │
-                    Low Performance (0.63 F1)
-
-    Slow ──────────────────────────────────────────── Fast
-         (>3s/sample)            (~0.05s/sample)
-```
-
-### Key Insights
-
-1. **Fine-tuning vs Few-shot**:
-   - T5 (fine-tuned): 0.784 macro F1, 4.64s/sample
-   - Improved LangExtract (7 examples): 0.750 macro F1, 0.045s/sample
-   - **Gap**: Only 4.3% lower performance with 103x faster inference
-
-2. **Component Strengths**:
-   - **Entities**: LLMs excel (0.90+ F1 with few-shot)
-   - **Attributes**: LLMs excel (0.90 F1 vs T5's 0.78)
-   - **Relationships**: Fine-tuning wins (T5: 0.66 F1 vs LangExtract: 0.45)
-
-3. **Speed Matters**:
-   - LangExtract: 0.045s = 22 samples/second
-   - T5: 4.64s = 0.2 samples/second
-   - **110x throughput advantage** for LangExtract
-
-4. **Iterative Improvement Works**:
-   - Original LangExtract: 0.174 relationship F1
-   - After analysis + 5 targeted examples: 0.450 relationship F1
-   - **+159% improvement** with minimal effort
 
 ---
 
@@ -404,21 +283,24 @@ The result: Improved LangExtract now **outperforms all other approaches** includ
 
 #### Choose **T5 Fine-tuned Model** if:
 ✅ You need the absolute best relationship extraction (0.662 F1)
+
 ✅ Inference speed is not a constraint
+
 ✅ You're working with FACTUAL-style data
+
 ✅ You have computational resources for model loading
 
 #### Choose **Improved LangExtract** if:
 ✅ You need fast inference (22 samples/second)
+
 ✅ You want excellent entity/attribute extraction (0.90 F1)
+
 ✅ You need flexibility to adapt to new domains (just change examples)
+
 ✅ You want good all-around performance without fine-tuning
+
 ✅ **Recommended for most production use cases**
 
-#### Choose **Native Gemini** if:
-⚠️ You need more control over structured output schema
-⚠️ You're building custom pipelines beyond LangExtract's capabilities
-❌ Generally not recommended for this task (slower and less accurate than LangExtract)
 
 ### Future Work
 
@@ -487,6 +369,6 @@ uv run compare_all_experiments.py
 
 Dataset: [FACTUAL Scene Graph Dataset](https://huggingface.co/datasets/lizhuang144/FACTUAL_Scene_Graph)
 
-Code: Available in this repository
+Code: Available in this [repository](https://github.com/dlfelps/semantic-extraction)
 
 
