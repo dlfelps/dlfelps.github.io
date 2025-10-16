@@ -1,4 +1,883 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-08-27T15:53:29+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 22</title><link href="https://dlfelps.github.io/2025/09/01/cobad.html" rel="alternate" type="text/html" title="Experiment 22" /><published>2025-09-01T00:00:00+00:00</published><updated>2025-09-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/09/01/cobad</id><content type="html" xml:base="https://dlfelps.github.io/2025/09/01/cobad.html"><![CDATA[<p>The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-10-16T11:10:53+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 24</title><link href="https://dlfelps.github.io/2025/11/01/langextract.html" rel="alternate" type="text/html" title="Experiment 24" /><published>2025-11-01T00:00:00+00:00</published><updated>2025-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/11/01/langextract</id><content type="html" xml:base="https://dlfelps.github.io/2025/11/01/langextract.html"><![CDATA[<p>The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference.</p>
+
+<h1 id="comparing-scene-graph-extraction-methods-from-fine-tuned-t5-to-few-shot-llms">Comparing Scene Graph Extraction Methods: From Fine-tuned T5 to Few-Shot LLMs</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<h3 id="what-is-scene-graph-parsing">What is Scene Graph Parsing?</h3>
+
+<p>In computer vision and natural language processing, <strong>scene graph parsing</strong> is the task of extracting structured representations from image captions or visual scenes. A scene graph breaks down a description into three key components:</p>
+
+<ol>
+  <li><strong>Entities</strong>: The objects, people, or things in the scene (e.g., “dog”, “bench”, “person”)</li>
+  <li><strong>Attributes</strong>: Properties describing entities (e.g., “brown dog”, “wooden bench”)</li>
+  <li><strong>Relationships</strong>: Interactions and spatial relationships between entities (e.g., “dog sits on bench”, “person next to tree”)</li>
+</ol>
+
+<p>For example, given the caption:</p>
+<blockquote>
+  <p>“A brown dog sitting on a wooden bench in a park”</p>
+</blockquote>
+
+<p>A scene graph would extract:</p>
+<ul>
+  <li><strong>Entities</strong>: dog, bench, park</li>
+  <li><strong>Attributes</strong>: (dog, brown), (dog, sitting), (bench, wooden)</li>
+  <li><strong>Relationships</strong>: (dog, sit on, bench), (bench, in, park)</li>
+</ul>
+
+<h3 id="why-scene-graphs-matter">Why Scene Graphs Matter</h3>
+
+<p>Scene graphs provide structured, machine-readable representations of visual information, enabling:</p>
+<ul>
+  <li><strong>Visual Question Answering</strong>: Understanding spatial relationships to answer questions like “What is the dog sitting on?”</li>
+  <li><strong>Image Retrieval</strong>: Finding images based on specific object relationships</li>
+  <li><strong>Robotics</strong>: Helping robots understand and navigate physical environments</li>
+  <li><strong>Accessibility</strong>: Generating rich descriptions for visually impaired users</li>
+</ul>
+
+<h3 id="the-challenge">The Challenge</h3>
+
+<p>Traditional approaches to scene graph extraction rely on fine-tuning specialized models on domain-specific datasets. While effective, this approach has limitations:</p>
+<ul>
+  <li>Requires large amounts of labeled training data</li>
+  <li>Models are domain-specific and don’t generalize well</li>
+  <li>Fine-tuning is computationally expensive</li>
+  <li>Slow inference times due to model size</li>
+</ul>
+
+<p><strong>Can modern large language models (LLMs) match or exceed fine-tuned models using only few-shot learning?</strong></p>
+
+<p>This blog post documents a series of experiments comparing:</p>
+<ol>
+  <li>A fine-tuned T5 model (baseline)</li>
+  <li>LLM-based extraction using Google’s LangExtract framework with Gemini</li>
+  <li>Native Gemini structured output</li>
+  <li>Iteratively improved few-shot prompting</li>
+</ol>
+
+<p>All experiments use the <strong>FACTUAL Scene Graph dataset</strong>, which contains 50,000+ image captions with ground-truth scene graph annotations.</p>
+
+<hr />
+
+<h2 id="experiment-1-t5-baseline-performance">Experiment 1: T5 Baseline Performance</h2>
+
+<h3 id="objective">Objective</h3>
+<p>Establish baseline performance using a fine-tuned T5 model pre-trained on the FACTUAL dataset.</p>
+
+<h3 id="methodology">Methodology</h3>
+<ul>
+  <li><strong>Model</strong>: <code class="language-plaintext highlighter-rouge">flan-t5-base-VG-factual-sg</code> (220M parameters)</li>
+  <li><strong>Test Set</strong>: 100 complex samples (captions with &gt;20 words)</li>
+  <li><strong>Evaluation</strong>: Precision, Recall, and F1 for entities, attributes, and relationships</li>
+</ul>
+
+<h3 id="results">Results</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Precision</th>
+      <th>Recall</th>
+      <th>F1 Score</th>
+      <th>Support</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Entities</strong></td>
+      <td>0.946</td>
+      <td>0.884</td>
+      <td><strong>0.907</strong></td>
+      <td>343</td>
+    </tr>
+    <tr>
+      <td><strong>Attributes</strong></td>
+      <td>0.822</td>
+      <td>0.770</td>
+      <td><strong>0.782</strong></td>
+      <td>305</td>
+    </tr>
+    <tr>
+      <td><strong>Relationships</strong></td>
+      <td>0.722</td>
+      <td>0.635</td>
+      <td><strong>0.662</strong></td>
+      <td>227</td>
+    </tr>
+    <tr>
+      <td><strong>Macro F1</strong></td>
+      <td>-</td>
+      <td>-</td>
+      <td><strong>0.784</strong></td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Inference Speed</strong>: 4.64 seconds per sample</p>
+
+<h3 id="key-findings">Key Findings</h3>
+
+<p>✅ <strong>Strengths:</strong></p>
+<ul>
+  <li>Strong overall performance (0.784 macro F1)</li>
+  <li>Excellent relationship extraction (0.662 F1)</li>
+  <li>Consistent across all components</li>
+</ul>
+
+<p>❌ <strong>Weaknesses:</strong></p>
+<ul>
+  <li>Slow inference (4.6s per sample)</li>
+  <li>Requires loading a 500MB model</li>
+  <li>Domain-specific: doesn’t generalize beyond FACTUAL-style data</li>
+  <li>Requires fine-tuning for new domains</li>
+</ul>
+
+<h3 id="analysis">Analysis</h3>
+
+<p>The T5 baseline demonstrates that fine-tuning on domain-specific data yields strong performance, particularly for relationship extraction. However, the 4.6-second inference time and lack of flexibility make it less practical for production use cases requiring fast inference or cross-domain generalization.</p>
+
+<hr />
+
+<h2 id="experiment-2-langextract-proof-of-concept">Experiment 2: LangExtract Proof of Concept</h2>
+
+<h3 id="objective-1">Objective</h3>
+<p>Validate whether LangExtract with Gemini can extract scene graphs with reasonable accuracy using few-shot learning (no fine-tuning required).</p>
+
+<h3 id="methodology-1">Methodology</h3>
+<ul>
+  <li><strong>Framework</strong>: Google LangExtract with Gemini 2.5 Flash</li>
+  <li><strong>Test Set</strong>: 30 diverse samples (subset of Experiment 1)</li>
+  <li><strong>Format</strong>: Flat Entities (separate classes for entity, attribute, relationship)</li>
+  <li><strong>Examples</strong>: 5 few-shot examples demonstrating extraction patterns</li>
+  <li><strong>Processing</strong>: Batch processing (all 30 samples in single API call)</li>
+</ul>
+
+<h3 id="results-1">Results</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Precision</th>
+      <th>Recall</th>
+      <th>F1 Score</th>
+      <th>Support</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Entities</strong></td>
+      <td>0.956</td>
+      <td>0.932</td>
+      <td><strong>0.944</strong></td>
+      <td>114</td>
+    </tr>
+    <tr>
+      <td><strong>Attributes</strong></td>
+      <td>0.899</td>
+      <td>0.888</td>
+      <td><strong>0.893</strong></td>
+      <td>99</td>
+    </tr>
+    <tr>
+      <td><strong>Relationships</strong></td>
+      <td>0.237</td>
+      <td>0.139</td>
+      <td><strong>0.174</strong></td>
+      <td>72</td>
+    </tr>
+    <tr>
+      <td><strong>Macro F1</strong></td>
+      <td>-</td>
+      <td>-</td>
+      <td><strong>0.670</strong></td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Inference Speed</strong>: 0.045 seconds per sample (103x faster than T5)</p>
+
+<h3 id="key-findings-1">Key Findings</h3>
+
+<p>✅ <strong>Strengths:</strong></p>
+<ul>
+  <li>Excellent entity extraction (0.944 F1, surpassing T5)</li>
+  <li>Strong attribute extraction (0.893 F1, surpassing T5)</li>
+  <li><strong>103x faster inference</strong> than T5</li>
+  <li>No fine-tuning required</li>
+  <li>Success rate: 100% (all extractions successful)</li>
+</ul>
+
+<p>❌ <strong>Weaknesses:</strong></p>
+<ul>
+  <li>Poor relationship extraction (0.174 F1, far below T5’s 0.662)</li>
+  <li>Overall performance 17% below T5 baseline</li>
+</ul>
+
+<h3 id="analysis-1">Analysis</h3>
+
+<p>LangExtract demonstrates the power of few-shot learning: with just 5 examples, it matches or exceeds T5’s performance on entities and attributes while being dramatically faster. However, relationship extraction is significantly weaker, suggesting the few-shot examples need improvement or the task requires more sophisticated prompting.</p>
+
+<hr />
+
+<h2 id="experiment-3-format-optimization">Experiment 3: Format Optimization</h2>
+
+<h3 id="objective-2">Objective</h3>
+<p>Identify the optimal output format for LangExtract to maximize extraction accuracy.</p>
+
+<h3 id="methodology-2">Methodology</h3>
+<ul>
+  <li><strong>Framework</strong>: LangExtract + Gemini 2.5 Flash</li>
+  <li><strong>Test Set</strong>: 50 diverse samples (subset of Experiment 1)</li>
+  <li><strong>Formats Tested</strong>:
+    <ol>
+      <li><strong>Flat Entities</strong>: Separate classes (entity, attribute, relationship)</li>
+      <li><strong>Tuple Format</strong>: Direct FACTUAL format <code class="language-plaintext highlighter-rouge">(subject, predicate, object)</code></li>
+      <li><strong>Hierarchical</strong>: Nested objects with properties</li>
+      <li><strong>JSON Structured</strong>: Clean JSON with entities/attributes/relationships arrays</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="results-2">Results</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Format</th>
+      <th>Entities F1</th>
+      <th>Attributes F1</th>
+      <th>Relationships F1</th>
+      <th>Macro F1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Flat Entities</td>
+      <td>0.922</td>
+      <td>0.865</td>
+      <td>0.161</td>
+      <td><strong>0.649</strong></td>
+    </tr>
+    <tr>
+      <td>Tuple Format</td>
+      <td>0.905</td>
+      <td>0.851</td>
+      <td>0.145</td>
+      <td><strong>0.634</strong></td>
+    </tr>
+    <tr>
+      <td>Hierarchical</td>
+      <td>0.898</td>
+      <td>0.842</td>
+      <td>0.138</td>
+      <td><strong>0.626</strong></td>
+    </tr>
+    <tr>
+      <td><strong>JSON Structured</strong></td>
+      <td><strong>0.928</strong></td>
+      <td><strong>0.878</strong></td>
+      <td><strong>0.173</strong></td>
+      <td><strong>0.660</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Winner</strong>: JSON Structured (0.660 macro F1)</p>
+
+<h3 id="key-findings-2">Key Findings</h3>
+
+<p>✅ <strong>JSON Structured format performs best:</strong></p>
+<ul>
+  <li>Clearest semantic structure for LLMs</li>
+  <li>Explicitly separates entities, attributes, and relationships</li>
+  <li>Better attribute extraction due to nested structure</li>
+  <li>Slight edge in relationship extraction</li>
+</ul>
+
+<p>📊 <strong>Format Impact</strong>:</p>
+<ul>
+  <li>All formats show similar patterns (strong entities/attributes, weak relationships)</li>
+  <li>JSON format’s advantage comes from clearer semantic boundaries</li>
+  <li>Difference between best and worst: only 3.4% macro F1</li>
+</ul>
+
+<h3 id="analysis-2">Analysis</h3>
+
+<p>While JSON Structured emerges as the winner, the relatively small differences between formats (0.626-0.660) suggest that representation format is not the primary bottleneck. The consistent weakness in relationship extraction across all formats points to a deeper issue with the few-shot examples or prompting strategy.</p>
+
+<hr />
+
+<h2 id="experiment-4-backend-comparison-langextract-vs-native-gemini">Experiment 4: Backend Comparison (LangExtract vs Native Gemini)</h2>
+
+<h3 id="objective-3">Objective</h3>
+<p>Compare LangExtract framework against native Gemini structured output using the winning JSON format.</p>
+
+<h3 id="methodology-3">Methodology</h3>
+<ul>
+  <li><strong>Approaches</strong>:
+    <ol>
+      <li><strong>LangExtract</strong>: Framework with 2 few-shot examples</li>
+      <li><strong>Native Gemini</strong>: Direct API with <code class="language-plaintext highlighter-rouge">response_schema</code> + same 2 examples</li>
+    </ol>
+  </li>
+  <li><strong>Test Set</strong>: 50 samples (same as Experiment 3)</li>
+  <li><strong>Format</strong>: JSON Structured (winner from Experiment 3)</li>
+</ul>
+
+<h3 id="initial-results-before-dataset-standardization">Initial Results (Before Dataset Standardization)</h3>
+
+<p>In the initial run with inconsistent test data:</p>
+<ul>
+  <li>Native Gemini: 0.523 macro F1</li>
+  <li>LangExtract: 0.422 macro F1</li>
+</ul>
+
+<h3 id="final-results-with-consistent-dataset">Final Results (With Consistent Dataset)</h3>
+
+<p>After implementing centralized dataset loading to ensure all experiments use identical test data:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Approach</th>
+      <th>Entities F1</th>
+      <th>Attributes F1</th>
+      <th>Relationships F1</th>
+      <th>Macro F1</th>
+      <th>Speed (s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>LangExtract</strong></td>
+      <td><strong>0.944</strong></td>
+      <td><strong>0.893</strong></td>
+      <td>0.174</td>
+      <td><strong>0.670</strong></td>
+      <td><strong>0.045</strong></td>
+    </tr>
+    <tr>
+      <td>Native Gemini</td>
+      <td>0.784</td>
+      <td>0.713</td>
+      <td><strong>0.392</strong></td>
+      <td>0.630</td>
+      <td>3.762</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="key-findings-3">Key Findings</h3>
+
+<p>✅ <strong>LangExtract Advantages:</strong></p>
+<ul>
+  <li>Superior entity extraction (+20.4% over Native Gemini)</li>
+  <li>Superior attribute extraction (+25.3% over Native Gemini)</li>
+  <li><strong>83x faster</strong> inference (0.045s vs 3.76s)</li>
+  <li>Higher overall performance (+6.5% macro F1)</li>
+</ul>
+
+<p>✅ <strong>Native Gemini Advantages:</strong></p>
+<ul>
+  <li>Better relationship extraction (0.392 vs 0.174, +125%)</li>
+  <li>More structured prompt control via response_schema</li>
+</ul>
+
+<h3 id="critical-discovery">Critical Discovery</h3>
+
+<p>The results completely reversed when using consistent test data:</p>
+<ul>
+  <li><strong>Initial (inconsistent data)</strong>: Native Gemini won</li>
+  <li><strong>Final (consistent data)</strong>: LangExtract won</li>
+</ul>
+
+<p>This highlights the importance of:</p>
+<ol>
+  <li>Consistent test data across experiments</li>
+  <li>Careful dataset management</li>
+  <li>Not drawing conclusions from single runs on different data</li>
+</ol>
+
+<h3 id="analysis-3">Analysis</h3>
+
+<p>LangExtract’s framework optimizations for batch processing and few-shot learning make it more effective than raw Gemini API calls for entity and attribute extraction. However, Native Gemini’s structured schema enforcement provides better relationship extraction. The dramatic speed difference (83x) favors LangExtract for production use cases.</p>
+
+<hr />
+
+<h2 id="experiment-4b-targeted-improvement-with-analysis-driven-examples">Experiment 4b: Targeted Improvement with Analysis-Driven Examples</h2>
+
+<h3 id="objective-4">Objective</h3>
+<p>Improve LangExtract’s relationship extraction by analyzing specific failures and creating targeted few-shot examples.</p>
+
+<h3 id="methodology-4">Methodology</h3>
+
+<p><strong>Step 1: Failure Analysis</strong></p>
+<ul>
+  <li>Compared detailed results from LangExtract vs Native Gemini</li>
+  <li>Identified specific relationships Native Gemini extracted correctly but LangExtract missed</li>
+  <li>Found the root cause of failures</li>
+</ul>
+
+<p><strong>Key Discovery</strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Analysis Results:
+- Total failed relationships: 52
+- "sit on" predicate failures: 48 (92%)
+- "with" predicate failures: 4 (8%)
+
+Root Cause: LangExtract was extracting "sitting on" instead of "sit on"
+despite having instructions to use base verb forms.
+</code></pre></div></div>
+
+<p><strong>Step 2: Create Targeted Examples</strong>
+Added 5 new examples specifically demonstrating “sitting on” → “sit on” normalization:</p>
+
+<ol>
+  <li>“A white teddy bear sitting on a green carpeted stair” → uses “sit on”</li>
+  <li>“A small child sitting on a wooden chair” → uses “sit on”</li>
+  <li>“A dog sitting beside a tree” → uses “beside” (not “sitting beside”)</li>
+  <li>“People sitting on benches next to tables” → uses “sit on”</li>
+  <li>“A man standing on a ladder” → uses “stand on” (same pattern)</li>
+</ol>
+
+<p><strong>Step 3: Re-run Evaluation</strong></p>
+<ul>
+  <li>Same 50 samples as Experiment 4</li>
+  <li>Same LangExtract framework</li>
+  <li>Now with 7 total examples (2 original + 5 targeted)</li>
+</ul>
+
+<h3 id="results-3">Results</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Approach</th>
+      <th>Entities F1</th>
+      <th>Attributes F1</th>
+      <th>Relationships F1</th>
+      <th>Macro F1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Improved LangExtract</strong></td>
+      <td><strong>0.901</strong></td>
+      <td><strong>0.900</strong></td>
+      <td><strong>0.450</strong></td>
+      <td><strong>0.750</strong></td>
+    </tr>
+    <tr>
+      <td>Original LangExtract</td>
+      <td>0.944</td>
+      <td>0.893</td>
+      <td>0.174</td>
+      <td>0.670</td>
+    </tr>
+    <tr>
+      <td>Native Gemini</td>
+      <td>0.784</td>
+      <td>0.713</td>
+      <td>0.392</td>
+      <td>0.630</td>
+    </tr>
+    <tr>
+      <td>T5 Baseline</td>
+      <td>0.907</td>
+      <td>0.782</td>
+      <td>0.662</td>
+      <td>0.784</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Improvement from Targeted Examples:</strong></p>
+<ul>
+  <li>Relationships: 0.174 → 0.450 (+159% improvement!)</li>
+  <li>Macro F1: 0.670 → 0.750 (+12% improvement)</li>
+</ul>
+
+<h3 id="key-findings-4">Key Findings</h3>
+
+<p>✅ <strong>Dramatic Improvements:</strong></p>
+<ul>
+  <li>Relationship F1 increased by <strong>+159%</strong> (0.174 → 0.450)</li>
+  <li>Overall macro F1 improved by <strong>+12%</strong> (0.670 → 0.750)</li>
+  <li>Now <strong>best overall approach</strong> among all LLM-based methods</li>
+</ul>
+
+<p>✅ <strong>Analysis-Driven Success:</strong></p>
+<ul>
+  <li>By analyzing 52 specific failures, we identified a single pattern accounting for 92% of errors</li>
+  <li>Creating just 5 targeted examples addressing this pattern dramatically improved performance</li>
+  <li>Demonstrates the power of <strong>iterative few-shot learning</strong></li>
+</ul>
+
+<p>✅ <strong>Speed Maintained:</strong></p>
+<ul>
+  <li>Still 0.045s per sample (103x faster than T5, 83x faster than Native Gemini)</li>
+</ul>
+
+<p>📊 <strong>Trade-offs:</strong></p>
+<ul>
+  <li>Slight decrease in entity F1 (-0.043) as model focuses more on relationships</li>
+  <li>Net benefit is strongly positive (+0.080 macro F1)</li>
+</ul>
+
+<h3 id="analysis-4">Analysis</h3>
+
+<p>This experiment demonstrates a powerful methodology for improving LLM performance:</p>
+<ol>
+  <li><strong>Analyze failures</strong>: Don’t just look at aggregate metrics</li>
+  <li><strong>Identify patterns</strong>: Find common error modes (92% were “sit on” failures)</li>
+  <li><strong>Create targeted examples</strong>: Address specific weaknesses with focused demonstrations</li>
+  <li><strong>Iterate</strong>: Measure impact and repeat</li>
+</ol>
+
+<p>The result: Improved LangExtract now <strong>outperforms all other approaches</strong> including Native Gemini, while remaining extremely fast. It comes within 4.3% of T5’s performance (0.750 vs 0.784) despite using only 7 examples instead of full fine-tuning.</p>
+
+<hr />
+
+<h2 id="comprehensive-comparison">Comprehensive Comparison</h2>
+
+<h3 id="overall-results-across-all-experiments">Overall Results Across All Experiments</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Approach</th>
+      <th>Test Samples</th>
+      <th>Entities F1</th>
+      <th>Attributes F1</th>
+      <th>Relationships F1</th>
+      <th>Macro F1</th>
+      <th>Speed (s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>T5 Baseline</strong></td>
+      <td>100</td>
+      <td>0.907</td>
+      <td>0.782</td>
+      <td><strong>0.662</strong></td>
+      <td><strong>0.784</strong></td>
+      <td>4.641</td>
+    </tr>
+    <tr>
+      <td>LangExtract Original</td>
+      <td>50</td>
+      <td><strong>0.944</strong></td>
+      <td><strong>0.893</strong></td>
+      <td>0.174</td>
+      <td>0.670</td>
+      <td><strong>0.045</strong></td>
+    </tr>
+    <tr>
+      <td>Native Gemini</td>
+      <td>50</td>
+      <td>0.784</td>
+      <td>0.713</td>
+      <td>0.392</td>
+      <td>0.630</td>
+      <td>3.762</td>
+    </tr>
+    <tr>
+      <td><strong>LangExtract Improved</strong></td>
+      <td>50</td>
+      <td>0.901</td>
+      <td><strong>0.900</strong></td>
+      <td>0.450</td>
+      <td><strong>0.750</strong></td>
+      <td><strong>0.045</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="performance-vs-speed-trade-off">Performance vs Speed Trade-off</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                    High Performance (0.78+ F1)
+                            │
+    T5 Baseline ─────────── │ ──────────── Improved LangExtract
+       (0.784 F1)           │                  (0.750 F1)
+       4.64s/sample         │                  0.045s/sample
+                            │
+                            │
+                            │         Native Gemini
+                            │           (0.630 F1)
+                            │           3.76s/sample
+                            │
+                    Low Performance (0.63 F1)
+
+    Slow ──────────────────────────────────────────── Fast
+         (&gt;3s/sample)            (~0.05s/sample)
+</code></pre></div></div>
+
+<h3 id="key-insights">Key Insights</h3>
+
+<ol>
+  <li><strong>Fine-tuning vs Few-shot</strong>:
+    <ul>
+      <li>T5 (fine-tuned): 0.784 macro F1, 4.64s/sample</li>
+      <li>Improved LangExtract (7 examples): 0.750 macro F1, 0.045s/sample</li>
+      <li><strong>Gap</strong>: Only 4.3% lower performance with 103x faster inference</li>
+    </ul>
+  </li>
+  <li><strong>Component Strengths</strong>:
+    <ul>
+      <li><strong>Entities</strong>: LLMs excel (0.90+ F1 with few-shot)</li>
+      <li><strong>Attributes</strong>: LLMs excel (0.90 F1 vs T5’s 0.78)</li>
+      <li><strong>Relationships</strong>: Fine-tuning wins (T5: 0.66 F1 vs LangExtract: 0.45)</li>
+    </ul>
+  </li>
+  <li><strong>Speed Matters</strong>:
+    <ul>
+      <li>LangExtract: 0.045s = 22 samples/second</li>
+      <li>T5: 4.64s = 0.2 samples/second</li>
+      <li><strong>110x throughput advantage</strong> for LangExtract</li>
+    </ul>
+  </li>
+  <li><strong>Iterative Improvement Works</strong>:
+    <ul>
+      <li>Original LangExtract: 0.174 relationship F1</li>
+      <li>After analysis + 5 targeted examples: 0.450 relationship F1</li>
+      <li><strong>+159% improvement</strong> with minimal effort</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="conclusions-and-recommendations">Conclusions and Recommendations</h2>
+
+<h3 id="key-takeaways">Key Takeaways</h3>
+
+<ol>
+  <li><strong>Few-Shot Learning is Surprisingly Effective</strong>
+    <ul>
+      <li>With just 7 examples, LangExtract achieved 96% of T5’s performance (0.750 vs 0.784)</li>
+      <li>No fine-tuning, no domain-specific training data required</li>
+      <li>Dramatically faster inference (103x speedup)</li>
+    </ul>
+  </li>
+  <li><strong>Analysis-Driven Few-Shot Engineering is Powerful</strong>
+    <ul>
+      <li>Analyzing specific failures revealed 92% of errors came from one pattern</li>
+      <li>Creating 5 targeted examples improved relationship F1 by +159%</li>
+      <li>This methodology can be repeated iteratively to close the gap with fine-tuned models</li>
+    </ul>
+  </li>
+  <li><strong>Dataset Consistency is Critical</strong>
+    <ul>
+      <li>Initial experiment 4 results were misleading due to inconsistent test data</li>
+      <li>Centralizing dataset loading (dataset_utils.py) ensured fair comparisons</li>
+      <li>Lesson: Always use identical test sets when comparing approaches</li>
+    </ul>
+  </li>
+  <li><strong>LLMs Excel at Different Tasks Than Fine-tuned Models</strong>
+    <ul>
+      <li><strong>LLMs better at</strong>: Entities (0.90+ F1), Attributes (0.90 F1)</li>
+      <li><strong>Fine-tuned models better at</strong>: Relationships (0.66 vs 0.45 F1)</li>
+      <li>This suggests relationships require more domain-specific knowledge</li>
+    </ul>
+  </li>
+  <li><strong>Speed vs Accuracy Trade-offs</strong>
+    <ul>
+      <li>T5: Best accuracy, slowest (4.6s/sample)</li>
+      <li>Improved LangExtract: Excellent accuracy, extremely fast (0.045s/sample)</li>
+      <li>Native Gemini: Worst of both worlds (lower accuracy, slow)</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="recommendations-by-use-case">Recommendations by Use Case</h3>
+
+<h4 id="choose-t5-fine-tuned-model-if">Choose <strong>T5 Fine-tuned Model</strong> if:</h4>
+<p>✅ You need the absolute best relationship extraction (0.662 F1)
+✅ Inference speed is not a constraint
+✅ You’re working with FACTUAL-style data
+✅ You have computational resources for model loading</p>
+
+<h4 id="choose-improved-langextract-if">Choose <strong>Improved LangExtract</strong> if:</h4>
+<p>✅ You need fast inference (22 samples/second)
+✅ You want excellent entity/attribute extraction (0.90 F1)
+✅ You need flexibility to adapt to new domains (just change examples)
+✅ You want good all-around performance without fine-tuning
+✅ <strong>Recommended for most production use cases</strong></p>
+
+<h4 id="choose-native-gemini-if">Choose <strong>Native Gemini</strong> if:</h4>
+<p>⚠️ You need more control over structured output schema
+⚠️ You’re building custom pipelines beyond LangExtract’s capabilities
+❌ Generally not recommended for this task (slower and less accurate than LangExtract)</p>
+
+<h3 id="future-work">Future Work</h3>
+
+<ol>
+  <li><strong>Close the Relationship Gap</strong>
+    <ul>
+      <li>Current improved LangExtract: 0.450 relationship F1</li>
+      <li>T5 fine-tuned: 0.662 relationship F1</li>
+      <li><strong>Gap to close</strong>: 0.212 F1 points</li>
+      <li>Approach: Continue iterative analysis + targeted examples</li>
+    </ul>
+  </li>
+  <li><strong>Test on More Complex Samples</strong>
+    <ul>
+      <li>Current experiments used complex captions (&gt;20 words)</li>
+      <li>Test on even longer, more complex descriptions</li>
+      <li>Evaluate where LLMs break down vs fine-tuned models</li>
+    </ul>
+  </li>
+  <li><strong>Cross-Domain Generalization</strong>
+    <ul>
+      <li>Test improved LangExtract on non-FACTUAL datasets</li>
+      <li>Evaluate how well few-shot examples transfer</li>
+      <li>Compare against domain-specific fine-tuned models</li>
+    </ul>
+  </li>
+  <li><strong>Hybrid Approaches</strong>
+    <ul>
+      <li>Could LLMs extract entities/attributes, then specialized model handles relationships?</li>
+      <li>Explore combining strengths of both approaches</li>
+      <li>Potential for best of both worlds: speed + accuracy</li>
+    </ul>
+  </li>
+  <li><strong>Cost Analysis</strong>
+    <ul>
+      <li>LangExtract uses API calls (cost per sample)</li>
+      <li>T5 requires GPU resources (fixed infrastructure cost)</li>
+      <li>Comprehensive cost-benefit analysis for different scales</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="final-thoughts">Final Thoughts</h3>
+
+<p>This series of experiments demonstrates that <strong>modern LLMs with few-shot learning can approach the performance of fine-tuned models</strong> while offering dramatic speed advantages and flexibility. The key insight: <strong>analysis-driven few-shot engineering</strong> is a powerful technique for iteratively improving LLM performance on structured extraction tasks.</p>
+
+<p>For scene graph extraction specifically:</p>
+<ul>
+  <li><strong>Improved LangExtract achieved 96% of T5’s performance with 103x faster inference</strong></li>
+  <li><strong>Adding just 5 targeted examples improved relationship extraction by +159%</strong></li>
+  <li><strong>The gap between few-shot and fine-tuning continues to narrow</strong></li>
+</ul>
+
+<p>As LLMs continue to improve and few-shot learning techniques become more sophisticated, we expect the gap to close further. For practitioners, this means:</p>
+<ul>
+  <li><strong>Start with few-shot LLMs</strong> for their speed and flexibility</li>
+  <li><strong>Use fine-tuned models</strong> only when you need the absolute best accuracy</li>
+  <li><strong>Invest time in analysis-driven example engineering</strong> rather than collecting labeled data for fine-tuning</li>
+</ul>
+
+<p>The future of structured extraction is fast, flexible, and increasingly accurate—powered by few-shot learning with large language models.</p>
+
+<hr />
+
+<h2 id="appendix-reproduction">Appendix: Reproduction</h2>
+
+<p>All experiments are reproducible using:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install dependencies</span>
+uv add FactualSceneGraph langextract anthropic datasets torch pandas numpy matplotlib seaborn python-dotenv scikit-learn
+
+<span class="c"># Run experiments</span>
+uv run experiment_1_t5_baseline.py
+uv run experiment_2_langextract_poc_batched.py
+uv run experiment_3_format_optimization_batched.py
+uv run experiment_4_backend_comparison.py
+uv run experiment_4b_improved_langextract.py
+
+<span class="c"># Compare all results</span>
+uv run compare_all_experiments.py
+</code></pre></div></div>
+
+<p>Dataset: <a href="https://huggingface.co/datasets/lizhuang144/FACTUAL_Scene_Graph">FACTUAL Scene Graph Dataset</a></p>
+
+<p>Code: Available in this repository</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="semantic" /><category term="scene-graph" /><category term="captioning" /><category term="langextract" /><category term="t5" /><category term="few-shot" /><category term="llm" /><category term="gemini" /><summary type="html"><![CDATA[The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference.]]></summary></entry><entry><title type="html">Experiment 23</title><link href="https://dlfelps.github.io/2025/10/01/devit.html" rel="alternate" type="text/html" title="Experiment 23" /><published>2025-10-01T00:00:00+00:00</published><updated>2025-10-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/10/01/devit</id><content type="html" xml:base="https://dlfelps.github.io/2025/10/01/devit.html"><![CDATA[<p>The blog post describes a fork of the DE-ViT algorithm that adapts it for few-shot object detection on satellite imagery by using DINOv3 vision transformers pretrained on the SAT-493M dataset, with a target application of detecting objects in the xView dataset.</p>
+
+<h1 id="zero-shot-object-detection-for-overhead-imagery-a-de-vit-adaptation">Zero-Shot Object Detection for Overhead Imagery: A DE-ViT Adaptation</h1>
+
+<h2 id="the-de-vit-approach">The DE-ViT Approach</h2>
+
+<p>DE-ViT (Detection Transformer with Vision Transformers) represents a significant advancement in few-shot object detection, leveraging the powerful feature representations learned by vision transformers. The approach combines a pretrained vision transformer backbone with a region propagation network to enable detection with minimal training examples. The core innovation lies in how DE-ViT propagates information between support (example) images and query (target) images through a sophisticated attention mechanism, allowing the model to generalize to novel object categories with limited data.</p>
+
+<p>The original DE-ViT architecture employs a subspace projection mechanism to align features from the vision transformer backbone, followed by region proposal generation and a region propagation network that refines detections based on support set prototypes. For a comprehensive understanding of the theoretical foundations, architectural details, and empirical validations, readers are directed to the original research paper (2309.12969v4.pdf).</p>
+
+<h2 id="overhead-imagery-unique-challenges-and-the-xview-dataset">Overhead Imagery: Unique Challenges and the xView Dataset</h2>
+
+<p>Overhead imagery presents distinct challenges that differentiate it from natural image domains. The most critical challenge is <strong>rotation invariance</strong>: objects in satellite and aerial imagery can appear at arbitrary orientations, unlike natural images where vehicles are typically upright and buildings follow gravity-aligned perspectives. A car photographed from above may appear at any angle from 0 to 360 degrees, and detection systems must recognize it regardless of orientation.</p>
+
+<p>The <strong>xView dataset</strong> has become a cornerstone benchmark for evaluating object detection algorithms in overhead imagery. Released in 2018, xView contains over 1 million object instances across 60 categories in high-resolution satellite imagery, spanning diverse geographic regions and imaging conditions. The dataset was specifically designed to challenge computer vision systems with the complexities of overhead imagery: dense object clustering, extreme scale variation (objects ranging from small vehicles to large buildings), and the aforementioned rotation problem.</p>
+
+<p>Historically, xView has driven innovation in several areas: anchor-free detection methods to handle arbitrary orientations, multi-scale feature pyramids to address the extreme scale variation, and attention mechanisms to manage dense scenes. However, most successful approaches have required extensive training on large labeled datasets, limiting their applicability in scenarios where labeled data is scarce or when adapting to new object categories.</p>
+
+<h2 id="novel-contributions-toward-zero-shot-detection">Novel Contributions: Toward Zero-Shot Detection</h2>
+
+<p>This project introduces several key modifications to the original DE-ViT framework, fundamentally shifting from a few-shot to a <strong>zero-shot detection paradigm</strong> optimized for overhead imagery.</p>
+
+<h3 id="1-removal-of-the-region-propagation-network">1. Removal of the Region Propagation Network</h3>
+
+<p>The most significant architectural change is the <strong>elimination of the region propagation component</strong>. While the original DE-ViT uses this network to refine detections through learned interactions between support and query features, this requires training on a base dataset. By removing this component, we transition to a true zero-shot scenario where no training is required. Instead, the system relies entirely on the rich feature representations from the DINOv3 vision transformer, which has been pretrained on 493 million satellite images (SAT-493M dataset). This pretrained knowledge serves as the foundation for detection without any task-specific fine-tuning.</p>
+
+<h3 id="2-differentiated-prototype-generation">2. Differentiated Prototype Generation</h3>
+
+<p>The approach to <strong>prototype generation</strong> differs fundamentally between base and novel categories:</p>
+
+<p><strong>Base Data Prototypes</strong>: For established object categories in the base dataset, prototypes are generated using standard feature extraction and pooling techniques. These prototypes serve as canonical representations of each category, extracted from single-orientation examples under the assumption that the DINOv3 backbone has already learned rotation-invariant features during pretraining.</p>
+
+<p><strong>Novel Data Prototypes with Rotation Augmentation</strong>: For novel categories where rotation invariance cannot be assumed, the system employs a <strong>rotation augmentation strategy</strong>. Multiple rotated versions of support images are generated (at incremental angles), and features are extracted from each rotation. These multi-orientation features are then aggregated to create rotation-robust prototypes. This ensures that when a novel object appears at an arbitrary angle in a query image, it can be matched against prototypes that encode appearance information across all orientations.</p>
+
+<h3 id="3-support-vector-machine-ensemble-for-confidence-scoring">3. Support Vector Machine Ensemble for Confidence Scoring</h3>
+
+<p>The final novel component is the integration of a <strong>Support Vector Machine (SVM) ensemble</strong> as a confidence gating mechanism. Rather than directly thresholding similarity scores between query features and prototypes, an ensemble of SVMs is trained to distinguish between genuine matches and false positives. Each SVM in the ensemble is trained on different feature subspaces or using different kernel functions, and their outputs are combined through a voting or weighted averaging scheme.</p>
+
+<p>This ensemble approach provides several benefits: it captures non-linear decision boundaries that simple cosine similarity cannot, it reduces false positives by requiring consensus across multiple classifiers, and it produces calibrated confidence scores that better reflect true match probability. The SVM ensemble acts as a final filter, ensuring that only high-confidence detections propagate to the final output.</p>
+
+<h2 id="experiment--results">Experiment &amp; Results</h2>
+
+<p>I will start by summarizing the result and then briefly describe the experiment. The results were dissapointing. Despite the favorable results published in the <a href="https://arxiv.org/abs/2309.12969">paper</a>, the author admits on his <a href="https://github.com/mlzxy/devit/tree/main">Github site</a> that:</p>
+
+<blockquote>
+  <p>[DeVIT] tends to detect objects that do not belong to the prototypes, especially for retailed products that are not presented in the training data. For example, if you have “can”, “bottle”, and “toy” in the scene, but you only have “can” and “bottle” in the class prototypes. The ideal performance is to mark “toy” as background, but DE-ViT tends to detect “toy” as either “can” or “bottle”.</p>
+</blockquote>
+
+<p>I noticed a similar trend. While the approach is promising for tapping into the power of foundation vision models for few-shot learning, it fails to provide good performance at scale for satellite imagery.</p>
+
+<h3 id="experiment">Experiment</h3>
+
+<p>I did not perform a formal experiment, but here is a rough description of the anecdotal test:</p>
+<ul>
+  <li>2 prototype base classes that cover +70% of xView’s dataset (building &amp; bus)</li>
+  <li>1 background base class</li>
+  <li>1 novel class for testing (excavator)</li>
+  <li>5 full view satellite images with known excavators present</li>
+</ul>
+
+<p>###</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This project demonstrates that effective zero-shot object detection in overhead imagery is achievable through careful architectural modifications and domain-specific adaptations. By removing the trainable region propagation network, we eliminate the need for training data while relying on strong pretrained features from DINOv3. The rotation-aware prototype generation strategy directly addresses the orientation challenge inherent to overhead imagery, and the SVM ensemble provides robust confidence filtering to maintain detection precision.</p>
+
+<p>The combination of these innovations creates a practical system for detecting novel object categories in satellite imagery without requiring labeled training data—a significant step toward adaptable, deployment-ready detection systems for real-world remote sensing applications. Future work may explore adaptive rotation augmentation strategies, hierarchical prototype refinement, and extension to additional overhead imagery datasets beyond xView.</p>
+
+<p>Code for this project can be found at <a href="https://github.com/dlfelps/devit-xview">https://github.com/dlfelps/devit-xview</a>.</p>
+
+<h2 id="claude-protips">CLAUDE PROTIPS</h2>
+
+<p>In the last few blog posts I provided examples where CLAUDE needed extra guidance. I thought I would do something different in this post.</p>
+
+<ol>
+  <li>PROTIP #1: When working in complex code bases (such as a research level machine learning project), work in small measured steps.</li>
+  <li>PROTIP #2: After using CLAUDE to implement a new feature (or in this case replace an existing module with something else), ask CLAUDE to write a simple script to demonstrate/test the new feature. Optional: treat this as a temporary test - you don’t have to add it to git.</li>
+  <li>PROTIP #3: If there is a problem that “feels small” and I think I have a good idea how to fix it, I just give CLAUDE the error and CLAUDE will usually fix it.</li>
+  <li>PROTIP #4: If there is a problem that “feels big” and I don’t understand it or know how to fix it, I ask CLAUDE to write a debugging script to log values up to the point at which the error occurs. Then I review the output. Next I ask CLAUDE to fix the problem and then run the debugging script again. If all goes well and values make sense I rerun the original code.</li>
+  <li>PROTIP #5</li>
+</ol>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="few-shot" /><category term="dino" /><category term="devit" /><summary type="html"><![CDATA[The blog post describes a fork of the DE-ViT algorithm that adapts it for few-shot object detection on satellite imagery by using DINOv3 vision transformers pretrained on the SAT-493M dataset, with a target application of detecting objects in the xView dataset.]]></summary></entry><entry><title type="html">Experiment 22</title><link href="https://dlfelps.github.io/2025/09/01/cobad.html" rel="alternate" type="text/html" title="Experiment 22" /><published>2025-09-01T00:00:00+00:00</published><updated>2025-09-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/09/01/cobad</id><content type="html" xml:base="https://dlfelps.github.io/2025/09/01/cobad.html"><![CDATA[<p>The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.</p>
 
 <h2 id="introduction-beyond-individual-anomalies">Introduction: Beyond Individual Anomalies</h2>
 
@@ -1856,355 +2735,4 @@ few_shot_classifier = PrototypicalNetworks(model).to(DEVICE)
       <p>Yoshua Bengio and Geoffrey Hinton are also given this title. In 2018 LeCun, Bengio, and Hinton won the <a href="https://www.acm.org/media-center/2019/march/turing-award-2018">Turing award</a> for their contributions in deep learing. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="vit" /><category term="computer-vision" /><category term="image-retrieval" /><category term="ml-portfolio" /><category term="self-supervised" /><summary type="html"><![CDATA[This post explores DINOv2 - a foundational vision model from FAIR.]]></summary></entry><entry><title type="html">Experiment 14</title><link href="https://dlfelps.github.io/2024/06/01/quantum-smalltalk5.html" rel="alternate" type="text/html" title="Experiment 14" /><published>2024-06-01T00:00:00+00:00</published><updated>2024-06-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/06/01/quantum-smalltalk5</id><content type="html" xml:base="https://dlfelps.github.io/2024/06/01/quantum-smalltalk5.html"><![CDATA[<h1 id="introduction">Introduction</h1>
-<p>Our final post in the Quantum Smalltalk series explores a thought experiment proposed by Avshalom Elitzur and Lev Vaidman to demonstrate an unusual quantum feature - interaction-free measurement.</p>
-
-<h1 id="experiment-14">Experiment #14</h1>
-<p>Elitzur and  Vaidman proposed the following thought experiment:</p>
-
-<blockquote>
-  <p>You are given 100 EV bombs. Due to a manufacturing problem that was caught too late, some of the triggers are defective. Your job is to try to salvage as many good bombs as possible.</p>
-</blockquote>
-
-<h2 id="what-is-an-ev-bomb">What is an EV Bomb?</h2>
-<p>This experiment requires us to add a new piece of equipment to our workbench - the EV bomb. This bomb is special because it has a very sensitive trigger: a photon detector. Turn out the lights now because a single photon can cause this bomb to explode!</p>
-
-<p>The following rules describe an EV bomb:</p>
-<ol>
-  <li>If the trigger is not defective, when a photon enters trigger tube the bomb explodes and you cannot salvage the bomb.</li>
-  <li>If the trigger is defective, when a photon enters the trigger tube the bomb does not explode and the photon continues undisturbed out the trigger tube exit.</li>
-  <li>The distance from the bomb to the rest of the equipment is sufficiently large to protect the equipment; only the bomb is destroyed if an explosion occurs.</li>
-</ol>
-
-<h2 id="attempt-1">Attempt #1</h2>
-<p><img src="/assets/images/exp14.png" alt="Experiment #14" title="Experiment #14" /></p>
-
-<p>Our first attempt to salvage the good EV bombs isn’t very clever. Let’s just shoot some photons at it and see what happens.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">Count</th>
-      <th style="text-align: center">Explosion</th>
-      <th style="text-align: center">Photon detected at D1</th>
-      <th style="text-align: center">Bombs salvaged</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">80</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">0</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">20</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">N/A</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>We tested all the bombs and determined with 100% accuracy which ones were defective and which ones were good. However, we failed to salvage any of the good bombs because they were blown up in the process. If it seems like this thought experiment has no solution, then you are likely restricting yourself to solutions that follow the principle of locality. (For extra details on locality see Appendix B &amp; C below.)</p>
-
-<h2 id="attempt-2">Attempt #2</h2>
-<p><img src="/assets/images/exp15.png" alt="Experiment #15" title="Experiment #15" /></p>
-
-<p>Our second attempt should look familiar by now - the Mach-Zehnder setup. We place the bomb on the path between the first beamsplitter and the lower mirror and observe the following results:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">Count</th>
-      <th style="text-align: center">Explosion</th>
-      <th style="text-align: center">Photon detected at D0</th>
-      <th style="text-align: center">Photon detected at D1</th>
-      <th style="text-align: center">Bombs salvaged</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">40</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">?</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">40</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">?</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">20</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">?</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>Clearly we can’t salvage any of the 40 good bombs that blew up. But what about the remaining 60 that didn’t explode? Were they all defective? To answer this question, let’s look at our simulation output. We first observe what happens to photons that pass through a defective EV bomb:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-Emitting a photon from lower path. &gt;&gt; #(0 1)
-Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Photon passes through defective EV Bomb placed on the lower path. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Photon passing through a beam splitter. &gt;&gt; #(0.9999999999999996 0.0)
-Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999996 0.0 )
-
-</code></pre></div></div>
-
-<p>Defective EV bombs act as if they aren’t there (just like Experiment #11) so there is a 100% chance that it will be detected at D0. Good EV bombs give a different result:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
-Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Photon detonates EV Bomb on the lower path with 50% probability. &gt;&gt; #(0.4999999999999999 0)
-Photon bouncing off of a mirror. &gt;&gt; #(0.0 0.4999999999999999)
-Photon passing through a beam splitter. &gt;&gt; #(0.2499999999999999 0.2499999999999999)
-Photon finally detected with following probabilities: &gt;&gt; #(0.2499999999999999 0.2499999999999999)
-</code></pre></div></div>
-
-<p>From the simulation we see that half of the time the EV bomb detonates. Therefore, we can deduce that there were 80 good bombs (because we observed 40 detonating) and 20 bad bombs (the remainder). The output probability for the bombs that don’t detonate is 25% at D0 and 25% at D1. This means that the 20 bombs we observed at D1 are good! The other 40 bombs that didn’t detonate and that we observed at D0 have a 50% probability of being good, but we can’t tell which is which.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">Count</th>
-      <th style="text-align: center">Explosion</th>
-      <th style="text-align: center">Photon detected at D0</th>
-      <th style="text-align: center">Photon detected at D1</th>
-      <th style="text-align: center">Bombs salvaged</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">40</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">0</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">40</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">0</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">20</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">20</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="attempt-3-optional">Attempt #3 (optional)</h2>
-
-<p>It’s a shame that we were only able to recover 25% of the good bombs. We can achieve the theoretical limit of 50% (or 40 in our example) by using something called the <a href="https://en.wikipedia.org/wiki/Quantum_Zeno_effect?useskin=vector">Quantum Zeno Effect</a>. The details of how to extend our setup using this effect are left up to the reader. I recommend <a href="https://youtu.be/fus1nJ6JaTk?si=Y6ljo3NrULArOx5H&amp;t=375">this video</a>.</p>
-
-<p><img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*bjGo9HLPhqvxcVbdZGnuOA.gif" alt="Quantum Zeno effect" />
-<a href="https://medium.com/qiskit/building-quantum-bomb-testers-and-other-thought-experiments-with-quantum-computers-c160060fdde4">source</a></p>
-
-<h1 id="interaction-free-measurement">Interaction-free measurement</h1>
-
-<p>The EV bomb experiment demonstrates a non-local feature of quantum mechanics; we were able to learn something about a path that the photon didn’t take. Furthermore, we did so without any prior information. This is called an interaction-free measurement.</p>
-
-<p>This is in contrast to, for example, the case where it is known that an object is located in one of two boxes. Looking and <em>not</em> finding it in one box tells us that the object is located inside the other box. This is also an interaction-free measurement, but it does not violate non-locality because we used prior information.</p>
-
-<h1 id="summary">Summary</h1>
-<p>Experiment #14 presented another weird quantum feature of interaction-free measurements. Although our treatment was theoretical, know that these results have been duplicated in the <a href="https://www.oeaw.ac.at/fileadmin/Institute/IQOQI-Vienna/PDF/publications-zeilinger/1994_-_Fundamental_Problems_in_Quantum_Theory_-_Experimental_Realization_of_Interaction-Free_Measurement.pdf">lab</a>.</p>
-
-<h1 id="conclusion">Conclusion</h1>
-<p>This post concludes the Quantum Smalltalk series. I am amazed at how much of the quantum world we were able to explore using the Mach-Zehnder setup. I hope that these posts piqued your interest in quantum mechanics. There are a lot of great resources available. As a next step, I recommend the book <a href="https://www.amazon.com/Through-Two-Doors-Once-Experiment/dp/1101986093">Through Two Doors at Once: The Elegant Experiment That Captures the Enigma of Our Quantum Reality</a> by Anil Ananthaswamy. Alternatively, if you find general relativity generally fascinating then you might want to explore more advanced topics like the <a href="https://en.wikipedia.org/wiki/Black_hole_information_paradox?useskin=vector">black hole information paradox</a>.</p>
-
-<h1 id="appendix-a-the-smalltalk-code">Appendix A: The Smalltalk code</h1>
-<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>
-
-<h1 id="appendix-b-einstein-and-locality">Appendix B: Einstein and locality</h1>
-<p>The principle of locality states that for one point to have an effect one another point, something must travel between the points to cause the effect. The special theory of relativity limits the speed of travel to the speed of light. Therefore an event at point <strong>A</strong> cannot cause a result at point <strong>B</strong> in a time less than <strong>D/c</strong>, where <strong>D</strong> is the distance between the points and <strong>c</strong> is the speed of light in vacuum.</p>
-
-<p>Einstein believed in locality. In one of his 1935 papers, Einstein (along with co-authors Podolsky and Rosen) describe a thought experiment that demonstrates a scenario where quantum mechanics violates locality and concluded that quantum theory does not provide a complete description of reality. The paper ends by saying:</p>
-
-<blockquote>
-  <p>“While we have thus shown that the wave function does not provide a complete description of the physical reality, we left open the question of whether or not such a description exists. We believe, however, that such a theory is possible.”</p>
-</blockquote>
-
-<p>Einstein believed that the solution to the paradox lay in introducing additional (possibly inaccessible) variables. Such a theory is known as a hidden variable theory.</p>
-
-<h1 id="appendix-c-bell-and-locality">Appendix C: Bell and locality</h1>
-<p>Almost 30 years after Einstein’s paper, John Stewart Bell proposed a theory that states that no theory of hidden local variables can ever reproduce all the predictions of quantum mechanics. To date, all such experiments have supported the theory of quantum physics and not the hypothesis of local hidden variables. The 2022 Nobel Prize in Physics was awarded to three scientists (John Clauser, Alain Aspect, and Anton Zeilinger) for their efforts to experimentally validate violations of the Bell inequalities. Bell’s test proves that quantum mechanics is either non-local itself or has non-local hidden variables.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction Our final post in the Quantum Smalltalk series explores a thought experiment proposed by Avshalom Elitzur and Lev Vaidman to demonstrate an unusual quantum feature - interaction-free measurement.]]></summary></entry><entry><title type="html">Experiment 13</title><link href="https://dlfelps.github.io/2024/05/01/quantum-smalltalk4.html" rel="alternate" type="text/html" title="Experiment 13" /><published>2024-05-01T00:00:00+00:00</published><updated>2024-05-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/05/01/quantum-smalltalk4</id><content type="html" xml:base="https://dlfelps.github.io/2024/05/01/quantum-smalltalk4.html"><![CDATA[<h1 id="introduction">Introduction</h1>
-<p>In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions:</p>
-<ul>
-  <li>Does the photon decide to travel as a wave or a particle depending on the experimental setup?</li>
-  <li>And if yes, when does the photon decide?</li>
-</ul>
-
-<h1 id="experiment-13">Experiment #13</h1>
-<p><img src="/assets/images/exp4.gif" alt="Experiment #13" title="Experiment #13" /></p>
-
-<p>Combine the setups from Experiment #11 and #12 by randomly inserting the second beamsplitter AFTER the photon has interacted with the first beam splitter. This allows the photon to take one of six paths:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">State name</th>
-      <th style="text-align: center">Path at BS1</th>
-      <th style="text-align: center">BS2 present</th>
-      <th style="text-align: center">Path at BS2</th>
-      <th style="text-align: center">Detector</th>
-      <th style="text-align: center">Probability</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">RX</td>
-      <td style="text-align: center">Reflected</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">N/A</td>
-      <td style="text-align: center">D1</td>
-      <td style="text-align: center">?</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">TX</td>
-      <td style="text-align: center">Transmitted</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">N/A</td>
-      <td style="text-align: center">D0</td>
-      <td style="text-align: center">?</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">RR</td>
-      <td style="text-align: center">Reflected</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">Reflected</td>
-      <td style="text-align: center">D1</td>
-      <td style="text-align: center">?</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">RT</td>
-      <td style="text-align: center">Reflected</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">Transmitted</td>
-      <td style="text-align: center">D0</td>
-      <td style="text-align: center">?</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">TR</td>
-      <td style="text-align: center">Transmitted</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">Reflected</td>
-      <td style="text-align: center">D0</td>
-      <td style="text-align: center">?</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">TT</td>
-      <td style="text-align: center">Transmitted</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">Transmitted</td>
-      <td style="text-align: center">D1</td>
-      <td style="text-align: center">?</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>We have seen both of the setups independently, but now the decision to add the second beamsplitter takes place during the experiment.</p>
-
-<h2 id="results">Results</h2>
-
-<p>Let’s examine two of the Smalltalk simulation runs. In the first example, the second beamsplitter was omitted from the setup.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
-Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Second beamsplitter omitted from setup. 
-Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Photon finally detected with following probabilities: &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-
-</code></pre></div></div>
-<p>We observe detection probabilities similar to those in Experiment #12. In the next example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Emitting a photon from lower path. &gt;&gt; #(0 1)
-Photon passing through a beam splitter. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Second beamsplitter inserted into setup after mirror. 
-Photon bouncing off of a mirror. &gt;&gt; #(0.4999999999999999 0.4999999999999999)
-Photon passing through a beam splitter. &gt;&gt; #(0.9999999999999996 0.0 )
-Photon finally detected with following probabilities: &gt;&gt; #(0.9999999999999996 0.0)
-</code></pre></div></div>
-
-<p>We observe detection probabilities similar to those in Experiment #11. Filling in the results chart we notice that the table reads as if there were two different experiments going on (i.e. the total observation probability adds up to 2.0!)</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">State name</th>
-      <th style="text-align: center">Path at BS1</th>
-      <th style="text-align: center">BS2 present</th>
-      <th style="text-align: center">Path at BS2</th>
-      <th style="text-align: center">Detector</th>
-      <th style="text-align: center">Probability</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">RX</td>
-      <td style="text-align: center">Reflected</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">N/A</td>
-      <td style="text-align: center">D1</td>
-      <td style="text-align: center">0.50</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">TX</td>
-      <td style="text-align: center">Transmitted</td>
-      <td style="text-align: center">No</td>
-      <td style="text-align: center">N/A</td>
-      <td style="text-align: center">D0</td>
-      <td style="text-align: center">0.50</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">RR/TT</td>
-      <td style="text-align: center">?</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">?</td>
-      <td style="text-align: center">D1</td>
-      <td style="text-align: center">0.0</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">RT/TR</td>
-      <td style="text-align: center">?</td>
-      <td style="text-align: center">Yes</td>
-      <td style="text-align: center">?</td>
-      <td style="text-align: center">D0</td>
-      <td style="text-align: center">1.0</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>This is because there are two experiments happening - as soon as you insert the second beamsplitter you change the experiment.</p>
-
-<h1 id="interpretation">Interpretation</h1>
-<p>It is clear that the behavior of the photon in the interferometer depends on the choice of second beamsplitter, even when that choice is made after the photon enters the interferometer. In Wheeler’s words,</p>
-
-<blockquote>
-  <p>“we have a strange inversion of the normal order of time. We, now, by moving the mirror in or out have an unavoidable effect on what we have a right to say about the already past history of that photon”</p>
-</blockquote>
-
-<p>It may be tempting to interpret this experiment as a case of <a href="https://en.wikipedia.org/wiki/Retrocausality">retrocausality</a>, whereby the insertion of the second beamsplitter causes the photon to retroactively act like a wave instead of a particle. However, this is a leap too far.</p>
-
-<p>Experiment #13, also known as the <a href="https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment">delayed-choice experiment</a>, demonstrates a  subtle point of <a href="https://en.wikipedia.org/w/index.php?title=Wave%E2%80%93particle_duality">wave-particle duality</a> - a photon’s behavior is <em>always</em> governed by the Schrödinger equation, yet when measured, it is observed as a particle whose location is determined by the <a href="https://en.wikipedia.org/wiki/Born_rule">Born rule</a>.</p>
-
-<p>This is what is meant by a photon acting like a <em>wave</em> and a <em>particle</em>. But what about Experiments #10 and #12, where the photon acted only like a particle and not like a wave? WRONG. The photon was both, but the wavefunction predicted behavior that did not have any interference (i.e. it is particle-like).</p>
-
-<h1 id="summary">Summary</h1>
-<p>Experiment #13 presented John Wheeler’s <a href="https://en.wikipedia.org/wiki/Wheeler%27s_delayed-choice_experiment">delayed-choice experiment</a>. An interesting variation of this experiment is called the <a href="https://en.wikipedia.org/wiki/Delayed-choice_quantum_eraser">delayed-choice quantum eraser</a>.</p>
-
-<h1 id="appendix-the-smalltalk-code">Appendix: The Smalltalk code</h1>
-<p>The full Pharo package can be found at <a href="https://github.com/dlfelps/MZI">dlfeps/MZI</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="quantum" /><category term="smalltalk" /><summary type="html"><![CDATA[Introduction In Experiments #10 and #12 we observed photons acting like particles. In Experiment #11 a photon’s actions could only be explained using wave-like behavior. In 1978, John Wheeler proposed an experiment to test the limits this paradox. He designed the experiment to answer the following questions: Does the photon decide to travel as a wave or a particle depending on the experimental setup? And if yes, when does the photon decide?]]></summary></entry></feed>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="vit" /><category term="computer-vision" /><category term="image-retrieval" /><category term="ml-portfolio" /><category term="self-supervised" /><summary type="html"><![CDATA[This post explores DINOv2 - a foundational vision model from FAIR.]]></summary></entry></feed>

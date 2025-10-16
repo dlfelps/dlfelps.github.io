@@ -1,0 +1,389 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.3 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 23 - .NET Experiments</title>
+<meta name="description" content="The blog post describes a fork of the DE-ViT algorithm that adapts it for few-shot object detection on satellite imagery by using DINOv3 vision transformers pretrained on the SAT-493M dataset, with a target application of detecting objects in the xView dataset.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 23">
+<meta property="og:url" content="https://dlfelps.github.io/2025/10/01/devit.html">
+
+
+  <meta property="og:description" content="The blog post describes a fork of the DE-ViT algorithm that adapts it for few-shot object detection on satellite imagery by using DINOv3 vision transformers pretrained on the SAT-493M dataset, with a target application of detecting objects in the xView dataset.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-10-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2025/10/01/devit.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/"
+                
+                
+              >Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 23">
+    <meta itemprop="description" content="The blog post describes a fork of the DE-ViT algorithm that adapts it for few-shot object detection on satellite imagery by using DINOv3 vision transformers pretrained on the SAT-493M dataset, with a target application of detecting objects in the xView dataset.">
+    <meta itemprop="datePublished" content="2025-10-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://dlfelps.github.io/2025/10/01/devit.html" itemprop="url">Experiment 23
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-10-01T00:00:00+00:00">October 1, 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          17 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#zero-shot-object-detection-for-overhead-imagery-a-de-vit-adaptation">Zero-Shot Object Detection for Overhead Imagery: A DE-ViT Adaptation</a><ul><li><a href="#the-de-vit-approach">The DE-ViT Approach</a></li><li><a href="#overhead-imagery-unique-challenges-and-the-xview-dataset">Overhead Imagery: Unique Challenges and the xView Dataset</a></li><li><a href="#novel-contributions-toward-zero-shot-detection">Novel Contributions: Toward Zero-Shot Detection</a><ul><li><a href="#1-removal-of-the-region-propagation-network">1. Removal of the Region Propagation Network</a></li><li><a href="#2-differentiated-prototype-generation">2. Differentiated Prototype Generation</a></li><li><a href="#3-support-vector-machine-ensemble-for-confidence-scoring">3. Support Vector Machine Ensemble for Confidence Scoring</a></li></ul></li><li><a href="#experiment--results">Experiment &amp; Results</a><ul><li><a href="#experiment">Experiment</a></li></ul></li><li><a href="#conclusion">Conclusion</a></li><li><a href="#claude-protips">CLAUDE PROTIPS</a></li></ul></li></ul>
+            </nav>
+          </aside>
+        
+        <p>The blog post describes a fork of the DE-ViT algorithm that adapts it for few-shot object detection on satellite imagery by using DINOv3 vision transformers pretrained on the SAT-493M dataset, with a target application of detecting objects in the xView dataset.</p>
+
+<h1 id="zero-shot-object-detection-for-overhead-imagery-a-de-vit-adaptation">Zero-Shot Object Detection for Overhead Imagery: A DE-ViT Adaptation</h1>
+
+<h2 id="the-de-vit-approach">The DE-ViT Approach</h2>
+
+<p>DE-ViT (Detection Transformer with Vision Transformers) represents a significant advancement in few-shot object detection, leveraging the powerful feature representations learned by vision transformers. The approach combines a pretrained vision transformer backbone with a region propagation network to enable detection with minimal training examples. The core innovation lies in how DE-ViT propagates information between support (example) images and query (target) images through a sophisticated attention mechanism, allowing the model to generalize to novel object categories with limited data.</p>
+
+<p>The original DE-ViT architecture employs a subspace projection mechanism to align features from the vision transformer backbone, followed by region proposal generation and a region propagation network that refines detections based on support set prototypes. For a comprehensive understanding of the theoretical foundations, architectural details, and empirical validations, readers are directed to the original research paper (2309.12969v4.pdf).</p>
+
+<h2 id="overhead-imagery-unique-challenges-and-the-xview-dataset">Overhead Imagery: Unique Challenges and the xView Dataset</h2>
+
+<p>Overhead imagery presents distinct challenges that differentiate it from natural image domains. The most critical challenge is <strong>rotation invariance</strong>: objects in satellite and aerial imagery can appear at arbitrary orientations, unlike natural images where vehicles are typically upright and buildings follow gravity-aligned perspectives. A car photographed from above may appear at any angle from 0 to 360 degrees, and detection systems must recognize it regardless of orientation.</p>
+
+<p>The <strong>xView dataset</strong> has become a cornerstone benchmark for evaluating object detection algorithms in overhead imagery. Released in 2018, xView contains over 1 million object instances across 60 categories in high-resolution satellite imagery, spanning diverse geographic regions and imaging conditions. The dataset was specifically designed to challenge computer vision systems with the complexities of overhead imagery: dense object clustering, extreme scale variation (objects ranging from small vehicles to large buildings), and the aforementioned rotation problem.</p>
+
+<p>Historically, xView has driven innovation in several areas: anchor-free detection methods to handle arbitrary orientations, multi-scale feature pyramids to address the extreme scale variation, and attention mechanisms to manage dense scenes. However, most successful approaches have required extensive training on large labeled datasets, limiting their applicability in scenarios where labeled data is scarce or when adapting to new object categories.</p>
+
+<h2 id="novel-contributions-toward-zero-shot-detection">Novel Contributions: Toward Zero-Shot Detection</h2>
+
+<p>This project introduces several key modifications to the original DE-ViT framework, fundamentally shifting from a few-shot to a <strong>zero-shot detection paradigm</strong> optimized for overhead imagery.</p>
+
+<h3 id="1-removal-of-the-region-propagation-network">1. Removal of the Region Propagation Network</h3>
+
+<p>The most significant architectural change is the <strong>elimination of the region propagation component</strong>. While the original DE-ViT uses this network to refine detections through learned interactions between support and query features, this requires training on a base dataset. By removing this component, we transition to a true zero-shot scenario where no training is required. Instead, the system relies entirely on the rich feature representations from the DINOv3 vision transformer, which has been pretrained on 493 million satellite images (SAT-493M dataset). This pretrained knowledge serves as the foundation for detection without any task-specific fine-tuning.</p>
+
+<h3 id="2-differentiated-prototype-generation">2. Differentiated Prototype Generation</h3>
+
+<p>The approach to <strong>prototype generation</strong> differs fundamentally between base and novel categories:</p>
+
+<p><strong>Base Data Prototypes</strong>: For established object categories in the base dataset, prototypes are generated using standard feature extraction and pooling techniques. These prototypes serve as canonical representations of each category, extracted from single-orientation examples under the assumption that the DINOv3 backbone has already learned rotation-invariant features during pretraining.</p>
+
+<p><strong>Novel Data Prototypes with Rotation Augmentation</strong>: For novel categories where rotation invariance cannot be assumed, the system employs a <strong>rotation augmentation strategy</strong>. Multiple rotated versions of support images are generated (at incremental angles), and features are extracted from each rotation. These multi-orientation features are then aggregated to create rotation-robust prototypes. This ensures that when a novel object appears at an arbitrary angle in a query image, it can be matched against prototypes that encode appearance information across all orientations.</p>
+
+<h3 id="3-support-vector-machine-ensemble-for-confidence-scoring">3. Support Vector Machine Ensemble for Confidence Scoring</h3>
+
+<p>The final novel component is the integration of a <strong>Support Vector Machine (SVM) ensemble</strong> as a confidence gating mechanism. Rather than directly thresholding similarity scores between query features and prototypes, an ensemble of SVMs is trained to distinguish between genuine matches and false positives. Each SVM in the ensemble is trained on different feature subspaces or using different kernel functions, and their outputs are combined through a voting or weighted averaging scheme.</p>
+
+<p>This ensemble approach provides several benefits: it captures non-linear decision boundaries that simple cosine similarity cannot, it reduces false positives by requiring consensus across multiple classifiers, and it produces calibrated confidence scores that better reflect true match probability. The SVM ensemble acts as a final filter, ensuring that only high-confidence detections propagate to the final output.</p>
+
+<h2 id="experiment--results">Experiment &amp; Results</h2>
+
+<p>I will start by summarizing the result and then briefly describe the experiment. The results were dissapointing. Despite the favorable results published in the <a href="https://arxiv.org/abs/2309.12969">paper</a>, the author admits on his <a href="https://github.com/mlzxy/devit/tree/main">Github site</a> that:</p>
+
+<blockquote>
+  <p>[DeVIT] tends to detect objects that do not belong to the prototypes, especially for retailed products that are not presented in the training data. For example, if you have “can”, “bottle”, and “toy” in the scene, but you only have “can” and “bottle” in the class prototypes. The ideal performance is to mark “toy” as background, but DE-ViT tends to detect “toy” as either “can” or “bottle”.</p>
+</blockquote>
+
+<p>I noticed a similar trend. While the approach is promising for tapping into the power of foundation vision models for few-shot learning, it fails to provide good performance at scale for satellite imagery.</p>
+
+<h3 id="experiment">Experiment</h3>
+
+<p>I did not perform a formal experiment, but here is a rough description of the anecdotal test:</p>
+<ul>
+  <li>2 prototype base classes that cover +70% of xView’s dataset (building &amp; bus)</li>
+  <li>1 background base class</li>
+  <li>1 novel class for testing (excavator)</li>
+  <li>5 full view satellite images with known excavators present</li>
+</ul>
+
+<p>###</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This project demonstrates that effective zero-shot object detection in overhead imagery is achievable through careful architectural modifications and domain-specific adaptations. By removing the trainable region propagation network, we eliminate the need for training data while relying on strong pretrained features from DINOv3. The rotation-aware prototype generation strategy directly addresses the orientation challenge inherent to overhead imagery, and the SVM ensemble provides robust confidence filtering to maintain detection precision.</p>
+
+<p>The combination of these innovations creates a practical system for detecting novel object categories in satellite imagery without requiring labeled training data—a significant step toward adaptable, deployment-ready detection systems for real-world remote sensing applications. Future work may explore adaptive rotation augmentation strategies, hierarchical prototype refinement, and extension to additional overhead imagery datasets beyond xView.</p>
+
+<p>Code for this project can be found at <a href="https://github.com/dlfelps/devit-xview">https://github.com/dlfelps/devit-xview</a>.</p>
+
+<h2 id="claude-protips">CLAUDE PROTIPS</h2>
+
+<p>In the last few blog posts I provided examples where CLAUDE needed extra guidance. I thought I would do something different in this post.</p>
+
+<ol>
+  <li>PROTIP #1: When working in complex code bases (such as a research level machine learning project), work in small measured steps.</li>
+  <li>PROTIP #2: After using CLAUDE to implement a new feature (or in this case replace an existing module with something else), ask CLAUDE to write a simple script to demonstrate/test the new feature. Optional: treat this as a temporary test - you don’t have to add it to git.</li>
+  <li>PROTIP #3: If there is a problem that “feels small” and I think I have a good idea how to fix it, I just give CLAUDE the error and CLAUDE will usually fix it.</li>
+  <li>PROTIP #4: If there is a problem that “feels big” and I don’t understand it or know how to fix it, I ask CLAUDE to write a debugging script to log values up to the point at which the error occurs. Then I review the output. Next I ask CLAUDE to fix the problem and then run the debugging script again. If all goes well and values make sense I rerun the original code.</li>
+  <li>PROTIP #5</li>
+</ol>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/claude" class="page__taxonomy-item p-category" rel="tag">claude</a><span class="sep">, </span>
+    
+      <a href="/tags/devit" class="page__taxonomy-item p-category" rel="tag">devit</a><span class="sep">, </span>
+    
+      <a href="/tags/dino" class="page__taxonomy-item p-category" rel="tag">dino</a><span class="sep">, </span>
+    
+      <a href="/tags/few-shot" class="page__taxonomy-item p-category" rel="tag">few-shot</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-10-01T00:00:00+00:00">October 1, 2025</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  <h4 class="page__share-title">Share on</h4>
+
+  <a href="https://x.com/intent/tweet?text=Experiment+23%20https%3A%2F%2Fdlfelps.github.io%2F2025%2F10%2F01%2Fdevit.html" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
+    <i class="fab fa-fw fa-x-twitter" aria-hidden="true"></i><span> X</span>
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2025%2F10%2F01%2Fdevit.html" class="btn btn--facebook" aria-label="Share on Facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook">
+    <i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span>
+  </a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dlfelps.github.io/2025/10/01/devit.html" class="btn btn--linkedin" aria-label="Share on LinkedIn" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn">
+    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
+  </a>
+
+  <a href="https://bsky.app/intent/compose?text=Experiment+23%20https%3A%2F%2Fdlfelps.github.io%2F2025%2F10%2F01%2Fdevit.html" class="btn btn--bluesky" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Bluesky">
+    <i class="fab fa-fw fa-bluesky" aria-hidden="true"></i><span> Bluesky</span>
+  </a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2025/09/01/cobad.html" class="pagination--pager" title="Experiment 22">Previous</a>
+    
+    
+      <a href="/2025/11/01/langextract.html" class="pagination--pager" title="Experiment 24">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2025 <a href="https://dlfelps.github.io">.NET Experiments</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

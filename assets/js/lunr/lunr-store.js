@@ -136,4 +136,16 @@ var store = [{
         "tags": ["claude","gps","mobility","cobad"],
         "url": "/2025/09/01/cobad.html",
         "teaser": null
+      },{
+        "title": "Experiment 23",
+        "excerpt":"The blog post describes a fork of the DE-ViT algorithm that adapts it for few-shot object detection on satellite imagery by using DINOv3 vision transformers pretrained on the SAT-493M dataset, with a target application of detecting objects in the xView dataset. Zero-Shot Object Detection for Overhead Imagery: A DE-ViT Adaptation...","categories": [],
+        "tags": ["claude","few-shot","dino","devit"],
+        "url": "/2025/10/01/devit.html",
+        "teaser": null
+      },{
+        "title": "Experiment 24",
+        "excerpt":"The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference. Comparing Scene Graph Extraction Methods: From Fine-tuned T5 to Few-Shot LLMs Introduction What is Scene Graph Parsing? In computer vision and natural language processing, scene graph parsing is...","categories": [],
+        "tags": ["claude","semantic","scene-graph","captioning","langextract","t5","few-shot","llm","gemini"],
+        "url": "/2025/11/01/langextract.html",
+        "teaser": null
       }]
