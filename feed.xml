@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-10-16T11:39:07+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 24</title><link href="https://dlfelps.github.io/2025/11/01/langextract.html" rel="alternate" type="text/html" title="Experiment 24" /><published>2025-11-01T00:00:00+00:00</published><updated>2025-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/11/01/langextract</id><content type="html" xml:base="https://dlfelps.github.io/2025/11/01/langextract.html"><![CDATA[<p>The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-10-16T14:19:19+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 24</title><link href="https://dlfelps.github.io/2025/11/01/langextract.html" rel="alternate" type="text/html" title="Experiment 24" /><published>2025-11-01T00:00:00+00:00</published><updated>2025-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/11/01/langextract</id><content type="html" xml:base="https://dlfelps.github.io/2025/11/01/langextract.html"><![CDATA[<p>The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference.</p>
 
 <h1 id="comparing-scene-graph-extraction-methods-from-fine-tuned-t5-to-few-shot-llms">Comparing Scene Graph Extraction Methods: From Fine-tuned T5 to Few-Shot LLMs</h1>
 
@@ -70,8 +70,6 @@
   <li><strong>Evaluation</strong>: Precision, Recall, and F1 for entities, attributes, and relationships</li>
 </ul>
 
-<h3 id="results">Results</h3>
-
 <table>
   <thead>
     <tr>
@@ -116,8 +114,6 @@
 
 <p><strong>Inference Speed</strong>: 4.64 seconds per sample</p>
 
-<h3 id="analysis">Analysis</h3>
-
 <p>The T5 baseline demonstrates that fine-tuning on domain-specific data yields strong performance, particularly for relationship extraction. However, the 4.6-second inference time and lack of flexibility make it less practical for production use cases requiring fast inference or cross-domain generalization. The high performance on the FACTUAL dataset is to be expected since this model was specifically trained using FACTUAL data. In the following experiments we only provide a handful of examples to the LLM during the prompt to achieve a similar level of performance.</p>
 
 <hr />
@@ -133,8 +129,6 @@
   <li><strong>Examples</strong>: 5 few-shot examples demonstrating extraction patterns</li>
   <li><strong>Processing</strong>: Batch processing (all 30 samples in single API call)</li>
 </ul>
-
-<h3 id="results-1">Results</h3>
 
 <table>
   <thead>
@@ -180,8 +174,6 @@
 
 <p><strong>Inference Speed</strong>: 0.045 seconds per sample (103x faster than T5)</p>
 
-<h3 id="analysis-1">Analysis</h3>
-
 <p>LangExtract demonstrates the power of few-shot learning: with just 5 examples, it matches or exceeds T5’s performance on entities and attributes while being dramatically faster. However, relationship extraction is significantly weaker, suggesting the few-shot examples need improvement or the task requires more sophisticated prompting.</p>
 
 <hr />
@@ -202,8 +194,6 @@
     </ol>
   </li>
 </ul>
-
-<h3 id="results-2">Results</h3>
 
 <table>
   <thead>
@@ -249,8 +239,6 @@
 
 <p><strong>Winner</strong>: JSON Structured (0.660 macro F1)</p>
 
-<h3 id="analysis-2">Analysis</h3>
-
 <p>While JSON Structured emerges as the winner, the relatively small differences between formats (0.626-0.660) suggest that representation format is not the primary bottleneck. The consistent weakness in relationship extraction across all formats points to a deeper issue with the few-shot examples or prompting strategy.</p>
 
 <hr />
@@ -269,8 +257,6 @@
   <li><strong>Test Set</strong>: 50 samples (same as Experiment 3)</li>
   <li><strong>Format</strong>: JSON Structured (winner from Experiment 3)</li>
 </ul>
-
-<h3 id="results-3">Results</h3>
 
 <p>After implementing centralized dataset loading to ensure all experiments use identical test data:</p>
 
@@ -304,8 +290,6 @@
     </tr>
   </tbody>
 </table>
-
-<h3 id="analysis-3">Analysis</h3>
 
 <p>LangExtract’s framework optimizations for batch processing and few-shot learning make it more effective than raw Gemini API calls for entity and attribute extraction. However, Native Gemini’s structured schema enforcement provides better relationship extraction. The dramatic speed difference (83x) favors LangExtract for production use cases.</p>
 
@@ -349,8 +333,6 @@ Added 5 new examples specifically demonstrating “sitting on” → “sit on�
   <li>Same LangExtract framework</li>
   <li>Now with 7 total examples (2 original + 5 targeted)</li>
 </ul>
-
-<h3 id="results-4">Results</h3>
 
 <table>
   <thead>
@@ -400,8 +382,6 @@ Added 5 new examples specifically demonstrating “sitting on” → “sit on�
   <li>Macro F1: 0.670 → 0.750 (+12% improvement)</li>
 </ul>
 
-<h3 id="analysis-4">Analysis</h3>
-
 <p>This experiment demonstrates a powerful methodology for improving LLM performance:</p>
 <ol>
   <li><strong>Analyze failures</strong>: Don’t just look at aggregate metrics</li>
@@ -415,8 +395,6 @@ Added 5 new examples specifically demonstrating “sitting on” → “sit on�
 <hr />
 
 <h2 id="comprehensive-comparison">Comprehensive Comparison</h2>
-
-<h3 id="overall-results-across-all-experiments">Overall Results Across All Experiments</h3>
 
 <table>
   <thead>
@@ -473,8 +451,6 @@ Added 5 new examples specifically demonstrating “sitting on” → “sit on�
 <hr />
 
 <h2 id="conclusions-and-recommendations">Conclusions and Recommendations</h2>
-
-<h3 id="key-takeaways">Key Takeaways</h3>
 
 <ol>
   <li><strong>Few-Shot Learning is Surprisingly Effective</strong>
@@ -535,47 +511,6 @@ Added 5 new examples specifically demonstrating “sitting on” → “sit on�
 <p>✅ You want good all-around performance without fine-tuning</p>
 
 <p>✅ <strong>Recommended for most production use cases</strong></p>
-
-<h3 id="future-work">Future Work</h3>
-
-<ol>
-  <li><strong>Close the Relationship Gap</strong>
-    <ul>
-      <li>Current improved LangExtract: 0.450 relationship F1</li>
-      <li>T5 fine-tuned: 0.662 relationship F1</li>
-      <li><strong>Gap to close</strong>: 0.212 F1 points</li>
-      <li>Approach: Continue iterative analysis + targeted examples</li>
-    </ul>
-  </li>
-  <li><strong>Test on More Complex Samples</strong>
-    <ul>
-      <li>Current experiments used complex captions (&gt;20 words)</li>
-      <li>Test on even longer, more complex descriptions</li>
-      <li>Evaluate where LLMs break down vs fine-tuned models</li>
-    </ul>
-  </li>
-  <li><strong>Cross-Domain Generalization</strong>
-    <ul>
-      <li>Test improved LangExtract on non-FACTUAL datasets</li>
-      <li>Evaluate how well few-shot examples transfer</li>
-      <li>Compare against domain-specific fine-tuned models</li>
-    </ul>
-  </li>
-  <li><strong>Hybrid Approaches</strong>
-    <ul>
-      <li>Could LLMs extract entities/attributes, then specialized model handles relationships?</li>
-      <li>Explore combining strengths of both approaches</li>
-      <li>Potential for best of both worlds: speed + accuracy</li>
-    </ul>
-  </li>
-  <li><strong>Cost Analysis</strong>
-    <ul>
-      <li>LangExtract uses API calls (cost per sample)</li>
-      <li>T5 requires GPU resources (fixed infrastructure cost)</li>
-      <li>Comprehensive cost-benefit analysis for different scales</li>
-    </ul>
-  </li>
-</ol>
 
 <h3 id="final-thoughts">Final Thoughts</h3>
 
