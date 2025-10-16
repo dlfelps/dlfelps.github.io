@@ -63,7 +63,7 @@ Establish baseline performance using a fine-tuned T5 model pre-trained on the FA
 - **Test Set**: 100 complex samples (captions with >20 words)
 - **Evaluation**: Precision, Recall, and F1 for entities, attributes, and relationships
 
-### Results
+
 
 | Metric | Precision | Recall | F1 Score | Support |
 |--------|-----------|--------|----------|---------|
@@ -75,7 +75,7 @@ Establish baseline performance using a fine-tuned T5 model pre-trained on the FA
 **Inference Speed**: 4.64 seconds per sample
 
 
-### Analysis
+
 
 The T5 baseline demonstrates that fine-tuning on domain-specific data yields strong performance, particularly for relationship extraction. However, the 4.6-second inference time and lack of flexibility make it less practical for production use cases requiring fast inference or cross-domain generalization. The high performance on the FACTUAL dataset is to be expected since this model was specifically trained using FACTUAL data. In the following experiments we only provide a handful of examples to the LLM during the prompt to achieve a similar level of performance.
 
@@ -93,7 +93,7 @@ Validate whether LangExtract with Gemini can extract scene graphs with reasonabl
 - **Examples**: 5 few-shot examples demonstrating extraction patterns
 - **Processing**: Batch processing (all 30 samples in single API call)
 
-### Results
+
 
 | Metric | Precision | Recall | F1 Score | Support |
 |--------|-----------|--------|----------|---------|
@@ -105,7 +105,7 @@ Validate whether LangExtract with Gemini can extract scene graphs with reasonabl
 **Inference Speed**: 0.045 seconds per sample (103x faster than T5)
 
 
-### Analysis
+
 
 LangExtract demonstrates the power of few-shot learning: with just 5 examples, it matches or exceeds T5's performance on entities and attributes while being dramatically faster. However, relationship extraction is significantly weaker, suggesting the few-shot examples need improvement or the task requires more sophisticated prompting.
 
@@ -125,7 +125,7 @@ Identify the optimal output format for LangExtract to maximize extraction accura
   3. **Hierarchical**: Nested objects with properties
   4. **JSON Structured**: Clean JSON with entities/attributes/relationships arrays
 
-### Results
+
 
 | Format | Entities F1 | Attributes F1 | Relationships F1 | Macro F1 |
 |--------|-------------|---------------|------------------|----------|
@@ -137,7 +137,7 @@ Identify the optimal output format for LangExtract to maximize extraction accura
 **Winner**: JSON Structured (0.660 macro F1)
 
 
-### Analysis
+
 
 While JSON Structured emerges as the winner, the relatively small differences between formats (0.626-0.660) suggest that representation format is not the primary bottleneck. The consistent weakness in relationship extraction across all formats points to a deeper issue with the few-shot examples or prompting strategy.
 
@@ -156,7 +156,7 @@ Compare LangExtract framework against native Gemini structured output using the 
 - **Format**: JSON Structured (winner from Experiment 3)
 
 
-### Results 
+ 
 
 After implementing centralized dataset loading to ensure all experiments use identical test data:
 
@@ -167,7 +167,7 @@ After implementing centralized dataset loading to ensure all experiments use ide
 
 
 
-### Analysis
+
 
 LangExtract's framework optimizations for batch processing and few-shot learning make it more effective than raw Gemini API calls for entity and attribute extraction. However, Native Gemini's structured schema enforcement provides better relationship extraction. The dramatic speed difference (83x) favors LangExtract for production use cases.
 
@@ -210,7 +210,7 @@ Added 5 new examples specifically demonstrating "sitting on" → "sit on" normal
 - Same LangExtract framework
 - Now with 7 total examples (2 original + 5 targeted)
 
-### Results
+
 
 | Approach | Entities F1 | Attributes F1 | Relationships F1 | Macro F1 |
 |----------|-------------|---------------|------------------|----------|
@@ -224,7 +224,7 @@ Added 5 new examples specifically demonstrating "sitting on" → "sit on" normal
 - Macro F1: 0.670 → 0.750 (+12% improvement)
 
 
-### Analysis
+
 
 This experiment demonstrates a powerful methodology for improving LLM performance:
 1. **Analyze failures**: Don't just look at aggregate metrics
@@ -238,7 +238,6 @@ The result: Improved LangExtract now **outperforms all other approaches** includ
 
 ## Comprehensive Comparison
 
-### Overall Results Across All Experiments
 
 | Approach | Test Samples | Entities F1 | Attributes F1 | Relationships F1 | Macro F1 | Speed (s) |
 |----------|-------------|-------------|---------------|------------------|----------|-----------|
@@ -251,8 +250,6 @@ The result: Improved LangExtract now **outperforms all other approaches** includ
 ---
 
 ## Conclusions and Recommendations
-
-### Key Takeaways
 
 1. **Few-Shot Learning is Surprisingly Effective**
    - With just 7 examples, LangExtract achieved 96% of T5's performance (0.750 vs 0.784)
@@ -301,34 +298,6 @@ The result: Improved LangExtract now **outperforms all other approaches** includ
 
 ✅ **Recommended for most production use cases**
 
-
-### Future Work
-
-1. **Close the Relationship Gap**
-   - Current improved LangExtract: 0.450 relationship F1
-   - T5 fine-tuned: 0.662 relationship F1
-   - **Gap to close**: 0.212 F1 points
-   - Approach: Continue iterative analysis + targeted examples
-
-2. **Test on More Complex Samples**
-   - Current experiments used complex captions (>20 words)
-   - Test on even longer, more complex descriptions
-   - Evaluate where LLMs break down vs fine-tuned models
-
-3. **Cross-Domain Generalization**
-   - Test improved LangExtract on non-FACTUAL datasets
-   - Evaluate how well few-shot examples transfer
-   - Compare against domain-specific fine-tuned models
-
-4. **Hybrid Approaches**
-   - Could LLMs extract entities/attributes, then specialized model handles relationships?
-   - Explore combining strengths of both approaches
-   - Potential for best of both worlds: speed + accuracy
-
-5. **Cost Analysis**
-   - LangExtract uses API calls (cost per sample)
-   - T5 requires GPU resources (fixed infrastructure cost)
-   - Comprehensive cost-benefit analysis for different scales
 
 ### Final Thoughts
 
