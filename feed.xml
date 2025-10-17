@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-10-17T03:24:46+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 24</title><link href="https://dlfelps.github.io/2025/11/01/langextract.html" rel="alternate" type="text/html" title="Experiment 24" /><published>2025-11-01T00:00:00+00:00</published><updated>2025-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/11/01/langextract</id><content type="html" xml:base="https://dlfelps.github.io/2025/11/01/langextract.html"><![CDATA[<p>The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-10-17T15:37:51+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 24</title><link href="https://dlfelps.github.io/2025/11/01/langextract.html" rel="alternate" type="text/html" title="Experiment 24" /><published>2025-11-01T00:00:00+00:00</published><updated>2025-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/11/01/langextract</id><content type="html" xml:base="https://dlfelps.github.io/2025/11/01/langextract.html"><![CDATA[<p>The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference.</p>
 
 <h1 id="comparing-scene-graph-extraction-methods-from-fine-tuned-t5-to-few-shot-llms">Comparing Scene Graph Extraction Methods: From Fine-tuned T5 to Few-Shot LLMs</h1>
 
@@ -600,17 +600,7 @@ uv run compare_all_experiments.py
 
 <p>This ensemble approach provides several benefits: it captures non-linear decision boundaries that simple cosine similarity cannot, it reduces false positives by requiring consensus across multiple orientations of the target, and it produces calibrated confidence scores that better reflect true match probability. The SVM ensemble acts as a final filter, ensuring that only high-confidence detections propagate to the final output.</p>
 
-<h2 id="experiment--results">Experiment &amp; Results</h2>
-
-<p>I will start by summarizing the result and then briefly describe the experiment. The results were dissapointing. Despite the favorable results published in the <a href="https://arxiv.org/abs/2309.12969">paper</a>, the author admits on his <a href="https://github.com/mlzxy/devit/tree/main">Github site</a> that:</p>
-
-<blockquote>
-  <p>[DeVIT] tends to detect objects that do not belong to the prototypes, especially for retailed products that are not presented in the training data. For example, if you have “can”, “bottle”, and “toy” in the scene, but you only have “can” and “bottle” in the class prototypes. The ideal performance is to mark “toy” as background, but DE-ViT tends to detect “toy” as either “can” or “bottle”.</p>
-</blockquote>
-
-<p>I noticed a similar trend. While the approach is promising for tapping into the power of foundation vision models for few-shot learning, it fails to provide good performance at scale for satellite imagery.</p>
-
-<h3 id="experiment">Experiment</h3>
+<h2 id="experiment">Experiment</h2>
 
 <p>I did not perform a formal experiment, but here is a rough description of the anecdotal test:</p>
 <ul>
@@ -619,6 +609,20 @@ uv run compare_all_experiments.py
   <li>1 novel class for testing (excavator)</li>
   <li>5 full view satellite images with known excavators present</li>
 </ul>
+
+<h2 id="results">Results</h2>
+
+<p>The results were <em>dissapointing</em>. Despite the favorable results published in the <a href="https://arxiv.org/abs/2309.12969">paper</a>, the author admits on his <a href="https://github.com/mlzxy/devit/tree/main">Github site</a> that:</p>
+
+<blockquote>
+  <p>[DeVIT] tends to detect objects that do not belong to the prototypes, especially for retailed products that are not presented in the training data. For example, if you have “can”, “bottle”, and “toy” in the scene, but you only have “can” and “bottle” in the class prototypes. The ideal performance is to mark “toy” as background, but DE-ViT tends to detect “toy” as either “can” or “bottle”.</p>
+</blockquote>
+
+<p>I noticed a similar trend. While the approach is promising for tapping into the power of foundation vision models for few-shot learning, it fails to provide good performance at scale for satellite imagery. I didn’t bother calculating any formal statistics, but you can see for yourself the quality of the classifications below:</p>
+
+<p><a href="/assets/images/31_detections.png"><img src="/assets/images/31_detections_thumb.jpg" alt="Click for full size" /></a></p>
+
+<p><em>(Click to download full resolution) The green boxes are the novel detections (excavators) and blue boxes are classified as one of the base classes. NOTE: the few-shot adaptation did not affect the region proposal network, which was taken from a Faster RCNN model trained on xView, so the bounding box proposals themselves are not part of this evaluation. If you review the contents of the green boxes, however, you will find a low classification accuracy for the excavator class.</em></p>
 
 <h2 id="conclusion">Conclusion</h2>
 

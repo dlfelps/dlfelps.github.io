@@ -166,7 +166,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          17 minute read
+          18 minute read
         
       </span>
     
@@ -181,7 +181,7 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#zero-shot-object-detection-for-overhead-imagery-a-de-vit-adaptation">Zero-Shot Object Detection for Overhead Imagery: A DE-ViT Adaptation</a><ul><li><a href="#the-de-vit-approach">The DE-ViT Approach</a></li><li><a href="#overhead-imagery-unique-challenges-and-the-xview-dataset">Overhead Imagery: Unique Challenges and the xView Dataset</a></li><li><a href="#novel-contributions-toward-zero-shot-detection">Novel Contributions: Toward Zero-Shot Detection</a><ul><li><a href="#1-removal-of-the-region-propagation-network">1. Removal of the Region Propagation Network</a></li><li><a href="#2-differentiated-prototype-generation">2. Differentiated Prototype Generation</a></li><li><a href="#3-support-vector-machine-ensemble-for-confidence-scoring">3. Support Vector Machine Ensemble for Confidence Scoring</a></li></ul></li><li><a href="#experiment--results">Experiment &amp; Results</a><ul><li><a href="#experiment">Experiment</a></li></ul></li><li><a href="#conclusion">Conclusion</a></li><li><a href="#claude-protips">CLAUDE PROTIPS</a></li></ul></li></ul>
+              <ul class="toc__menu"><li><a href="#zero-shot-object-detection-for-overhead-imagery-a-de-vit-adaptation">Zero-Shot Object Detection for Overhead Imagery: A DE-ViT Adaptation</a><ul><li><a href="#the-de-vit-approach">The DE-ViT Approach</a></li><li><a href="#overhead-imagery-unique-challenges-and-the-xview-dataset">Overhead Imagery: Unique Challenges and the xView Dataset</a></li><li><a href="#novel-contributions-toward-zero-shot-detection">Novel Contributions: Toward Zero-Shot Detection</a><ul><li><a href="#1-removal-of-the-region-propagation-network">1. Removal of the Region Propagation Network</a></li><li><a href="#2-differentiated-prototype-generation">2. Differentiated Prototype Generation</a></li><li><a href="#3-support-vector-machine-ensemble-for-confidence-scoring">3. Support Vector Machine Ensemble for Confidence Scoring</a></li></ul></li><li><a href="#experiment">Experiment</a></li><li><a href="#results">Results</a></li><li><a href="#conclusion">Conclusion</a></li><li><a href="#claude-protips">CLAUDE PROTIPS</a></li></ul></li></ul>
             </nav>
           </aside>
         
@@ -231,17 +231,7 @@
 
 <p>This ensemble approach provides several benefits: it captures non-linear decision boundaries that simple cosine similarity cannot, it reduces false positives by requiring consensus across multiple orientations of the target, and it produces calibrated confidence scores that better reflect true match probability. The SVM ensemble acts as a final filter, ensuring that only high-confidence detections propagate to the final output.</p>
 
-<h2 id="experiment--results">Experiment &amp; Results</h2>
-
-<p>I will start by summarizing the result and then briefly describe the experiment. The results were dissapointing. Despite the favorable results published in the <a href="https://arxiv.org/abs/2309.12969">paper</a>, the author admits on his <a href="https://github.com/mlzxy/devit/tree/main">Github site</a> that:</p>
-
-<blockquote>
-  <p>[DeVIT] tends to detect objects that do not belong to the prototypes, especially for retailed products that are not presented in the training data. For example, if you have “can”, “bottle”, and “toy” in the scene, but you only have “can” and “bottle” in the class prototypes. The ideal performance is to mark “toy” as background, but DE-ViT tends to detect “toy” as either “can” or “bottle”.</p>
-</blockquote>
-
-<p>I noticed a similar trend. While the approach is promising for tapping into the power of foundation vision models for few-shot learning, it fails to provide good performance at scale for satellite imagery.</p>
-
-<h3 id="experiment">Experiment</h3>
+<h2 id="experiment">Experiment</h2>
 
 <p>I did not perform a formal experiment, but here is a rough description of the anecdotal test:</p>
 <ul>
@@ -250,6 +240,20 @@
   <li>1 novel class for testing (excavator)</li>
   <li>5 full view satellite images with known excavators present</li>
 </ul>
+
+<h2 id="results">Results</h2>
+
+<p>The results were <em>dissapointing</em>. Despite the favorable results published in the <a href="https://arxiv.org/abs/2309.12969">paper</a>, the author admits on his <a href="https://github.com/mlzxy/devit/tree/main">Github site</a> that:</p>
+
+<blockquote>
+  <p>[DeVIT] tends to detect objects that do not belong to the prototypes, especially for retailed products that are not presented in the training data. For example, if you have “can”, “bottle”, and “toy” in the scene, but you only have “can” and “bottle” in the class prototypes. The ideal performance is to mark “toy” as background, but DE-ViT tends to detect “toy” as either “can” or “bottle”.</p>
+</blockquote>
+
+<p>I noticed a similar trend. While the approach is promising for tapping into the power of foundation vision models for few-shot learning, it fails to provide good performance at scale for satellite imagery. I didn’t bother calculating any formal statistics, but you can see for yourself the quality of the classifications below:</p>
+
+<p><a href="/assets/images/31_detections.png"><img src="/assets/images/31_detections_thumb.jpg" alt="Click for full size" /></a></p>
+
+<p><em>(Click to download full resolution) The green boxes are the novel detections (excavators) and blue boxes are classified as one of the base classes. NOTE: the few-shot adaptation did not affect the region proposal network, which was taken from a Faster RCNN model trained on xView, so the bounding box proposals themselves are not part of this evaluation. If you review the contents of the green boxes, however, you will find a low classification accuracy for the excavator class.</em></p>
 
 <h2 id="conclusion">Conclusion</h2>
 
