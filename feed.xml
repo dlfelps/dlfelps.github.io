@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-10-16T14:19:19+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 24</title><link href="https://dlfelps.github.io/2025/11/01/langextract.html" rel="alternate" type="text/html" title="Experiment 24" /><published>2025-11-01T00:00:00+00:00</published><updated>2025-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/11/01/langextract</id><content type="html" xml:base="https://dlfelps.github.io/2025/11/01/langextract.html"><![CDATA[<p>The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-10-17T03:24:46+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 24</title><link href="https://dlfelps.github.io/2025/11/01/langextract.html" rel="alternate" type="text/html" title="Experiment 24" /><published>2025-11-01T00:00:00+00:00</published><updated>2025-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/11/01/langextract</id><content type="html" xml:base="https://dlfelps.github.io/2025/11/01/langextract.html"><![CDATA[<p>The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference.</p>
 
 <h1 id="comparing-scene-graph-extraction-methods-from-fine-tuned-t5-to-few-shot-llms">Comparing Scene Graph Extraction Methods: From Fine-tuned T5 to Few-Shot LLMs</h1>
 
@@ -562,7 +562,10 @@ uv run compare_all_experiments.py
 
 <p>DE-ViT (Detection Transformer with Vision Transformers) represents a significant advancement in few-shot object detection, leveraging the powerful feature representations learned by vision transformers. The approach combines a pretrained vision transformer backbone with a region propagation network to enable detection with minimal training examples. The core innovation lies in how DE-ViT propagates information between support (example) images and query (target) images through a sophisticated attention mechanism, allowing the model to generalize to novel object categories with limited data.</p>
 
-<p>The original DE-ViT architecture employs a subspace projection mechanism to align features from the vision transformer backbone, followed by region proposal generation and a region propagation network that refines detections based on support set prototypes. For a comprehensive understanding of the theoretical foundations, architectural details, and empirical validations, readers are directed to the original research paper (2309.12969v4.pdf).</p>
+<p>The original DE-ViT architecture employs a subspace projection mechanism to align features from the vision transformer backbone, followed by region proposal generation and a region propagation network that refines detections based on support set prototypes. For a comprehensive understanding of the theoretical foundations, architectural details, and empirical validations, readers are directed to the <a href="https://arxiv.org/abs/2309.12969">original research paper</a>.</p>
+
+<p><img src="/assets/images/main-rpropnet.jpg" alt="devit overview" />
+<em>Overview of the DE-ViT method</em></p>
 
 <h2 id="overhead-imagery-unique-challenges-and-the-xview-dataset">Overhead Imagery: Unique Challenges and the xView Dataset</h2>
 
@@ -571,6 +574,9 @@ uv run compare_all_experiments.py
 <p>The <strong>xView dataset</strong> has become a cornerstone benchmark for evaluating object detection algorithms in overhead imagery. Released in 2018, xView contains over 1 million object instances across 60 categories in high-resolution satellite imagery, spanning diverse geographic regions and imaging conditions. The dataset was specifically designed to challenge computer vision systems with the complexities of overhead imagery: dense object clustering, extreme scale variation (objects ranging from small vehicles to large buildings), and the aforementioned rotation problem.</p>
 
 <p>Historically, xView has driven innovation in several areas: anchor-free detection methods to handle arbitrary orientations, multi-scale feature pyramids to address the extreme scale variation, and attention mechanisms to manage dense scenes. However, most successful approaches have required extensive training on large labeled datasets, limiting their applicability in scenarios where labeled data is scarce or when adapting to new object categories.</p>
+
+<p><img src="/assets/images/dataset-cover.jpeg" alt="sample xview image" />
+<em>Example image from xView with detections</em></p>
 
 <h2 id="novel-contributions-toward-zero-shot-detection">Novel Contributions: Toward Zero-Shot Detection</h2>
 
@@ -584,15 +590,15 @@ uv run compare_all_experiments.py
 
 <p>The approach to <strong>prototype generation</strong> differs fundamentally between base and novel categories:</p>
 
-<p><strong>Base Data Prototypes</strong>: For established object categories in the base dataset, prototypes are generated using standard feature extraction and pooling techniques. These prototypes serve as canonical representations of each category, extracted from single-orientation examples under the assumption that the DINOv3 backbone has already learned rotation-invariant features during pretraining.</p>
+<p><strong>Base Data Prototypes</strong>: For established object categories in the base dataset, prototypes are generated using standard feature extraction and pooling techniques. A large number of examples from each base class is sampled from the training data. Once the DINOv3 features are extracted and pooled, a the KMeans clustering algorithm is used to capture the centers that provide coverage for 75% of the examples. These centers become the prototypes for that base class.</p>
 
-<p><strong>Novel Data Prototypes with Rotation Augmentation</strong>: For novel categories where rotation invariance cannot be assumed, the system employs a <strong>rotation augmentation strategy</strong>. Multiple rotated versions of support images are generated (at incremental angles), and features are extracted from each rotation. These multi-orientation features are then aggregated to create rotation-robust prototypes. This ensures that when a novel object appears at an arbitrary angle in a query image, it can be matched against prototypes that encode appearance information across all orientations.</p>
+<p><strong>Novel Data Prototypes with Rotation Augmentation</strong>: For novel categories where rotation invariance cannot be assumed, the system employs a <strong>rotation augmentation strategy</strong>. For each image in the few-shot set (e.g. 5), 23 rotations (at 15 degree increments) are created. Next DINOv3 features are calculated and pooled from each of the rotated images. These serve as the novel class prototypes. NOTE: the original orientation of the object is not needed, but at the end of this process it we are guaranteed to have full 360 degree rotation examples.</p>
 
 <h3 id="3-support-vector-machine-ensemble-for-confidence-scoring">3. Support Vector Machine Ensemble for Confidence Scoring</h3>
 
-<p>The final novel component is the integration of a <strong>Support Vector Machine (SVM) ensemble</strong> as a confidence gating mechanism. Rather than directly thresholding similarity scores between query features and prototypes, an ensemble of SVMs is trained to distinguish between genuine matches and false positives. Each SVM in the ensemble is trained on different feature subspaces or using different kernel functions, and their outputs are combined through a voting or weighted averaging scheme.</p>
+<p>The final novel component is the integration of a <strong>Support Vector Machine (SVM) ensemble</strong> as a confidence gating mechanism. First and SVM is trained to maximally separate the novel classes, base classes, and background. Given a new image, it is rotated using the same scheme from the novel data prototype yielding 24 total images covering all angles. Finally these 24 samples are classified by the SVM and assigned a confidence corresponding to the highest percentage of class agreement (e.g. if 12 of the 24 examples are assigned to background class then it is classified as background with 50% confidence).</p>
 
-<p>This ensemble approach provides several benefits: it captures non-linear decision boundaries that simple cosine similarity cannot, it reduces false positives by requiring consensus across multiple classifiers, and it produces calibrated confidence scores that better reflect true match probability. The SVM ensemble acts as a final filter, ensuring that only high-confidence detections propagate to the final output.</p>
+<p>This ensemble approach provides several benefits: it captures non-linear decision boundaries that simple cosine similarity cannot, it reduces false positives by requiring consensus across multiple orientations of the target, and it produces calibrated confidence scores that better reflect true match probability. The SVM ensemble acts as a final filter, ensuring that only high-confidence detections propagate to the final output.</p>
 
 <h2 id="experiment--results">Experiment &amp; Results</h2>
 
@@ -616,9 +622,7 @@ uv run compare_all_experiments.py
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>This project demonstrates that effective zero-shot object detection in overhead imagery is achievable through careful architectural modifications and domain-specific adaptations. By removing the trainable region propagation network, we eliminate the need for training data while relying on strong pretrained features from DINOv3. The rotation-aware prototype generation strategy directly addresses the orientation challenge inherent to overhead imagery, and the SVM ensemble provides robust confidence filtering to maintain detection precision.</p>
-
-<p>The combination of these innovations creates a practical system for detecting novel object categories in satellite imagery without requiring labeled training data—a significant step toward adaptable, deployment-ready detection systems for real-world remote sensing applications. Future work may explore adaptive rotation augmentation strategies, hierarchical prototype refinement, and extension to additional overhead imagery datasets beyond xView.</p>
+<p>This project demonstrates some potential improvements for zero-shot object detection in overhead imagery. Given the results, I cannot recommend the approach without additional changes.</p>
 
 <p>Code for this project can be found at <a href="https://github.com/dlfelps/devit-xview">https://github.com/dlfelps/devit-xview</a>.</p>
 
