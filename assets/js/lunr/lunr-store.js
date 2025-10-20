@@ -148,4 +148,10 @@ var store = [{
         "tags": ["claude","semantic","scene-graph","captioning","langextract","t5","few-shot","llm","gemini"],
         "url": "/2025/11/01/langextract.html",
         "teaser": null
+      },{
+        "title": "Experiment 25",
+        "excerpt":"The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies. Solving Cloud Resource Allocation with Reinforcement Learning Introduction Cloud computing has revolutionized how we deploy and manage applications, but efficiently allocating resources across virtual machines (VMs) remains...","categories": [],
+        "tags": ["claude","cloud-gym","reinforcement-learning","rl","ppo","optimization","policy"],
+        "url": "/2025/12/01/cloud-gym.html",
+        "teaser": null
       }]
