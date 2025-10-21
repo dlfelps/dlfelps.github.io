@@ -166,7 +166,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          32 minute read
+          26 minute read
         
       </span>
     
@@ -181,7 +181,7 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#solving-cloud-resource-allocation-with-reinforcement-learning">Solving Cloud Resource Allocation with Reinforcement Learning</a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#the-cloud-resource-allocation-domain">The Cloud Resource Allocation Domain</a><ul><li><a href="#environment-overview">Environment Overview</a></li><li><a href="#state-space-92-dimensions---fully-discrete">State Space (92 Dimensions - Fully Discrete)</a></li><li><a href="#action-space-discrete">Action Space (Discrete)</a></li><li><a href="#reward-function-multi-objective">Reward Function (Multi-Objective)</a></li><li><a href="#sources-of-uncertainty">Sources of Uncertainty</a></li><li><a href="#policy-descriptions">Policy Descriptions</a></li></ul></li><li><a href="#results">Results</a><ul><li><a href="#key-findings">Key Findings</a><ul><li><a href="#1-ppo-achieves-highest-reward-through-cost-optimization">1. PPO Achieves Highest Reward Through Cost Optimization</a></li><li><a href="#2-heuristics-form-a-strong-cluster">2. Heuristics Form a Strong Cluster</a></li><li><a href="#3-a2c-and-dqn-not-as-good-as-ppo">3. A2C and DQN not as good as PPO</a></li><li><a href="#4-the-discrete-observation-space-advantage">4. The Discrete Observation Space Advantage</a></li></ul></li><li><a href="#multi-objective-performance">Multi-Objective Performance</a></li><li><a href="#statistical-significance">Statistical Significance</a></li><li><a href="#additional-visualizations">Additional Visualizations</a></li></ul></li><li><a href="#conclusion">Conclusion</a><ul><li><a href="#key-takeaways">Key Takeaways</a></li><li><a href="#similar-domains-for-simulation--ppo">Similar Domains for Simulation + PPO</a><ul><li><a href="#1-manufacturing--production-scheduling">1. Manufacturing &amp; Production Scheduling</a></li><li><a href="#2-logistics--warehouse-optimization">2. Logistics &amp; Warehouse Optimization</a></li><li><a href="#3-network-traffic-routing">3. Network Traffic Routing</a></li><li><a href="#4-healthcare-resource-allocation">4. Healthcare Resource Allocation</a></li><li><a href="#5-energy-grid-management">5. Energy Grid Management</a></li><li><a href="#6-container-orchestration-kubernetes-like">6. Container Orchestration (Kubernetes-like)</a></li><li><a href="#7-airport-gate-assignment">7. Airport Gate Assignment</a></li><li><a href="#8-ride-sharing-dispatch">8. Ride-Sharing Dispatch</a></li></ul></li><li><a href="#why-simulation--ppo-works-well">Why Simulation + PPO Works Well</a></li><li><a href="#code-and-data-availability">Code and Data Availability</a></li></ul></li></ul></li></ul>
+              <ul class="toc__menu"><li><a href="#solving-cloud-resource-allocation-with-reinforcement-learning">Solving Cloud Resource Allocation with Reinforcement Learning</a><ul><li><a href="#introduction">Introduction</a><ul><li><a href="#the-cloud-resource-allocation-domain">The Cloud Resource Allocation Domain</a></li></ul></li><li><a href="#results">Results</a></li><li><a href="#conclusion">Conclusion</a></li><li><a href="#code-and-data-availability">Code and Data Availability</a></li><li><a href="#appendix---additional-visualizations">Appendix - Additional Visualizations</a></li></ul></li></ul>
             </nav>
           </aside>
         
@@ -196,9 +196,7 @@
 
 <p>This project implements a realistic cloud resource allocation simulator as a <strong>Gymnasium environment</strong> and applies <strong>Proximal Policy Optimization (PPO)</strong>, a state-of-the-art RL algorithm, to learn intelligent scheduling policies. We compare the learned policies against seven traditional heuristics and two other RL algorithms (A2C and DQN) to evaluate performance across multiple metrics.</p>
 
-<h2 id="the-cloud-resource-allocation-domain">The Cloud Resource Allocation Domain</h2>
-
-<h3 id="environment-overview">Environment Overview</h3>
+<h3 id="the-cloud-resource-allocation-domain">The Cloud Resource Allocation Domain</h3>
 
 <p>Our simulator models a heterogeneous cloud cluster with the following characteristics:</p>
 
@@ -236,7 +234,7 @@
 
 <p>These tight deadlines create realistic scheduling pressure, forcing the agent to make quick, effective decisions.</p>
 
-<h3 id="state-space-92-dimensions---fully-discrete">State Space (92 Dimensions - Fully Discrete)</h3>
+<hr />
 
 <p>The observation space is a dictionary containing:</p>
 
@@ -276,7 +274,9 @@
 
 <p><strong>Key Design Decision:</strong> All task requirements and VM resources are <strong>discrete integers</strong>, creating a fully discrete state space with ~10^80 possible states. This discretization dramatically improves learning efficiency while maintaining realism (cloud resources are often allocated in whole units anyway).</p>
 
-<h3 id="action-space-discrete">Action Space (Discrete)</h3>
+<hr />
+
+<p><strong>Action Space (Discrete)</strong></p>
 
 <p>At each timestep, the agent selects from <strong>12 possible actions</strong>:</p>
 <ul>
@@ -287,7 +287,9 @@
 
 <p>An <strong>action mask</strong> prevents the agent from selecting invalid actions (e.g., assigning to a VM without enough resources).</p>
 
-<h3 id="reward-function-multi-objective">Reward Function (Multi-Objective)</h3>
+<hr />
+
+<p><strong>Reward Function (Multi-Objective)</strong></p>
 
 <p>The reward function balances multiple competing objectives:</p>
 
@@ -299,8 +301,6 @@
        - vm_cost
        - queue_penalty
 </code></pre></div></div>
-
-<p><strong>Components:</strong></p>
 
 <ol>
   <li><strong>Utilization Bonus</strong>: Encourages efficient resource usage</li>
@@ -326,7 +326,9 @@
 
 <p>This multi-objective reward structure creates a challenging optimization problem where the agent must learn to balance short-term gains with long-term system health.</p>
 
-<h3 id="sources-of-uncertainty">Sources of Uncertainty</h3>
+<hr />
+
+<p><strong>Sources of Uncertainty</strong></p>
 
 <p>The environment models several realistic uncertainties:</p>
 
@@ -339,7 +341,9 @@
 
 <p>These uncertainties prevent simple rule-based solutions and reward adaptive policies.</p>
 
-<h3 id="policy-descriptions">Policy Descriptions</h3>
+<hr />
+
+<p><strong>Policy Descriptions</strong></p>
 
 <p><strong>Heuristic Baselines:</strong></p>
 <ol>
@@ -471,9 +475,11 @@
   </tbody>
 </table>
 
-<h3 id="key-findings">Key Findings</h3>
+<hr />
 
-<h4 id="1-ppo-achieves-highest-reward-through-cost-optimization">1. PPO Achieves Highest Reward Through Cost Optimization</h4>
+<ol>
+  <li>PPO Achieves Highest Reward Through Cost Optimization</li>
+</ol>
 
 <p><img src="/assets/images/reward_comparison.png" alt="Reward Comparison" /></p>
 
@@ -494,7 +500,9 @@
 
 <p>This reveals an important insight: <strong>PPO found a local optimum in the reward landscape that maximizes reward but doesn’t maximize task completion.</strong> This is a form of “reward hacking” where the agent exploits the reward structure.</p>
 
-<h4 id="2-heuristics-form-a-strong-cluster">2. Heuristics Form a Strong Cluster</h4>
+<hr />
+
+<p>2. Heuristics Form a Strong Cluster</p>
 
 <p><img src="/assets/images/performance_heatmap.png" alt="Performance Heatmap" /></p>
 
@@ -515,7 +523,9 @@
   <li>The benefit of deadline-awareness or priority-awareness is marginal under tight deadlines</li>
 </ul>
 
-<h4 id="3-a2c-and-dqn-not-as-good-as-ppo">3. A2C and DQN not as good as PPO</h4>
+<hr />
+
+<p>3. A2C and DQN not as good as PPO</p>
 
 <p>Both A2C and DQN showed poor performance:</p>
 <ul>
@@ -536,7 +546,9 @@
 
 <p><strong>Key Finding</strong>: The discrete observation space alone doesn’t guarantee good performance - the choice of RL algorithm matters significantly for this domain.</p>
 
-<h4 id="4-the-discrete-observation-space-advantage">4. The Discrete Observation Space Advantage</h4>
+<hr />
+
+<p>4. The Discrete Observation Space Advantage</p>
 
 <p>Our environment uses <strong>fully discrete observations</strong> (92 integer-valued dimensions):</p>
 
@@ -557,7 +569,9 @@
 
 <p>The discrete formulation is possible because task requirements are integers, which cascade through the system (VMs subtract/add integers, staying discrete).</p>
 
-<h3 id="multi-objective-performance">Multi-Objective Performance</h3>
+<hr />
+
+<p><strong>Multi-Objective Performance</strong></p>
 
 <p><img src="/assets/images/radar_comparison.png" alt="Radar Comparison" /></p>
 
@@ -569,42 +583,13 @@
   <li><strong>A2C/DQN</strong>: Underperforming on all metrics</li>
 </ul>
 
-<h3 id="statistical-significance">Statistical Significance</h3>
-
-<p><img src="/assets/images/reward_distribution.png" alt="Reward Distribution" /></p>
-
-<p>All performance differences are statistically significant (p &lt; 0.001) with non-overlapping confidence intervals between:</p>
-<ul>
-  <li>PPO vs. all other policies</li>
-  <li>Heuristics cluster vs. RL cluster (A2C/DQN)</li>
-  <li>Random vs. sophisticated heuristics</li>
-</ul>
-
-<p>Standard deviations remain low (~5% of mean), indicating stable, reproducible performance.</p>
-
-<h3 id="additional-visualizations">Additional Visualizations</h3>
-
-<p><img src="/assets/images/per_priority_performance.png" alt="Per-Priority Performance" /></p>
-
-<p><em>Figure: Performance breakdown by task priority level. PPO demonstrates clear prioritization of HIGH-priority tasks while aggressively rejecting LOW-priority tasks. BestFit maintains more balanced performance across all priority levels.</em></p>
-
-<p><img src="/assets/images/utilization_over_time.png" alt="Resource Utilization Over Time" /></p>
-
-<p><em>Figure: Resource utilization comparison over a 200-timestep episode. BestFit maintains steady ~70% CPU and ~65% memory utilization with 9-10 active VMs. PPO operates at lower ~35% CPU and ~30% memory utilization with only 5-6 active VMs, reflecting its cost-optimization strategy.</em></p>
-
-<p><img src="/assets/images/queue_length_distribution.png" alt="Queue Length Distribution" /></p>
-
-<p><em>Figure: Distribution of pending task queue lengths across policies. A2C and DQN show pathological behavior with very long queues (8-15 tasks), while efficient heuristics maintain shorter queues (2-5 tasks). PPO’s queue is moderately longer due to selective task acceptance.</em></p>
-
-<p><img src="/assets/images/cost_breakdown.png" alt="Cost Breakdown" /></p>
-
-<p><em>Figure: Energy cost vs. VM rental cost breakdown. PPO achieves lowest total cost ($394.48) through minimal VM usage. Heuristics cluster at $479-487 with higher energy consumption from running more tasks. A2C/DQN have low costs but only because they reject 90%+ of tasks.</em></p>
+<hr />
 
 <h2 id="conclusion">Conclusion</h2>
 
 <p>This project demonstrates that <strong>reinforcement learning can discover effective cloud resource allocation strategies</strong>, but with important caveats:</p>
 
-<h3 id="key-takeaways">Key Takeaways</h3>
+<p><strong>Key Takeaways</strong></p>
 
 <ol>
   <li>
@@ -621,85 +606,11 @@
   </li>
 </ol>
 
-<h3 id="similar-domains-for-simulation--ppo">Similar Domains for Simulation + PPO</h3>
+<hr />
 
-<p>The combination of <strong>high-fidelity simulation + PPO</strong> can be applied to many complex scheduling and resource allocation problems:</p>
+<p><strong>Why PPO Works Well</strong></p>
 
-<h4 id="1-manufacturing--production-scheduling">1. <strong>Manufacturing &amp; Production Scheduling</strong></h4>
-<ul>
-  <li><strong>Problem</strong>: Assign jobs to machines in a factory, minimizing makespan and tardiness</li>
-  <li><strong>State</strong>: Machine availability, job queue, setup times, deadlines</li>
-  <li><strong>Actions</strong>: Assign job to machine, defer, preempt</li>
-  <li><strong>Reward</strong>: Throughput, on-time delivery, machine utilization</li>
-  <li><strong>Example</strong>: Semiconductor fabrication scheduling with 200+ processing steps</li>
-</ul>
-
-<h4 id="2-logistics--warehouse-optimization">2. <strong>Logistics &amp; Warehouse Optimization</strong></h4>
-<ul>
-  <li><strong>Problem</strong>: Route orders to pickers, assign storage locations, manage inventory</li>
-  <li><strong>State</strong>: Order queue, picker locations, inventory levels, storage capacity</li>
-  <li><strong>Actions</strong>: Assign order to picker, allocate storage slot, replenishment decisions</li>
-  <li><strong>Reward</strong>: Order fulfillment speed, travel distance, storage efficiency</li>
-  <li><strong>Example</strong>: Amazon warehouse order batching and routing</li>
-</ul>
-
-<h4 id="3-network-traffic-routing">3. <strong>Network Traffic Routing</strong></h4>
-<ul>
-  <li><strong>Problem</strong>: Route packets through network switches to minimize latency and congestion</li>
-  <li><strong>State</strong>: Queue lengths, link utilizations, packet priorities, QoS requirements</li>
-  <li><strong>Actions</strong>: Select output port, drop packet, adjust priority</li>
-  <li><strong>Reward</strong>: Latency, throughput, packet loss, fairness</li>
-  <li><strong>Example</strong>: Data center fabric routing with mixed traffic (storage, compute, ML)</li>
-</ul>
-
-<h4 id="4-healthcare-resource-allocation">4. <strong>Healthcare Resource Allocation</strong></h4>
-<ul>
-  <li><strong>Problem</strong>: Assign patients to hospital beds, schedule surgeries, allocate staff</li>
-  <li><strong>State</strong>: Patient queue, bed availability, staff schedules, patient acuity, predicted length of stay</li>
-  <li><strong>Actions</strong>: Assign patient to bed/ward, schedule surgery slot, allocate nurse</li>
-  <li><strong>Reward</strong>: Patient wait time, bed utilization, staff overtime, health outcomes</li>
-  <li><strong>Example</strong>: Emergency department patient flow optimization</li>
-</ul>
-
-<h4 id="5-energy-grid-management">5. <strong>Energy Grid Management</strong></h4>
-<ul>
-  <li><strong>Problem</strong>: Dispatch power generation sources to meet demand while minimizing cost</li>
-  <li><strong>State</strong>: Current demand, renewable availability (wind/solar), battery storage, grid capacity</li>
-  <li><strong>Actions</strong>: Activate/deactivate generators, charge/discharge batteries, curtail renewables</li>
-  <li><strong>Reward</strong>: Cost, emissions, grid stability, renewable utilization</li>
-  <li><strong>Example</strong>: Microgrid optimization with solar, wind, diesel, and battery storage</li>
-</ul>
-
-<h4 id="6-container-orchestration-kubernetes-like">6. <strong>Container Orchestration (Kubernetes-like)</strong></h4>
-<ul>
-  <li><strong>Problem</strong>: Schedule containers/pods to cluster nodes, similar to our VM problem but at larger scale</li>
-  <li><strong>State</strong>: Node resources (CPU, memory, network), pod requirements, affinities, taints/tolerations</li>
-  <li><strong>Actions</strong>: Assign pod to node, reject, defer, preempt lower-priority pod</li>
-  <li><strong>Reward</strong>: Resource utilization, SLA violations, cost, autoscaling efficiency</li>
-  <li><strong>Example</strong>: Multi-tenant Kubernetes cluster with diverse workloads</li>
-</ul>
-
-<h4 id="7-airport-gate-assignment">7. <strong>Airport Gate Assignment</strong></h4>
-<ul>
-  <li><strong>Problem</strong>: Assign arriving flights to gates while minimizing taxi time and conflicts</li>
-  <li><strong>State</strong>: Flight schedule, gate availability, aircraft types, passenger connections, ground crew</li>
-  <li><strong>Actions</strong>: Assign flight to gate, use remote stand, delay assignment</li>
-  <li><strong>Reward</strong>: Passenger connection success, taxi distance, gate utilization, airline preferences</li>
-  <li><strong>Example</strong>: Major hub airport with 100+ gates and 1000+ daily flights</li>
-</ul>
-
-<h4 id="8-ride-sharing-dispatch">8. <strong>Ride-Sharing Dispatch</strong></h4>
-<ul>
-  <li><strong>Problem</strong>: Match drivers to riders in real-time to minimize wait times and maximize throughput</li>
-  <li><strong>State</strong>: Driver locations, rider requests, traffic conditions, surge pricing zones</li>
-  <li><strong>Actions</strong>: Assign rider to driver, defer for batching, reject (surge)</li>
-  <li><strong>Reward</strong>: Wait time, driver utilization, revenue, geographic coverage</li>
-  <li><strong>Example</strong>: Urban ride-sharing with demand spikes and heterogeneous geography</li>
-</ul>
-
-<h3 id="why-simulation--ppo-works-well">Why Simulation + PPO Works Well</h3>
-
-<p>These domains share key characteristics that make the simulation + PPO approach effective:</p>
+<p>This domain is well suited to PPO.</p>
 
 <ol>
   <li><strong>Complex state spaces</strong>: Too many dimensions for analytical solutions</li>
@@ -713,7 +624,7 @@
 
 <p><strong>The PPO advantage</strong>: Unlike heuristics that use fixed rules, PPO learns from experience to discover strategies that traditional methods might miss. Unlike exact optimization, PPO handles stochasticity and scales to complex state spaces.</p>
 
-<h3 id="code-and-data-availability">Code and Data Availability</h3>
+<h2 id="code-and-data-availability">Code and Data Availability</h2>
 
 <p>The complete implementation, trained models, and evaluation scripts are available at:</p>
 <ul>
@@ -724,6 +635,24 @@
 </ul>
 
 <p>All experiments are reproducible using the provided seeds and configurations.</p>
+
+<h2 id="appendix---additional-visualizations">Appendix - Additional Visualizations</h2>
+
+<p><img src="/assets/images/per_priority_performance.png" alt="Per-Priority Performance" /></p>
+
+<p><em>Figure: Performance breakdown by task priority level. PPO demonstrates clear prioritization of HIGH-priority tasks while aggressively rejecting LOW-priority tasks. BestFit maintains more balanced performance across all priority levels.</em></p>
+
+<p><img src="/assets/images/utilization_over_time.png" alt="Resource Utilization Over Time" /></p>
+
+<p><em>Figure: Resource utilization comparison over a 200-timestep episode. BestFit maintains steady ~70% CPU and ~65% memory utilization with 9-10 active VMs. PPO operates at lower ~35% CPU and ~30% memory utilization with only 5-6 active VMs, reflecting its cost-optimization strategy.</em></p>
+
+<p><img src="/assets/images/queue_length_distribution.png" alt="Queue Length Distribution" /></p>
+
+<p><em>Figure: Distribution of pending task queue lengths across policies. A2C and DQN show pathological behavior with very long queues (8-15 tasks), while efficient heuristics maintain shorter queues (2-5 tasks). PPO’s queue is moderately longer due to selective task acceptance.</em></p>
+
+<p><img src="/assets/images/cost_breakdown.png" alt="Cost Breakdown" /></p>
+
+<p><em>Figure: Energy cost vs. VM rental cost breakdown. PPO achieves lowest total cost ($394.48) through minimal VM usage. Heuristics cluster at $479-487 with higher energy consumption from running more tasks. A2C/DQN have low costs but only because they reject 90%+ of tasks.</em></p>
 
 <hr />
 
