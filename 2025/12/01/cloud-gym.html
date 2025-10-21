@@ -11,7 +11,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>Experiment 25 - .NET Experiments</title>
-<meta name="description" content="The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies.">
+<meta name="description" content="The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies. Solving Cloud Resource Allocation with Reinforcement Learning">
 
 
   <meta name="author" content="Daniel Felps">
@@ -27,7 +27,7 @@
 <meta property="og:url" content="https://dlfelps.github.io/2025/12/01/cloud-gym.html">
 
 
-  <meta property="og:description" content="The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies.">
+  <meta property="og:description" content="The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies. Solving Cloud Resource Allocation with Reinforcement Learning">
 
 
 
@@ -134,7 +134,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Experiment 25">
-    <meta itemprop="description" content="The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies.">
+    <meta itemprop="description" content="The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies.Solving Cloud Resource Allocation with Reinforcement Learning">
     <meta itemprop="datePublished" content="2025-12-01T00:00:00+00:00">
     
 
@@ -166,7 +166,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          39 minute read
+          32 minute read
         
       </span>
     
@@ -181,12 +181,11 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#solving-cloud-resource-allocation-with-reinforcement-learning">Solving Cloud Resource Allocation with Reinforcement Learning</a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#the-cloud-resource-allocation-domain">The Cloud Resource Allocation Domain</a><ul><li><a href="#environment-overview">Environment Overview</a></li><li><a href="#state-space-92-dimensions---fully-discrete">State Space (92 Dimensions - Fully Discrete)</a></li><li><a href="#action-space-discrete">Action Space (Discrete)</a></li><li><a href="#reward-function-multi-objective">Reward Function (Multi-Objective)</a></li><li><a href="#sources-of-uncertainty">Sources of Uncertainty</a></li></ul></li><li><a href="#the-ppo-algorithm">The PPO Algorithm</a><ul><li><a href="#why-ppo-for-this-problem">Why PPO for This Problem?</a></li><li><a href="#ppo-training-configuration">PPO Training Configuration</a></li><li><a href="#training-process">Training Process</a></li></ul></li><li><a href="#results">Results</a><ul><li><a href="#policy-descriptions">Policy Descriptions</a></li><li><a href="#performance-summary">Performance Summary</a></li><li><a href="#key-findings">Key Findings</a><ul><li><a href="#1-ppo-achieves-highest-reward-through-cost-optimization">1. PPO Achieves Highest Reward Through Cost Optimization</a></li><li><a href="#2-heuristics-form-a-strong-cluster">2. Heuristics Form a Strong Cluster</a></li><li><a href="#3-a2c-and-dqn-require-more-training">3. A2C and DQN Require More Training</a></li><li><a href="#4-the-discrete-observation-space-advantage">4. The Discrete Observation Space Advantage</a></li></ul></li><li><a href="#multi-objective-performance">Multi-Objective Performance</a></li><li><a href="#statistical-significance">Statistical Significance</a></li><li><a href="#metrics-breakdown">Metrics Breakdown</a></li><li><a href="#additional-visualizations">Additional Visualizations</a></li></ul></li><li><a href="#conclusion">Conclusion</a><ul><li><a href="#key-takeaways">Key Takeaways</a></li><li><a href="#similar-domains-for-simulation--ppo">Similar Domains for Simulation + PPO</a><ul><li><a href="#1-manufacturing--production-scheduling">1. Manufacturing &amp; Production Scheduling</a></li><li><a href="#2-logistics--warehouse-optimization">2. Logistics &amp; Warehouse Optimization</a></li><li><a href="#3-network-traffic-routing">3. Network Traffic Routing</a></li><li><a href="#4-healthcare-resource-allocation">4. Healthcare Resource Allocation</a></li><li><a href="#5-energy-grid-management">5. Energy Grid Management</a></li><li><a href="#6-container-orchestration-kubernetes-like">6. Container Orchestration (Kubernetes-like)</a></li><li><a href="#7-airport-gate-assignment">7. Airport Gate Assignment</a></li><li><a href="#8-ride-sharing-dispatch">8. Ride-Sharing Dispatch</a></li></ul></li><li><a href="#why-simulation--ppo-works-well">Why Simulation + PPO Works Well</a></li><li><a href="#future-work">Future Work</a></li><li><a href="#code-and-data-availability">Code and Data Availability</a></li></ul></li></ul></li></ul>
+              <ul class="toc__menu"><li><a href="#solving-cloud-resource-allocation-with-reinforcement-learning">Solving Cloud Resource Allocation with Reinforcement Learning</a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#the-cloud-resource-allocation-domain">The Cloud Resource Allocation Domain</a><ul><li><a href="#environment-overview">Environment Overview</a></li><li><a href="#state-space-92-dimensions---fully-discrete">State Space (92 Dimensions - Fully Discrete)</a></li><li><a href="#action-space-discrete">Action Space (Discrete)</a></li><li><a href="#reward-function-multi-objective">Reward Function (Multi-Objective)</a></li><li><a href="#sources-of-uncertainty">Sources of Uncertainty</a></li><li><a href="#policy-descriptions">Policy Descriptions</a></li></ul></li><li><a href="#results">Results</a><ul><li><a href="#key-findings">Key Findings</a><ul><li><a href="#1-ppo-achieves-highest-reward-through-cost-optimization">1. PPO Achieves Highest Reward Through Cost Optimization</a></li><li><a href="#2-heuristics-form-a-strong-cluster">2. Heuristics Form a Strong Cluster</a></li><li><a href="#3-a2c-and-dqn-not-as-good-as-ppo">3. A2C and DQN not as good as PPO</a></li><li><a href="#4-the-discrete-observation-space-advantage">4. The Discrete Observation Space Advantage</a></li></ul></li><li><a href="#multi-objective-performance">Multi-Objective Performance</a></li><li><a href="#statistical-significance">Statistical Significance</a></li><li><a href="#additional-visualizations">Additional Visualizations</a></li></ul></li><li><a href="#conclusion">Conclusion</a><ul><li><a href="#key-takeaways">Key Takeaways</a></li><li><a href="#similar-domains-for-simulation--ppo">Similar Domains for Simulation + PPO</a><ul><li><a href="#1-manufacturing--production-scheduling">1. Manufacturing &amp; Production Scheduling</a></li><li><a href="#2-logistics--warehouse-optimization">2. Logistics &amp; Warehouse Optimization</a></li><li><a href="#3-network-traffic-routing">3. Network Traffic Routing</a></li><li><a href="#4-healthcare-resource-allocation">4. Healthcare Resource Allocation</a></li><li><a href="#5-energy-grid-management">5. Energy Grid Management</a></li><li><a href="#6-container-orchestration-kubernetes-like">6. Container Orchestration (Kubernetes-like)</a></li><li><a href="#7-airport-gate-assignment">7. Airport Gate Assignment</a></li><li><a href="#8-ride-sharing-dispatch">8. Ride-Sharing Dispatch</a></li></ul></li><li><a href="#why-simulation--ppo-works-well">Why Simulation + PPO Works Well</a></li><li><a href="#code-and-data-availability">Code and Data Availability</a></li></ul></li></ul></li></ul>
             </nav>
           </aside>
         
         <p>The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies.</p>
-
 <h1 id="solving-cloud-resource-allocation-with-reinforcement-learning">Solving Cloud Resource Allocation with Reinforcement Learning</h1>
 
 <h2 id="introduction">Introduction</h2>
@@ -340,84 +339,6 @@
 
 <p>These uncertainties prevent simple rule-based solutions and reward adaptive policies.</p>
 
-<h2 id="the-ppo-algorithm">The PPO Algorithm</h2>
-
-<p><strong>Proximal Policy Optimization (PPO)</strong> is a policy gradient method developed by OpenAI that has become the de facto standard for continuous control and many discrete action tasks. PPO strikes an excellent balance between sample efficiency, stability, and ease of implementation.</p>
-
-<h3 id="why-ppo-for-this-problem">Why PPO for This Problem?</h3>
-
-<ol>
-  <li>
-    <p><strong>Handles Complex State Spaces</strong>: PPO uses neural networks to approximate the policy, allowing it to handle the 92-dimensional observation space effectively.</p>
-  </li>
-  <li>
-    <p><strong>Stable Training</strong>: PPO’s clipped objective prevents destructive policy updates, ensuring steady improvement.</p>
-  </li>
-  <li>
-    <p><strong>Sample Efficient</strong>: Compared to earlier policy gradient methods (like REINFORCE), PPO reuses data through multiple epochs of minibatch updates.</p>
-  </li>
-  <li>
-    <p><strong>Discrete Action Support</strong>: While PPO works for both continuous and discrete actions, it excels at discrete action spaces like ours (12 actions).</p>
-  </li>
-  <li>
-    <p><strong>Multi-Objective Optimization</strong>: PPO naturally handles the multi-objective reward signal through its value function baseline.</p>
-  </li>
-</ol>
-
-<h3 id="ppo-training-configuration">PPO Training Configuration</h3>
-
-<p>We trained PPO with the following hyperparameters:</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model</span> <span class="o">=</span> <span class="nc">PPO</span><span class="p">(</span>
-    <span class="n">policy</span><span class="o">=</span><span class="sh">"</span><span class="s">MultiInputPolicy</span><span class="sh">"</span><span class="p">,</span>      <span class="c1"># Handles Dict observation space
-</span>    <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
-    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">3e-4</span><span class="p">,</span>
-    <span class="n">n_steps</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>                    <span class="c1"># Steps per rollout
-</span>    <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
-    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>                     <span class="c1"># Optimization epochs per rollout
-</span>    <span class="n">gamma</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span>                      <span class="c1"># Discount factor
-</span>    <span class="n">gae_lambda</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>                <span class="c1"># GAE parameter
-</span>    <span class="n">clip_range</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>                 <span class="c1"># PPO clipping parameter
-</span>    <span class="n">ent_coef</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>                  <span class="c1"># Entropy bonus (exploration)
-</span>    <span class="n">vf_coef</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>                    <span class="c1"># Value function loss coefficient
-</span>    <span class="n">policy_kwargs</span><span class="o">=</span><span class="p">{</span>
-        <span class="sh">"</span><span class="s">net_arch</span><span class="sh">"</span><span class="p">:</span> <span class="p">[</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">],</span>      <span class="c1"># Two hidden layers
-</span>    <span class="p">},</span>
-<span class="p">)</span>
-</code></pre></div></div>
-
-<p><strong>Training Setup:</strong></p>
-<ul>
-  <li><strong>8 Parallel Environments</strong>: Using <code class="language-plaintext highlighter-rouge">SubprocVecEnv</code> for faster data collection</li>
-  <li><strong>Reward Normalization</strong>: <code class="language-plaintext highlighter-rouge">VecNormalize</code> for stable learning</li>
-  <li><strong>Total Timesteps</strong>: 500,000 (recommended for convergence)</li>
-  <li><strong>Checkpointing</strong>: Every 10,000 steps</li>
-</ul>
-
-<p>The <strong>MultiInputPolicy</strong> architecture processes the dictionary observation through separate encoders for each component (global state, VM state, task state, action mask) before combining them in shared layers.</p>
-
-<h3 id="training-process">Training Process</h3>
-
-<ol>
-  <li><strong>Rollout Collection</strong>: The agent interacts with 8 parallel environments, collecting 2,048 timesteps of experience.</li>
-  <li><strong>Advantage Estimation</strong>: PPO computes advantages using Generalized Advantage Estimation (GAE).</li>
-  <li><strong>Policy Update</strong>: The policy is updated for 10 epochs using minibatches of 64 samples, with the clipped objective preventing large updates.</li>
-  <li><strong>Repeat</strong>: This process repeats for 500,000 total timesteps (~244 update cycles).</li>
-</ol>
-
-<p>During training, PPO learns to:</p>
-<ul>
-  <li>Identify which VMs are best suited for each task type</li>
-  <li>Prioritize HIGH-priority tasks with tight deadlines</li>
-  <li>Balance acceptance vs. rejection trade-offs</li>
-  <li>Manage queue lengths to avoid congestion</li>
-  <li>Optimize resource utilization while controlling costs</li>
-</ul>
-
-<h2 id="results">Results</h2>
-
-<p>We evaluated PPO against <strong>7 heuristic baselines</strong> and <strong>2 other RL algorithms</strong> (A2C and DQN) over <strong>100 episodes</strong> each. All policies were evaluated on the same environment configuration for fair comparison.</p>
-
 <h3 id="policy-descriptions">Policy Descriptions</h3>
 
 <p><strong>Heuristic Baselines:</strong></p>
@@ -438,11 +359,11 @@
   <li><strong>DQN</strong> (Deep Q-Network)</li>
 </ol>
 
-<h3 id="performance-summary">Performance Summary</h3>
+<h2 id="results">Results</h2>
 
-<p><img src="/assets/images/summary_table.png" alt="Summary Table" /></p>
+<p>We evaluated PPO against <strong>7 heuristic baselines</strong> and <strong>2 other RL algorithms</strong> (A2C and DQN) over <strong>100 episodes</strong> each. All policies were evaluated on the same environment configuration for fair comparison.</p>
 
-<p><strong>Table 1: Complete Results (100 episodes)</strong></p>
+<p>Table 1: Complete Results (100 episodes)</p>
 
 <table>
   <thead>
@@ -480,14 +401,14 @@
       <td>-1464.7</td>
       <td>55.7%</td>
       <td>41.2%</td>
-      <td>54.3%</td>
+      <td><strong>54.3%</strong></td>
       <td>465.9</td>
       <td>487.2</td>
     </tr>
     <tr>
       <td>FirstFit</td>
       <td>-1450.5</td>
-      <td>55.8%</td>
+      <td><strong>55.8%</strong></td>
       <td>41.0%</td>
       <td><strong>54.3%</strong></td>
       <td>458.0</td>
@@ -496,7 +417,7 @@
     <tr>
       <td><strong>BestFit</strong></td>
       <td>-1440.2</td>
-      <td><strong>55.6%</strong></td>
+      <td>55.6%</td>
       <td>41.2%</td>
       <td>54.1%</td>
       <td>461.7</td>
@@ -533,7 +454,7 @@
       <td>A2C_Improved</td>
       <td>-261.7</td>
       <td>8.9%</td>
-      <td><strong>90.2%</strong></td>
+      <td>90.2%</td>
       <td>8.7%</td>
       <td><strong>144.6</strong></td>
       <td><strong>151.5</strong></td>
@@ -542,7 +463,7 @@
       <td>DQN_Improved</td>
       <td>-283.0</td>
       <td>8.5%</td>
-      <td>90.5%</td>
+      <td><strong>90.5%</strong></td>
       <td>8.3%</td>
       <td>151.0</td>
       <td>157.7</td>
@@ -594,7 +515,7 @@
   <li>The benefit of deadline-awareness or priority-awareness is marginal under tight deadlines</li>
 </ul>
 
-<h4 id="3-a2c-and-dqn-require-more-training">3. A2C and DQN Require More Training</h4>
+<h4 id="3-a2c-and-dqn-not-as-good-as-ppo">3. A2C and DQN not as good as PPO</h4>
 
 <p>Both A2C and DQN showed poor performance:</p>
 <ul>
@@ -604,25 +525,16 @@
 </ul>
 
 <p><strong>Root Cause Analysis:</strong></p>
+
+<p>All three RL algorithms (PPO, A2C, and DQN) were trained for 500,000 timesteps on the same discrete observation space environment. However:</p>
+
 <ol>
-  <li><strong>Insufficient training</strong>: Models trained with only 50,000 timesteps
-    <ul>
-      <li>PPO needs 300k+ timesteps for convergence</li>
-      <li>A2C needs 400k+ timesteps</li>
-      <li>DQN needs 500k+ timesteps for discrete state spaces</li>
-    </ul>
-  </li>
-  <li><strong>Local minima</strong>: A2C learned to defer everything; DQN learned to reject everything</li>
-  <li><strong>Environment mismatch</strong>: Models trained on an older environment version</li>
+  <li><strong>Algorithm suitability</strong>: PPO’s policy gradient approach appears better suited for this multi-objective scheduling problem than value-based methods (DQN) or advantage actor-critic (A2C)</li>
+  <li><strong>Local minima</strong>: A2C and DQN converged to suboptimal policies (aggressive rejection/deferral) and failed to escape</li>
+  <li><strong>Exploration challenges</strong>: Value-based and actor-critic methods struggled with the exploration-exploitation tradeoff in this high-dimensional discrete space</li>
 </ol>
 
-<p><strong>Expected improvement</strong>: With proper training (500k timesteps) on the discrete observation space:</p>
-<ul>
-  <li>A2C: 65-70% completion rate</li>
-  <li>DQN: 60-65% completion rate (discrete state space should help significantly)</li>
-</ul>
-
-<p>![Placeholder: Training curves showing PPO convergence over 500k timesteps]</p>
+<p><strong>Key Finding</strong>: The discrete observation space alone doesn’t guarantee good performance - the choice of RL algorithm matters significantly for this domain.</p>
 
 <h4 id="4-the-discrete-observation-space-advantage">4. The Discrete Observation Space Advantage</h4>
 
@@ -651,9 +563,11 @@
 
 <p>The radar chart reveals distinct strategy profiles:</p>
 
-<p><strong>PPO</strong>: Extreme cost optimization, low throughput
-<strong>Heuristics</strong>: Balanced performance across all objectives
-<strong>A2C/DQN</strong>: Underperforming on all metrics (undertrained)</p>
+<ul>
+  <li><strong>PPO</strong>: Extreme cost optimization, low throughput</li>
+  <li><strong>Heuristics</strong>: Ignores reward function, similar performance across all other metrics</li>
+  <li><strong>A2C/DQN</strong>: Underperforming on all metrics</li>
+</ul>
 
 <h3 id="statistical-significance">Statistical Significance</h3>
 
@@ -667,16 +581,6 @@
 </ul>
 
 <p>Standard deviations remain low (~5% of mean), indicating stable, reproducible performance.</p>
-
-<h3 id="metrics-breakdown">Metrics Breakdown</h3>
-
-<p><img src="/assets/images/metrics_comparison.png" alt="Metrics Comparison" /></p>
-
-<p><strong>Completion Rate</strong>: BestFit leads at 55.6%, PPO at 33.4%
-<strong>SLA Satisfaction</strong>: All policies achieve 97%+ SLA on <em>completed</em> tasks
-<strong>Overall SLA Success</strong>: FirstFit leads at 54.3% (includes rejections)
-<strong>Energy Efficiency</strong>: PPO most efficient (376.8), heuristics cluster at ~460
-<strong>Rejection Rate</strong>: Heuristics cluster at ~41%, PPO at 60%</p>
 
 <h3 id="additional-visualizations">Additional Visualizations</h3>
 
@@ -708,9 +612,6 @@
   </li>
   <li>
     <p><strong>Simple heuristics remain competitive</strong>: FirstFit achieved 54.3% overall SLA success with a straightforward greedy strategy. This suggests that for many practical scenarios, well-tuned heuristics may be sufficient.</p>
-  </li>
-  <li>
-    <p><strong>Training matters enormously</strong>: A2C and DQN’s poor performance (8-9% completion) resulted from insufficient training (50k vs. 500k needed timesteps), not algorithmic limitations. Proper training should bring them to 60-70% performance.</p>
   </li>
   <li>
     <p><strong>Discrete state spaces improve learning</strong>: The fully discrete observation space (92 integer dimensions) should significantly boost DQN performance while providing cleaner learning signals for all algorithms.</p>
@@ -812,24 +713,11 @@
 
 <p><strong>The PPO advantage</strong>: Unlike heuristics that use fixed rules, PPO learns from experience to discover strategies that traditional methods might miss. Unlike exact optimization, PPO handles stochasticity and scales to complex state spaces.</p>
 
-<h3 id="future-work">Future Work</h3>
-
-<p>To further improve this system:</p>
-
-<ol>
-  <li><strong>Reward redesign</strong>: Add a completion rate floor or multiply rewards by throughput</li>
-  <li><strong>Curriculum learning</strong>: Start with easy scenarios (low arrival rate) and gradually increase difficulty</li>
-  <li><strong>Multi-agent RL</strong>: Train specialized agents for different priority levels</li>
-  <li><strong>Meta-learning</strong>: Train agents that can quickly adapt to new environment parameters</li>
-  <li><strong>Hybrid approaches</strong>: Combine RL policies with heuristic safety nets</li>
-  <li><strong>Real-world deployment</strong>: Validate in production cloud environments with real traces</li>
-</ol>
-
 <h3 id="code-and-data-availability">Code and Data Availability</h3>
 
 <p>The complete implementation, trained models, and evaluation scripts are available at:</p>
 <ul>
-  <li><strong>Repository</strong>: <a href="https://github.com/yourusername/cloud-resource-gym">github.com/yourusername/cloud-resource-gym</a></li>
+  <li><strong>Repository</strong>: <a href="https://github.com/dlfelps/cloud-gym">https://github.com/dlfelps/cloud-gym</a></li>
   <li><strong>Environment</strong>: Built with Gymnasium (OpenAI Gym successor)</li>
   <li><strong>RL Framework</strong>: Stable-Baselines3 (PyTorch-based)</li>
   <li><strong>Visualization</strong>: Matplotlib, Seaborn, Pandas</li>
@@ -840,7 +728,6 @@
 <hr />
 
 <p><strong>Reinforcement learning offers a powerful framework for tackling complex resource allocation problems.</strong> While challenges remain in reward design and training stability, the ability to learn sophisticated strategies from simulation makes RL an invaluable tool for modern cloud infrastructure management and beyond.</p>
-
 
         
       </section>
