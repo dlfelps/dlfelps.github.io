@@ -150,8 +150,8 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 25",
-        "excerpt":"The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies. Solving Cloud Resource Allocation with Reinforcement Learning Introduction Cloud computing has revolutionized how we deploy and manage applications, but efficiently allocating resources across virtual machines (VMs) remains...","categories": [],
-        "tags": ["claude","cloud-gym","reinforcement-learning","rl","ppo","optimization","policy"],
-        "url": "/2025/12/01/cloud-gym.html",
+        "excerpt":"This post demonstrates that reinforcement learning agents can be trained with sparse reward signals as effectively as carefully tuned dense rewards. Optimizing Last-Mile Delivery with Reinforcement Learning: From Dense to Sparse Rewards Introduction: The Problem of Last-Mile Delivery Last-mile delivery—the final leg of a package’s journey from distribution center to...","categories": [],
+        "tags": ["claude","reinforcement-learning","rl","ppo","sparse","soft-actor-critic","optimization","policy","last-mile"],
+        "url": "/2025/12/01/sparse-rl.html",
         "teaser": null
       }]

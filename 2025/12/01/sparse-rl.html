@@ -1,0 +1,722 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.3 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 25 - .NET Experiments</title>
+<meta name="description" content="This post demonstrates that reinforcement learning agents can be trained with sparse reward signals as effectively as carefully tuned dense rewards.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 25">
+<meta property="og:url" content="https://dlfelps.github.io/2025/12/01/sparse-rl.html">
+
+
+  <meta property="og:description" content="This post demonstrates that reinforcement learning agents can be trained with sparse reward signals as effectively as carefully tuned dense rewards.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-12-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2025/12/01/sparse-rl.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/"
+                
+                
+              >Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 25">
+    <meta itemprop="description" content="This post demonstrates that reinforcement learning agents can be trained with sparse reward signals as effectively as carefully tuned dense rewards.">
+    <meta itemprop="datePublished" content="2025-12-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://dlfelps.github.io/2025/12/01/sparse-rl.html" itemprop="url">Experiment 25
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-12-01T00:00:00+00:00">December 1, 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          23 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#optimizing-last-mile-delivery-with-reinforcement-learning-from-dense-to-sparse-rewards">Optimizing Last-Mile Delivery with Reinforcement Learning: From Dense to Sparse Rewards</a><ul><li><a href="#introduction-the-problem-of-last-mile-delivery">Introduction: The Problem of Last-Mile Delivery</a></li><li><a href="#algorithmic-solutions-from-dense-to-sparse-rewards">Algorithmic Solutions: From Dense to Sparse Rewards</a><ul><li><a href="#1-greedy-baseline">1. Greedy Baseline</a></li><li><a href="#2-dense-reward-pposac-traditional-rl-approach">2. Dense Reward PPO/SAC (Traditional RL Approach)</a></li><li><a href="#3-sparse-reward-pposac-novel-approach">3. Sparse Reward PPO/SAC (Novel Approach)</a></li></ul></li><li><a href="#the-surprising-results-sparse-wins-over-dense">The Surprising Results: Sparse Wins Over Dense</a></li><li><a href="#why-does-sparse-reward-learning-work">Why Does Sparse Reward Learning Work?</a><ul><li><a href="#hypothesis-1-signal-noise-reduction">Hypothesis 1: Signal Noise Reduction</a></li><li><a href="#hypothesis-2-relative-framebench-built-in">Hypothesis 2: Relative Framebench Built-In</a></li><li><a href="#hypothesis-3-simpler-loss-landscape">Hypothesis 3: Simpler Loss Landscape</a></li></ul></li><li><a href="#real-world-advantages-of-sparse-reward-learning">Real-World Advantages of Sparse Reward Learning</a></li><li><a href="#conclusion">Conclusion</a></li><li><a href="#final-thoughts">Final Thoughts</a></li></ul></li></ul>
+            </nav>
+          </aside>
+        
+        <p>This post demonstrates that reinforcement learning agents can be trained with sparse reward signals as effectively as carefully tuned dense rewards.</p>
+
+<h1 id="optimizing-last-mile-delivery-with-reinforcement-learning-from-dense-to-sparse-rewards">Optimizing Last-Mile Delivery with Reinforcement Learning: From Dense to Sparse Rewards</h1>
+
+<h2 id="introduction-the-problem-of-last-mile-delivery">Introduction: The Problem of Last-Mile Delivery</h2>
+
+<p>Last-mile delivery—the final leg of a package’s journey from distribution center to customer—represents one of the most expensive and operationally challenging aspects of modern logistics. According to industry research, last-mile costs can account for 50-60% of total shipping expenses, and with the explosive growth of e-commerce, the problem has only become more acute.</p>
+
+<p>The core challenge is deceptively simple to state: Given a fleet of vehicles with limited capacity, a stream of daily package arrivals with varying priorities and delivery deadlines, and geographic constraints on which truck can serve which zone, how do you decide <strong>which packages to deliver today and which to defer</strong> to maximize operational value while meeting customer expectations?</p>
+
+<p>This is a constrained optimization problem that sits at the intersection of:</p>
+<ul>
+  <li><strong>Vehicle Routing Problems (VRP)</strong>: Classical logistics optimization</li>
+  <li><strong>Knapsack Problems</strong>: Capacity-constrained selection</li>
+  <li><strong>Temporal Scheduling</strong>: Deadline-aware decision making</li>
+  <li><strong>Reinforcement Learning</strong>: Learning optimal policies from experience</li>
+</ul>
+
+<p>Traditional approaches to logistics optimization have relied on integer linear programming, metaheuristics (genetic algorithms, simulated annealing), and handcrafted rule-based systems. But what if we could train an agent to learn better strategies through experience? And what if we could do it <strong>without designing a complex reward function</strong>?</p>
+
+<p>That’s the premise of this project, and the surprising answer lies in <strong>sparse reward learning</strong>.</p>
+
+<hr />
+
+<p>The Simulation Model</p>
+
+<p>We model the delivery optimization problem as a <strong>constrained capacity problem with 10 trucks, 10 zones, and 30 daily package arrivals</strong>:</p>
+
+<p><strong>Infrastructure:</strong></p>
+<ul>
+  <li><strong>Warehouse</strong>: Central depot (location 0)</li>
+  <li><strong>Zones</strong>: 10 geographic zones, each with 4 delivery addresses (40 total addresses)</li>
+  <li><strong>Trucks</strong>: 10 trucks, one assigned per zone
+    <ul>
+      <li>Capacity: 2 packages per truck per day</li>
+      <li>Total daily fleet capacity: 20 packages</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Daily Arrivals:</strong></p>
+<ul>
+  <li><strong>Volume</strong>: 30 packages per day</li>
+  <li><strong>Shortage</strong>: 33% capacity shortage (must defer 10 packages)</li>
+  <li><strong>Priority</strong>: Bimodal distribution
+    <ul>
+      <li>40% low-priority (1-3)</li>
+      <li>40% high-priority (8-10)</li>
+      <li>20% medium-priority (4-7)</li>
+    </ul>
+  </li>
+  <li><strong>Deadlines</strong>: 1-7 days from arrival</li>
+  <li><strong>Destinations</strong>: Uniformly distributed across zones</li>
+</ul>
+
+<hr />
+
+<p>The Core Decision Problem</p>
+
+<p>Each day, each truck independently faces the decision:</p>
+<blockquote>
+  <p><strong>“Of my available packages (new arrivals + deferred backlog), which 2 should I deliver today?”</strong></p>
+</blockquote>
+
+<p>This is non-trivial because:</p>
+<ol>
+  <li><strong>Capacity is limited</strong>: Can’t deliver everything</li>
+  <li><strong>Deadlines create urgency</strong>: Some packages expire soon</li>
+  <li><strong>Priorities are heterogeneous</strong>: High-priority packages are worth more</li>
+  <li><strong>Deferrals have costs</strong>: Deferred packages tie up future capacity</li>
+  <li><strong>Information is incomplete</strong>: Don’t know future arrivals</li>
+</ol>
+
+<h2 id="algorithmic-solutions-from-dense-to-sparse-rewards">Algorithmic Solutions: From Dense to Sparse Rewards</h2>
+
+<h3 id="1-greedy-baseline">1. Greedy Baseline</h3>
+
+<p><strong>Algorithm</strong>: Deliver all available packages (up to capacity limit)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>For each truck:
+  available_packages = deferred + new_arrivals
+  deliver = sort_by_priority(available_packages)[:capacity]
+</code></pre></div></div>
+
+<p><strong>Characteristics:</strong></p>
+<ul>
+  <li>Deterministic</li>
+  <li>No learning required</li>
+  <li>Simple to implement</li>
+  <li>Treats all packages equally (ignores deadline pressure)</li>
+</ul>
+
+<p><strong>Performance Baseline</strong>:</p>
+<ul>
+  <li>Average daily reward: 805.7</li>
+  <li>On-time delivery: 75.6%</li>
+  <li>No variance (deterministic)</li>
+</ul>
+
+<h3 id="2-dense-reward-pposac-traditional-rl-approach">2. Dense Reward PPO/SAC (Traditional RL Approach)</h3>
+
+<p><strong>Reward Function</strong>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Total Reward = Σ(delivered_package_value) - Σ(missed_deadline_penalty) - distance_cost
+
+Where:
+  delivered_package_value = 100 × (priority / 10)
+  missed_deadline_penalty = -50 × (priority / 10)
+  distance_cost = -0.01 × kilometers_traveled
+</code></pre></div></div>
+
+<p><strong>Key Characteristics</strong>:</p>
+<ul>
+  <li>Complex reward engineering required</li>
+  <li>Hyperparameters: 100 (delivery weight), -50 (miss penalty), -0.01 (distance)</li>
+  <li>Requires extensive domain knowledge to set correctly</li>
+  <li>Dense signal ranges from -500 to +1000 per decision</li>
+  <li>Scaling factors need careful tuning</li>
+</ul>
+
+<h3 id="3-sparse-reward-pposac-novel-approach">3. Sparse Reward PPO/SAC (Novel Approach)</h3>
+
+<p><strong>Core Insight</strong>: What if we don’t need a complex reward function at all? What if agents can learn from <strong>comparative signals only</strong>?</p>
+
+<p><strong>Sparse Reward Signal</strong>:</p>
+
+<p>Instead of <code class="language-plaintext highlighter-rouge">-500 to +1000</code>, agents receive:</p>
+<ul>
+  <li><strong>+1</strong>: When policy outperforms what the greedy baseline would have done</li>
+  <li><strong>-1</strong>: When policy underperforms the baseline</li>
+  <li><strong>0</strong>: When policy matches the baseline</li>
+</ul>
+
+<p><strong>Why This Matters</strong>:</p>
+<ul>
+  <li>No hyperparameter tuning needed (just +1 and -1)</li>
+  <li>No domain knowledge required to scale rewards</li>
+  <li>Agents learn from pure comparison: “Am I better or worse?”</li>
+  <li>Signal is invariant to absolute reward magnitude</li>
+  <li><strong>Simpler, more robust, more generalizable</strong></li>
+</ul>
+
+<p><strong>Architecture Unchanged</strong>:</p>
+<ul>
+  <li>Same zone-agnostic shared policy</li>
+  <li>Same observations: priority, deadline_urgency, distance, truck_load</li>
+  <li>Same action space: continuous confidence scores for packages</li>
+  <li>Same training (PPO and SAC) and duration (500k timesteps)</li>
+</ul>
+
+<p><strong>The only difference</strong>: The reward signal during training</p>
+
+<hr />
+
+<h2 id="the-surprising-results-sparse-wins-over-dense">The Surprising Results: Sparse Wins Over Dense</h2>
+
+<p>We evaluated all agents (Greedy, Dense PPO, Dense SAC, Sparse PPO, Sparse SAC) using a <strong>relative value metric</strong>: How much better/worse than the baseline?</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Agent</th>
+      <th>Daily Advantage</th>
+      <th>Win Rate</th>
+      <th>Max Advantage</th>
+      <th>Std Dev</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Sparse PPO</strong> 🏆</td>
+      <td><strong>+464.8</strong></td>
+      <td>98.6%</td>
+      <td>+1020.2</td>
+      <td>200.7</td>
+    </tr>
+    <tr>
+      <td><strong>Dense PPO</strong></td>
+      <td>+461.5</td>
+      <td>99.6%</td>
+      <td>+980.0</td>
+      <td>192.5</td>
+    </tr>
+    <tr>
+      <td>Dense SAC</td>
+      <td>+399.7</td>
+      <td>96.8%</td>
+      <td>+999.5</td>
+      <td>220.0</td>
+    </tr>
+    <tr>
+      <td>Sparse SAC</td>
+      <td>+362.4</td>
+      <td>96.6%</td>
+      <td>+860.1</td>
+      <td>198.8</td>
+    </tr>
+    <tr>
+      <td><strong>Greedy Baseline</strong></td>
+      <td>0 (reference)</td>
+      <td>50%</td>
+      <td>0</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="/assets/images/01_absolute_rewards.png" alt="Absolute Rewards" /></p>
+
+<p>Both PPO agents significantly outperform SAC and the baseline. The Sparse PPO’s slight edge over Dense PPO (127,054 vs 126,720) is noteworthy because it achieves this with a 1000x simpler reward signal.</p>
+
+<hr />
+
+<p><img src="/assets/images/02_relative_values.png" alt="Relative Values" /></p>
+
+<p>This is the most important metric: How much better/worse than the greedy baseline?</p>
+
+<p>The heights are nearly identical for the PPO variants, showing that sparse and dense rewards achieve essentially the same end result. The slight Sparse PPO edge (+3.3 points) is statistically insignificant but philosophically important: <strong>simpler signals achieved better results</strong>.</p>
+
+<p>The SAC agents’ lower performance suggests that SAC’s off-policy nature may require denser reward signals for effective learning, or that our SAC hyperparameters weren’t as well-tuned as PPO’s.</p>
+
+<hr />
+
+<p><img src="/assets/images/03_win_rates.png" alt="Win Rates" /></p>
+
+<p>Win rate = percentage of days the agent beats the greedy baseline</p>
+
+<p><strong>Interpretation</strong>:</p>
+<ul>
+  <li>All agents are highly reliable, beating the baseline &gt;96% of the time</li>
+  <li>Dense PPO has a slight edge in consistency (99.6% vs 98.6%)</li>
+  <li>But this comes at the cost of complex reward engineering</li>
+  <li>The trade-off is acceptable: Sparse PPO’s 98.6% win rate is still excellent</li>
+  <li>Only 7 days out of 500 where Sparse PPO underperforms (1.4% failure rate)</li>
+</ul>
+
+<hr />
+
+<p><img src="/assets/images/04_relative_evolution.png" alt="Relative Evolution" /></p>
+
+<p>This plot shows how the daily advantage changes throughout a 100-day episode</p>
+
+<p><strong>Interpretation</strong>:</p>
+<ul>
+  <li>All agents maintain stable performance across the full episode</li>
+  <li>No degradation as days progress (agents don’t “tire out”)</li>
+  <li>No improvement trend (agents don’t learn within an episode; learning happens across episodes)</li>
+  <li>Sparse PPO’s consistency mirrors Dense PPO perfectly</li>
+  <li>This stability is crucial for real-world deployment: reliable day-after-day performance</li>
+</ul>
+
+<h2 id="why-does-sparse-reward-learning-work">Why Does Sparse Reward Learning Work?</h2>
+
+<p>Agents trained with only <strong>-1, 0, +1</strong> signals matched or exceeded agents trained with <strong>-500 to +1000</strong> dense rewards. This challenges conventional RL wisdom. Why?</p>
+
+<h3 id="hypothesis-1-signal-noise-reduction">Hypothesis 1: Signal Noise Reduction</h3>
+
+<p>Dense rewards encode both:</p>
+<ol>
+  <li><strong>Direction</strong>: Should I improve or degrade my behavior?</li>
+  <li><strong>Magnitude</strong>: By how much?</li>
+</ol>
+
+<p>The magnitude component introduces noise:</p>
+<ul>
+  <li>How much should I weight a +500 reward vs +550?</li>
+  <li>Are the scaling factors (100, -50, -0.01) optimal?</li>
+  <li>What if I increase scale 2x? The agent relearns everything.</li>
+</ul>
+
+<p>Sparse signals provide only <strong>direction</strong>, removing scaling noise:</p>
+<ul>
+  <li>Better than baseline? → +1 (learn this policy)</li>
+  <li>Worse? → -1 (unlearn this policy)</li>
+  <li>Same? → 0 (neutral)</li>
+</ul>
+
+<p>This <strong>cleaner signal</strong> might be more learnable.</p>
+
+<h3 id="hypothesis-2-relative-framebench-built-in">Hypothesis 2: Relative Framebench Built-In</h3>
+
+<p>Dense rewards are <strong>absolute</strong>: “This decision is worth 547 points.”</p>
+
+<p>Sparse rewards are <strong>relative</strong>: “This decision beats the baseline.”</p>
+
+<p>Relative framebench is more robust:</p>
+<ul>
+  <li>Generalizes across different problem scales</li>
+  <li>Adapts if baseline changes (e.g., competitor improves)</li>
+  <li>Built-in regularization against extreme behaviors</li>
+  <li>Agents learn what matters: being <strong>better, not just good</strong></li>
+</ul>
+
+<h3 id="hypothesis-3-simpler-loss-landscape">Hypothesis 3: Simpler Loss Landscape</h3>
+
+<p>Dense reward functions create complex, multi-objective loss surfaces:</p>
+<ul>
+  <li>Deliver high-priority: +100 × priority/10</li>
+  <li>Avoid misses: -50 × priority/10</li>
+  <li>Minimize distance: -0.01 × km</li>
+</ul>
+
+<p>Three conflicting objectives, each with scaling factors.</p>
+
+<p>Sparse signals create simpler landscapes:</p>
+<ul>
+  <li>Single objective: maximize probability of beating baseline</li>
+  <li>Binary feedback (better/worse)</li>
+  <li>Cleaner gradient flow</li>
+</ul>
+
+<p>Simpler landscapes = faster convergence, better local optima.</p>
+
+<h2 id="real-world-advantages-of-sparse-reward-learning">Real-World Advantages of Sparse Reward Learning</h2>
+
+<p>In academic settings, we can carefully design reward functions. In the real world, this is <strong>hard</strong>:</p>
+
+<ol>
+  <li><strong>Unknown Objectives</strong>: What’s the true business objective?
+    <ul>
+      <li>Maximize revenue? Minimize costs? Customer satisfaction? All of the above?</li>
+      <li>Often these conflict</li>
+    </ul>
+  </li>
+  <li><strong>Scaling Uncertainty</strong>: How to weight different objectives?
+    <ul>
+      <li>Is on-time delivery worth 2x cost savings or 10x?</li>
+      <li>How much does customer satisfaction matter vs revenue?</li>
+      <li>These weights differ by market, season, customer segment</li>
+    </ul>
+  </li>
+  <li><strong>Lack of Domain Knowledge</strong>: What if you’re optimizing something new?
+    <ul>
+      <li>Traditional logistics expertise doesn’t transfer perfectly</li>
+      <li>New market = new constraints</li>
+      <li>Hand-tuned weights from one domain fail in another</li>
+    </ul>
+  </li>
+  <li><strong>Hyperparameter Sensitivity</strong>: Dense rewards require constant retuning
+    <ul>
+      <li>Market conditions change → tune weights again</li>
+      <li>Competitor behavior changes → tune again</li>
+      <li>Seasonal variations → more tuning</li>
+      <li><strong>No end to the tuning work</strong></li>
+    </ul>
+  </li>
+</ol>
+
+<p>With sparse rewards, you <strong>only need one thing</strong>: A baseline policy</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Define baseline (e.g., greedy heuristic, existing system, competitor)
+</span><span class="n">baseline_action</span> <span class="o">=</span> <span class="nf">get_greedy_action</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="n">baseline_reward</span> <span class="o">=</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">baseline_action</span><span class="p">)</span>
+
+<span class="c1"># Define learned policy
+</span><span class="n">learned_action</span> <span class="o">=</span> <span class="n">agent</span><span class="p">.</span><span class="nf">predict</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="n">learned_reward</span> <span class="o">=</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">learned_action</span><span class="p">)</span>
+
+<span class="c1"># That's it! No hyperparameter tuning needed
+</span><span class="k">if</span> <span class="n">learned_reward</span> <span class="o">&gt;</span> <span class="n">baseline_reward</span><span class="p">:</span>
+    <span class="n">reward_signal</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">reward_signal</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</code></pre></div></div>
+
+<p><strong>Advantages</strong>:</p>
+<ul>
+  <li>✅ No reward scaling needed</li>
+  <li>✅ Works with any baseline (greedy, heuristic, human expert, previous system)</li>
+  <li>✅ Automatically adapts as baseline changes</li>
+  <li>✅ Same code works for different objectives (just change baseline)</li>
+  <li>✅ Explainable: “We learned a policy better than your existing system”</li>
+</ul>
+
+<p>This is <strong>profoundly more practical</strong> for real systems.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This project demonstrates two critical insights:</p>
+
+<p><strong>First</strong>: Reinforcement learning can discover sophisticated logistics optimization strategies. Our shared policy agents beat a greedy baseline by 57-58% on the same problem instances that professional logistics systems solve with static heuristics.</p>
+
+<p><strong>Second, and more surprising</strong>: You might not need a complex reward function to achieve this. A simple comparative signal (+1 if better, -1 if worse) matched or exceeded carefully tuned dense rewards (-500 to +1000).</p>
+
+<p>This challenges a fundamental assumption in RL: <strong>that bigger, richer reward signals are always better</strong>. In practice, simpler signals that provide clear direction (“beat the baseline”) might be more learnable and generalizable than complex signals with precise magnitudes.</p>
+
+<p>The counter-intuitive result—that sparse PPO (+464.8 advantage) slightly outperformed dense PPO (+461.5)—suggests that <strong>how you train matters more than what you train with</strong>. A cleaner learning signal, even if simpler, can outweigh richer but more complex information.</p>
+
+<p>For practitioners building real-world RL systems: <strong>Stop optimizing your reward function. Start comparing against your baseline.</strong> It’s simpler, more practical, and achieves the same (or better) results.</p>
+
+<h2 id="final-thoughts">Final Thoughts</h2>
+
+<p>Optimization problems in logistics have been solved for decades using mathematical programming. Traditional RL adds learning capability. But <strong>sparse reward learning adds something different: simplicity and adaptability</strong>.</p>
+
+<p>A traditional solver finds the optimal solution given a model. But if your model is wrong or incomplete, you’ve optimized the wrong thing.</p>
+
+<p>A dense reward agent learns a policy that maximizes your hand-tuned objective. But if that objective changes (market shifts, new constraint discovered), the training loses relevance.</p>
+
+<p>A sparse reward agent learns one simple thing: <strong>How to beat what you already have.</strong> This is more robust, more adaptable, and more practical.</p>
+
+<p>The next generation of logistics software—and optimization software broadly—won’t just optimize given constraints. It will learn baseline-relative improvement through sparse, adaptive signals.</p>
+
+<p>And sometimes, the simpler signal is the stronger one.</p>
+
+<p>Code: Available in this <a href="https://github.com/dlfelps/sparse-rl">repository</a></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/claude" class="page__taxonomy-item p-category" rel="tag">claude</a><span class="sep">, </span>
+    
+      <a href="/tags/last-mile" class="page__taxonomy-item p-category" rel="tag">last-mile</a><span class="sep">, </span>
+    
+      <a href="/tags/optimization" class="page__taxonomy-item p-category" rel="tag">optimization</a><span class="sep">, </span>
+    
+      <a href="/tags/policy" class="page__taxonomy-item p-category" rel="tag">policy</a><span class="sep">, </span>
+    
+      <a href="/tags/ppo" class="page__taxonomy-item p-category" rel="tag">ppo</a><span class="sep">, </span>
+    
+      <a href="/tags/reinforcement-learning" class="page__taxonomy-item p-category" rel="tag">reinforcement-learning</a><span class="sep">, </span>
+    
+      <a href="/tags/rl" class="page__taxonomy-item p-category" rel="tag">rl</a><span class="sep">, </span>
+    
+      <a href="/tags/soft-actor-critic" class="page__taxonomy-item p-category" rel="tag">soft-actor-critic</a><span class="sep">, </span>
+    
+      <a href="/tags/sparse" class="page__taxonomy-item p-category" rel="tag">sparse</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-12-01T00:00:00+00:00">December 1, 2025</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  <h4 class="page__share-title">Share on</h4>
+
+  <a href="https://x.com/intent/tweet?text=Experiment+25%20https%3A%2F%2Fdlfelps.github.io%2F2025%2F12%2F01%2Fsparse-rl.html" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
+    <i class="fab fa-fw fa-x-twitter" aria-hidden="true"></i><span> X</span>
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2025%2F12%2F01%2Fsparse-rl.html" class="btn btn--facebook" aria-label="Share on Facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook">
+    <i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span>
+  </a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dlfelps.github.io/2025/12/01/sparse-rl.html" class="btn btn--linkedin" aria-label="Share on LinkedIn" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn">
+    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
+  </a>
+
+  <a href="https://bsky.app/intent/compose?text=Experiment+25%20https%3A%2F%2Fdlfelps.github.io%2F2025%2F12%2F01%2Fsparse-rl.html" class="btn btn--bluesky" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Bluesky">
+    <i class="fab fa-fw fa-bluesky" aria-hidden="true"></i><span> Bluesky</span>
+  </a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2025/11/01/langextract.html" class="pagination--pager" title="Experiment 24">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2025 <a href="https://dlfelps.github.io">.NET Experiments</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,475 +1,408 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-10-21T16:25:38+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 25</title><link href="https://dlfelps.github.io/2025/12/01/cloud-gym.html" rel="alternate" type="text/html" title="Experiment 25" /><published>2025-12-01T00:00:00+00:00</published><updated>2025-12-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/12/01/cloud-gym</id><content type="html" xml:base="https://dlfelps.github.io/2025/12/01/cloud-gym.html"><![CDATA[<p>The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies.</p>
-<h1 id="solving-cloud-resource-allocation-with-reinforcement-learning">Solving Cloud Resource Allocation with Reinforcement Learning</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-10-28T16:13:49+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 25</title><link href="https://dlfelps.github.io/2025/12/01/sparse-rl.html" rel="alternate" type="text/html" title="Experiment 25" /><published>2025-12-01T00:00:00+00:00</published><updated>2025-12-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/12/01/sparse-rl</id><content type="html" xml:base="https://dlfelps.github.io/2025/12/01/sparse-rl.html"><![CDATA[<p>This post demonstrates that reinforcement learning agents can be trained with sparse reward signals as effectively as carefully tuned dense rewards.</p>
 
-<h2 id="introduction">Introduction</h2>
+<h1 id="optimizing-last-mile-delivery-with-reinforcement-learning-from-dense-to-sparse-rewards">Optimizing Last-Mile Delivery with Reinforcement Learning: From Dense to Sparse Rewards</h1>
 
-<p>Cloud computing has revolutionized how we deploy and manage applications, but efficiently allocating resources across virtual machines (VMs) remains a challenging optimization problem. Data centers must continuously decide which tasks to assign to which VMs while balancing multiple competing objectives: maximizing resource utilization, meeting service level agreements (SLAs), minimizing energy costs, and maintaining system responsiveness.</p>
+<h2 id="introduction-the-problem-of-last-mile-delivery">Introduction: The Problem of Last-Mile Delivery</h2>
 
-<p><strong>Reinforcement Learning (RL)</strong> offers a promising approach to this challenge. Unlike traditional heuristics that rely on fixed rules, RL agents learn optimal strategies through trial and error, discovering policies that can adapt to complex, dynamic environments. In RL, an agent observes the current state of the environment (e.g., available VM resources, pending tasks), takes an action (e.g., assign task to VM 3), and receives a reward signal indicating how good that decision was. Over thousands of episodes, the agent learns which actions lead to better long-term outcomes.</p>
+<p>Last-mile delivery—the final leg of a package’s journey from distribution center to customer—represents one of the most expensive and operationally challenging aspects of modern logistics. According to industry research, last-mile costs can account for 50-60% of total shipping expenses, and with the explosive growth of e-commerce, the problem has only become more acute.</p>
 
-<p>This project implements a realistic cloud resource allocation simulator as a <strong>Gymnasium environment</strong> and applies <strong>Proximal Policy Optimization (PPO)</strong>, a state-of-the-art RL algorithm, to learn intelligent scheduling policies. We compare the learned policies against seven traditional heuristics and two other RL algorithms (A2C and DQN) to evaluate performance across multiple metrics.</p>
+<p>The core challenge is deceptively simple to state: Given a fleet of vehicles with limited capacity, a stream of daily package arrivals with varying priorities and delivery deadlines, and geographic constraints on which truck can serve which zone, how do you decide <strong>which packages to deliver today and which to defer</strong> to maximize operational value while meeting customer expectations?</p>
 
-<h3 id="the-cloud-resource-allocation-domain">The Cloud Resource Allocation Domain</h3>
+<p>This is a constrained optimization problem that sits at the intersection of:</p>
+<ul>
+  <li><strong>Vehicle Routing Problems (VRP)</strong>: Classical logistics optimization</li>
+  <li><strong>Knapsack Problems</strong>: Capacity-constrained selection</li>
+  <li><strong>Temporal Scheduling</strong>: Deadline-aware decision making</li>
+  <li><strong>Reinforcement Learning</strong>: Learning optimal policies from experience</li>
+</ul>
 
-<p>Our simulator models a heterogeneous cloud cluster with the following characteristics:</p>
+<p>Traditional approaches to logistics optimization have relied on integer linear programming, metaheuristics (genetic algorithms, simulated annealing), and handcrafted rule-based systems. But what if we could train an agent to learn better strategies through experience? And what if we could do it <strong>without designing a complex reward function</strong>?</p>
+
+<p>That’s the premise of this project, and the surprising answer lies in <strong>sparse reward learning</strong>.</p>
+
+<hr />
+
+<p>The Simulation Model</p>
+
+<p>We model the delivery optimization problem as a <strong>constrained capacity problem with 10 trucks, 10 zones, and 30 daily package arrivals</strong>:</p>
 
 <p><strong>Infrastructure:</strong></p>
 <ul>
-  <li><strong>10 Virtual Machines</strong> distributed across <strong>3 availability zones</strong></li>
-  <li><strong>4 VM types</strong> with different resource profiles:
+  <li><strong>Warehouse</strong>: Central depot (location 0)</li>
+  <li><strong>Zones</strong>: 10 geographic zones, each with 4 delivery addresses (40 total addresses)</li>
+  <li><strong>Trucks</strong>: 10 trucks, one assigned per zone
     <ul>
-      <li><strong>Compute-optimized</strong>: 16 CPU cores, 32 GB RAM, high performance ($0.80/hour)</li>
-      <li><strong>Memory-optimized</strong>: 8 CPU cores, 64 GB RAM, for memory-intensive workloads ($0.90/hour)</li>
-      <li><strong>Balanced</strong>: 8 CPU cores, 32 GB RAM, general purpose ($0.60/hour)</li>
-      <li><strong>Budget</strong>: 4 CPU cores, 16 GB RAM, cost-effective ($0.30/hour)</li>
+      <li>Capacity: 2 packages per truck per day</li>
+      <li>Total daily fleet capacity: 20 packages</li>
     </ul>
   </li>
 </ul>
 
-<p><strong>Task Characteristics:</strong></p>
-
-<p>Tasks arrive according to a <strong>Poisson process</strong> (mean arrival rate: 3.0 tasks/timestep) and have discrete resource requirements:</p>
+<p><strong>Daily Arrivals:</strong></p>
 <ul>
-  <li><strong>CPU</strong>: 1-16 cores</li>
-  <li><strong>Memory</strong>: 2-64 GB</li>
-  <li><strong>Disk</strong>: 10-100 GB</li>
-  <li><strong>Bandwidth</strong>: 50-500 Mbps (in 50 Mbps increments)</li>
-  <li><strong>Duration</strong>: 1-20 timesteps (with ±20% uncertainty)</li>
-  <li><strong>Priority</strong>: LOW, MEDIUM, or HIGH (probabilities: 50%, 30%, 20%)</li>
+  <li><strong>Volume</strong>: 30 packages per day</li>
+  <li><strong>Shortage</strong>: 33% capacity shortage (must defer 10 packages)</li>
+  <li><strong>Priority</strong>: Bimodal distribution
+    <ul>
+      <li>40% low-priority (1-3)</li>
+      <li>40% high-priority (8-10)</li>
+      <li>20% medium-priority (4-7)</li>
+    </ul>
+  </li>
+  <li><strong>Deadlines</strong>: 1-7 days from arrival</li>
+  <li><strong>Destinations</strong>: Uniformly distributed across zones</li>
 </ul>
-
-<p>Each task has an <strong>aggressive deadline</strong> based on its priority:</p>
-<ul>
-  <li><strong>HIGH priority</strong>: 1.05× estimated duration (only 5% slack)</li>
-  <li><strong>MEDIUM priority</strong>: 1.2× estimated duration (20% slack)</li>
-  <li><strong>LOW priority</strong>: 2.0× estimated duration (100% slack)</li>
-</ul>
-
-<p>These tight deadlines create realistic scheduling pressure, forcing the agent to make quick, effective decisions.</p>
 
 <hr />
 
-<p>The observation space is a dictionary containing:</p>
+<p>The Core Decision Problem</p>
 
-<p><strong>Global State (3 dimensions):</strong></p>
-<ul>
-  <li>Current timestep (0-200)</li>
-  <li>Number of pending tasks (0-20)</li>
-  <li>Number of running tasks (0-100)</li>
-</ul>
+<p>Each day, each truck independently faces the decision:</p>
+<blockquote>
+  <p><strong>“Of my available packages (new arrivals + deferred backlog), which 2 should I deliver today?”</strong></p>
+</blockquote>
 
-<p><strong>Per-VM State (70 dimensions = 10 VMs × 7 features):</strong></p>
-<ul>
-  <li>Available CPU cores (0-16, discrete integers)</li>
-  <li>Available memory (0-64 GB, discrete integers)</li>
-  <li>Available disk (0-200 GB, discrete integers)</li>
-  <li>Available bandwidth (0-1000 Mbps, discrete integers)</li>
-  <li>Number of running tasks (0-10)</li>
-  <li>Operational status (binary: 0 or 1)</li>
-  <li>Availability zone (0, 1, or 2)</li>
-</ul>
+<p>This is non-trivial because:</p>
+<ol>
+  <li><strong>Capacity is limited</strong>: Can’t deliver everything</li>
+  <li><strong>Deadlines create urgency</strong>: Some packages expire soon</li>
+  <li><strong>Priorities are heterogeneous</strong>: High-priority packages are worth more</li>
+  <li><strong>Deferrals have costs</strong>: Deferred packages tie up future capacity</li>
+  <li><strong>Information is incomplete</strong>: Don’t know future arrivals</li>
+</ol>
 
-<p><strong>Current Task State (7 dimensions):</strong></p>
-<ul>
-  <li>Required CPU (1-16 cores, discrete)</li>
-  <li>Required memory (2-64 GB, discrete)</li>
-  <li>Required disk (10-100 GB, discrete)</li>
-  <li>Required bandwidth (50-500 Mbps, discrete steps of 50)</li>
-  <li>Estimated duration (1-20 timesteps)</li>
-  <li>Priority level (0, 1, or 2)</li>
-  <li>Time until deadline (0-999 timesteps)</li>
-</ul>
+<h2 id="algorithmic-solutions-from-dense-to-sparse-rewards">Algorithmic Solutions: From Dense to Sparse Rewards</h2>
 
-<p><strong>Action Mask (12 dimensions):</strong></p>
-<ul>
-  <li>Binary validity flags for each action (10 VMs + reject + defer)</li>
-</ul>
+<h3 id="1-greedy-baseline">1. Greedy Baseline</h3>
 
-<p><strong>Key Design Decision:</strong> All task requirements and VM resources are <strong>discrete integers</strong>, creating a fully discrete state space with ~10^80 possible states. This discretization dramatically improves learning efficiency while maintaining realism (cloud resources are often allocated in whole units anyway).</p>
+<p><strong>Algorithm</strong>: Deliver all available packages (up to capacity limit)</p>
 
-<hr />
-
-<p><strong>Action Space (Discrete)</strong></p>
-
-<p>At each timestep, the agent selects from <strong>12 possible actions</strong>:</p>
-<ul>
-  <li><strong>Actions 0-9</strong>: Assign the current task to VM 0-9 (if sufficient resources)</li>
-  <li><strong>Action 10</strong>: <strong>Reject</strong> the task (incurs a priority-dependent penalty)</li>
-  <li><strong>Action 11</strong>: <strong>Defer</strong> the task to the next timestep (delays decision)</li>
-</ul>
-
-<p>An <strong>action mask</strong> prevents the agent from selecting invalid actions (e.g., assigning to a VM without enough resources).</p>
-
-<hr />
-
-<p><strong>Reward Function (Multi-Objective)</strong></p>
-
-<p>The reward function balances multiple competing objectives:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>reward = utilization_bonus
-       + completion_bonus
-       - rejection_penalty
-       - sla_violation_penalty
-       - energy_cost
-       - vm_cost
-       - queue_penalty
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>For each truck:
+  available_packages = deferred + new_arrivals
+  deliver = sort_by_priority(available_packages)[:capacity]
 </code></pre></div></div>
 
-<ol>
-  <li><strong>Utilization Bonus</strong>: Encourages efficient resource usage</li>
-  <li><strong>Completion Bonus</strong>: Rewards successful task execution
-    <ul>
-      <li>HIGH priority: +8.0</li>
-      <li>MEDIUM priority: +3.0</li>
-      <li>LOW priority: +1.0</li>
-    </ul>
-  </li>
-  <li><strong>Rejection Penalty</strong>: Discourages giving up on tasks
-    <ul>
-      <li>HIGH priority: -25.0</li>
-      <li>MEDIUM priority: -15.0</li>
-      <li>LOW priority: -5.0</li>
-    </ul>
-  </li>
-  <li><strong>SLA Violation Penalty</strong>: Penalizes missed deadlines (-10.0 per violation)</li>
-  <li><strong>Energy Cost</strong>: Based on VM power consumption (active vs. idle)</li>
-  <li><strong>VM Cost</strong>: Hourly rental fees for VMs</li>
-  <li><strong>Queue Penalty</strong>: Discourages long wait times</li>
-</ol>
+<p><strong>Characteristics:</strong></p>
+<ul>
+  <li>Deterministic</li>
+  <li>No learning required</li>
+  <li>Simple to implement</li>
+  <li>Treats all packages equally (ignores deadline pressure)</li>
+</ul>
 
-<p>This multi-objective reward structure creates a challenging optimization problem where the agent must learn to balance short-term gains with long-term system health.</p>
+<p><strong>Performance Baseline</strong>:</p>
+<ul>
+  <li>Average daily reward: 805.7</li>
+  <li>On-time delivery: 75.6%</li>
+  <li>No variance (deterministic)</li>
+</ul>
+
+<h3 id="2-dense-reward-pposac-traditional-rl-approach">2. Dense Reward PPO/SAC (Traditional RL Approach)</h3>
+
+<p><strong>Reward Function</strong>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Total Reward = Σ(delivered_package_value) - Σ(missed_deadline_penalty) - distance_cost
+
+Where:
+  delivered_package_value = 100 × (priority / 10)
+  missed_deadline_penalty = -50 × (priority / 10)
+  distance_cost = -0.01 × kilometers_traveled
+</code></pre></div></div>
+
+<p><strong>Key Characteristics</strong>:</p>
+<ul>
+  <li>Complex reward engineering required</li>
+  <li>Hyperparameters: 100 (delivery weight), -50 (miss penalty), -0.01 (distance)</li>
+  <li>Requires extensive domain knowledge to set correctly</li>
+  <li>Dense signal ranges from -500 to +1000 per decision</li>
+  <li>Scaling factors need careful tuning</li>
+</ul>
+
+<h3 id="3-sparse-reward-pposac-novel-approach">3. Sparse Reward PPO/SAC (Novel Approach)</h3>
+
+<p><strong>Core Insight</strong>: What if we don’t need a complex reward function at all? What if agents can learn from <strong>comparative signals only</strong>?</p>
+
+<p><strong>Sparse Reward Signal</strong>:</p>
+
+<p>Instead of <code class="language-plaintext highlighter-rouge">-500 to +1000</code>, agents receive:</p>
+<ul>
+  <li><strong>+1</strong>: When policy outperforms what the greedy baseline would have done</li>
+  <li><strong>-1</strong>: When policy underperforms the baseline</li>
+  <li><strong>0</strong>: When policy matches the baseline</li>
+</ul>
+
+<p><strong>Why This Matters</strong>:</p>
+<ul>
+  <li>No hyperparameter tuning needed (just +1 and -1)</li>
+  <li>No domain knowledge required to scale rewards</li>
+  <li>Agents learn from pure comparison: “Am I better or worse?”</li>
+  <li>Signal is invariant to absolute reward magnitude</li>
+  <li><strong>Simpler, more robust, more generalizable</strong></li>
+</ul>
+
+<p><strong>Architecture Unchanged</strong>:</p>
+<ul>
+  <li>Same zone-agnostic shared policy</li>
+  <li>Same observations: priority, deadline_urgency, distance, truck_load</li>
+  <li>Same action space: continuous confidence scores for packages</li>
+  <li>Same training (PPO and SAC) and duration (500k timesteps)</li>
+</ul>
+
+<p><strong>The only difference</strong>: The reward signal during training</p>
 
 <hr />
 
-<p><strong>Sources of Uncertainty</strong></p>
+<h2 id="the-surprising-results-sparse-wins-over-dense">The Surprising Results: Sparse Wins Over Dense</h2>
 
-<p>The environment models several realistic uncertainties:</p>
-
-<ol>
-  <li><strong>Stochastic Task Arrivals</strong>: Poisson process with rate λ=3.0</li>
-  <li><strong>Duration Uncertainty</strong>: Actual duration varies ±20% from estimate</li>
-  <li><strong>Resource Demand Variability</strong>: Tasks have diverse resource requirements</li>
-  <li><strong>VM Failures</strong>: Random failures and recovery (modeled but low probability)</li>
-</ol>
-
-<p>These uncertainties prevent simple rule-based solutions and reward adaptive policies.</p>
-
-<hr />
-
-<p><strong>Policy Descriptions</strong></p>
-
-<p><strong>Heuristic Baselines:</strong></p>
-<ol>
-  <li><strong>Random</strong>: Randomly selects an available VM</li>
-  <li><strong>RoundRobin</strong>: Cycles through VMs sequentially</li>
-  <li><strong>FirstFit</strong>: Assigns to the first VM with sufficient resources</li>
-  <li><strong>BestFit</strong>: Assigns to the VM with the least remaining capacity (best utilization)</li>
-  <li><strong>WorstFit</strong>: Assigns to the VM with the most remaining capacity (load balancing)</li>
-  <li><strong>PriorityBestFit</strong>: BestFit with priority-based scheduling</li>
-  <li><strong>EarliestDeadlineFirst (EDF)</strong>: Prioritizes tasks with nearest deadlines</li>
-</ol>
-
-<p><strong>RL Algorithms:</strong></p>
-<ol>
-  <li><strong>PPO</strong> (Proximal Policy Optimization)</li>
-  <li><strong>A2C</strong> (Advantage Actor-Critic)</li>
-  <li><strong>DQN</strong> (Deep Q-Network)</li>
-</ol>
-
-<h2 id="results">Results</h2>
-
-<p>We evaluated PPO against <strong>7 heuristic baselines</strong> and <strong>2 other RL algorithms</strong> (A2C and DQN) over <strong>100 episodes</strong> each. All policies were evaluated on the same environment configuration for fair comparison.</p>
-
-<p>Table 1: Complete Results (100 episodes)</p>
+<p>We evaluated all agents (Greedy, Dense PPO, Dense SAC, Sparse PPO, Sparse SAC) using a <strong>relative value metric</strong>: How much better/worse than the baseline?</p>
 
 <table>
   <thead>
     <tr>
-      <th>Policy</th>
-      <th>Mean Reward</th>
-      <th>Completion Rate</th>
-      <th>Rejection Rate</th>
-      <th>Overall SLA</th>
-      <th>Energy Cost</th>
-      <th>Total Cost</th>
+      <th>Agent</th>
+      <th>Daily Advantage</th>
+      <th>Win Rate</th>
+      <th>Max Advantage</th>
+      <th>Std Dev</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><strong>PPO_Improved</strong></td>
-      <td><strong>+774.9</strong></td>
-      <td>33.4%</td>
-      <td>60.4%</td>
-      <td>32.5%</td>
-      <td>376.8</td>
-      <td>394.5</td>
+      <td><strong>Sparse PPO</strong> 🏆</td>
+      <td><strong>+464.8</strong></td>
+      <td>98.6%</td>
+      <td>+1020.2</td>
+      <td>200.7</td>
     </tr>
     <tr>
-      <td>Random</td>
-      <td>-667.7</td>
-      <td>42.6%</td>
-      <td>27.6%</td>
-      <td>41.5%</td>
-      <td>423.8</td>
-      <td>443.3</td>
+      <td><strong>Dense PPO</strong></td>
+      <td>+461.5</td>
+      <td>99.6%</td>
+      <td>+980.0</td>
+      <td>192.5</td>
     </tr>
     <tr>
-      <td>RoundRobin</td>
-      <td>-1464.7</td>
-      <td>55.7%</td>
-      <td>41.2%</td>
-      <td><strong>54.3%</strong></td>
-      <td>465.9</td>
-      <td>487.2</td>
+      <td>Dense SAC</td>
+      <td>+399.7</td>
+      <td>96.8%</td>
+      <td>+999.5</td>
+      <td>220.0</td>
     </tr>
     <tr>
-      <td>FirstFit</td>
-      <td>-1450.5</td>
-      <td><strong>55.8%</strong></td>
-      <td>41.0%</td>
-      <td><strong>54.3%</strong></td>
-      <td>458.0</td>
-      <td>479.0</td>
+      <td>Sparse SAC</td>
+      <td>+362.4</td>
+      <td>96.6%</td>
+      <td>+860.1</td>
+      <td>198.8</td>
     </tr>
     <tr>
-      <td><strong>BestFit</strong></td>
-      <td>-1440.2</td>
-      <td>55.6%</td>
-      <td>41.2%</td>
-      <td>54.1%</td>
-      <td>461.7</td>
-      <td>482.8</td>
-    </tr>
-    <tr>
-      <td>WorstFit</td>
-      <td>-1537.7</td>
-      <td>55.5%</td>
-      <td>41.3%</td>
-      <td>54.1%</td>
-      <td>465.5</td>
-      <td>486.8</td>
-    </tr>
-    <tr>
-      <td>PriorityBestFit</td>
-      <td>-1455.0</td>
-      <td>55.6%</td>
-      <td>41.3%</td>
-      <td>54.2%</td>
-      <td>460.5</td>
-      <td>481.6</td>
-    </tr>
-    <tr>
-      <td>EarliestDeadlineFirst</td>
-      <td>-1467.2</td>
-      <td>55.7%</td>
-      <td>41.2%</td>
-      <td>54.2%</td>
-      <td>460.3</td>
-      <td>481.4</td>
-    </tr>
-    <tr>
-      <td>A2C_Improved</td>
-      <td>-261.7</td>
-      <td>8.9%</td>
-      <td>90.2%</td>
-      <td>8.7%</td>
-      <td><strong>144.6</strong></td>
-      <td><strong>151.5</strong></td>
-    </tr>
-    <tr>
-      <td>DQN_Improved</td>
-      <td>-283.0</td>
-      <td>8.5%</td>
-      <td><strong>90.5%</strong></td>
-      <td>8.3%</td>
-      <td>151.0</td>
-      <td>157.7</td>
+      <td><strong>Greedy Baseline</strong></td>
+      <td>0 (reference)</td>
+      <td>50%</td>
+      <td>0</td>
+      <td>-</td>
     </tr>
   </tbody>
 </table>
 
+<p><img src="/assets/images/01_absolute_rewards.png" alt="Absolute Rewards" /></p>
+
+<p>Both PPO agents significantly outperform SAC and the baseline. The Sparse PPO’s slight edge over Dense PPO (127,054 vs 126,720) is noteworthy because it achieves this with a 1000x simpler reward signal.</p>
+
 <hr />
 
+<p><img src="/assets/images/02_relative_values.png" alt="Relative Values" /></p>
+
+<p>This is the most important metric: How much better/worse than the greedy baseline?</p>
+
+<p>The heights are nearly identical for the PPO variants, showing that sparse and dense rewards achieve essentially the same end result. The slight Sparse PPO edge (+3.3 points) is statistically insignificant but philosophically important: <strong>simpler signals achieved better results</strong>.</p>
+
+<p>The SAC agents’ lower performance suggests that SAC’s off-policy nature may require denser reward signals for effective learning, or that our SAC hyperparameters weren’t as well-tuned as PPO’s.</p>
+
+<hr />
+
+<p><img src="/assets/images/03_win_rates.png" alt="Win Rates" /></p>
+
+<p>Win rate = percentage of days the agent beats the greedy baseline</p>
+
+<p><strong>Interpretation</strong>:</p>
+<ul>
+  <li>All agents are highly reliable, beating the baseline &gt;96% of the time</li>
+  <li>Dense PPO has a slight edge in consistency (99.6% vs 98.6%)</li>
+  <li>But this comes at the cost of complex reward engineering</li>
+  <li>The trade-off is acceptable: Sparse PPO’s 98.6% win rate is still excellent</li>
+  <li>Only 7 days out of 500 where Sparse PPO underperforms (1.4% failure rate)</li>
+</ul>
+
+<hr />
+
+<p><img src="/assets/images/04_relative_evolution.png" alt="Relative Evolution" /></p>
+
+<p>This plot shows how the daily advantage changes throughout a 100-day episode</p>
+
+<p><strong>Interpretation</strong>:</p>
+<ul>
+  <li>All agents maintain stable performance across the full episode</li>
+  <li>No degradation as days progress (agents don’t “tire out”)</li>
+  <li>No improvement trend (agents don’t learn within an episode; learning happens across episodes)</li>
+  <li>Sparse PPO’s consistency mirrors Dense PPO perfectly</li>
+  <li>This stability is crucial for real-world deployment: reliable day-after-day performance</li>
+</ul>
+
+<h2 id="why-does-sparse-reward-learning-work">Why Does Sparse Reward Learning Work?</h2>
+
+<p>Agents trained with only <strong>-1, 0, +1</strong> signals matched or exceeded agents trained with <strong>-500 to +1000</strong> dense rewards. This challenges conventional RL wisdom. Why?</p>
+
+<h3 id="hypothesis-1-signal-noise-reduction">Hypothesis 1: Signal Noise Reduction</h3>
+
+<p>Dense rewards encode both:</p>
 <ol>
-  <li>PPO Achieves Highest Reward Through Cost Optimization</li>
+  <li><strong>Direction</strong>: Should I improve or degrade my behavior?</li>
+  <li><strong>Magnitude</strong>: By how much?</li>
 </ol>
 
-<p><img src="/assets/images/reward_comparison.png" alt="Reward Comparison" /></p>
-
-<p><strong>PPO’s mean reward of +774.9 is dramatically higher than all other policies.</strong> This surprising result comes from a fundamentally different strategy:</p>
-
+<p>The magnitude component introduces noise:</p>
 <ul>
-  <li><strong>Ultra-low costs</strong>: $394.5 total cost vs. $479-487 for heuristics (~18% cost reduction)</li>
-  <li><strong>Selective task acceptance</strong>: 33.4% completion rate vs. 55%+ for heuristics</li>
-  <li><strong>Strategic rejections</strong>: 60.4% rejection rate, focusing on profitable tasks</li>
+  <li>How much should I weight a +500 reward vs +550?</li>
+  <li>Are the scaling factors (100, -50, -0.01) optimal?</li>
+  <li>What if I increase scale 2x? The agent relearns everything.</li>
 </ul>
 
-<p>While PPO completes fewer tasks overall, it <strong>optimized directly for the reward function</strong>, learning that:</p>
-<ol>
-  <li>Rejecting low-value tasks saves more than the penalty cost</li>
-  <li>Keeping VMs idle reduces energy and rental costs</li>
-  <li>Completing only HIGH-priority tasks maximizes completion bonuses</li>
-</ol>
-
-<p>This reveals an important insight: <strong>PPO found a local optimum in the reward landscape that maximizes reward but doesn’t maximize task completion.</strong> This is a form of “reward hacking” where the agent exploits the reward structure.</p>
-
-<hr />
-
-<p>2. Heuristics Form a Strong Cluster</p>
-
-<p><img src="/assets/images/performance_heatmap.png" alt="Performance Heatmap" /></p>
-
-<p>The six sophisticated heuristics (RoundRobin through EDF) all achieved remarkably similar performance:</p>
+<p>Sparse signals provide only <strong>direction</strong>, removing scaling noise:</p>
 <ul>
-  <li><strong>Completion rates</strong>: 55.5-55.8% (within 0.3%)</li>
-  <li><strong>Overall SLA success</strong>: 54.1-54.3% (within 0.2%)</li>
-  <li><strong>Rejection rates</strong>: 41.0-41.3% (within 0.3%)</li>
-  <li><strong>Mean rewards</strong>: -1440 to -1537 (within 6%)</li>
+  <li>Better than baseline? → +1 (learn this policy)</li>
+  <li>Worse? → -1 (unlearn this policy)</li>
+  <li>Same? → 0 (neutral)</li>
 </ul>
 
-<p><strong>FirstFit</strong> emerged as the slight winner among heuristics (54.3% overall SLA, -1450.5 reward), demonstrating that simple greedy assignment can be surprisingly effective.</p>
+<p>This <strong>cleaner signal</strong> might be more learnable.</p>
 
-<p>This clustering suggests that:</p>
+<h3 id="hypothesis-2-relative-framebench-built-in">Hypothesis 2: Relative Framebench Built-In</h3>
+
+<p>Dense rewards are <strong>absolute</strong>: “This decision is worth 547 points.”</p>
+
+<p>Sparse rewards are <strong>relative</strong>: “This decision beats the baseline.”</p>
+
+<p>Relative framebench is more robust:</p>
 <ul>
-  <li>The environment has found an <strong>equilibrium point</strong> around 41% rejection rate</li>
-  <li>Sophisticated scheduling (EDF, Priority) provides minimal advantage over simple FirstFit</li>
-  <li>The benefit of deadline-awareness or priority-awareness is marginal under tight deadlines</li>
+  <li>Generalizes across different problem scales</li>
+  <li>Adapts if baseline changes (e.g., competitor improves)</li>
+  <li>Built-in regularization against extreme behaviors</li>
+  <li>Agents learn what matters: being <strong>better, not just good</strong></li>
 </ul>
 
-<hr />
+<h3 id="hypothesis-3-simpler-loss-landscape">Hypothesis 3: Simpler Loss Landscape</h3>
 
-<p>3. A2C and DQN not as good as PPO</p>
-
-<p>Both A2C and DQN showed poor performance:</p>
+<p>Dense reward functions create complex, multi-objective loss surfaces:</p>
 <ul>
-  <li><strong>Completion rates</strong>: 8.5-8.9% (vs. 55%+ for heuristics)</li>
-  <li><strong>Rejection rates</strong>: 90%+ (learned to reject almost everything)</li>
-  <li><strong>Low costs</strong>: But from running few tasks, not efficiency</li>
+  <li>Deliver high-priority: +100 × priority/10</li>
+  <li>Avoid misses: -50 × priority/10</li>
+  <li>Minimize distance: -0.01 × km</li>
 </ul>
 
-<p><strong>Root Cause Analysis:</strong></p>
+<p>Three conflicting objectives, each with scaling factors.</p>
 
-<p>All three RL algorithms (PPO, A2C, and DQN) were trained for 500,000 timesteps on the same discrete observation space environment. However:</p>
+<p>Sparse signals create simpler landscapes:</p>
+<ul>
+  <li>Single objective: maximize probability of beating baseline</li>
+  <li>Binary feedback (better/worse)</li>
+  <li>Cleaner gradient flow</li>
+</ul>
+
+<p>Simpler landscapes = faster convergence, better local optima.</p>
+
+<h2 id="real-world-advantages-of-sparse-reward-learning">Real-World Advantages of Sparse Reward Learning</h2>
+
+<p>In academic settings, we can carefully design reward functions. In the real world, this is <strong>hard</strong>:</p>
 
 <ol>
-  <li><strong>Algorithm suitability</strong>: PPO’s policy gradient approach appears better suited for this multi-objective scheduling problem than value-based methods (DQN) or advantage actor-critic (A2C)</li>
-  <li><strong>Local minima</strong>: A2C and DQN converged to suboptimal policies (aggressive rejection/deferral) and failed to escape</li>
-  <li><strong>Exploration challenges</strong>: Value-based and actor-critic methods struggled with the exploration-exploitation tradeoff in this high-dimensional discrete space</li>
+  <li><strong>Unknown Objectives</strong>: What’s the true business objective?
+    <ul>
+      <li>Maximize revenue? Minimize costs? Customer satisfaction? All of the above?</li>
+      <li>Often these conflict</li>
+    </ul>
+  </li>
+  <li><strong>Scaling Uncertainty</strong>: How to weight different objectives?
+    <ul>
+      <li>Is on-time delivery worth 2x cost savings or 10x?</li>
+      <li>How much does customer satisfaction matter vs revenue?</li>
+      <li>These weights differ by market, season, customer segment</li>
+    </ul>
+  </li>
+  <li><strong>Lack of Domain Knowledge</strong>: What if you’re optimizing something new?
+    <ul>
+      <li>Traditional logistics expertise doesn’t transfer perfectly</li>
+      <li>New market = new constraints</li>
+      <li>Hand-tuned weights from one domain fail in another</li>
+    </ul>
+  </li>
+  <li><strong>Hyperparameter Sensitivity</strong>: Dense rewards require constant retuning
+    <ul>
+      <li>Market conditions change → tune weights again</li>
+      <li>Competitor behavior changes → tune again</li>
+      <li>Seasonal variations → more tuning</li>
+      <li><strong>No end to the tuning work</strong></li>
+    </ul>
+  </li>
 </ol>
 
-<p><strong>Key Finding</strong>: The discrete observation space alone doesn’t guarantee good performance - the choice of RL algorithm matters significantly for this domain.</p>
+<p>With sparse rewards, you <strong>only need one thing</strong>: A baseline policy</p>
 
-<hr />
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Define baseline (e.g., greedy heuristic, existing system, competitor)
+</span><span class="n">baseline_action</span> <span class="o">=</span> <span class="nf">get_greedy_action</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="n">baseline_reward</span> <span class="o">=</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">baseline_action</span><span class="p">)</span>
 
-<p>4. The Discrete Observation Space Advantage</p>
+<span class="c1"># Define learned policy
+</span><span class="n">learned_action</span> <span class="o">=</span> <span class="n">agent</span><span class="p">.</span><span class="nf">predict</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="n">learned_reward</span> <span class="o">=</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">learned_action</span><span class="p">)</span>
 
-<p>Our environment uses <strong>fully discrete observations</strong> (92 integer-valued dimensions):</p>
+<span class="c1"># That's it! No hyperparameter tuning needed
+</span><span class="k">if</span> <span class="n">learned_reward</span> <span class="o">&gt;</span> <span class="n">baseline_reward</span><span class="p">:</span>
+    <span class="n">reward_signal</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">reward_signal</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</code></pre></div></div>
 
-<p><strong>Benefits for Learning:</strong></p>
+<p><strong>Advantages</strong>:</p>
 <ul>
-  <li><strong>Finite state space</strong>: ~10^80 states (large but countable)</li>
-  <li><strong>No noise from floating-point precision</strong>: 5 cores is always exactly 5</li>
-  <li><strong>Better generalization</strong>: States revisited more frequently</li>
-  <li><strong>Cleaner gradients</strong>: Neural networks learn crisper decision boundaries</li>
+  <li>✅ No reward scaling needed</li>
+  <li>✅ Works with any baseline (greedy, heuristic, human expert, previous system)</li>
+  <li>✅ Automatically adapts as baseline changes</li>
+  <li>✅ Same code works for different objectives (just change baseline)</li>
+  <li>✅ Explainable: “We learned a policy better than your existing system”</li>
 </ul>
 
-<p><strong>Impact on algorithms:</strong></p>
-<ul>
-  <li><strong>DQN</strong>: Should improve dramatically (designed for discrete states)</li>
-  <li><strong>PPO/A2C</strong>: Slight improvement from cleaner signals</li>
-  <li><strong>All algorithms</strong>: Faster convergence, more stable training</li>
-</ul>
-
-<p>The discrete formulation is possible because task requirements are integers, which cascade through the system (VMs subtract/add integers, staying discrete).</p>
-
-<hr />
-
-<p><strong>Multi-Objective Performance</strong></p>
-
-<p><img src="/assets/images/radar_comparison.png" alt="Radar Comparison" /></p>
-
-<p>The radar chart reveals distinct strategy profiles:</p>
-
-<ul>
-  <li><strong>PPO</strong>: Extreme cost optimization, low throughput</li>
-  <li><strong>Heuristics</strong>: Ignores reward function, similar performance across all other metrics</li>
-  <li><strong>A2C/DQN</strong>: Underperforming on all metrics</li>
-</ul>
-
-<hr />
+<p>This is <strong>profoundly more practical</strong> for real systems.</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>This project demonstrates that <strong>reinforcement learning can discover effective cloud resource allocation strategies</strong>, but with important caveats:</p>
+<p>This project demonstrates two critical insights:</p>
 
-<p><strong>Key Takeaways</strong></p>
+<p><strong>First</strong>: Reinforcement learning can discover sophisticated logistics optimization strategies. Our shared policy agents beat a greedy baseline by 57-58% on the same problem instances that professional logistics systems solve with static heuristics.</p>
 
-<ol>
-  <li>
-    <p><strong>PPO found a profitable but low-throughput strategy</strong>: By optimizing directly for the reward function, PPO learned to maximize reward through aggressive cost cutting and selective task acceptance. This highlights the importance of <strong>reward shaping</strong> – the reward function must carefully align with true business objectives.</p>
-  </li>
-  <li>
-    <p><strong>Simple heuristics remain competitive</strong>: FirstFit achieved 54.3% overall SLA success with a straightforward greedy strategy. This suggests that for many practical scenarios, well-tuned heuristics may be sufficient.</p>
-  </li>
-  <li>
-    <p><strong>Discrete state spaces improve learning</strong>: The fully discrete observation space (92 integer dimensions) should significantly boost DQN performance while providing cleaner learning signals for all algorithms.</p>
-  </li>
-  <li>
-    <p><strong>Multi-objective optimization is challenging</strong>: Balancing utilization, SLA, cost, and throughput requires careful reward design. PPO’s strategy was optimal for the reward but suboptimal for business goals.</p>
-  </li>
-</ol>
+<p><strong>Second, and more surprising</strong>: You might not need a complex reward function to achieve this. A simple comparative signal (+1 if better, -1 if worse) matched or exceeded carefully tuned dense rewards (-500 to +1000).</p>
 
-<hr />
+<p>This challenges a fundamental assumption in RL: <strong>that bigger, richer reward signals are always better</strong>. In practice, simpler signals that provide clear direction (“beat the baseline”) might be more learnable and generalizable than complex signals with precise magnitudes.</p>
 
-<p><strong>Why PPO Works Well</strong></p>
+<p>The counter-intuitive result—that sparse PPO (+464.8 advantage) slightly outperformed dense PPO (+461.5)—suggests that <strong>how you train matters more than what you train with</strong>. A cleaner learning signal, even if simpler, can outweigh richer but more complex information.</p>
 
-<p>This domain is well suited to PPO.</p>
+<p>For practitioners building real-world RL systems: <strong>Stop optimizing your reward function. Start comparing against your baseline.</strong> It’s simpler, more practical, and achieves the same (or better) results.</p>
 
-<ol>
-  <li><strong>Complex state spaces</strong>: Too many dimensions for analytical solutions</li>
-  <li><strong>Stochastic dynamics</strong>: Arrivals, durations, and demands are uncertain</li>
-  <li><strong>Multi-objective optimization</strong>: Must balance competing goals</li>
-  <li><strong>Discrete decisions</strong>: Selecting from a finite set of actions</li>
-  <li><strong>Sequential decision making</strong>: Current decisions affect future options</li>
-  <li><strong>Simulatable</strong>: Domain dynamics can be accurately modeled</li>
-  <li><strong>Expensive to deploy</strong>: Real-world experimentation is risky/costly</li>
-</ol>
+<h2 id="final-thoughts">Final Thoughts</h2>
 
-<p><strong>The PPO advantage</strong>: Unlike heuristics that use fixed rules, PPO learns from experience to discover strategies that traditional methods might miss. Unlike exact optimization, PPO handles stochasticity and scales to complex state spaces.</p>
+<p>Optimization problems in logistics have been solved for decades using mathematical programming. Traditional RL adds learning capability. But <strong>sparse reward learning adds something different: simplicity and adaptability</strong>.</p>
 
-<h2 id="code-and-data-availability">Code and Data Availability</h2>
+<p>A traditional solver finds the optimal solution given a model. But if your model is wrong or incomplete, you’ve optimized the wrong thing.</p>
 
-<p>The complete implementation, trained models, and evaluation scripts are available at:</p>
-<ul>
-  <li><strong>Repository</strong>: <a href="https://github.com/dlfelps/cloud-gym">https://github.com/dlfelps/cloud-gym</a></li>
-  <li><strong>Environment</strong>: Built with Gymnasium (OpenAI Gym successor)</li>
-  <li><strong>RL Framework</strong>: Stable-Baselines3 (PyTorch-based)</li>
-  <li><strong>Visualization</strong>: Matplotlib, Seaborn, Pandas</li>
-</ul>
+<p>A dense reward agent learns a policy that maximizes your hand-tuned objective. But if that objective changes (market shifts, new constraint discovered), the training loses relevance.</p>
 
-<p>All experiments are reproducible using the provided seeds and configurations.</p>
+<p>A sparse reward agent learns one simple thing: <strong>How to beat what you already have.</strong> This is more robust, more adaptable, and more practical.</p>
 
-<h2 id="appendix---additional-visualizations">Appendix - Additional Visualizations</h2>
+<p>The next generation of logistics software—and optimization software broadly—won’t just optimize given constraints. It will learn baseline-relative improvement through sparse, adaptive signals.</p>
 
-<p><img src="/assets/images/per_priority_performance.png" alt="Per-Priority Performance" /></p>
+<p>And sometimes, the simpler signal is the stronger one.</p>
 
-<p><em>Figure: Performance breakdown by task priority level. PPO demonstrates clear prioritization of HIGH-priority tasks while aggressively rejecting LOW-priority tasks. BestFit maintains more balanced performance across all priority levels.</em></p>
-
-<p><img src="/assets/images/utilization_over_time.png" alt="Resource Utilization Over Time" /></p>
-
-<p><em>Figure: Resource utilization comparison over a 200-timestep episode. BestFit maintains steady ~70% CPU and ~65% memory utilization with 9-10 active VMs. PPO operates at lower ~35% CPU and ~30% memory utilization with only 5-6 active VMs, reflecting its cost-optimization strategy.</em></p>
-
-<p><img src="/assets/images/queue_length_distribution.png" alt="Queue Length Distribution" /></p>
-
-<p><em>Figure: Distribution of pending task queue lengths across policies. A2C and DQN show pathological behavior with very long queues (8-15 tasks), while efficient heuristics maintain shorter queues (2-5 tasks). PPO’s queue is moderately longer due to selective task acceptance.</em></p>
-
-<p><img src="/assets/images/cost_breakdown.png" alt="Cost Breakdown" /></p>
-
-<p><em>Figure: Energy cost vs. VM rental cost breakdown. PPO achieves lowest total cost ($394.48) through minimal VM usage. Heuristics cluster at $479-487 with higher energy consumption from running more tasks. A2C/DQN have low costs but only because they reject 90%+ of tasks.</em></p>
-
-<hr />
-
-<p><strong>Reinforcement learning offers a powerful framework for tackling complex resource allocation problems.</strong> While challenges remain in reward design and training stability, the ability to learn sophisticated strategies from simulation makes RL an invaluable tool for modern cloud infrastructure management and beyond.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="cloud-gym" /><category term="reinforcement-learning" /><category term="rl" /><category term="ppo" /><category term="optimization" /><category term="policy" /><summary type="html"><![CDATA[The blog post describes a reinforcement learning benchmark environment for cloud resource allocation that uses RL algorithms to learn optimal VM scheduling policies. Solving Cloud Resource Allocation with Reinforcement Learning]]></summary></entry><entry><title type="html">Experiment 24</title><link href="https://dlfelps.github.io/2025/11/01/langextract.html" rel="alternate" type="text/html" title="Experiment 24" /><published>2025-11-01T00:00:00+00:00</published><updated>2025-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/11/01/langextract</id><content type="html" xml:base="https://dlfelps.github.io/2025/11/01/langextract.html"><![CDATA[<p>The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference.</p>
+<p>Code: Available in this <a href="https://github.com/dlfelps/sparse-rl">repository</a></p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="reinforcement-learning" /><category term="rl" /><category term="ppo" /><category term="sparse" /><category term="soft-actor-critic" /><category term="optimization" /><category term="policy" /><category term="last-mile" /><summary type="html"><![CDATA[This post demonstrates that reinforcement learning agents can be trained with sparse reward signals as effectively as carefully tuned dense rewards.]]></summary></entry><entry><title type="html">Experiment 24</title><link href="https://dlfelps.github.io/2025/11/01/langextract.html" rel="alternate" type="text/html" title="Experiment 24" /><published>2025-11-01T00:00:00+00:00</published><updated>2025-11-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/11/01/langextract</id><content type="html" xml:base="https://dlfelps.github.io/2025/11/01/langextract.html"><![CDATA[<p>The blog post demonstrates that few-shot LLMs can match 96% of fine-tuned model accuracy on scene graph extraction with 103x faster inference.</p>
 
 <h1 id="comparing-scene-graph-extraction-methods-from-fine-tuned-t5-to-few-shot-llms">Comparing Scene Graph Extraction Methods: From Fine-tuned T5 to Few-Shot LLMs</h1>
 
