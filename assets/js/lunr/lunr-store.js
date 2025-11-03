@@ -154,4 +154,10 @@ var store = [{
         "tags": ["claude","reinforcement-learning","rl","ppo","sparse","soft-actor-critic","optimization","policy","last-mile"],
         "url": "/2025/12/01/sparse-rl.html",
         "teaser": null
+      },{
+        "title": "Experiment 26",
+        "excerpt":"This post analyzes urban mobility patterns to identify critical mobility hubs, network resilience, and neighborhood structures within cities by applying centrality algorithms and community detection on graph networks. Urban Mobility Networks: Uncovering Commuter Patterns in Cities Cities are defined by movement. Every morning, millions of people leave home to reach...","categories": [],
+        "tags": ["claude","graph-learning","graphs","urban-mobility","mobility","network-analysis","networks","algorithms"],
+        "url": "/2025/12/02/commuter-patterns.html",
+        "teaser": null
       }]

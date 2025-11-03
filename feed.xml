@@ -1,4 +1,178 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-10-28T16:13:49+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 25</title><link href="https://dlfelps.github.io/2025/12/01/sparse-rl.html" rel="alternate" type="text/html" title="Experiment 25" /><published>2025-12-01T00:00:00+00:00</published><updated>2025-12-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/12/01/sparse-rl</id><content type="html" xml:base="https://dlfelps.github.io/2025/12/01/sparse-rl.html"><![CDATA[<p>This post demonstrates that reinforcement learning agents can be trained with sparse reward signals as effectively as carefully tuned dense rewards.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-11-03T12:08:18+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 26</title><link href="https://dlfelps.github.io/2025/12/02/commuter-patterns.html" rel="alternate" type="text/html" title="Experiment 26" /><published>2025-12-02T00:00:00+00:00</published><updated>2025-12-02T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/12/02/commuter-patterns</id><content type="html" xml:base="https://dlfelps.github.io/2025/12/02/commuter-patterns.html"><![CDATA[<p>This post analyzes urban mobility patterns to identify critical mobility hubs, network resilience, and neighborhood structures within cities by applying centrality algorithms and community detection on graph networks.</p>
+
+<h1 id="urban-mobility-networks-uncovering-commuter-patterns-in-cities">Urban Mobility Networks: Uncovering Commuter Patterns in Cities</h1>
+
+<p>Cities are defined by movement. Every morning, millions of people leave home to reach work. Every evening, they return. This migration shapes everything: traffic congestion, air quality, real estate values, employment opportunities, and social equity.</p>
+
+<p>Yet despite its importance, we rarely see commuting patterns clearly. We experience them—sitting in traffic, missing a meeting, choosing where to live—but we don’t <em>see</em> them as a system. Where exactly do commuters come from? Which corridors carry the heaviest flows? Which neighborhoods are most dependent on distant employment centers? Which areas could benefit most from local job creation?</p>
+
+<p>These questions matter for city planning, transportation policy, and equity. But answering them requires data: fine-grained observations of where people are and where they’re going, aggregated at a scale that reveals patterns without violating privacy.</p>
+
+<p>That’s where the LYMOB dataset comes in.</p>
+
+<h2 id="the-lymob-dataset-aggregated-mobility-traces">The LYMOB Dataset: Aggregated Mobility Traces</h2>
+
+<p>The LYMOB (LYsimob Mobility) dataset captures movement patterns derived from mobile device location traces and cellular network data. Instead of tracking individuals, it aggregates patterns at a population level, creating a mathematical portrait of how cities function.</p>
+
+<p>The data represents each city as a 200×200 grid of cells, where each cell is a geographic region. For each cell pair and time period, we know how many people moved from one cell to another, broken down by hour of day and day type (weekday vs. weekend).</p>
+
+<p>What makes this valuable is the granularity: we know not just <em>that</em> people commute, but <em>when</em> they commute (rush hour vs. afternoon), <em>where from</em> and <em>where to</em>, and <em>how many</em> make each trip. For urban scientists, this is like having X-ray vision into the city’s circulatory system.</p>
+
+<h2 id="building-the-commuter-graph-from-raw-movement-to-network-structure">Building the Commuter Graph: From Raw Movement to Network Structure</h2>
+
+<p>Creating a commuter transit network from raw mobility data requires a clever insight: commuting is fundamentally asymmetric in time, but infrastructure is fundamentally shared.</p>
+
+<p>In the morning, people flow from residential areas into business districts. In the evening, they flow back out. But these don’t use different roads—they use the same corridors in opposite directions. A highway from suburb to the central business district carries rush-hour traffic inbound in the morning and outbound in the evening.</p>
+
+<p>To identify these true commute corridors, we exploited this asymmetry using a method that converts directional flow into a signed graph structure.</p>
+
+<h3 id="step-1-filtering-for-peak-commuting-hours">Step 1: Filtering for Peak Commuting Hours</h3>
+
+<p>I started with hundreds of millions of movement records. But not all movement is commuting. A person buying lunch across town isn’t a commuter; they’re a shopper. To isolate the pure signal of work-related commuting, I filtered specifically for:</p>
+
+<ul>
+  <li><strong>Morning commute</strong>: 7 AM to 11 AM (peak inbound flow to employment centers)</li>
+  <li><strong>Afternoon commute</strong>: 3 PM to 7 PM (peak outbound flow from employment centers)</li>
+  <li><strong>Weekdays only</strong>: Ignoring weekends when commute patterns change dramatically</li>
+</ul>
+
+<p>This filtering removed the noise of shopping trips, tourist movements, and weekend activity, leaving me with the core commuting signal.</p>
+
+<h3 id="step-2-converting-directional-flows-to-signed-values">Step 2: Converting Directional Flows to Signed Values</h3>
+
+<p>With filtered commute data in hand, I built a directed graph for the <strong>morning commute</strong>:</p>
+
+<p>For morning hours (7-11 AM), if 50 people traveled from cell A to cell B, I recorded a directed edge A → B with weight 50. This captures the direction and magnitude of morning flow.</p>
+
+<p>But then I performed a crucial transformation: <strong>I converted this directed graph into an undirected graph with signed (positive and negative) edge weights</strong>.</p>
+
+<p>For any pair of nodes (A, B), I ask: which direction did the morning flow go? If the net flow during morning was A → B, I record it as edge (A, B) with weight <strong>+50</strong>. If the flow went the opposite direction B → A, I record it as edge (A, B) with weight <strong>-50</strong>. This converts directionality into a sign while preserving magnitude.</p>
+
+<p>The result is an <strong>undirected graph where edge weights can be positive or negative</strong>, with the sign indicating which direction the morning commute flows.</p>
+
+<p>I repeated this exact process for the <strong>afternoon commute</strong> (3-7 PM), creating a separate undirected signed graph with edge weights indicating afternoon flow direction.</p>
+
+<h3 id="step-3-using-multiplication-to-identify-true-bidirectional-corridors">Step 3: Using Multiplication to Identify True Bidirectional Corridors</h3>
+
+<p>Now comes the elegant part. I multiply the morning and afternoon edge weights together, <strong>keeping only edges whose product is negative</strong>.</p>
+
+<p>Here’s why this works:</p>
+
+<ul>
+  <li>
+    <p><strong>If a corridor has morning flow A → B and afternoon flow B → A (opposite directions):</strong> Morning produces +50, afternoon produces -30. Multiply: (+50) × (-30) = <strong>-1500</strong>. Keep it. ✓</p>
+  </li>
+  <li>
+    <p><strong>If a corridor has morning flow A → B and afternoon flow A → B (same direction):</strong> Morning produces +50, afternoon produces +30. Multiply: (+50) × (+30) = <strong>+1500</strong>. Discard it. ✗ This isn’t a bidirectional commute corridor.</p>
+  </li>
+  <li>
+    <p><strong>If a corridor has morning flow but no afternoon flow:</strong> Morning produces ±50, afternoon produces 0. Multiply: (±50) × 0 = <strong>0</strong>. Discard it. ✗ Not a true corridor.</p>
+  </li>
+</ul>
+
+<p>This multiplication filter is mathematically elegant: <strong>it selects exactly the corridors that carry flow in opposite directions at different times of day</strong>. Those are the true commute corridors—the ones connecting residential areas (source morning, destination afternoon) with employment centers (destination morning, source afternoon).</p>
+
+<h3 id="step-4-creating-the-final-commuter-graph">Step 4: Creating the Final Commuter Graph</h3>
+
+<p>For each corridor that survived the multiplication filter (negative product), I create the final edge weight as <strong>the absolute value of the product</strong>. This weight represents the magnitude of bidirectional flow: how much traffic flows through this corridor in both directions combined.</p>
+
+<p>A corridor with morning flow of 50 and afternoon flow of 30 in opposite directions becomes a final weight of 50 × 30 = 1500. A corridor with morning flow of 200 and afternoon flow of 100 in opposite directions becomes 200 × 100 = 20,000. The multiplication naturally weights corridors more heavily when they have balanced, substantial flows in both directions.</p>
+
+<p>The resulting <strong>weighted undirected graph</strong> captured the true commute network: 23,090 nodes (geographic cells) and 683,461 edges (commute corridors) representing approximately 1.6 million total commute trips.</p>
+
+<h2 id="network-algorithms-reading-the-citys-hidden-structure">Network Algorithms: Reading the City’s Hidden Structure</h2>
+
+<p>With a mathematical model of the city’s commuting system in hand, I applied network science algorithms to extract deeper insights. Each algorithm answers different questions about urban organization.</p>
+
+<h3 id="centrality-identifying-critical-hubs">Centrality: Identifying Critical Hubs</h3>
+
+<p><img src="/assets/images/top_nodes_comparison.png" alt="Centrality" /></p>
+
+<p>The most intuitive question is: <em>Which locations are most important?</em></p>
+
+<p>I computed this three different ways, each revealing different aspects of importance.</p>
+
+<p><strong>Degree Centrality</strong> simply counts traffic volume. It answers: “Which node has the most commute activity?” The overwhelming winner is node (77, 135)—Nagoya’s the central business district—with over 21,500 units of commute flow. This isn’t surprising; it’s the magnet pulling workers from across the region.</p>
+
+<p><strong>Eigenvector Centrality</strong> is more subtle. It recognizes that not all connections are equal. A node is important if it connects to <em>other important nodes</em>. Imagine two transit hubs with equal traffic volume: one connects to peripheral neighborhoods, the other connects to other major business districts. The second one is arguably more important to the overall system because it’s in the backbone of the network.</p>
+
+<p>For Nagoya, eigenvector centrality again ranked node (77, 135) at the top with a score of 0.482, validating its role as the central hub. But this algorithm also revealed secondary hubs—places that are important because they connect to other important places, not just because they have high traffic.</p>
+
+<p><strong>PageRank</strong> (yes, the algorithm that powers Google) works by thinking about flow as a process: imagine commuters randomly following corridors through the network. Which nodes would they visit most often? Nodes that receive flow from high-traffic sources get higher PageRank. This reveals nodes that are important within the commute flow process itself, not just structurally central.</p>
+
+<p>Together, these three measures paint a picture: the city has a clear hierarchy. The the central business district is dominant, secondary nodes support the main hub, and the periphery consists of neighborhoods that feed the center.</p>
+
+<p>Most nodes have low scores, but a few have extremely high scores—the signature of a hub-and-spoke urban structure. The single the central business district node dominates all three measures, validating its role as the primary employment magnet.</p>
+
+<h3 id="community-detection-discovering-natural-neighborhoods">Community Detection: Discovering Natural Neighborhoods</h3>
+
+<p><img src="/assets/images/communities.PNG" alt="Communities" /></p>
+
+<p>The next question is: <em>Does the network have structure?</em> Are there natural groupings of neighborhoods that commute internally before connecting to broader networks?</p>
+
+<p>I used the Louvain algorithm, one of the most effective community detection methods. It works by repeatedly asking: “If I move this node from its current group to a neighboring group, does the network become more internally cohesive?” Over many iterations, neighborhoods naturally sort into communities.</p>
+
+<p>The algorithm discovered <strong>57 communities</strong> in the commute network. But here’s the striking part: the top 10 communities contain 94.9% of all commuters. The remaining 47 communities are tiny—often just 2-6 isolated nodes on the periphery.</p>
+
+<p>The figure above shows these major commuting zones, each colored distinctly. Looking at this map, you can immediately see where the area naturally divides into semi-independent commute sheds. This tells us that despite being one integrated metropolitan area, the city actually functions as a collection of 10 semi-independent zones. Someone in Community 1 is far more likely to work within Community 1 than to commute to Community 2. This finding has real implications: each zone could be partially self-sufficient in employment, suggesting where to invest in local job creation versus regional transit.</p>
+
+<h3 id="corridor-analysis-finding-the-bottlenecks">Corridor Analysis: Finding the Bottlenecks</h3>
+
+<p><img src="/assets/images/long_distance_corridors_log_thickness.png" alt="Corridors" /></p>
+
+<p>If communities tell us about regional structure, corridor analysis tells us about the critical links.</p>
+
+<p>I analyzed the top 100 long-distance commute corridors (routes spanning at least 10 cells). The findings revealed a classic pattern: <strong>power-law distribution</strong>.</p>
+
+<p>The single busiest long-distance corridor, from neighborhood (60,161) to the the central business district at (77,135), carries 442 commuters. The second busiest carries 199. The tenth busiest carries 92. By the time you get to the 20th corridor, you’re down to 83 commuters.</p>
+
+<p>This means that <strong>80% of long-distance commute flow is concentrated in just 68 corridors out of 100</strong>. To put it another way: the busiest 68 corridors carry the same total traffic as the least busy 32 corridors combined.</p>
+
+<p>Why does this matter? Infrastructure planning. If you’re a city planner with a fixed budget for improving commute corridors, you should focus on those top 68, not spread resources across all 683,461 corridors. Every dollar spent improving the (60,161) → (77,135) corridor benefits 442 people daily. Spending it on a low-flow corridor might benefit only a handful.</p>
+
+<p>The longest corridor I identified spans 53 grid cells, connecting a distant residential area directly to the the central business district. This is a classic pattern in sprawling cities: as residential areas expand outward, some commuters accept very long commutes to reach employment centers rather than moving closer. These long-distance corridors deserve special attention because they’re likely to be the most congested relative to their capacity.</p>
+
+<h3 id="connectivity-and-resilience-is-the-network-robust">Connectivity and Resilience: Is the Network Robust?</h3>
+
+<p>The final algorithmic question concerns robustness: <em>If a major corridor or hub fails, can commuters find alternative routes?</em></p>
+
+<p>I measured this using clustering coefficients. A clustering coefficient measures how many “triangles” exist in the network—three nodes where A connects to B, B connects to C, and A also connects to C. High clustering means lots of alternative routes; low clustering means corridors are more like highways with few off-ramps.</p>
+
+<p>Nagoya’s clustering coefficient is very low (0.000446). This means the network is highly hierarchical and hub-dependent. There aren’t many alternative routes. If you disrupt the the central business district or major corridors leading to it, many commuters have no alternative path.</p>
+
+<p>This is actually typical of transportation networks. They’re not meant to be highly redundant (that would be inefficient and expensive). But it does suggest vulnerabilities. A transit disruption in one of the major corridors could strand thousands of commuters with no obvious alternative.</p>
+
+<h2 id="conclusion-reading-the-citys-structure">Conclusion: Reading the City’s Structure</h2>
+
+<p>Every city has underlying structure—concentrated employment, dispersed housing, funnel-like commute flows. But most cities don’t have fine-grained data making this structure visible.</p>
+
+<p>The LYMOB dataset, combined with network algorithms, reveals what residents experience but can’t quantify. It transforms millions of individual decisions (where to work, where to live, how to get there) into a coherent mathematical structure that shows how cities actually function.</p>
+
+<p>What’s remarkable is how well the mathematics maps to human reality. The hubs we identified match known employment centers. The communities we detected match actual geographic and social boundaries. The power-law distribution matches what traffic engineers observe every day.</p>
+
+<p>By building a mathematical model of commute flows and applying network algorithms, we can answer questions that matter: Which areas are most critical? Where are bottlenecks? Which corridors would benefit most from capacity improvements? Which neighborhoods could absorb more employment to reduce commute pressure?</p>
+
+<p>The tools exist. The data exists. What remains is applying these insights to create more equitable, efficient, and resilient urban systems.</p>
+
+<h2 id="appendix-geographic-discovery---how-we-identified-nagoya">Appendix: Geographic Discovery - How We Identified Nagoya</h2>
+
+<p><img src="/assets/images/nagoya.PNG" alt="Nagoya" />
+(left) cityA in the LYMOB dataset (middle) ORNL Landscan Population layer (right) Google Maps of Nagoya region in Japan.</p>
+
+<p>The LYMOB dataset represents cities as grids of cells with integer coordinates (X and Y ranging from 1 to 200 in our case). It does not have absolute latitude and longitude. In fact, this was done intentionally to increase privacy in the data.</p>
+
+<p>During initial exploration of the data, I noticed that the flow of the citA data had a rather unique shape. Particularly it featured a double bay and a uniquely shaped gap, which I assumed was a river feeding the bay. I cross-referenced this pattern against Japan’s coastline and determined that the area was in fact Nagoya, but it was rotated. When I mapped the coordinate system as <strong>X = Longitude, Y = Latitude</strong> (the way this dataset organizes coordinates), the grid coordinates aligned perfectly with the actual layout on a real map.</p>
+
+<p>This discovery is the first that I could find of the true locations in the LYMOB dataset.</p>
+
+<p><strong>Network Summary:</strong></p>
+<ul>
+  <li><strong>Nodes:</strong> 23,090 geographic cells</li>
+  <li><strong>Edges:</strong> 683,461 commute corridors</li>
+  <li><strong>Total trips:</strong> 1.6 million bidirectional commutes</li>
+  <li><strong>Connected components:</strong> 46 (largest contains 99.5% of nodes)</li>
+  <li><strong>Detected communities:</strong> 57 (top 10 contain 94.9% of commuters)</li>
+</ul>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="graph-learning" /><category term="graphs" /><category term="urban-mobility" /><category term="mobility" /><category term="network-analysis" /><category term="networks" /><category term="algorithms" /><summary type="html"><![CDATA[This post analyzes urban mobility patterns to identify critical mobility hubs, network resilience, and neighborhood structures within cities by applying centrality algorithms and community detection on graph networks.]]></summary></entry><entry><title type="html">Experiment 25</title><link href="https://dlfelps.github.io/2025/12/01/sparse-rl.html" rel="alternate" type="text/html" title="Experiment 25" /><published>2025-12-01T00:00:00+00:00</published><updated>2025-12-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/12/01/sparse-rl</id><content type="html" xml:base="https://dlfelps.github.io/2025/12/01/sparse-rl.html"><![CDATA[<p>This post demonstrates that reinforcement learning agents can be trained with sparse reward signals as effectively as carefully tuned dense rewards.</p>
 
 <h1 id="optimizing-last-mile-delivery-with-reinforcement-learning-from-dense-to-sparse-rewards">Optimizing Last-Mile Delivery with Reinforcement Learning: From Dense to Sparse Rewards</h1>
 
@@ -2653,123 +2827,4 @@ cub_model = get_model('resnet18_cub', pretrained=True)
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>In this post I demonstrated how to make a machine learning model more interpretable and explainable. I also discussed the tradeoffs and alternative uses for such models when their accuracies do not perform at practical levels. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="explainable" /><category term="interpretable" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.]]></summary></entry><entry><title type="html">Experiment 16</title><link href="https://dlfelps.github.io/2024/06/03/few-shot.html" rel="alternate" type="text/html" title="Experiment 16" /><published>2024-06-03T00:00:00+00:00</published><updated>2024-06-03T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/06/03/few-shot</id><content type="html" xml:base="https://dlfelps.github.io/2024/06/03/few-shot.html"><![CDATA[<p>This post explores unique concepts in few-shot learning.</p>
-
-<h2 id="introduction">Introduction</h2>
-
-<p>Few-shot learning describes the situation where a classifier must generalize to new classes using only a few examples of each new class. It represents scenarios where data collection (or annotation) is costly for the classes you care about, but you may have access to related data. There are some unique terms associated with few-shot learning, which we will introduce next.</p>
-
-<p>In standard supervised learning, the training and testing sets contain the SAME classes. The classifier is tested for its ability to discriminate between KNOWN classes.</p>
-
-<p><img src="/assets/images/supervised_learning.PNG" alt="supervised learning" title="supervised learning" /></p>
-
-<p><a href="https://ieeexplore.ieee.org/document/10287966">image reference</a></p>
-
-<p>In few-shot learning, the training and testing sets contain DIFFERENT classes. A few-shot classifier is tested for its ability to discriminate UNKNOWN classes given only a few examples. These samples are further divided into the support set and query set. The support set contains labeled examples (for tuning the few-shot classifier) and the query set contains unlabeled samples for evaluation. The number of classes in the support set is denoted by N and the number of examples per class is denoted by K. A 5-way 1-shot method describes a method that has (N=5) classes with (K=1) examples per class.</p>
-
-<p><img src="/assets/images/few_shot_learning.PNG" alt="few_shot_learning" title="few_shot_learning" /></p>
-
-<p><a href="https://ieeexplore.ieee.org/document/10287966">image reference</a></p>
-
-<h2 id="experiment">Experiment</h2>
-
-<p>This experiment will test a model in a 5-way 5-shot task (i.e. 5 new classes, 5 examples each). We will use a standard benchmark in few-shot learning -  <a href="https://www.vision.caltech.edu/datasets/cub_200_2011/">CUB-200-2011</a> dataset. It is a fine-grained image classification task with over 200 different species of birds. The large number of classes make it suitable for few-shot learning as several can be withheld for testing while maintaining a difficult baseline. We next explain our basic approach to few-shot learning (prototype models) and then compare the performance of three ways to train the model.</p>
-
-<h3 id="few-shot-framework-prototype-model">Few-shot framework: Prototype model</h3>
-
-<p>We adopt a single framework for all variations of our experiment - <a href="https://arxiv.org/abs/1703.05175">Prototypical networks</a>. The concept is based on the idea that there is a single prototype representation for each class. A prototype for each class is calculated from the mean of its support set in the embedding space of a neural network. Our three approaches explore three different ways to train this neural network. Classification in a prototypical model is simply a nearest neighbors using only the prototypes<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>. The code uses models and task loaders from <a href="https://github.com/sicara/easy-few-shot-learning">Easy Few-shot learning</a>.</p>
-
-<p><img src="/assets/images/prototypical_network.jpeg" alt="prototypical network" title="prototypical network" /></p>
-
-<p><a href="https://www.sciencedirect.com/science/article/abs/pii/S0925231221001818">image reference</a></p>
-
-<h3 id="approach-1-pretrained-model">Approach #1: Pretrained model</h3>
-
-<p>The first approach adapts a pretrained model using transfer learning. The transfer learning process starts with a model that is trained on a large and general dataset (e.g. Imagenet). The purpose of this model is to rely on the learned feature maps - which should be robust - and adapt the later layers to classify your new classes (see image below).</p>
-
-<p><img src="/assets/images/transfer_learning.png" alt="transfer model" title="transfer model" /></p>
-
-<p><a href="https://www.nature.com/articles/s41598-024-54923-y">image reference</a></p>
-
-<p>This experiment uses a ResNet-18 model with pretrained weights from an Imagenet dataset. For each task in the evaluation phase, the support set is used to calculate the prototypes and the the query sets are classified from the prototypes.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model = resnet18(weights=ResNet18_Weights.DEFAULT)
-model.fc = nn.Flatten()
-few_shot_classifier = PrototypicalNetworks(model).to(DEVICE)
-</code></pre></div></div>
-
-<h3 id="approach-2-classical-model">Approach #2: Classical model</h3>
-
-<p>This approach uses a subset of the training data to generate a pretrained model. NOTE: the test data contains classes that were not included in the training data. This approach is not always viable since it requires prior knowledge of the few-shot task data distribution. However, it can be powerful if you work in a specific domain and have labeled data from that domain readily available. To simulate it here, we split the 200 species in CUB into 140 for training and 60 for testing. During test time, a 5-way 5-shot task is created by randomly sampling 5 classes from the 60 test classes. This process is repeated 500 times to get a statistically significant measure of generalization performance.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model = resnet18()
-model.fc = nn.Linear(512, 140)
-model.load_state_dict(torch.load('/content/easy-few-shot-learning/classical_model_18_acc_744.pt')) # pretrained just for you!
-few_shot_classifier = PrototypicalNetworks(model).to(DEVICE)
-</code></pre></div></div>
-
-<h3 id="approach-3-episodic-model">Approach #3: Episodic model</h3>
-
-<p>Episodic training (also called meta-learning) mirrors the few-shot tasks that will be used to test the final model during the training phase. Each “episode” is designed to mimic the few-shot task by subsampling classes as well as data points. The use of episodes makes the training problem more faithful to the test environment and thereby improves generalization. This strategy typically assumes prior knowledge of N and K that will be used at test time. <a href="https://arxiv.org/pdf/2204.11181">ref1</a> <a href="https://arxiv.org/pdf/1703.05175">ref2</a></p>
-
-<p>Episodic training can be performed following a classic training regime if additional data is available or using pretrained-weights if it is not. In this case we reserve the same 140 classes as in Approach #2 for training. But instead of performing classic training, which reduces cross entropy across all classes, we adjust weights based on many training episodes (5-way 5-shot). This process is slower as there is additional overhead required for each episode.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model = resnet18()
-model.fc = nn.Flatten()
-model.load_state_dict(torch.load('/content/easy-few-shot-learning/episodic_model_18_acc_779.pt')) # pretrained just for you!
-few_shot_classifier = PrototypicalNetworks(model).to(DEVICE)
-</code></pre></div></div>
-
-<h3 id="bonus-approach-pretrained-model-dinov2-backbone">BONUS Approach: Pretrained model (DINOv2 backbone)</h3>
-
-<p>The three primary variations above can be compared directly because they are all variations of Resnet-18 and use Prototypical models for evaluation. In this bonus approach, we replace the Resnet-18 backbone of the pretrained model (approach #1) with DINOv2. The rest of the setup is the same.</p>
-
-<h2 id="results">Results</h2>
-
-<p>For this purposes of this discussion we will focus on Approaches #1-#3. The accuracy improves with each successive approach, but the assumptions also increase. Namely, in moving from transfer learning to classic learning we assume knowledge of the domain of the test classes and also assume access to labeled examples from that domain. In moving from classic learning to episodic learning we further assume knowledge of the task itself (5-way 5-shot) and the distribution of the data within it (i.e. uniformly sampled). This does not always reflect the real word - a <a href="https://arxiv.org/abs/2204.11181">study</a> showed that if these assumptions are incorrect they can impact performance significantly.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">Backbone</th>
-      <th style="text-align: center">Training approach</th>
-      <th style="text-align: center">Accuracy</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">Resnet-18</td>
-      <td style="text-align: center">transfer learning</td>
-      <td style="text-align: center">0.684</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Resnet-18</td>
-      <td style="text-align: center">classic</td>
-      <td style="text-align: center">0.773</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Resnet-18</td>
-      <td style="text-align: center">episodic</td>
-      <td style="text-align: center">0.779</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">DINOv2</td>
-      <td style="text-align: center">transfer learning</td>
-      <td style="text-align: center">0.964</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="conclusion">Conclusion</h2>
-
-<p>We compared three approaches to few-shot learning and discussed the conditions and assumptions necessary to use them. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>
-
-<h3 id="footnotes">Footnotes</h3>
-
-<div class="footnotes" role="doc-endnotes">
-  <ol>
-    <li id="fn:1">
-      <p>There is some similarity between Prototypical models and Image retrieval tasks. Image retrieval can be viewed as a prototypical model where each image is its own prototype. And instead of returing a single class, the top-N closest prototypes are returned. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-  </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="few-shot" /><category term="computer-vision" /><category term="ml-portfolio" /><category term="meta-learning" /><summary type="html"><![CDATA[This post explores unique concepts in few-shot learning.]]></summary></entry></feed>
+<p>In this post I demonstrated how to make a machine learning model more interpretable and explainable. I also discussed the tradeoffs and alternative uses for such models when their accuracies do not perform at practical levels. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="explainable" /><category term="interpretable" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.]]></summary></entry></feed>
