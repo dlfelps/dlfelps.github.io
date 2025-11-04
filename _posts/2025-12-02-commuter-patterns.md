@@ -123,8 +123,6 @@ I analyzed the top 100 long-distance commute corridors (routes spanning at least
 
 The single busiest long-distance corridor, from neighborhood (60,161) to the the central business district at (77,135), carries 442 commuters. The second busiest carries 199. The tenth busiest carries 92. By the time you get to the 20th corridor, you're down to 83 commuters.
 
-This means that **80% of long-distance commute flow is concentrated in just 68 corridors out of 100**. To put it another way: the busiest 68 corridors carry the same total traffic as the least busy 32 corridors combined.
-
 Why does this matter? Infrastructure planning. If you're a city planner with a fixed budget for improving commute corridors, you should focus on those top 68, not spread resources across all 683,461 corridors. Every dollar spent improving the (60,161) → (77,135) corridor benefits 442 people daily. Spending it on a low-flow corridor might benefit only a handful.
 
 The longest corridor I identified spans 53 grid cells, connecting a distant residential area directly to the the central business district. This is a classic pattern in sprawling cities: as residential areas expand outward, some commuters accept very long commutes to reach employment centers rather than moving closer. These long-distance corridors deserve special attention because they're likely to be the most congested relative to their capacity.
@@ -158,11 +156,11 @@ The tools exist. The data exists. What remains is applying these insights to cre
 ![Nagoya](/assets/images/nagoya.PNG)
 (left) cityA in the LYMOB dataset (middle) ORNL Landscan Population layer (right) Google Maps of Nagoya region in Japan.
 
-The LYMOB dataset represents cities as grids of cells with integer coordinates (X and Y ranging from 1 to 200 in our case). It does not have absolute latitude and longitude. In fact, this was done intentionally to increase privacy in the data.
+The LYMOB dataset does not disclose that the data represents the Nagoya region. The dataset we looked at is simply called "cityA" - this was done intentionally to increase privacy in the data.
 
-During initial exploration of the data, I noticed that the flow of the citA data had a rather unique shape. Particularly it featured a double bay and a uniquely shaped gap, which I assumed was a river feeding the bay. I cross-referenced this pattern against Japan's coastline and determined that the area was in fact Nagoya, but it was rotated. When I mapped the coordinate system as **X = Longitude, Y = Latitude** (the way this dataset organizes coordinates), the grid coordinates aligned perfectly with the actual layout on a real map.
+During initial exploration of the data, I noticed that the flow of the cityA data had a rather unique shape. Particularly it featured a double bay and a circular gap, which I assumed was a river feeding the bay. I cross-referenced this pattern against Japan's coastline and determined that the area was in fact Nagoya, but it was rotated. When I mapped the coordinate system as **X = Longitude, Y = Latitude** , the grid coordinates aligned perfectly with the actual layout on a real map.
 
-This discovery is the first that I could find of the true locations in the LYMOB dataset. 
+This discovery is the first that I could find that uncovered a true location in the LYMOB dataset. 
 
 **Network Summary:**
 - **Nodes:** 23,090 geographic cells
