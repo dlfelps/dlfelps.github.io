@@ -1,4 +1,450 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-11-03T12:08:18+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 26</title><link href="https://dlfelps.github.io/2025/12/02/commuter-patterns.html" rel="alternate" type="text/html" title="Experiment 26" /><published>2025-12-02T00:00:00+00:00</published><updated>2025-12-02T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/12/02/commuter-patterns</id><content type="html" xml:base="https://dlfelps.github.io/2025/12/02/commuter-patterns.html"><![CDATA[<p>This post analyzes urban mobility patterns to identify critical mobility hubs, network resilience, and neighborhood structures within cities by applying centrality algorithms and community detection on graph networks.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-12-15T16:24:26+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 27</title><link href="https://dlfelps.github.io/2026/01/02/kalman.html" rel="alternate" type="text/html" title="Experiment 27" /><published>2026-01-02T00:00:00+00:00</published><updated>2026-01-02T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/01/02/kalman</id><content type="html" xml:base="https://dlfelps.github.io/2026/01/02/kalman.html"><![CDATA[<p>This post presents an inventory tracking simulation that demonstrates how Kalman filters optimally estimate total inventory across partially-observable shelves, especially when the system dynamics change over time as items leak to unobserved locations.</p>
+<h1 id="understanding-kalman-filters-through-inventory-management">Understanding Kalman Filters Through Inventory Management</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Imagine managing a warehouse with 20 shelves where you can only check one shelf at a time while items constantly move between adjacent shelves. By the time you’ve checked all the shelves, your early observations are outdated. How do we estimate the total accurately?</p>
+
+<p>This is a partial observability problem, and it’s exactly the kind of challenge that Kalman filters excel at solving. In this post, we’ll explore Kalman filters through a hands-on inventory simulation that makes abstract concepts concrete and intuitive.</p>
+
+<h2 id="what-is-a-kalman-filter">What is a Kalman Filter?</h2>
+
+<p>The <strong>Kalman filter</strong> is a mathematical algorithm that estimates the state of a system from a series of noisy measurements. First developed by Rudolf Kalman in 1960, it has become one of the most widely used algorithms in control theory, robotics, and signal processing.</p>
+
+<h3 id="the-core-idea">The Core Idea</h3>
+
+<p>The Kalman filter answers one question over and over: <em>Given what I believed before and what I just observed, what should I believe now?</em></p>
+
+<p>It maintains a belief about the system state, quantifies uncertainty in that belief, predicts how things will evolve, then updates when new measurements arrive. The balance between trusting predictions versus trusting measurements shifts automatically based on their relative uncertainties.</p>
+
+<p>When the system is linear and noise is Gaussian, the Kalman filter gives you the <strong>optimal</strong> estimate—minimum mean squared error, provably the best you can do. Real systems violate these assumptions constantly, but the filter often works anyway.</p>
+
+<p><img src="/assets/images/blog_figure_6_innovation.png" alt="Innovation Analysis" />
+<em>Figure 1: Innovation (prediction error) over time. Large innovations early on show rapid learning; small innovations later indicate convergence.</em></p>
+
+<h2 id="where-youll-find-them">Where You’ll Find Them</h2>
+
+<p>Kalman filters are everywhere, though you usually don’t notice them. Your phone’s GPS is constantly running one to combine satellite signals with accelerometer data. Tesla’s Autopilot uses them to fuse camera and radar readings. Quantitative traders use them to estimate volatility in options pricing. Even old-school applications like radar tracking in air traffic control still rely on Kalman filtering—it’s been the standard solution since the 1960s.</p>
+
+<p>The math works out to be provably optimal when noise is Gaussian and dynamics are linear (minimum mean squared error). In practice, real systems violate these assumptions, but Kalman filters still work surprisingly well. They’re also cheap to run—O(n²) where n is the state dimension, which means even embedded systems can handle them in real time.</p>
+
+<p>What makes them useful is how they handle uncertainty. Unlike simple averaging, they track confidence explicitly through the covariance matrix. When sensors disagree, the filter automatically weights them by reliability. If a sensor drops out entirely, the filter keeps running on predictions alone while uncertainty grows until measurements return.</p>
+
+<h2 id="the-inventory-simulator">The Inventory Simulator</h2>
+
+<p>I built this example specifically to make the abstract math concrete. It’s got all the hard parts—partial observability, noisy measurements, a changing system—but the state is just a single number, so you can actually see what’s happening without drowning in linear algebra.</p>
+
+<h3 id="the-problem-setup">The Problem Setup</h3>
+
+<p>Imagine managing a warehouse with 20 shelves arranged in a circle, containing 300 items that constantly move between adjacent shelves at a rate of 1% per item per timestep. We can only observe one shelf at a time, and shelf #0 is completely hidden from observation. Critically, shelf #0 acts as a dynamic source or sink—items can leak to or from it, and in “leak-then-trap” mode it becomes a one-way sink that captures items permanently.</p>
+
+<p>The goal: estimate the total number of items on the observable shelves (1-19)—a value that changes over time as items leak to the hidden shelf.</p>
+
+<h3 id="what-makes-this-hard">What Makes This Hard</h3>
+
+<p>The obvious problem is partial observability—we can only look at one shelf per timestep. By the time we complete a round-robin cycle through all 19 observable shelves, those early observations are stale. Items have moved.</p>
+
+<p>But the real challenge is that we’re tracking a moving target. The total we’re estimating changes as items leak to or from shelf #0, which we never observe. When the estimate drifts from reality, is that measurement noise or items disappearing into the hidden shelf? The filter has to figure this out.</p>
+
+<p>Then there’s the “leak-then-trap” mode. At step 150, shelf #0 becomes a one-way sink. Items can enter but never leave. The observable total starts declining systematically. The Kalman filter has never seen shelf #0, has no direct evidence of the trap activating, but somehow needs to track the declining total anyway.</p>
+
+<h3 id="why-use-this-example">Why Use This Example?</h3>
+
+<p>The state is just one number—the total item count on observable shelves. No matrices, no complex math, just <code class="language-plaintext highlighter-rouge">x = total</code>. This simplicity lets you actually see what the Kalman gain is doing instead of getting lost in linear algebra.</p>
+
+<p>Starting from complete ignorance (estimate = 0, uncertainty = 1000), you can watch the filter converge. After 200 steps, error drops below 5%. After 1000 steps, it’s stable. The process is visible in a way that multi-dimensional problems never are.</p>
+
+<p><img src="/assets/images/blog_figure_1_convergence.png" alt="Convergence Demonstration" />
+<em>Figure 2: Kalman filter convergence from complete ignorance to accurate estimation. The blue line shows the evolving estimate with uncertainty bands (shaded region), converging toward the true total (green dashed line) within 200 steps.</em></p>
+
+<p>Uncertainty is concrete here. A shelf we just observed has uncertainty = 0. A shelf we haven’t checked in 10 timesteps has accumulated uncertainty. Shelf #0, which we never observe, has infinite uncertainty. The measurement noise R literally depends on how stale our observations are.</p>
+
+<p><img src="/assets/images/blog_figure_5_staleness.png" alt="Staleness Visualization" />
+<em>Figure 3: Staleness heatmap showing uncertainty across shelves. Recently observed shelves have low uncertainty (yellow), while shelf #0 (never observed) has maximum uncertainty (dark red).</em></p>
+
+<h2 id="the-implementation">The Implementation</h2>
+
+<p>Let’s dive into how the Kalman filter is implemented in the inventory simulator.</p>
+
+<h3 id="state-model">State Model</h3>
+
+<p>Our state is simple:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>State: x = total_items_on_observed_shelves (a single number)
+</code></pre></div></div>
+
+<p>Key insight: We’re estimating the total of shelves 1-19 only, not the system total. This value changes as items leak to/from shelf #0.</p>
+
+<p>State transition model:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>State transition: x_next = F × x = 1 × x = x (assume total persists)
+Process noise: Q = configurable (default 10.0 for dynamic systems)
+</code></pre></div></div>
+
+<p>Process noise <code class="language-plaintext highlighter-rouge">Q</code> quantifies how much we expect the state to change between timesteps beyond what our model predicts. In our simple model, we assume the total persists (<code class="language-plaintext highlighter-rouge">x_next = x</code>), but in reality, items leak to shelf #0, causing the observed total to change unpredictably.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Q</code> directly affects prediction uncertainty: <code class="language-plaintext highlighter-rouge">P_pred = P + Q</code>. Each prediction step, we add <code class="language-plaintext highlighter-rouge">Q</code> to our uncertainty, acknowledging that the state might have changed. This increased uncertainty makes the Kalman gain larger, giving more weight to new measurements and enabling the filter to track changes.</p>
+
+<p>Why is <code class="language-plaintext highlighter-rouge">Q</code> so important now?</p>
+<ul>
+  <li>Low Q (0.1): Assumes total is nearly constant → <code class="language-plaintext highlighter-rouge">P</code> stays low → <code class="language-plaintext highlighter-rouge">K</code> stays low → filter slow to adapt → lags behind changes</li>
+  <li>High Q (10.0): Expects total to change → <code class="language-plaintext highlighter-rouge">P</code> increases faster → <code class="language-plaintext highlighter-rouge">K</code> stays higher → filter more responsive → tracks leaking items</li>
+  <li>Too high Q (100.0): Expects too much change → <code class="language-plaintext highlighter-rouge">P</code> grows too large → <code class="language-plaintext highlighter-rouge">K</code> too high → over-responsive, jittery estimates</li>
+</ul>
+
+<p>The key insight: <code class="language-plaintext highlighter-rouge">Q</code> controls how quickly uncertainty accumulates when we don’t measure. Higher <code class="language-plaintext highlighter-rouge">Q</code> means “my model might be wrong, listen to the data.” Lower <code class="language-plaintext highlighter-rouge">Q</code> means “my model is reliable, stick with predictions.”</p>
+
+<p>Initial conditions:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x_0 = 0.0 (we start knowing nothing)
+P_0 = 1000.0 (very uncertain initially)
+</code></pre></div></div>
+
+<h3 id="measurement-model">Measurement Model</h3>
+
+<p>Each timestep, we observe one shelf and update our estimates for all shelves in a DataFrame:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Measurement: z = sum(estimated_quantities for all shelves)
+Measurement matrix: H = 1 (we measure the total directly as a sum)
+Measurement noise: R = 10.0 + 0.5 × sum(uncertainties)
+</code></pre></div></div>
+
+<p>The measurement noise <code class="language-plaintext highlighter-rouge">R</code> is critical:</p>
+<ul>
+  <li><strong>Base noise</strong> (10.0): Accounts for items in motion during observation</li>
+  <li><strong>Staleness term</strong> (0.5 × sum of uncertainties): Increases when observations are old</li>
+  <li>This makes <code class="language-plaintext highlighter-rouge">R</code> <strong>time-varying</strong> and <strong>data-driven</strong></li>
+</ul>
+
+<h3 id="the-kalman-filter-equations">The Kalman Filter Equations</h3>
+
+<p>Since we’re working in 1D, the standard Kalman filter equations become simple arithmetic:</p>
+
+<p><strong>Predict Step:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x_pred = x                    # Total doesn't change
+P_pred = P + Q                # Add process noise (P + 0.1)
+</code></pre></div></div>
+
+<p><strong>Update Step:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>z = sum(all shelf estimates)  # Measurement from observations
+y = z - x_pred                # Innovation (how wrong was our prediction?)
+R = 10.0 + 0.5 × staleness    # Measurement noise (function of uncertainty)
+S = P_pred + R                # Innovation covariance
+K = P_pred / S                # Kalman gain (0 to 1)
+x = x_pred + K × y            # Updated state estimate
+P = (1 - K) × P_pred          # Updated uncertainty
+</code></pre></div></div>
+
+<h3 id="understanding-the-kalman-gain">Understanding the Kalman Gain</h3>
+
+<p>The Kalman gain <code class="language-plaintext highlighter-rouge">K = P_pred / (P_pred + R)</code> is the heart of the filter. This elegant equation represents the optimal balance between trusting our prediction versus trusting new measurements.</p>
+
+<p>Think of <code class="language-plaintext highlighter-rouge">K</code> as a “trust dial” ranging from 0 to 1:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">K = 1</code> means trust the measurement 100%, ignore the prediction</li>
+  <li><code class="language-plaintext highlighter-rouge">K = 0</code> means trust the prediction 100%, ignore the measurement</li>
+  <li><code class="language-plaintext highlighter-rouge">K = 0.3</code> means take 30% of the measurement’s correction, 70% of the prediction</li>
+</ul>
+
+<p>The denominator <code class="language-plaintext highlighter-rouge">(P_pred + R)</code> represents total uncertainty in our estimate: prediction uncertainty <code class="language-plaintext highlighter-rouge">P_pred</code> plus measurement noise <code class="language-plaintext highlighter-rouge">R</code>. The numerator <code class="language-plaintext highlighter-rouge">P_pred</code> is just our prediction uncertainty. So <code class="language-plaintext highlighter-rouge">K</code> literally answers: “What fraction of total uncertainty comes from our prediction?”</p>
+
+<p>Extreme cases make the intuition clear:</p>
+
+<ul>
+  <li>When prediction uncertainty is high (large <code class="language-plaintext highlighter-rouge">P_pred</code>): <code class="language-plaintext highlighter-rouge">K → 1</code>
+    <ul>
+      <li>Example: <code class="language-plaintext highlighter-rouge">P_pred = 100</code>, <code class="language-plaintext highlighter-rouge">R = 1</code> → <code class="language-plaintext highlighter-rouge">K = 100/101 ≈ 1.0</code></li>
+      <li>Our prediction is unreliable, so trust the measurement completely</li>
+      <li>Large correction: <code class="language-plaintext highlighter-rouge">x = x_pred + 1 × y = z</code></li>
+    </ul>
+  </li>
+  <li>When measurement noise is high (large <code class="language-plaintext highlighter-rouge">R</code>): <code class="language-plaintext highlighter-rouge">K → 0</code>
+    <ul>
+      <li>Example: <code class="language-plaintext highlighter-rouge">P_pred = 1</code>, <code class="language-plaintext highlighter-rouge">R = 100</code> → <code class="language-plaintext highlighter-rouge">K = 1/101 ≈ 0.01</code></li>
+      <li>The measurement is unreliable, so trust the prediction completely</li>
+      <li>Small correction: <code class="language-plaintext highlighter-rouge">x = x_pred + 0.01 × y ≈ x_pred</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>The filter automatically adapts. Early in the simulation:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">P_pred</code> is large (we’re uncertain)</li>
+  <li><code class="language-plaintext highlighter-rouge">K</code> is close to 1 (trust measurements)</li>
+  <li>Estimates change rapidly</li>
+</ul>
+
+<p>After convergence:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">P_pred</code> is small (we’re confident)</li>
+  <li><code class="language-plaintext highlighter-rouge">K</code> is close to 0 (trust prediction)</li>
+  <li>Estimates change slowly, smoothly tracking dynamics</li>
+</ul>
+
+<p><img src="/assets/images/blog_figure_2_kalman_gain.png" alt="Kalman Gain Evolution" />
+<em>Figure 5: Adaptive Kalman gain behavior. Top panel shows K starting near 1.0 (trust measurements) and decreasing to ~0.2 (trust predictions). Bottom panel shows the uncertainty components (P and R) that drive this adaptation. The filter automatically learns when to trust measurements vs. predictions.</em></p>
+
+<h3 id="convergence-behavior">Convergence Behavior</h3>
+
+<p>With default settings (20 shelves, 300 items, 1% movement probability), the filter converges beautifully:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Steps</th>
+      <th>Estimated Total</th>
+      <th>Error (%)</th>
+      <th>Uncertainty (P)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0.00</td>
+      <td>100.0</td>
+      <td>1000.0</td>
+    </tr>
+    <tr>
+      <td>100</td>
+      <td>95.71</td>
+      <td>4.3</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <td>200</td>
+      <td>94.28</td>
+      <td>5.7</td>
+      <td>4.3</td>
+    </tr>
+    <tr>
+      <td>500</td>
+      <td>95.89</td>
+      <td>4.1</td>
+      <td>6.0</td>
+    </tr>
+    <tr>
+      <td>1000</td>
+      <td>94.61</td>
+      <td>5.4</td>
+      <td>7.5</td>
+    </tr>
+    <tr>
+      <td>5000</td>
+      <td>95.83</td>
+      <td>4.2</td>
+      <td>9.8</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Notice:</p>
+<ul>
+  <li><strong>Rapid initial convergence</strong>: From 100% error to &lt;10% in 200 steps</li>
+  <li><strong>Stable performance</strong>: Error stays around 4-6% despite continuous item movement</li>
+  <li><strong>Uncertainty stabilizes</strong>: <code class="language-plaintext highlighter-rouge">P</code> converges to ~7-10 after sufficient observations</li>
+  <li><strong>Never perfect</strong>: 5% error persists because shelf #0 is never observed</li>
+</ul>
+
+<p>This is exactly what we expect from a well-tuned Kalman filter.</p>
+
+<p><img src="/assets/images/blog_figure_3_error_analysis.png" alt="Error Convergence Analysis" />
+<em>Figure 6: Multi-panel error analysis. Left: Percentage error drops below 10% threshold rapidly. Middle: Absolute error decreases and stabilizes. Right: Mean Absolute Error (MAE) across observed shelves shows shelf-level accuracy improving over time.</em></p>
+
+<p>The plots reveal:</p>
+<ol>
+  <li><strong>Convergence plot</strong>: Estimated total (blue line) converges to true total (green line) with uncertainty bands</li>
+  <li><strong>Uncertainty plot</strong>: Kalman covariance <code class="language-plaintext highlighter-rouge">P</code> decreases rapidly then stabilizes</li>
+  <li><strong>Error plot</strong>: Percentage error drops below 10% and remains stable</li>
+</ol>
+
+<h2 id="the-power-of-dynamic-tracking">The Power of Dynamic Tracking</h2>
+
+<p>The real strength of Kalman filters emerges when tracking changing values, not static constants. Our inventory simulator demonstrates this beautifully through the shelf #0 dynamics.</p>
+
+<h3 id="static-vs-dynamic-systems">Static vs. Dynamic Systems</h3>
+
+<p><strong>Old Problem (Boring)</strong>:</p>
+<ul>
+  <li>Estimate total of ALL shelves (0-19)</li>
+  <li>Total is constant at 300 items (conservation law)</li>
+  <li>Process noise Q = 0.1 (low, because nothing changes)</li>
+  <li>Result: Filter converges to 300 and stays there</li>
+  <li>Lesson: Not much to learn - just averaging with fancy math</li>
+</ul>
+
+<p><strong>New Problem (Interesting)</strong>:</p>
+<ul>
+  <li>Estimate total of OBSERVED shelves (1-19) only</li>
+  <li>Total changes as items leak to/from shelf #0</li>
+  <li>Process noise Q = 10.0 (high, because total is dynamic)</li>
+  <li>Result: Filter tracks a moving target</li>
+  <li>Lesson: See Kalman filters’ true power - adaptation to changing conditions</li>
+</ul>
+
+<h3 id="process-noise-q-the-adaptation-knob">Process Noise Q: The Adaptation Knob</h3>
+
+<p>Process noise <code class="language-plaintext highlighter-rouge">Q</code> determines how much the filter expects the state to change between timesteps. This parameter is critical for dynamic systems:</p>
+
+<p><strong>Q Too Low (Q = 0.1)</strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Step 250: True =  92, Estimated =  95.3  (trap activates)
+Step 300: True =  75, Estimated =  91.7  (lagging badly)
+Step 350: True =  61, Estimated =  85.2  (still lagging)
+Step 400: True =  53, Estimated =  76.8  (can't keep up)
+</code></pre></div></div>
+<p>The filter assumes the total is nearly constant, so it resists change. It lags far behind the declining total.</p>
+
+<p><strong>Q Just Right (Q = 10.0)</strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Step 250: True =  92, Estimated =  91.6  (trap activates)
+Step 300: True =  75, Estimated =  74.3  (tracking well)
+Step 350: True =  61, Estimated =  60.2  (close match)
+Step 400: True =  53, Estimated =  52.8  (excellent)
+</code></pre></div></div>
+<p>The filter expects changes, so it adapts quickly to the declining total while remaining stable.</p>
+
+<p><strong>Q Too High (Q = 100.0)</strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Step 250: True =  92, Estimated =  87.2  (trap activates)
+Step 300: True =  75, Estimated =  79.1  (overshoots)
+Step 350: True =  61, Estimated =  55.8  (overshoots again)
+Step 400: True =  53, Estimated =  58.3  (unstable)
+</code></pre></div></div>
+<p>The filter is over-responsive to measurements, leading to jittery, unreliable estimates that overshoot.</p>
+
+<h3 id="the-kalman-gain-perspective">The Kalman Gain Perspective</h3>
+
+<p>Process noise <code class="language-plaintext highlighter-rouge">Q</code> directly affects the Kalman gain <code class="language-plaintext highlighter-rouge">K = P / (P + R)</code>:</p>
+
+<ul>
+  <li>Low Q → Low <code class="language-plaintext highlighter-rouge">P</code> (low uncertainty) → Low <code class="language-plaintext highlighter-rouge">K</code> → Trust predictions more</li>
+  <li>High Q → High <code class="language-plaintext highlighter-rouge">P</code> (high uncertainty) → High <code class="language-plaintext highlighter-rouge">K</code> → Trust measurements more</li>
+</ul>
+
+<p>In a dynamic system:</p>
+<ul>
+  <li>Predictions are less reliable (the state changed)</li>
+  <li>Measurements carry more information</li>
+  <li>Higher <code class="language-plaintext highlighter-rouge">K</code> is appropriate - we need to listen to the data</li>
+</ul>
+
+<p><strong>Observed Behavior in Leak-Then-Trap Mode</strong> (see Figure 7, middle panel):</p>
+<ul>
+  <li>Steps 0-100: <code class="language-plaintext highlighter-rouge">K</code> decreases rapidly from ~0.9 to ~0.15 as the filter learns the system</li>
+  <li>Steps 100-250: <code class="language-plaintext highlighter-rouge">K</code> stabilizes around ~0.15 (normal mode, fluctuating total)</li>
+  <li>Steps 250+: <code class="language-plaintext highlighter-rouge">K</code> remains elevated at ~0.15-0.2 (trap mode, declining total)</li>
+</ul>
+
+<p>The key insight: With <code class="language-plaintext highlighter-rouge">Q = 10.0</code>, the Kalman gain never drops too low. Even after 500 steps, <code class="language-plaintext highlighter-rouge">K ≈ 0.15-0.2</code>, meaning the filter still gives 15-20% weight to new measurements. This responsiveness is exactly what enables tracking the declining total.</p>
+
+<p>Compare this to static systems where <code class="language-plaintext highlighter-rouge">Q = 0.1</code> drives <code class="language-plaintext highlighter-rouge">K → 0.01</code> or lower, making the filter “lock in” to its estimate and resist change. The 100× increase in process noise creates a 10-20× higher steady-state Kalman gain, which is the mechanism enabling adaptation.</p>
+
+<p><img src="/assets/images/blog_figure_7_leak_then_trap.png" alt="Leak-Then-Trap Demonstration" />
+<em>Figure 7: Leak-then-trap mode demonstration showing adaptive behavior. <strong>Top panel</strong>: Kalman filter successfully tracks the declining observed total after trap activation at step 150. <strong>Middle panel</strong>: Kalman gain K evolution - decreases during learning phase, then stabilizes at a higher value (~0.15-0.2) during trap mode to maintain responsiveness to changing dynamics. The higher K after step 150 shows the filter trusting measurements more when tracking a moving target. <strong>Bottom panel</strong>: Item distribution showing conservation - as items leak to shelf #0 (orange), the observed total (green) decreases while system total (black line) remains constant at 300.</em></p>
+
+<h2 id="key-insights-and-lessons">Key Insights and Lessons</h2>
+
+<p>Working through this inventory problem teaches several profound lessons about Kalman filters:</p>
+
+<h3 id="1-we-dont-need-perfect-information">1. We Don’t Need Perfect Information</h3>
+
+<p>The filter estimates the total accurately despite:</p>
+<ul>
+  <li>Never observing 5% of the system (shelf #0)</li>
+  <li>Observations being 1-19 timesteps stale</li>
+  <li>Items constantly moving</li>
+</ul>
+
+<p>Lesson: Kalman filters excel at extracting signal from partial, noisy, delayed data.</p>
+
+<h3 id="2-uncertainty-guides-estimation">2. Uncertainty Guides Estimation</h3>
+
+<p>The staleness-based measurement noise <code class="language-plaintext highlighter-rouge">R</code> is crucial:</p>
+<ul>
+  <li>Fresh observations get high weight (low <code class="language-plaintext highlighter-rouge">R</code>)</li>
+  <li>Stale observations get low weight (high <code class="language-plaintext highlighter-rouge">R</code>)</li>
+  <li>The filter automatically balances sources</li>
+</ul>
+
+<p>Lesson: Quantifying uncertainty is as important as the measurements themselves.</p>
+
+<h3 id="3-models-dont-need-to-be-perfect">3. Models Don’t Need to Be Perfect</h3>
+
+<p>Our process noise <code class="language-plaintext highlighter-rouge">Q = 0.1</code> is somewhat arbitrary, yet the filter works:</p>
+<ul>
+  <li>Too small <code class="language-plaintext highlighter-rouge">Q</code> → filter is slow to adapt</li>
+  <li>Too large <code class="language-plaintext highlighter-rouge">Q</code> → filter is jittery and oversensitive</li>
+  <li>Moderate <code class="language-plaintext highlighter-rouge">Q</code> → good balance</li>
+</ul>
+
+<p>Lesson: Kalman filters are robust to model imperfections. Tuning matters, but we don’t need exact models.</p>
+
+<h3 id="4-conservation-constraints-help">4. Conservation Constraints Help</h3>
+
+<p>The assumption that total items is constant (state transition = identity) is a strong prior:</p>
+<ul>
+  <li>It rules out impossible estimates (e.g., total suddenly doubling)</li>
+  <li>It focuses uncertainty on distribution, not total count</li>
+  <li>It makes the 1D state sufficient</li>
+</ul>
+
+<p>Lesson: Incorporating domain knowledge (like conservation laws) dramatically improves estimation.</p>
+
+<h3 id="5-convergence-takes-time">5. Convergence Takes Time</h3>
+
+<p>The filter needs 100-200 observations to converge well:</p>
+<ul>
+  <li>Each observation updates the estimate</li>
+  <li>Uncertainty decreases with each update</li>
+  <li>The round-robin pattern determines convergence rate</li>
+</ul>
+
+<p>Lesson: Kalman filters are sequential - they need time to “learn” the system.</p>
+
+<h3 id="6-kalman-gain-is-adaptive">6. Kalman Gain is Adaptive</h3>
+
+<p>Early steps: <code class="language-plaintext highlighter-rouge">K ≈ 0.8-1.0</code> (trust measurements)
+Later steps: <code class="language-plaintext highlighter-rouge">K ≈ 0.1-0.3</code> (trust predictions)</p>
+
+<p>Lesson: The filter automatically adapts its behavior based on accumulated knowledge.</p>
+
+<h3 id="7-partial-observability-is-manageable">7. Partial Observability is Manageable</h3>
+
+<p>Shelf #0 is never observed, yet:</p>
+<ul>
+  <li>The filter estimates the total accurately</li>
+  <li>The conservation constraint carries the information</li>
+  <li>Inference bridges the gap in direct observation</li>
+</ul>
+
+<p>Lesson: Indirect inference can be as powerful as direct measurement when combined with good models.</p>
+
+<h2 id="wrapping-up">Wrapping Up</h2>
+
+<p>The Kalman filter has been around since 1960, which in computer science terms makes it ancient. But it’s still the default solution for fusing noisy measurements because the math actually works—provably optimal under the right conditions, surprisingly robust when those conditions don’t hold.</p>
+
+<p>The inventory simulator demonstrates the core ideas without requiring you to track 10×10 covariance matrices. Partial observability, dynamic systems, measurement uncertainty—it’s all there, just scaled down to something you can reason about. Same principles apply whether you’re tracking items on shelves or estimating spacecraft position.</p>
+
+<h3 id="try-it-yourself">Try It Yourself</h3>
+
+<p>The complete code is available at the repository. Install it, run the examples, and experiment:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/dlfelps/kalman_demo
+<span class="nb">cd </span>kalman_demo
+pip <span class="nb">install</span> <span class="nt">-e</span> <span class="s2">".[viz]"</span>
+python main.py
+</code></pre></div></div>
+
+<p>You can watch the filter converge, plot the uncertainty, tune the parameters, and extend to 2D state. The best way to understand Kalman filters is to see them work.</p>
+
+<p><strong>Generate Blog Figures:</strong></p>
+
+<p>To recreate all figures shown in this blog post:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python generate_/assets/images/blog_figures.py
+</code></pre></div></div>
+
+<p>This generates all the figures you saw above—convergence plots, Kalman gain evolution, error analysis, and so on.</p>
+
+<hr />
+
+<h2 id="further-reading">Further Reading</h2>
+
+<p>If you want to go deeper, the original Kalman (1960) paper is surprisingly readable. The Welch &amp; Bishop tutorial from UNC is my go-to reference for implementation details. For interactive learning, check out Roger Labbe’s <a href="https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python">Kalman and Bayesian Filters in Python</a>—it’s free and excellent. The <a href="https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/">visual explanation at bzarg.com</a> is also worth a look.</p>
+
+<p>Once you outgrow linear systems, you’ll want Extended Kalman Filters (EKF) for mildly nonlinear problems or Unscented Kalman Filters (UKF) when things get really nonlinear.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="kalman-filter" /><category term="inventory" /><summary type="html"><![CDATA[This post presents an inventory tracking simulation that demonstrates how Kalman filters optimally estimate total inventory across partially-observable shelves, especially when the system dynamics change over time as items leak to unobserved locations. Understanding Kalman Filters Through Inventory Management]]></summary></entry><entry><title type="html">Experiment 26</title><link href="https://dlfelps.github.io/2025/12/02/commuter-patterns.html" rel="alternate" type="text/html" title="Experiment 26" /><published>2025-12-02T00:00:00+00:00</published><updated>2025-12-02T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/12/02/commuter-patterns</id><content type="html" xml:base="https://dlfelps.github.io/2025/12/02/commuter-patterns.html"><![CDATA[<p>This post analyzes urban mobility patterns to identify critical mobility hubs, network resilience, and neighborhood structures within cities by applying centrality algorithms and community detection on graph networks.</p>
 
 <h1 id="urban-mobility-networks-uncovering-commuter-patterns-in-cities">Urban Mobility Networks: Uncovering Commuter Patterns in Cities</h1>
 
@@ -126,8 +572,6 @@
 
 <p>The single busiest long-distance corridor, from neighborhood (60,161) to the the central business district at (77,135), carries 442 commuters. The second busiest carries 199. The tenth busiest carries 92. By the time you get to the 20th corridor, you’re down to 83 commuters.</p>
 
-<p>This means that <strong>80% of long-distance commute flow is concentrated in just 68 corridors out of 100</strong>. To put it another way: the busiest 68 corridors carry the same total traffic as the least busy 32 corridors combined.</p>
-
 <p>Why does this matter? Infrastructure planning. If you’re a city planner with a fixed budget for improving commute corridors, you should focus on those top 68, not spread resources across all 683,461 corridors. Every dollar spent improving the (60,161) → (77,135) corridor benefits 442 people daily. Spending it on a low-flow corridor might benefit only a handful.</p>
 
 <p>The longest corridor I identified spans 53 grid cells, connecting a distant residential area directly to the the central business district. This is a classic pattern in sprawling cities: as residential areas expand outward, some commuters accept very long commutes to reach employment centers rather than moving closer. These long-distance corridors deserve special attention because they’re likely to be the most congested relative to their capacity.</p>
@@ -159,11 +603,11 @@
 <p><img src="/assets/images/nagoya.PNG" alt="Nagoya" />
 (left) cityA in the LYMOB dataset (middle) ORNL Landscan Population layer (right) Google Maps of Nagoya region in Japan.</p>
 
-<p>The LYMOB dataset represents cities as grids of cells with integer coordinates (X and Y ranging from 1 to 200 in our case). It does not have absolute latitude and longitude. In fact, this was done intentionally to increase privacy in the data.</p>
+<p>The LYMOB dataset does not disclose that the data represents the Nagoya region. The dataset we looked at is simply called “cityA” - this was done intentionally to increase privacy in the data.</p>
 
-<p>During initial exploration of the data, I noticed that the flow of the citA data had a rather unique shape. Particularly it featured a double bay and a uniquely shaped gap, which I assumed was a river feeding the bay. I cross-referenced this pattern against Japan’s coastline and determined that the area was in fact Nagoya, but it was rotated. When I mapped the coordinate system as <strong>X = Longitude, Y = Latitude</strong> (the way this dataset organizes coordinates), the grid coordinates aligned perfectly with the actual layout on a real map.</p>
+<p>During initial exploration of the data, I noticed that the flow of the cityA data had a rather unique shape. Particularly it featured a double bay and a circular gap, which I assumed was a river feeding the bay. I cross-referenced this pattern against Japan’s coastline and determined that the area was in fact Nagoya, but it was rotated. When I mapped the coordinate system as <strong>X = Longitude, Y = Latitude</strong> , the grid coordinates aligned perfectly with the actual layout on a real map.</p>
 
-<p>This discovery is the first that I could find of the true locations in the LYMOB dataset.</p>
+<p>This discovery is the first that I could find that uncovered a true location in the LYMOB dataset.</p>
 
 <p><strong>Network Summary:</strong></p>
 <ul>
@@ -2631,200 +3075,4 @@ A few highlights of the report:</p>
   <li>Other evasion attacks (e.g. CW-LInf) may be rendered inneffective using adversarial training.</li>
 </ol>
 
-<p>As ML adoption grows, understanding and addressing these vulnerabilities become crucial for maintaining system integrity and security. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="adversarial" /><category term="evasion" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post describes simple approaches to attack and defend machine learning models.]]></summary></entry><entry><title type="html">Experiment 17</title><link href="https://dlfelps.github.io/2024/06/04/explainable.html" rel="alternate" type="text/html" title="Experiment 17" /><published>2024-06-04T00:00:00+00:00</published><updated>2024-06-04T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/06/04/explainable</id><content type="html" xml:base="https://dlfelps.github.io/2024/06/04/explainable.html"><![CDATA[<p>This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.</p>
-
-<h2 id="introduction-to-explainable-ai">Introduction to Explainable AI</h2>
-
-<p>Explainable machine learning models describe how and why a prediction was made. Experts in explainable AI (XAI) make a distinction between interpretabiliy and explainability: <a href="https://www.sciencedirect.com/science/article/abs/pii/S1566253521002281">source</a></p>
-
-<ul>
-  <li>
-    <p>Interpretability is the extraction of relevant sub-symbolic information from a machine-learning model concerning relationships either contained in data or learned by the model</p>
-  </li>
-  <li>
-    <p>Explainability is the ability to translate this sub-symbolic information in a comprehensible manner through human-understandable language expressions</p>
-  </li>
-</ul>
-
-<p>This blog post answers the following questions:</p>
-<ol>
-  <li>How do you make a machine learning model more interpretable and explainable?</li>
-  <li>What are the tradeoffs and when should you do it?</li>
-</ol>
-
-<h2 id="experimental-study">Experimental study</h2>
-
-<p>In order to demonstrate the benefits of XAI we will use a standard image classification task on well-known benchmark - <a href="https://www.vision.caltech.edu/datasets/cub_200_2011/">CUB-200-2011</a>, which contains 11,788 images of birds. This dataset is typically used for fine-grained classification since it contains over 200 species of birds. Additionally, for each image, it captures meta-data about each bird (i.e. 28 features including bill shape, wing shape, head color, etc.). This information will be critical to creating an interpretable model.
-<img src="https://i0.wp.com/www.beyourownbirder.com/wp-content/uploads/2019/09/american-goldfinch-1.jpg" alt="American goldfinch" /></p>
-
-<p><a href="https://i0.wp.com/www.beyourownbirder.com/wp-content/uploads/2019/09/american-goldfinch-1.jpg">Image source</a></p>
-
-<h2 id="establishing-the-baseline">Establishing the baseline</h2>
-
-<p>Before we build an interpretable model, we will establish the performance of a non-interpretable model. For this dataset we will use a ResNet-18 pretrained model from the <a href="https://github.com/osmr/imgclsmob">pytorchcv</a> package.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from pytorchcv.model_provider import get_model 
-
-cub_model = get_model('resnet18_cub', pretrained=True)
-</code></pre></div></div>
-
-<p>This model has 74.4% accuracy on the test set, which is impressive given that there are 200 classes and the classes are all similar because they are all birds. We will next describe how to adapt this model to be interpretable.</p>
-
-<h2 id="concept-bottleneck-models">Concept Bottleneck Models</h2>
-
-<p>Deep learning models are powerful due to their ability to learn features that are discriminative to the prediction task. However, these features are not interpretable by humans, leading to the so-called <a href="https://news.mit.edu/2022/machine-learning-explainability-0505">“black box problem”</a>. In an effort to make deep learning models more transparent, Concept Bottleneck Models (CBMs) make use of a human-interpretable feature layer called the “concept layer”. This layer contains features that are meaningful to a human and representative of the features necessary for a human to perform the same kind of prediction. The final prediction is made based on the values of the concept layer. There are two primary advantages of this approach:</p>
-<ol>
-  <li>Users can understand the feature values immediately before the prediction layer</li>
-  <li>Users can update the feature values to improve accuracy (sometimes called intervention)</li>
-</ol>
-
-<p><img src="/assets/images/cbm_cub.jpeg" alt="concept bottleneck model" title="concept bottleneck model" /></p>
-
-<p><a href="https://arxiv.org/pdf/2007.04612">image reference</a></p>
-
-<h3 id="training-a-concept-bottleneck-model">Training a Concept Bottleneck Model</h3>
-<p>In the original <a href="https://arxiv.org/pdf/2007.04612">paper</a> the authors test three ways to train a Concept Bottleneck Model:</p>
-
-<ul>
-  <li>
-    <p>Independent: learn a concept predictor (L<sub>C</sub>) and learn a task predictor (L<sub>Y</sub>)</p>
-  </li>
-  <li>
-    <p>Sequential: learn a concept predictor (L<sub>C</sub>) then learn a task predictor (L<sub>Y</sub> <span>|</span> L<sub>C</sub>)</p>
-  </li>
-  <li>
-    <p>Joint: simultaneously learn concept predictor (L<sub>C</sub>) and task predictor (L<sub>Y</sub> <span>|</span> L<sub>C</sub>)</p>
-  </li>
-</ul>
-
-<p>The joint approach offered the best performance on the CUB dataset. However, because the concept and task predictors are trained simultaneously using a dual loss function is it prone to side-channel leaks, in which the task predictor drives the concept predictor to leak additional information about features that are not strictly related to the concepts. The extent to which this occurs affects the overall interpretability of the model.</p>
-
-<p>Independent and sequential approaches offered similar performance on CUB and do not suffer from the side-channel leak problem. The independent approach is recommended for systems that anticipate high intervention rates because its task predictor is trained using ground truth concept values. The sequential approach is recommended when intervention is not likely and the concepts are difficult to predict. This allows the task predictor to learn to ignore concepts that may be difficult to predict.</p>
-
-<h4 id="learning-the-concepts">Learning the concepts</h4>
-<p>There are 28 concepts in the CUB-200 dataset. These are expert-selected concepts relevant to the problem of bird species identification.</p>
-
-<p><img src="/assets/images/cub_attributes.jpeg" alt="bird attributes" title="bird attributes" /></p>
-
-<p><a href="https://authors.library.caltech.edu/records/cvm3y-5hh21/files/CUB_200_2011.pdf?download=1">image reference</a></p>
-
-<p>We will use the training data to learn to predict these features by creating one classifier per concept. The embedding features from the baseline ResNet-18 model serve as the input to each concept classifier. As you can see in the figure below, the ability to predict each concept varies greatly. This is partially due to the fact that the embedding space is optimized to differentiate at the class level (global prediction) rather than the individual concepts (local predictions).</p>
-
-<p><img src="/assets/images/concept_plot.png" alt="concept predictions" title="concept predictions" /></p>
-
-<p>Let’s take a closer look at a few examples:</p>
-
-<ul>
-  <li>Head Pattern (33% accuracy) - this concept is difficult to predict from the embedded features; the classifier only performs marginally better than the base rate (+7% better)</li>
-  <li>Eye Color (80% accuracy) - this concept is the most accurately predicted concept; but it does not perform better than the base rate, suggesting that this feature is not informative and predicts that birds have black eyes regardless of input</li>
-  <li>Crown color (55% accuracy) - although this concept is not among the most accurately predicted, it does perform significantly higher than the base rate (+30% better) suggesting that the embedded features at least partially capture this information</li>
-</ul>
-
-<h4 id="learning-the-classes">Learning the classes</h4>
-<p>Because the performance of the concept predictors was relatively low, we will use a sequential training approach. After learning one concept predictor per concept L<sub>C<sub>i</sub></sub>, we use the predicted concepts (rather than the ground truth concepts) to learn the task predictor.</p>
-
-<h2 id="results">Results</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"> </th>
-      <th style="text-align: center">Backbone</th>
-      <th style="text-align: center">Interpretable features</th>
-      <th style="text-align: center">Concept labels required</th>
-      <th style="text-align: center">Accuracy</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">CBM</td>
-      <td style="text-align: center">ResNet-18</td>
-      <td style="text-align: center">Y</td>
-      <td style="text-align: center">Y</td>
-      <td style="text-align: center">0.594</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Baseline</td>
-      <td style="text-align: center">ResNet-18</td>
-      <td style="text-align: center">N</td>
-      <td style="text-align: center">N/A</td>
-      <td style="text-align: center">0.744</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>We added interpretability to our model at the cost of about 25 points of accuracy. This would be an unacceptable tradeoff for most real-world applications. Even though the overall accuracy is low, if either the accuracy of the concept predictor or task predictor is independently high then they can still be useful in certain contexts.</p>
-<ul>
-  <li><strong>Expert assistant</strong>:   This scenario assumes the system is being used by a highly trained user (e.g. ornithologist for CUB). The concept predictor (with high accuracy) can save the expert time by pre-populating values for the concept features. The expert then performs a final review of the concept features and assigns the final class label (e.g. species of bird for CUB).</li>
-  <li><strong>Psuedo-expert</strong>: This scenario assumes the system is being used by non-skilled users (e.g. Mechanical Turk workers). The worker is able to make simple observations about the image (e.g. what is the color of the bird’s wing, which of the following shapes most closely matches the bird’s beak, etc.). The task predictor (with high accuracy) then assigns the species of bird given the observations.</li>
-</ul>
-
-<h2 id="discussion">Discussion</h2>
-
-<h3 id="limitations-of-cbms">Limitations of CBMs</h3>
-
-<p>We have already observed the first limitation of Concept Bottleneck Models - they don’t tend to be as accurate as non-interpretable models for real-world applications. This gap can be reduced using a residual modeling technique such as the one proposed in <a href="https://arxiv.org/abs/2205.15480">Yuksekgonul, Wang, &amp; Zou, (2022)</a>, which splits the model’s predictions into an interpretable part and a non-interpretable part.</p>
-
-<p>Another limitation is the assumption of the concept labels themselves. The data labeling cost for such a dataset is significantly higher than one that only collects the task labels. Furthermore, the concepts themselves are difficult to get right without expert input. One solution, proposed in <a href="https://arxiv.org/abs/2304.06129">Oikarinen et. al (2023)</a>, uses a combination of a large language model (GPT-3) and a multimodal foundation model (CLIP) to extract concepts for any task. See <a href="https://arxiv.org/abs/2304.06129">paper</a> for details. The reported accuracy of their approach is included in the table below.</p>
-
-<h3 id="limitations-of-resnet-18-backbone">Limitations of ResNet-18 backbone</h3>
-
-<p>I have made it tradition to incorporate DINOv2 into my ml-portfolio series posts. In this post, I replaced the ResNet-18 backbone with DINOv2 and the accuracy improves 15 points. I can’t think of many applications that would prefer an interpretable model with 60% accuracy over a non-interpretable model with 90% accuracy. NOTE: Although the DINOv2 features were better for overall task accuracy, they did not significantly improve concept accuracy.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"> </th>
-      <th style="text-align: center">Backbone</th>
-      <th style="text-align: center">Interpretable features</th>
-      <th style="text-align: center">Concept labels required</th>
-      <th style="text-align: center">Accuracy</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">CBM</td>
-      <td style="text-align: center">ResNet-18</td>
-      <td style="text-align: center">Y</td>
-      <td style="text-align: center">Y</td>
-      <td style="text-align: center">0.594</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Label-free CBM</td>
-      <td style="text-align: center">ResNet-18</td>
-      <td style="text-align: center">*Y</td>
-      <td style="text-align: center">N</td>
-      <td style="text-align: center">0.743</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Baseline</td>
-      <td style="text-align: center">ResNet-18</td>
-      <td style="text-align: center">N</td>
-      <td style="text-align: center">N/A</td>
-      <td style="text-align: center">0.744</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">Baseline</td>
-      <td style="text-align: center">DINOv2</td>
-      <td style="text-align: center">N</td>
-      <td style="text-align: center">N/A</td>
-      <td style="text-align: center">0.905</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>*Features in this space take on continuous values correlated with human relatable concepts.</p>
-
-<h3 id="alternative-approaches-to-interpretability">Alternative approaches to interpretability</h3>
-
-<p>Saliency/attention maps are a common post-hoc interpretability technique that can be applied to any deep learning model. The purpose of these maps is to show the user which input features the model used for to perform most of their computations (i.e. paid the most attention to). They have one advantage over Concept Bottleneck Models in that they do not affect accuracy.</p>
-
-<p><img src="/assets/images/dino_attention_map.png" alt="attention map" title="attention map" /></p>
-
-<p><a href="https://arxiv.org/pdf/2309.16588">image reference</a></p>
-
-<p>But for the purposes of interpretability, I find that the approach falls short. At best it confirms for the user that the expected parts of the input were used to make a decision and not a spurious object (i.e. a common example is that the class “frisbee” is assigned to images containing large amounts of green grass). But attention maps fail to explain anything about the internal features of the model and its decision process. DINOv2 attention maps tend to highlight a single, main subject in an image. But it doesn’t do that because it knows the difference between a cow and a blue heron; it was trained in a totally unsupervised way! Furthermore, attention maps do not provide a mechanism for intervention.</p>
-
-<h2 id="conclusion">Conclusion</h2>
-
-<p>In this post I demonstrated how to make a machine learning model more interpretable and explainable. I also discussed the tradeoffs and alternative uses for such models when their accuracies do not perform at practical levels. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="explainable" /><category term="interpretable" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post introduces Concept Bottleneck Models - an interpretable approach to machine learning.]]></summary></entry></feed>
+<p>As ML adoption grows, understanding and addressing these vulnerabilities become crucial for maintaining system integrity and security. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="adversarial" /><category term="evasion" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post describes simple approaches to attack and defend machine learning models.]]></summary></entry></feed>

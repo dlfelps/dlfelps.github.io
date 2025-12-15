@@ -160,4 +160,10 @@ var store = [{
         "tags": ["claude","graph-learning","graphs","urban-mobility","mobility","network-analysis","networks","algorithms"],
         "url": "/2025/12/02/commuter-patterns.html",
         "teaser": null
+      },{
+        "title": "Experiment 27",
+        "excerpt":"This post presents an inventory tracking simulation that demonstrates how Kalman filters optimally estimate total inventory across partially-observable shelves, especially when the system dynamics change over time as items leak to unobserved locations. Understanding Kalman Filters Through Inventory Management Introduction Imagine managing a warehouse with 20 shelves where you can...","categories": [],
+        "tags": ["claude","kalman-filter","inventory"],
+        "url": "/2026/01/02/kalman.html",
+        "teaser": null
       }]
