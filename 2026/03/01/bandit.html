@@ -1,0 +1,441 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.3 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Experiment 28 - .NET Experiments</title>
+<meta name="description" content="This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 28">
+<meta property="og:url" content="https://dlfelps.github.io/2026/03/01/bandit.html">
+
+
+  <meta property="og:description" content="This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-03-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2026/03/01/bandit.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/"
+                
+                
+              >Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 28">
+    <meta itemprop="description" content="This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation.">
+    <meta itemprop="datePublished" content="2026-03-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://dlfelps.github.io/2026/03/01/bandit.html" itemprop="url">Experiment 28
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-03-01T00:00:00+00:00">March 1, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          25 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#from-random-to-contextual-comparing-bandit-algorithms-for-news-recommendation">From Random to Contextual: Comparing Bandit Algorithms for News Recommendation</a><ul><li><a href="#motivation">Motivation</a></li><li><a href="#methods">Methods</a><ul><li><a href="#randomchoice-baseline">RandomChoice (Baseline)</a></li><li><a href="#epsilon-greedy">Epsilon-Greedy</a></li><li><a href="#thompson-sampling">Thompson Sampling</a></li><li><a href="#linucb-contextual-bandit">LinUCB (Contextual Bandit)</a></li></ul></li><li><a href="#experiment">Experiment</a><ul><li><a href="#dataset">Dataset</a></li><li><a href="#simulation">Simulation</a></li><li><a href="#metric">Metric</a></li></ul></li><li><a href="#results">Results</a><ul><li><a href="#final-performance">Final Performance</a></li><li><a href="#learning-curves">Learning Curves</a></li><li><a href="#takeaways">Takeaways</a></li></ul></li></ul></li></ul>
+            </nav>
+          </aside>
+        
+        <p>This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation.</p>
+
+<h1 id="from-random-to-contextual-comparing-bandit-algorithms-for-news-recommendation">From Random to Contextual: Comparing Bandit Algorithms for News Recommendation</h1>
+
+<h2 id="motivation">Motivation</h2>
+
+<p>Every news website faces the same problem: a user arrives, the system has a handful of candidate articles, and it must decide which one to show. If the user clicks, that’s a success. If not, an opportunity was wasted. The goal is straightforward — maximize the click-through rate (CTR) over time — but the path to getting there is not.</p>
+
+<p>The core challenge is the <strong>explore/exploit dilemma</strong>. Should the system recommend the article it currently believes is best (exploit), or should it try something less certain to learn more about what works (explore)? Pure exploitation misses potentially great articles it has never tried. Pure exploration wastes impressions on articles that have already proven ineffective. Every recommendation system must navigate this tradeoff.</p>
+
+<p>Traditional A/B testing is one approach: split users into groups, show each group a different article, and after collecting enough data, pick the winner. But A/B tests are static. They require pre-defined variants, run to completion before any learning happens, and start over from scratch with each new test. In a domain like news — where content changes hourly and user preferences shift — this rigidity is costly.</p>
+
+<p><strong>Bandit algorithms</strong> offer a better model. They learn in real time, continuously adapting their recommendations based on observed feedback. Instead of waiting for a test to finish, a bandit shifts traffic toward better-performing options while still exploring alternatives. The learning never stops.</p>
+
+<p>Within the bandit framework there is a spectrum of sophistication. <strong>Multi-armed bandits</strong> (MABs) treat every user the same — they learn which articles are globally popular but cannot personalize. <strong>Contextual bandits</strong> go further, using information about the user and the article to make personalized decisions. A sports fan and a finance reader should see different recommendations, and contextual algorithms can learn these preferences.</p>
+
+<p>In this post we compare four algorithms that span this spectrum, from a random baseline to a fully contextual approach. We evaluate them head-to-head on the Microsoft News Dataset (MIND), a collection of real user impression logs. The question: how much does each level of sophistication actually buy you?</p>
+
+<h2 id="methods">Methods</h2>
+
+<p>All four algorithms face the same decision each round: given a set of candidate articles, pick one. After the user either clicks or ignores the recommendation, the algorithm updates its internal state. The difference between algorithms is <em>how</em> they make their choice and <em>what</em> they learn from the outcome.</p>
+
+<h3 id="randomchoice-baseline">RandomChoice (Baseline)</h3>
+
+<p>The simplest possible strategy: pick an article uniformly at random with no regard for past performance, user history, or article content.</p>
+
+<p><strong>Strengths:</strong> Dead simple and completely unbiased. It makes no assumptions and requires no tuning. Its only purpose is to establish a performance floor — any useful algorithm must beat this.</p>
+
+<p><strong>Weaknesses:</strong> It ignores everything. Every click it gets is pure luck. With ~37 candidates per round, we’d expect a CTR around 3%, but since some articles are more popular than others the actual random CTR lands around 11%.</p>
+
+<h3 id="epsilon-greedy">Epsilon-Greedy</h3>
+
+<p>Epsilon-greedy introduces the most basic form of learning. It tracks the average reward (click rate) for each article it has tried. With probability 1-ε it <em>exploits</em> by picking the article with the highest known average. With probability ε it <em>explores</em> by picking randomly. We use ε=0.1, meaning it exploits 90% of the time.</p>
+
+<p><strong>Strengths:</strong> Easy to understand and implement. It learns quickly which articles are popular across the user base. The ε parameter gives direct, intuitive control over the explore/exploit balance — turn it up for more exploration, down for more exploitation.</p>
+
+<p><strong>Weaknesses:</strong> Its exploration is blind. When it does explore, it picks randomly among all candidates, including ones that have already proven poor. It also treats all users identically — a sports fan and a foodie see the same recommendations. And it never stops exploring, even when it is highly confident about which articles are best. That 10% random exploration continues forever, wasting impressions on known losers.</p>
+
+<h3 id="thompson-sampling">Thompson Sampling</h3>
+
+<p>Thompson Sampling takes a Bayesian approach to the explore/exploit problem. Instead of tracking a single average per article, it maintains a full probability distribution (a Beta distribution) over each article’s true click rate. At decision time, it draws a random sample from each article’s distribution and picks the article whose sample is highest.</p>
+
+<p><strong>Strengths:</strong> Exploration is principled and automatic. Articles that the algorithm is uncertain about have wide distributions — their samples sometimes come out high, naturally triggering exploration. Articles with strong evidence of high click rates have narrow distributions centered on good values, so they consistently win. There is no exploration parameter to tune. As confidence grows, exploration naturally tapers off.</p>
+
+<p><strong>Weaknesses:</strong> Like epsilon-greedy, Thompson Sampling is context-free. It cannot personalize. It is also sensitive to the choice of prior distribution. With over 18,000 unique articles appearing across 100,000 impressions, many articles are seen only a handful of times. A uniform prior — Beta(1,1), expressing total ignorance — can slow down learning when the arm space is large. A pessimistic prior calibrated to the base click rate helps the algorithm exploit observed clicks sooner.</p>
+
+<p><strong>Key insight:</strong> We use a prior of Beta(1,8), which encodes a prior belief that articles are clicked about 11% of the time (close to the actual base rate). This lets even a single click on an article meaningfully shift its posterior upward. Prior tuning is a practical consideration that textbooks often gloss over, but it matters in real-world settings with large article catalogs.</p>
+
+<h3 id="linucb-contextual-bandit">LinUCB (Contextual Bandit)</h3>
+
+<p>LinUCB, introduced by Li et al. at WWW 2010, is a contextual bandit algorithm. Unlike the previous approaches, it does not treat articles or users as interchangeable. Instead, it builds a linear model for each article that predicts click probability from a <strong>context vector</strong> — a numerical description of the user and the article.</p>
+
+<p>At decision time, LinUCB computes a predicted reward for each candidate <em>plus</em> an “optimism bonus” that is large when the algorithm is uncertain about a prediction. It picks the article with the highest optimistic estimate. This is the Upper Confidence Bound (UCB) principle: be optimistic in the face of uncertainty, because the upside of discovering a great option outweighs the cost of a bad trial.</p>
+
+<p>The context vector we use is 62-dimensional, built from subcategory information rather than the coarser top-level categories. The MIND dataset has 285 subcategories — far more granular than the 18 categories. We keep the top 30 most frequent subcategories (covering 84% of articles) plus an “other” bucket, giving a 31-dimensional one-hot per article. The first 31 dimensions encode the <strong>user profile</strong>: a normalized subcategory-frequency vector from the user’s click history. A user who clicked mostly “football_nfl” and “basketball_nba” articles would have high weight on those subcategories. The remaining 31 dimensions encode the <strong>article subcategory</strong> as a one-hot. This lets LinUCB learn fine-grained patterns like “NFL fans tend to click NFL articles” rather than just “sports fans like sports.”</p>
+
+<p><strong>Strengths:</strong> LinUCB personalizes. Different users get different recommendations based on their reading history. It shares learning across contexts — a click on a sports article by a sports-oriented user informs predictions for similar user-article pairs, not just that specific article. And its exploration bonus shrinks automatically as confidence grows, so it explores less over time without requiring manual tuning.</p>
+
+<p><strong>Weaknesses:</strong> LinUCB is only as good as the features you give it. The algorithm itself is elegant, but feature engineering is the real bottleneck.</p>
+
+<p><strong>Key insight:</strong> Feature granularity matters. With only 18 top-level categories, LinUCB was learning “which categories get clicked globally” — something epsilon-greedy already captures by tracking per-article averages. Switching to 285 subcategories (bucketed into top-30 + other) and adding user subcategory profiles from click history meaningfully improved LinUCB’s performance. The algorithm needs fine-grained user-article interaction signals to personalize effectively.</p>
+
+<h2 id="experiment">Experiment</h2>
+
+<h3 id="dataset">Dataset</h3>
+
+<p>We evaluate on MINDlarge_train, the large training split from the Microsoft News Dataset (MIND). The full dataset contains over 2.2 million impression logs and 101,527 news articles. We sample the first 100,000 impressions for our comparison, which covers 18,866 unique articles across 18 categories including news, sports, entertainment, finance, lifestyle, health, and more. Each impression presents approximately 37 candidate articles on average, with ground-truth click labels indicating which article the user actually engaged with.</p>
+
+<h3 id="simulation">Simulation</h3>
+
+<p>We replay impressions sequentially through a simulation engine. For each round, the algorithm sees the candidate articles (and, for LinUCB, the context vectors), selects one article to recommend, and then observes the ground-truth reward: 1.0 if the user clicked that article, 0.0 otherwise. The algorithm updates its internal state and moves to the next round.</p>
+
+<p>Critically, all four algorithms process the same 100,000 impressions in the same order. This ensures a fair apples-to-apples comparison — differences in CTR reflect algorithmic merit, not data ordering.</p>
+
+<h3 id="metric">Metric</h3>
+
+<p>Our primary metric is click-through rate (CTR): total clicks divided by total impressions. We also track cumulative CTR at each round to visualize how algorithms learn over time.</p>
+
+<h2 id="results">Results</h2>
+
+<h3 id="final-performance">Final Performance</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Algorithm</th>
+      <th>CTR</th>
+      <th>vs. Random</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RandomChoice</td>
+      <td>0.1088</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>EpsilonGreedy</td>
+      <td>0.1931</td>
+      <td>+77.5%</td>
+    </tr>
+    <tr>
+      <td>ThompsonSampling</td>
+      <td>0.1821</td>
+      <td>+67.4%</td>
+    </tr>
+    <tr>
+      <td>LinUCB</td>
+      <td>0.1789</td>
+      <td>+64.4%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="/assets/images/final_ctr.png" alt="Final CTR comparison across all four algorithms" /></p>
+
+<p>All three learning algorithms substantially outperform the random baseline. Epsilon-greedy leads with a 77% relative improvement, followed by Thompson Sampling and LinUCB close behind. With 100,000 impressions, the differences between algorithms are clearly visible — EpsilonGreedy achieves 19,313 clicks compared to RandomChoice’s 10,876, and LinUCB nearly matches Thompson Sampling at 17,893 clicks.</p>
+
+<h3 id="learning-curves">Learning Curves</h3>
+
+<p><img src="/assets/images/cumulative_ctr.png" alt="Cumulative CTR over 100,000 impression rounds" /></p>
+
+<p>The cumulative CTR plot reveals how each algorithm learns over time. RandomChoice converges to ~10.9% and stays flat — there is no learning happening. EpsilonGreedy ramps up fastest, reaching near its final CTR by around 5,000 rounds. Thompson Sampling follows a similar trajectory but stabilizes slightly lower. LinUCB starts slower — its linear models need more data to learn the relationship between subcategory features and clicks — but steadily climbs throughout the entire run, closing the gap with Thompson Sampling by round 100,000 and still trending upward. All three learning algorithms clearly separate from the random baseline within the first few thousand rounds.</p>
+
+<h3 id="takeaways">Takeaways</h3>
+
+<p><strong>1. Any learning beats no learning.</strong> Even the simplest learning algorithm, epsilon-greedy, achieves a 77% relative improvement over random. With 100,000 impressions, that translates to over 8,400 additional clicks. The explore/exploit framework delivers real, measurable value.</p>
+
+<p><strong>2. Simple algorithms are hard to beat.</strong> Epsilon-greedy — the most straightforward learning approach — outperforms both Thompson Sampling and LinUCB on this dataset. Its fast exploitation of per-article averages is highly effective when the same articles recur across many impressions. Sophistication does not automatically mean better performance.</p>
+
+<p><strong>3. Bayesian priors matter.</strong> Thompson Sampling performs well with a Beta(1,8) prior calibrated to the base click rate. Prior tuning is a practical consideration that textbooks often gloss over, but it matters in real-world settings with large article catalogs where many arms are sparsely observed.</p>
+
+<p><strong>4. Feature granularity unlocks contextual algorithms.</strong> Switching from 18 top-level categories to the top-30 subcategories meaningfully improved LinUCB’s performance. Subcategories like “football_nfl” and “basketball_nba” carry far more preference signal than a flat “sports” label. LinUCB’s learning curve is still climbing at 100,000 rounds, suggesting that with more data — or even richer features like title embeddings — it could surpass the context-free approaches.</p>
+
+<p><strong>5. The framework matters more than any single result.</strong> A clean algorithmic interface — select an arm, observe a reward, update — makes it trivial to swap in new approaches. The engineering investment in a modular simulation framework pays dividends long after any individual experiment.</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/ad-tech" class="page__taxonomy-item p-category" rel="tag">ad-tech</a><span class="sep">, </span>
+    
+      <a href="/tags/bandit" class="page__taxonomy-item p-category" rel="tag">bandit</a><span class="sep">, </span>
+    
+      <a href="/tags/claude" class="page__taxonomy-item p-category" rel="tag">claude</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-03-01T00:00:00+00:00">March 1, 2026</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  <h4 class="page__share-title">Share on</h4>
+
+  <a href="https://x.com/intent/tweet?text=Experiment+28%20https%3A%2F%2Fdlfelps.github.io%2F2026%2F03%2F01%2Fbandit.html" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
+    <i class="fab fa-fw fa-x-twitter" aria-hidden="true"></i><span> X</span>
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2026%2F03%2F01%2Fbandit.html" class="btn btn--facebook" aria-label="Share on Facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook">
+    <i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span>
+  </a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dlfelps.github.io/2026/03/01/bandit.html" class="btn btn--linkedin" aria-label="Share on LinkedIn" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn">
+    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
+  </a>
+
+  <a href="https://bsky.app/intent/compose?text=Experiment+28%20https%3A%2F%2Fdlfelps.github.io%2F2026%2F03%2F01%2Fbandit.html" class="btn btn--bluesky" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Bluesky">
+    <i class="fab fa-fw fa-bluesky" aria-hidden="true"></i><span> Bluesky</span>
+  </a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2026/01/02/kalman.html" class="pagination--pager" title="Experiment 27">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2026 <a href="https://dlfelps.github.io">.NET Experiments</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

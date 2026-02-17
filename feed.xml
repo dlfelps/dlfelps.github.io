@@ -1,4 +1,138 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2025-12-15T16:24:26+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 27</title><link href="https://dlfelps.github.io/2026/01/02/kalman.html" rel="alternate" type="text/html" title="Experiment 27" /><published>2026-01-02T00:00:00+00:00</published><updated>2026-01-02T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/01/02/kalman</id><content type="html" xml:base="https://dlfelps.github.io/2026/01/02/kalman.html"><![CDATA[<p>This post presents an inventory tracking simulation that demonstrates how Kalman filters optimally estimate total inventory across partially-observable shelves, especially when the system dynamics change over time as items leak to unobserved locations.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2026-02-17T00:21:30+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 28</title><link href="https://dlfelps.github.io/2026/03/01/bandit.html" rel="alternate" type="text/html" title="Experiment 28" /><published>2026-03-01T00:00:00+00:00</published><updated>2026-03-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/03/01/bandit</id><content type="html" xml:base="https://dlfelps.github.io/2026/03/01/bandit.html"><![CDATA[<p>This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation.</p>
+
+<h1 id="from-random-to-contextual-comparing-bandit-algorithms-for-news-recommendation">From Random to Contextual: Comparing Bandit Algorithms for News Recommendation</h1>
+
+<h2 id="motivation">Motivation</h2>
+
+<p>Every news website faces the same problem: a user arrives, the system has a handful of candidate articles, and it must decide which one to show. If the user clicks, that’s a success. If not, an opportunity was wasted. The goal is straightforward — maximize the click-through rate (CTR) over time — but the path to getting there is not.</p>
+
+<p>The core challenge is the <strong>explore/exploit dilemma</strong>. Should the system recommend the article it currently believes is best (exploit), or should it try something less certain to learn more about what works (explore)? Pure exploitation misses potentially great articles it has never tried. Pure exploration wastes impressions on articles that have already proven ineffective. Every recommendation system must navigate this tradeoff.</p>
+
+<p>Traditional A/B testing is one approach: split users into groups, show each group a different article, and after collecting enough data, pick the winner. But A/B tests are static. They require pre-defined variants, run to completion before any learning happens, and start over from scratch with each new test. In a domain like news — where content changes hourly and user preferences shift — this rigidity is costly.</p>
+
+<p><strong>Bandit algorithms</strong> offer a better model. They learn in real time, continuously adapting their recommendations based on observed feedback. Instead of waiting for a test to finish, a bandit shifts traffic toward better-performing options while still exploring alternatives. The learning never stops.</p>
+
+<p>Within the bandit framework there is a spectrum of sophistication. <strong>Multi-armed bandits</strong> (MABs) treat every user the same — they learn which articles are globally popular but cannot personalize. <strong>Contextual bandits</strong> go further, using information about the user and the article to make personalized decisions. A sports fan and a finance reader should see different recommendations, and contextual algorithms can learn these preferences.</p>
+
+<p>In this post we compare four algorithms that span this spectrum, from a random baseline to a fully contextual approach. We evaluate them head-to-head on the Microsoft News Dataset (MIND), a collection of real user impression logs. The question: how much does each level of sophistication actually buy you?</p>
+
+<h2 id="methods">Methods</h2>
+
+<p>All four algorithms face the same decision each round: given a set of candidate articles, pick one. After the user either clicks or ignores the recommendation, the algorithm updates its internal state. The difference between algorithms is <em>how</em> they make their choice and <em>what</em> they learn from the outcome.</p>
+
+<h3 id="randomchoice-baseline">RandomChoice (Baseline)</h3>
+
+<p>The simplest possible strategy: pick an article uniformly at random with no regard for past performance, user history, or article content.</p>
+
+<p><strong>Strengths:</strong> Dead simple and completely unbiased. It makes no assumptions and requires no tuning. Its only purpose is to establish a performance floor — any useful algorithm must beat this.</p>
+
+<p><strong>Weaknesses:</strong> It ignores everything. Every click it gets is pure luck. With ~37 candidates per round, we’d expect a CTR around 3%, but since some articles are more popular than others the actual random CTR lands around 11%.</p>
+
+<h3 id="epsilon-greedy">Epsilon-Greedy</h3>
+
+<p>Epsilon-greedy introduces the most basic form of learning. It tracks the average reward (click rate) for each article it has tried. With probability 1-ε it <em>exploits</em> by picking the article with the highest known average. With probability ε it <em>explores</em> by picking randomly. We use ε=0.1, meaning it exploits 90% of the time.</p>
+
+<p><strong>Strengths:</strong> Easy to understand and implement. It learns quickly which articles are popular across the user base. The ε parameter gives direct, intuitive control over the explore/exploit balance — turn it up for more exploration, down for more exploitation.</p>
+
+<p><strong>Weaknesses:</strong> Its exploration is blind. When it does explore, it picks randomly among all candidates, including ones that have already proven poor. It also treats all users identically — a sports fan and a foodie see the same recommendations. And it never stops exploring, even when it is highly confident about which articles are best. That 10% random exploration continues forever, wasting impressions on known losers.</p>
+
+<h3 id="thompson-sampling">Thompson Sampling</h3>
+
+<p>Thompson Sampling takes a Bayesian approach to the explore/exploit problem. Instead of tracking a single average per article, it maintains a full probability distribution (a Beta distribution) over each article’s true click rate. At decision time, it draws a random sample from each article’s distribution and picks the article whose sample is highest.</p>
+
+<p><strong>Strengths:</strong> Exploration is principled and automatic. Articles that the algorithm is uncertain about have wide distributions — their samples sometimes come out high, naturally triggering exploration. Articles with strong evidence of high click rates have narrow distributions centered on good values, so they consistently win. There is no exploration parameter to tune. As confidence grows, exploration naturally tapers off.</p>
+
+<p><strong>Weaknesses:</strong> Like epsilon-greedy, Thompson Sampling is context-free. It cannot personalize. It is also sensitive to the choice of prior distribution. With over 18,000 unique articles appearing across 100,000 impressions, many articles are seen only a handful of times. A uniform prior — Beta(1,1), expressing total ignorance — can slow down learning when the arm space is large. A pessimistic prior calibrated to the base click rate helps the algorithm exploit observed clicks sooner.</p>
+
+<p><strong>Key insight:</strong> We use a prior of Beta(1,8), which encodes a prior belief that articles are clicked about 11% of the time (close to the actual base rate). This lets even a single click on an article meaningfully shift its posterior upward. Prior tuning is a practical consideration that textbooks often gloss over, but it matters in real-world settings with large article catalogs.</p>
+
+<h3 id="linucb-contextual-bandit">LinUCB (Contextual Bandit)</h3>
+
+<p>LinUCB, introduced by Li et al. at WWW 2010, is a contextual bandit algorithm. Unlike the previous approaches, it does not treat articles or users as interchangeable. Instead, it builds a linear model for each article that predicts click probability from a <strong>context vector</strong> — a numerical description of the user and the article.</p>
+
+<p>At decision time, LinUCB computes a predicted reward for each candidate <em>plus</em> an “optimism bonus” that is large when the algorithm is uncertain about a prediction. It picks the article with the highest optimistic estimate. This is the Upper Confidence Bound (UCB) principle: be optimistic in the face of uncertainty, because the upside of discovering a great option outweighs the cost of a bad trial.</p>
+
+<p>The context vector we use is 62-dimensional, built from subcategory information rather than the coarser top-level categories. The MIND dataset has 285 subcategories — far more granular than the 18 categories. We keep the top 30 most frequent subcategories (covering 84% of articles) plus an “other” bucket, giving a 31-dimensional one-hot per article. The first 31 dimensions encode the <strong>user profile</strong>: a normalized subcategory-frequency vector from the user’s click history. A user who clicked mostly “football_nfl” and “basketball_nba” articles would have high weight on those subcategories. The remaining 31 dimensions encode the <strong>article subcategory</strong> as a one-hot. This lets LinUCB learn fine-grained patterns like “NFL fans tend to click NFL articles” rather than just “sports fans like sports.”</p>
+
+<p><strong>Strengths:</strong> LinUCB personalizes. Different users get different recommendations based on their reading history. It shares learning across contexts — a click on a sports article by a sports-oriented user informs predictions for similar user-article pairs, not just that specific article. And its exploration bonus shrinks automatically as confidence grows, so it explores less over time without requiring manual tuning.</p>
+
+<p><strong>Weaknesses:</strong> LinUCB is only as good as the features you give it. The algorithm itself is elegant, but feature engineering is the real bottleneck.</p>
+
+<p><strong>Key insight:</strong> Feature granularity matters. With only 18 top-level categories, LinUCB was learning “which categories get clicked globally” — something epsilon-greedy already captures by tracking per-article averages. Switching to 285 subcategories (bucketed into top-30 + other) and adding user subcategory profiles from click history meaningfully improved LinUCB’s performance. The algorithm needs fine-grained user-article interaction signals to personalize effectively.</p>
+
+<h2 id="experiment">Experiment</h2>
+
+<h3 id="dataset">Dataset</h3>
+
+<p>We evaluate on MINDlarge_train, the large training split from the Microsoft News Dataset (MIND). The full dataset contains over 2.2 million impression logs and 101,527 news articles. We sample the first 100,000 impressions for our comparison, which covers 18,866 unique articles across 18 categories including news, sports, entertainment, finance, lifestyle, health, and more. Each impression presents approximately 37 candidate articles on average, with ground-truth click labels indicating which article the user actually engaged with.</p>
+
+<h3 id="simulation">Simulation</h3>
+
+<p>We replay impressions sequentially through a simulation engine. For each round, the algorithm sees the candidate articles (and, for LinUCB, the context vectors), selects one article to recommend, and then observes the ground-truth reward: 1.0 if the user clicked that article, 0.0 otherwise. The algorithm updates its internal state and moves to the next round.</p>
+
+<p>Critically, all four algorithms process the same 100,000 impressions in the same order. This ensures a fair apples-to-apples comparison — differences in CTR reflect algorithmic merit, not data ordering.</p>
+
+<h3 id="metric">Metric</h3>
+
+<p>Our primary metric is click-through rate (CTR): total clicks divided by total impressions. We also track cumulative CTR at each round to visualize how algorithms learn over time.</p>
+
+<h2 id="results">Results</h2>
+
+<h3 id="final-performance">Final Performance</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Algorithm</th>
+      <th>CTR</th>
+      <th>vs. Random</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RandomChoice</td>
+      <td>0.1088</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>EpsilonGreedy</td>
+      <td>0.1931</td>
+      <td>+77.5%</td>
+    </tr>
+    <tr>
+      <td>ThompsonSampling</td>
+      <td>0.1821</td>
+      <td>+67.4%</td>
+    </tr>
+    <tr>
+      <td>LinUCB</td>
+      <td>0.1789</td>
+      <td>+64.4%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="/assets/images/final_ctr.png" alt="Final CTR comparison across all four algorithms" /></p>
+
+<p>All three learning algorithms substantially outperform the random baseline. Epsilon-greedy leads with a 77% relative improvement, followed by Thompson Sampling and LinUCB close behind. With 100,000 impressions, the differences between algorithms are clearly visible — EpsilonGreedy achieves 19,313 clicks compared to RandomChoice’s 10,876, and LinUCB nearly matches Thompson Sampling at 17,893 clicks.</p>
+
+<h3 id="learning-curves">Learning Curves</h3>
+
+<p><img src="/assets/images/cumulative_ctr.png" alt="Cumulative CTR over 100,000 impression rounds" /></p>
+
+<p>The cumulative CTR plot reveals how each algorithm learns over time. RandomChoice converges to ~10.9% and stays flat — there is no learning happening. EpsilonGreedy ramps up fastest, reaching near its final CTR by around 5,000 rounds. Thompson Sampling follows a similar trajectory but stabilizes slightly lower. LinUCB starts slower — its linear models need more data to learn the relationship between subcategory features and clicks — but steadily climbs throughout the entire run, closing the gap with Thompson Sampling by round 100,000 and still trending upward. All three learning algorithms clearly separate from the random baseline within the first few thousand rounds.</p>
+
+<h3 id="takeaways">Takeaways</h3>
+
+<p><strong>1. Any learning beats no learning.</strong> Even the simplest learning algorithm, epsilon-greedy, achieves a 77% relative improvement over random. With 100,000 impressions, that translates to over 8,400 additional clicks. The explore/exploit framework delivers real, measurable value.</p>
+
+<p><strong>2. Simple algorithms are hard to beat.</strong> Epsilon-greedy — the most straightforward learning approach — outperforms both Thompson Sampling and LinUCB on this dataset. Its fast exploitation of per-article averages is highly effective when the same articles recur across many impressions. Sophistication does not automatically mean better performance.</p>
+
+<p><strong>3. Bayesian priors matter.</strong> Thompson Sampling performs well with a Beta(1,8) prior calibrated to the base click rate. Prior tuning is a practical consideration that textbooks often gloss over, but it matters in real-world settings with large article catalogs where many arms are sparsely observed.</p>
+
+<p><strong>4. Feature granularity unlocks contextual algorithms.</strong> Switching from 18 top-level categories to the top-30 subcategories meaningfully improved LinUCB’s performance. Subcategories like “football_nfl” and “basketball_nba” carry far more preference signal than a flat “sports” label. LinUCB’s learning curve is still climbing at 100,000 rounds, suggesting that with more data — or even richer features like title embeddings — it could surpass the context-free approaches.</p>
+
+<p><strong>5. The framework matters more than any single result.</strong> A clean algorithmic interface — select an arm, observe a reward, update — makes it trivial to swap in new approaches. The engineering investment in a modular simulation framework pays dividends long after any individual experiment.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="bandit" /><category term="ad-tech" /><summary type="html"><![CDATA[This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation.]]></summary></entry><entry><title type="html">Experiment 27</title><link href="https://dlfelps.github.io/2026/01/02/kalman.html" rel="alternate" type="text/html" title="Experiment 27" /><published>2026-01-02T00:00:00+00:00</published><updated>2026-01-02T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/01/02/kalman</id><content type="html" xml:base="https://dlfelps.github.io/2026/01/02/kalman.html"><![CDATA[<p>This post presents an inventory tracking simulation that demonstrates how Kalman filters optimally estimate total inventory across partially-observable shelves, especially when the system dynamics change over time as items leak to unobserved locations.</p>
 <h1 id="understanding-kalman-filters-through-inventory-management">Understanding Kalman Filters Through Inventory Management</h1>
 
 <h2 id="introduction">Introduction</h2>
@@ -2659,420 +2793,4 @@ A few highlights of the report:</p>
       <p>As a comparison, in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>, they trained a latent model on FFHQ for 283 hours on an A100. This would cost an equivalent of $370 in Colab compute units so you will have to forgive me for stopping early! <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="generative" /><category term="stable-diffusion" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post describes the stable diffusion architecture for generative AI.]]></summary></entry><entry><title type="html">Experiment 18</title><link href="https://dlfelps.github.io/2024/07/01/adversarial.html" rel="alternate" type="text/html" title="Experiment 18" /><published>2024-07-01T00:00:00+00:00</published><updated>2024-07-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/07/01/adversarial</id><content type="html" xml:base="https://dlfelps.github.io/2024/07/01/adversarial.html"><![CDATA[<p>This post describes simple approaches to attack and defend machine learning models.</p>
-
-<h1 id="introduction-to-adversarial-machine-learning">Introduction to adversarial machine learning</h1>
-<p>Adversarial machine learning refers to a set of techniques that adversaries use to attack machine learning systems. These attacks exploit vulnerabilities in ML models, aiming to manipulate their behavior or compromise their performance. Adversarial attacks can be used against any system that employs machine learning, including finance, security, and autonomous systems.</p>
-
-<h2 id="types-of-adversarial-attacks">Types of Adversarial Attacks</h2>
-<p>There are several types of known attacks against machine learning models. Please see the NIST  <a href="https://csrc.nist.gov/pubs/ai/100/2/e2023/final">taxonomy</a> for a comprehensive breakdown with references. The remainder of the post focuses on the evasion attack, which modifies the input in a way that alters the prediction of the model under attack.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"> </th>
-      <th style="text-align: center"><strong>Poisoning</strong></th>
-      <th style="text-align: center"><strong>Evasion</strong></th>
-      <th style="text-align: center"><strong>Extraction</strong></th>
-      <th style="text-align: center"><strong>Inference</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center"><em>during</em></td>
-      <td style="text-align: center">Training</td>
-      <td style="text-align: center">Inference</td>
-      <td style="text-align: center">Inference</td>
-      <td style="text-align: center">Inference</td>
-    </tr>
-    <tr>
-      <td style="text-align: center"><em>purpose</em></td>
-      <td style="text-align: center">Mistrain the model</td>
-      <td style="text-align: center">Deceive the model</td>
-      <td style="text-align: center">Steal the model</td>
-      <td style="text-align: center">Infer training data</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="threat-models">Threat models</h2>
-
-<p>An important consideration when attacking/defending a machine learning model is the threat model. The two primary threat models are white-box and black-box attacks.</p>
-
-<p><img src="/assets/images/white_box-Photoroom.png" alt="white box" /></p>
-
-<blockquote>
-  <p><strong>White-Box Attack:</strong> The attacker has <strong>full knowledge</strong> of the ML model’s architecture, parameters, and training data. e.g. <a href="https://arxiv.org/pdf/1412.6572v3.pdf">L-BFGS Attack</a>, <a href="https://arxiv.org/abs/1312.6199">Fast Gradient Sign Method</a></p>
-</blockquote>
-
-<p><img src="/assets/images/black_box-Photoroom.png" alt="black box" /></p>
-
-<blockquote>
-  <p><strong>Black-Box Attacks:</strong> The attacker has <strong>limited information</strong> about the ML model (e.g., input-output interactions).  e.g. <a href="https://arxiv.org/abs/1809.02861">Transfer Attack</a>, <a href="https://arxiv.org/abs/1708.03999">Score-based Black-Box Attacks</a>, <a href="https://arxiv.org/abs/1712.04248">Decision-based Attack</a></p>
-</blockquote>
-
-<p>Note that adversarial exmaples can be used under either threat model, however they are much more effective when an adversary has access to the internals of your model (i.e. white-box) and can verify that the attack works prior to deploying it.</p>
-
-<h2 id="experimental-setup">Experimental setup</h2>
-
-<p>As with a number of my previous posts, I will be using a pretrained <a href="https://github.com/osmr/imgclsmob/tree/master/pytorch#cub-200-2011">ResNet-18 model</a> trained on the <a href="https://www.vision.caltech.edu/visipedia/CUB-200-2011.html">CUB2011 dataset</a>; this will serve as the model under attack.</p>
-
-<h1 id="scenario-1-attacking-a-model-with-non-adversarial-methods">Scenario 1: Attacking a model with non-adversarial methods</h1>
-<p>This “attack” can also be seen as a model hardening test. I recommend running it on all computer vision models prior to deploying them. It tests the extent to which the model can handle common image transformations in the wild. Depending on the results, we might discover a cheap form of the evasion attack (applies to both black-box and white-box settings). The attack works as follows:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  1. Select a common image transform (e.g. rotation, brightness, contrast)
-  2. Select a random test image
-  3. Run the test image through the model and save the predicted class
-  4. Run the transformed test image through the model and save the predicted class
-  5. If #3 and #4 are different then increase counter
-  6. Repeat steps 2-5 100 times to estimate the effect of the transform
-</code></pre></div></div>
-
-<h2 id="results">Results</h2>
-<p>The following plots visually demonstrate the effect of a single transform. The results (represented by the blue bar to the right of each image) represent the average performance of 100 test images. A higher bar signifies that the model is robust to that transform (i.e. the counter in step#5 was low).</p>
-
-<p><img src="/assets/images/blur.png" alt="blur" /></p>
-
-<p><img src="/assets/images/hue.png" alt="hue" /></p>
-
-<p><img src="/assets/images/rotate.png" alt="rotate" /></p>
-
-<p><img src="/assets/images/brightness.png" alt="brightness" /></p>
-
-<p><img src="/assets/images/contrast.png" alt="contrast" /></p>
-
-<p><img src="/assets/images/gamma.png" alt="gamma" /></p>
-
-<p><img src="/assets/images/saturation.png" alt="saturation" /></p>
-
-<h2 id="discussion">Discussion</h2>
-<p>The model under attack was relatively robust to subtle image transforms and should be expected to perform well in the wild. Hue was the only transform that significantly impacted performance and that is expected since color is a differentiating factor in bird species. Can we use hue as a cheap form of adversarial attack? No, because the hue transform would also fool a human. In other words, the hue transform fundamentally changes the input so it isn’t “fooling” anything. We next turn to more advanced methods.</p>
-
-<h1 id="scenario-2-attacking-a-model-with-adversarial-methods">Scenario 2: Attacking a model with adversarial methods</h1>
-
-<p>The goal of an evasion attack is to minimally modify an input (i.e. image) in such a way that the model alters its class prediction, but a human still percieves the original class. It’s this combination that makes the evasion attack so potent - humans don’t know anything is wrong and the machine is fooled. The attack succeeds because the altered image lies outside of the training distribution.</p>
-
-<h2 id="pgd">PGD</h2>
-<p>The Projected Gradient Descent (PGD) attack <a href="https://arxiv.org/abs/1706.06083">(Madry et. al, 2017)</a> is an iterative optimization technique that seeks to find the most adversarial perturbation within a predefined constraint set. Here is psuedocode for the algorithm:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  1. Select an unmodified image as the target
-  2. Select a random point within the allowed perturbation region of the target image
-  3. Perform gradient descent on the model's loss function
-  4. Project the perturbed input back into the feasible set after each iteration
-</code></pre></div></div>
-<p>This iterative process ensures that the adversarial perturbation remains within the defined constraints around the original input, making the adversarial example both effective and imperceptible to human observers.</p>
-
-<p>However, the PGD attack has certain limitations that make it less practical for real-world applications:</p>
-<ul>
-  <li>Over-optimization against one constraint</li>
-  <li>Potential for unstable optimization</li>
-  <li>Limited transferability to other models</li>
-</ul>
-
-<h3 id="example">Example</h3>
-
-<p><img src="/assets/images/pgd_400.png" alt="pgd_400" /></p>
-<blockquote>
-  <p>A successful example of a PGD attack (left). The modified image was classified differently than the original image, but the modifications are barely visible to the human eye. The modifications added to the original image are magnified 10x in the (right) image.</p>
-</blockquote>
-
-<h2 id="carlini-wagner">Carlini-Wagner</h2>
-<p>The Carlini &amp; Wagner (C&amp;W) attack is a powerful adversarial evasion attack that aims to generate adversarial examples that are misclassified by a target model. Adversarial examples are created by formulating an optimization problem, where the goal is to minimize the perturbation while ensuring the classifier mislabels the adversarial example. C&amp;W is particularly notable for its ability to generate adversarial examples that are transferable across different models and defenses, making it a significant threat to the security of machine learning systems.</p>
-
-<p>However, the C&amp;W attack has certain limitations that make it less practical for real-world applications:</p>
-<ul>
-  <li>Computational cost</li>
-  <li>Requires domain-specific adaptations to shape the perturbations and the optimization problem depending on the type of data being manipulated</li>
-</ul>
-
-<h3 id="example-with-l0-norm">Example with L0 norm</h3>
-
-<p><img src="/assets/images/carliniL0_392.png" alt="carliniL0_392" /></p>
-<blockquote>
-  <p>A successful example of a C&amp;W attack (left). The modified image was classified differently than the original image. Although the modifications are mostly imperceptible, a small eye-like patch is visible in the magnitude-magnified image (right).</p>
-</blockquote>
-
-<h3 id="example-with-linf-norm">Example with LInf norm</h3>
-
-<p><img src="/assets/images/carliniLinf_3207.png" alt="carliniLinf_3207" /></p>
-<blockquote>
-  <p>A successful example of a C&amp;W attack (left). The modified image was classified differently than the original image. The modifications in this case are noticable and global in the original image and magnitude-magnified image (right).</p>
-</blockquote>
-
-<h1 id="scenario-3-defending-a-model-with-non-adversarial-methods">Scenario 3: Defending a model with non-adversarial methods</h1>
-
-<p><img src="/assets/images/adv-flowchart.png" alt="adv-flowchart" /></p>
-
-<p>This scenario explores the exent to which non-adversarial methods can be used to defend a model from a strong adversarial attack (e.g. PGD or Carlini-Wagner). The defense exploits the fact that the evasion attack itself is typically brittle. In other words, the attack noise was calculated to minimize the amount of change in the input space to achieve the desired result. Therefore, it stands to reason that the attack may not be able to withstand additional transformations. We constrain the suite of transformations considered in Scenario #1 to only those transformations that maintained greater than 99% performance on natural images. This allows us to limit the amount of false positives in our adversarial detector to less than 1%.</p>
-
-<h2 id="results-1">Results</h2>
-<p>In the tables below we report the prediction rates for the best parameter combination per transformation type (e.g. rotation, brightness).</p>
-
-<h3 id="pgd-1">PGD</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">Transformation</th>
-      <th style="text-align: center">Parameter</th>
-      <th style="text-align: center">Performance on natural images</th>
-      <th style="text-align: center">Performance on adversarial images</th>
-      <th style="text-align: center">Differential</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">rotate</td>
-      <td style="text-align: center">7</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.049505</td>
-      <td style="text-align: center">0.950495</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">brightness</td>
-      <td style="text-align: center">1.75</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.283019</td>
-      <td style="text-align: center">0.716981</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">saturation</td>
-      <td style="text-align: center">0.5</td>
-      <td style="text-align: center">0.995305</td>
-      <td style="text-align: center">0.441441</td>
-      <td style="text-align: center">0.553864</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">contrast</td>
-      <td style="text-align: center">1.5</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.454545</td>
-      <td style="text-align: center">0.545455</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">gamma</td>
-      <td style="text-align: center">1.5</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.555556</td>
-      <td style="text-align: center">0.444444</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">blur</td>
-      <td style="text-align: center">0</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">hue</td>
-      <td style="text-align: center">0</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="cw-l0">CW-L0</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">Transformation</th>
-      <th style="text-align: center">Parameter</th>
-      <th style="text-align: center">Performance on natural images</th>
-      <th style="text-align: center">Performance on adversarial images</th>
-      <th style="text-align: center">Differential</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">rotate</td>
-      <td style="text-align: center">7</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.114286</td>
-      <td style="text-align: center">0.885714</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">brightness</td>
-      <td style="text-align: center">1.6</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.558442</td>
-      <td style="text-align: center">0.441558</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">saturation</td>
-      <td style="text-align: center">0.5</td>
-      <td style="text-align: center">0.995305</td>
-      <td style="text-align: center">0.561905</td>
-      <td style="text-align: center">0.4334</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">gamma</td>
-      <td style="text-align: center">1.5</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.741935</td>
-      <td style="text-align: center">0.258065</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">contrast</td>
-      <td style="text-align: center">0.75</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.815126</td>
-      <td style="text-align: center">0.184874</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">blur</td>
-      <td style="text-align: center">0</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">hue</td>
-      <td style="text-align: center">0</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="cw-linf">CW-LInf</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">Transformation</th>
-      <th style="text-align: center">Parameter</th>
-      <th style="text-align: center">Performance on natural images</th>
-      <th style="text-align: center">Performance on adversarial images</th>
-      <th style="text-align: center">Differential</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">rotate</td>
-      <td style="text-align: center">7</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.819444</td>
-      <td style="text-align: center">0.180556</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">brightness</td>
-      <td style="text-align: center">1.75</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.910256</td>
-      <td style="text-align: center">0.089744</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">gamma</td>
-      <td style="text-align: center">1.5</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.939394</td>
-      <td style="text-align: center">0.060606</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">contrast</td>
-      <td style="text-align: center">1.5</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.943182</td>
-      <td style="text-align: center">0.056818</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">saturation</td>
-      <td style="text-align: center">1.5</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0.944444</td>
-      <td style="text-align: center">0.055556</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">blur</td>
-      <td style="text-align: center">0</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">hue</td>
-      <td style="text-align: center">0</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">1</td>
-      <td style="text-align: center">0</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="discussion-1">Discussion</h2>
-
-<p>The highest average difference between performance on natural images and adversarial images is achieved by rotating images by 7 degrees. This transformation is ideal from a false-positive point of view as all natural images are unphased by it. NOTE: this does not mean that the predicted class is correct, only that the predicted class is not altered by rotating the image 7 degrees. Our ability to detect adversarial examples depends on the attack:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"> </th>
-      <th style="text-align: center">TP rate</th>
-      <th style="text-align: center">FP rate</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">PGD</td>
-      <td style="text-align: center">0.95</td>
-      <td style="text-align: center">0.0</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">CW-L0</td>
-      <td style="text-align: center">0.885</td>
-      <td style="text-align: center">0.0</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">CW-LInf</td>
-      <td style="text-align: center">0.18</td>
-      <td style="text-align: center">0.0</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>The results are quite promising for PGD and CW-L0, but the CW-LInf attack proved to be more resilient (to all tested transformations). The results appear to confirm our hypothesis about the fragility of the evasion attacks - more subtle attacks are more easily detected precisely because they are more subtle. In other words, if the attack has a low signal-to-noise ratio then rotating the image has a better chance to render it ineffective.</p>
-
-<h1 id="scenario-4-defending-a-model-with-adversarial-methods">Scenario 4: Defending a model with adversarial methods</h1>
-
-<p>Adversarial training is a technique used to enhance the robustness of machine learning models against adversarial examples. The simplest way to perform adversarial training is to include adversarial examples in the training set.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Train a model with the original training data
-2. Use the model to generate adversarial examples
-3. Add the adversarial examples (with correct labels) to the training data
-4. Retrain the model
-</code></pre></div></div>
-<p>A more sophisticated approach called Robust training <a href="https://arxiv.org/abs/1706.06083">(Madry et. al, 2017)</a> alters the optimization process itself in order to make models more resilient to adversarial perturbations. These perturbations are carefully crafted to deceive the model into making incorrect predictions.</p>
-
-<h2 id="comparing-detection-and-adversarial-training">Comparing detection and adversarial training</h2>
-
-<p>Adversarial training strengthens models intrinsically, while detection approaches focus on identifying adversarial examples during inference. Both play crucial roles in addressing the challenges posed by adversarial attacks.</p>
-
-<ul>
-  <li>advantages of adversarial detection
-    <ul>
-      <li>can defend against white-box and black-box threat models</li>
-      <li>can be used to protect existing/pretrained models</li>
-      <li>may work against UNKNOWN attacks</li>
-    </ul>
-  </li>
-  <li>advantages of adversarial training
-    <ul>
-      <li>moderate success against all KNOWN attacks</li>
-    </ul>
-  </li>
-</ul>
-
-<p>NOTE: If you are training your own model then you can do BOTH!</p>
-
-<h1 id="conclusion">Conclusion</h1>
-<p>This was a long post, so I will summarize the results here:</p>
-<ol>
-  <li>It is good practice to test your model’s performance against non-adversarial image transformations.</li>
-  <li>Evasion attacks (e.g. PGD and CW) can be used to alter the predictions of a model.</li>
-  <li>Some evasion attacks (e.g. PGD and CW-L0) can be detected at inference time due to their lack of robustness against non-adversarial image transformations.</li>
-  <li>Other evasion attacks (e.g. CW-LInf) may be rendered inneffective using adversarial training.</li>
-</ol>
-
-<p>As ML adoption grows, understanding and addressing these vulnerabilities become crucial for maintaining system integrity and security. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="adversarial" /><category term="evasion" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post describes simple approaches to attack and defend machine learning models.]]></summary></entry></feed>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="generative" /><category term="stable-diffusion" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post describes the stable diffusion architecture for generative AI.]]></summary></entry></feed>

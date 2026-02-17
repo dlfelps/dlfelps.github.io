@@ -166,4 +166,10 @@ var store = [{
         "tags": ["claude","kalman-filter","inventory"],
         "url": "/2026/01/02/kalman.html",
         "teaser": null
+      },{
+        "title": "Experiment 28",
+        "excerpt":"This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation. From Random to Contextual: Comparing Bandit Algorithms for News Recommendation Motivation Every news website faces the same problem: a user arrives, the system has a...","categories": [],
+        "tags": ["claude","bandit","ad-tech"],
+        "url": "/2026/03/01/bandit.html",
+        "teaser": null
       }]
