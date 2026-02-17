@@ -168,7 +168,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Experiment 28",
-        "excerpt":"This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation. From Random to Contextual: Comparing Bandit Algorithms for News Recommendation Motivation Every news website faces the same problem: a user arrives, the system has a...","categories": [],
+        "excerpt":"I tested four bandit algorithms on news recommendation to figure out if contextual learning could teach LLMs to adapt their prompting style to individual users in real time. Teaching LLMs to Learn What You Want (Using Bandit Algorithms) The Problem LLMs are weirdly sensitive to how you prompt them. Same...","categories": [],
         "tags": ["claude","bandit","ad-tech"],
         "url": "/2026/03/01/bandit.html",
         "teaser": null

@@ -11,7 +11,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>Experiment 28 - .NET Experiments</title>
-<meta name="description" content="This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation.">
+<meta name="description" content="I tested four bandit algorithms on news recommendation to figure out if contextual learning could teach LLMs to adapt their prompting style to individual users in real time.">
 
 
   <meta name="author" content="Daniel Felps">
@@ -27,7 +27,7 @@
 <meta property="og:url" content="https://dlfelps.github.io/2026/03/01/bandit.html">
 
 
-  <meta property="og:description" content="This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation.">
+  <meta property="og:description" content="I tested four bandit algorithms on news recommendation to figure out if contextual learning could teach LLMs to adapt their prompting style to individual users in real time.">
 
 
 
@@ -134,7 +134,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Experiment 28">
-    <meta itemprop="description" content="This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation.">
+    <meta itemprop="description" content="I tested four bandit algorithms on news recommendation to figure out if contextual learning could teach LLMs to adapt their prompting style to individual users in real time.">
     <meta itemprop="datePublished" content="2026-03-01T00:00:00+00:00">
     
 
@@ -166,7 +166,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          39 minute read
+          12 minute read
         
       </span>
     
@@ -181,250 +181,139 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#from-random-to-contextual-comparing-bandit-algorithms-for-news-recommendation">From Random to Contextual: Comparing Bandit Algorithms for News Recommendation</a><ul><li><a href="#motivation">Motivation</a></li><li><a href="#methods">Methods</a><ul><li><a href="#randomchoice-baseline">RandomChoice (Baseline)</a></li><li><a href="#epsilon-greedy">Epsilon-Greedy</a></li><li><a href="#thompson-sampling">Thompson Sampling</a></li><li><a href="#linucb-contextual-bandit">LinUCB (Contextual Bandit)</a></li></ul></li><li><a href="#experiment">Experiment</a><ul><li><a href="#dataset">Dataset</a></li><li><a href="#simulation">Simulation</a></li><li><a href="#metric">Metric</a></li></ul></li><li><a href="#results">Results</a><ul><li><a href="#final-performance">Final Performance</a></li><li><a href="#learning-curves">Learning Curves</a></li><li><a href="#takeaways">Takeaways</a></li></ul></li><li><a href="#beyond-news-bandits-for-llm-prompt-shaping">Beyond News: Bandits for LLM Prompt Shaping</a><ul><li><a href="#the-problem">The Problem</a></li><li><a href="#shaping-prompts-as-arms">Shaping Prompts as Arms</a></li><li><a href="#why-contextual-bandits-fit">Why Contextual Bandits Fit</a></li><li><a href="#agree-or-disagree-a-concrete-example">Agree or Disagree: A Concrete Example</a></li><li><a href="#design-considerations">Design Considerations</a></li><li><a href="#connection-to-the-simulation-framework">Connection to the Simulation Framework</a></li></ul></li></ul></li></ul>
+              <ul class="toc__menu"><li><a href="#teaching-llms-to-learn-what-you-want-using-bandit-algorithms">Teaching LLMs to Learn What You Want (Using Bandit Algorithms)</a><ul><li><a href="#the-problem">The Problem</a></li><li><a href="#bandits-for-prompt-shaping">Bandits for Prompt Shaping</a><ul><li><a href="#why-this-matters">Why This Matters</a></li></ul></li><li><a href="#testing-the-idea-news-recommendation">Testing the Idea: News Recommendation</a><ul><li><a href="#the-algorithms">The Algorithms</a></li></ul></li><li><a href="#results">Results</a><ul><li><a href="#what-i-learned">What I Learned</a></li></ul></li><li><a href="#back-to-llm-prompt-shaping">Back to LLM Prompt Shaping</a></li></ul></li></ul>
             </nav>
           </aside>
         
-        <p>This blog post compares four bandit algorithms—from random selection to fully contextual approaches—to quantify how much algorithmic sophistication actually improves click-through rates in news recommendation.</p>
+        <p>I tested four bandit algorithms on news recommendation to figure out if contextual learning could teach LLMs to adapt their prompting style to individual users in real time.</p>
 
-<h1 id="from-random-to-contextual-comparing-bandit-algorithms-for-news-recommendation">From Random to Contextual: Comparing Bandit Algorithms for News Recommendation</h1>
+<h1 id="teaching-llms-to-learn-what-you-want-using-bandit-algorithms">Teaching LLMs to Learn What You Want (Using Bandit Algorithms)</h1>
 
-<h2 id="motivation">Motivation</h2>
+<h2 id="the-problem">The Problem</h2>
 
-<p>Every news website faces the same problem: a user arrives, the system has a handful of candidate articles, and it must decide which one to show. If the user clicks, that’s a success. If not, an opportunity was wasted. The goal is straightforward — maximize the click-through rate (CTR) over time — but the path to getting there is not.</p>
+<p>LLMs are weirdly sensitive to how you prompt them. Same question, different phrasing, completely different answer quality. Right now, most LLM apps use one static system prompt that developers tune by hand. It’s like A/B testing in 2010—slow, rigid, and treats everyone the same.</p>
 
-<p>The core challenge is the <strong>explore/exploit dilemma</strong>. Should the system recommend the article it currently believes is best (exploit), or should it try something less certain to learn more about what works (explore)? Pure exploitation misses potentially great articles it has never tried. Pure exploration wastes impressions on articles that have already proven ineffective. Every recommendation system must navigate this tradeoff.</p>
+<p>What if the system could learn your preferences in real time?</p>
 
-<p>Traditional A/B testing is one approach: split users into groups, show each group a different article, and after collecting enough data, pick the winner. But A/B tests are static. They require pre-defined variants, run to completion before any learning happens, and start over from scratch with each new test. In a domain like news — where content changes hourly and user preferences shift — this rigidity is costly.</p>
+<h2 id="bandits-for-prompt-shaping">Bandits for Prompt Shaping</h2>
 
-<p><strong>Bandit algorithms</strong> offer a better model. They learn in real time, continuously adapting their recommendations based on observed feedback. Instead of waiting for a test to finish, a bandit shifts traffic toward better-performing options while still exploring alternatives. The learning never stops.</p>
+<p>Here’s the idea: define a small set of <strong>shaping prompts</strong>—short directives that steer the LLM’s behavior. Each one is an “arm” in bandit terms. The system picks one, generates a response, observes how you react (ratings, engagement, follow-ups), and updates its beliefs about what works for you.</p>
 
-<p>Within the bandit framework there is a spectrum of sophistication. <strong>Multi-armed bandits</strong> (MABs) treat every user the same — they learn which articles are globally popular but cannot personalize. <strong>Contextual bandits</strong> go further, using information about the user and the article to make personalized decisions. A sports fan and a finance reader should see different recommendations, and contextual algorithms can learn these preferences.</p>
+<p>Example arms:</p>
+<ul>
+  <li>“Validate the user’s perspective before responding” → supportive tone</li>
+  <li>“Respectfully challenge assumptions” → Socratic pushback</li>
+  <li>“Concise, factual statements only” → neutral and brief</li>
+  <li>“Mirror the user’s energy” → adaptive empathy</li>
+</ul>
 
-<p>In this post we compare four algorithms that span this spectrum, from a random baseline to a fully contextual approach. We evaluate them head-to-head on the Microsoft News Dataset (MIND), a collection of real user impression logs. The question: how much does each level of sophistication actually buy you?</p>
+<p>A basic multi-armed bandit learns which strategy works best on average. But people are different. Someone venting wants validation. Someone stress-testing an idea wants pushback.</p>
 
-<h2 id="methods">Methods</h2>
+<p><strong>Contextual bandits</strong> solve this. They use features about the conversation—your message tone, topic, session history—to personalize which prompt gets selected. LinUCB (which I’ll explain below) could learn patterns like:</p>
+<ul>
+  <li>Assertive messages → challenge assumptions (you want sparring)</li>
+  <li>Frustrated tone → validate first (you need to feel heard)</li>
+  <li>Rapid factual questions → concise answers (you want efficiency)</li>
+</ul>
 
-<p>All four algorithms face the same decision each round: given a set of candidate articles, pick one. After the user either clicks or ignores the recommendation, the algorithm updates its internal state. The difference between algorithms is <em>how</em> they make their choice and <em>what</em> they learn from the outcome.</p>
+<p>These are the interaction patterns that one-size-fits-all approaches miss entirely.</p>
 
-<h3 id="randomchoice-baseline">RandomChoice (Baseline)</h3>
+<h3 id="why-this-matters">Why This Matters</h3>
 
-<p>The simplest possible strategy: pick an article uniformly at random with no regard for past performance, user history, or article content.</p>
+<p>The reward signal is messier than a click (maybe thumbs up/down, or whether you continue the conversation), and you need to handle preference shifts within a single session. But the core framework—pick an action, observe feedback, update—maps perfectly. And unlike news recommendation with thousands of articles, you only need 4-8 well-designed shaping prompts, so the bandit converges faster.</p>
 
-<p><strong>Strengths:</strong> Dead simple and completely unbiased. It makes no assumptions and requires no tuning. Its only purpose is to establish a performance floor — any useful algorithm must beat this.</p>
+<p>The catch: <strong>feature quality matters</strong>. Coarse features like “positive vs negative tone” won’t cut it. You need granular conversational signals to unlock real personalization.</p>
 
-<p><strong>Weaknesses:</strong> It ignores everything. Every click it gets is pure luck. With ~37 candidates per round, we’d expect a CTR around 3%, but since some articles are more popular than others the actual random CTR lands around 11%.</p>
+<p>Which brings me to the experiment.</p>
 
-<h3 id="epsilon-greedy">Epsilon-Greedy</h3>
+<h2 id="testing-the-idea-news-recommendation">Testing the Idea: News Recommendation</h2>
 
-<p>Epsilon-greedy introduces the most basic form of learning. It tracks the average reward (click rate) for each article it has tried. With probability 1-ε it <em>exploits</em> by picking the article with the highest known average. With probability ε it <em>explores</em> by picking randomly. We use ε=0.1, meaning it exploits 90% of the time.</p>
+<p>I wanted to see how much feature granularity actually matters, and whether contextual bandits justify their complexity. So I compared four algorithms on a simpler problem first: news recommendation.</p>
 
-<p><strong>Strengths:</strong> Easy to understand and implement. It learns quickly which articles are popular across the user base. The ε parameter gives direct, intuitive control over the explore/exploit balance — turn it up for more exploration, down for more exploitation.</p>
+<p>The setup: 100,000 impression logs from Microsoft’s MIND dataset. Each round, the algorithm picks one article from ~37 candidates. If the user clicked it, reward = 1. Otherwise, 0. Same data, same order, for all four algorithms.</p>
 
-<p><strong>Weaknesses:</strong> Its exploration is blind. When it does explore, it picks randomly among all candidates, including ones that have already proven poor. It also treats all users identically — a sports fan and a foodie see the same recommendations. And it never stops exploring, even when it is highly confident about which articles are best. That 10% random exploration continues forever, wasting impressions on known losers.</p>
+<h3 id="the-algorithms">The Algorithms</h3>
 
-<h3 id="thompson-sampling">Thompson Sampling</h3>
+<p><strong>RandomChoice</strong> – Pick randomly. No learning. This is the floor.</p>
 
-<p>Thompson Sampling takes a Bayesian approach to the explore/exploit problem. Instead of tracking a single average per article, it maintains a full probability distribution (a Beta distribution) over each article’s true click rate. At decision time, it draws a random sample from each article’s distribution and picks the article whose sample is highest.</p>
+<p><strong>Epsilon-Greedy</strong> – Track average click rate per article. 90% of the time, pick the best one. 10% of the time, explore randomly. Simple, fast, no personalization.</p>
 
-<p><strong>Strengths:</strong> Exploration is principled and automatic. Articles that the algorithm is uncertain about have wide distributions — their samples sometimes come out high, naturally triggering exploration. Articles with strong evidence of high click rates have narrow distributions centered on good values, so they consistently win. There is no exploration parameter to tune. As confidence grows, exploration naturally tapers off.</p>
+<p><strong>Thompson Sampling</strong> – Bayesian approach. Maintains a probability distribution over each article’s true click rate. Samples from each distribution and picks the highest sample. Exploration happens automatically based on uncertainty. I used a Beta(1,8) prior calibrated to the ~11% base click rate, which helps with the 18k sparse articles.</p>
 
-<p><strong>Weaknesses:</strong> Like epsilon-greedy, Thompson Sampling is context-free. It cannot personalize. It is also sensitive to the choice of prior distribution. With over 18,000 unique articles appearing across 100,000 impressions, many articles are seen only a handful of times. A uniform prior — Beta(1,1), expressing total ignorance — can slow down learning when the arm space is large. A pessimistic prior calibrated to the base click rate helps the algorithm exploit observed clicks sooner.</p>
+<p><strong>LinUCB</strong> – The contextual algorithm. Builds a linear model per article that predicts clicks from a 62-dimensional context vector:</p>
+<ul>
+  <li>First 31 dims: user profile (normalized frequency of subcategories in their click history)</li>
+  <li>Last 31 dims: article subcategory (one-hot)</li>
+</ul>
 
-<p><strong>Key insight:</strong> We use a prior of Beta(1,8), which encodes a prior belief that articles are clicked about 11% of the time (close to the actual base rate). This lets even a single click on an article meaningfully shift its posterior upward. Prior tuning is a practical consideration that textbooks often gloss over, but it matters in real-world settings with large article catalogs.</p>
+<p>The MIND dataset has 285 subcategories. I kept the top 30 (covering 84% of articles) plus an “other” bucket. This lets LinUCB learn patterns like “NFL fans click NFL articles” instead of just “sports fans like sports.”</p>
 
-<h3 id="linucb-contextual-bandit">LinUCB (Contextual Bandit)</h3>
-
-<p>LinUCB, introduced by Li et al. at WWW 2010, is a contextual bandit algorithm. Unlike the previous approaches, it does not treat articles or users as interchangeable. Instead, it builds a linear model for each article that predicts click probability from a <strong>context vector</strong> — a numerical description of the user and the article.</p>
-
-<p>At decision time, LinUCB computes a predicted reward for each candidate <em>plus</em> an “optimism bonus” that is large when the algorithm is uncertain about a prediction. It picks the article with the highest optimistic estimate. This is the Upper Confidence Bound (UCB) principle: be optimistic in the face of uncertainty, because the upside of discovering a great option outweighs the cost of a bad trial.</p>
-
-<p>The context vector we use is 62-dimensional, built from subcategory information rather than the coarser top-level categories. The MIND dataset has 285 subcategories — far more granular than the 18 categories. We keep the top 30 most frequent subcategories (covering 84% of articles) plus an “other” bucket, giving a 31-dimensional one-hot per article. The first 31 dimensions encode the <strong>user profile</strong>: a normalized subcategory-frequency vector from the user’s click history. A user who clicked mostly “football_nfl” and “basketball_nba” articles would have high weight on those subcategories. The remaining 31 dimensions encode the <strong>article subcategory</strong> as a one-hot. This lets LinUCB learn fine-grained patterns like “NFL fans tend to click NFL articles” rather than just “sports fans like sports.”</p>
-
-<p><strong>Strengths:</strong> LinUCB personalizes. Different users get different recommendations based on their reading history. It shares learning across contexts — a click on a sports article by a sports-oriented user informs predictions for similar user-article pairs, not just that specific article. And its exploration bonus shrinks automatically as confidence grows, so it explores less over time without requiring manual tuning.</p>
-
-<p><strong>Weaknesses:</strong> LinUCB is only as good as the features you give it. The algorithm itself is elegant, but feature engineering is the real bottleneck.</p>
-
-<p><strong>Key insight:</strong> Feature granularity matters. With only 18 top-level categories, LinUCB was learning “which categories get clicked globally” — something epsilon-greedy already captures by tracking per-article averages. Switching to 285 subcategories (bucketed into top-30 + other) and adding user subcategory profiles from click history meaningfully improved LinUCB’s performance. The algorithm needs fine-grained user-article interaction signals to personalize effectively.</p>
-
-<h2 id="experiment">Experiment</h2>
-
-<h3 id="dataset">Dataset</h3>
-
-<p>We evaluate on MINDlarge_train, the large training split from the Microsoft News Dataset (MIND). The full dataset contains over 2.2 million impression logs and 101,527 news articles. We sample the first 100,000 impressions for our comparison, which covers 18,866 unique articles across 18 categories including news, sports, entertainment, finance, lifestyle, health, and more. Each impression presents approximately 37 candidate articles on average, with ground-truth click labels indicating which article the user actually engaged with.</p>
-
-<h3 id="simulation">Simulation</h3>
-
-<p>We replay impressions sequentially through a simulation engine. For each round, the algorithm sees the candidate articles (and, for LinUCB, the context vectors), selects one article to recommend, and then observes the ground-truth reward: 1.0 if the user clicked that article, 0.0 otherwise. The algorithm updates its internal state and moves to the next round.</p>
-
-<p>Critically, all four algorithms process the same 100,000 impressions in the same order. This ensures a fair apples-to-apples comparison — differences in CTR reflect algorithmic merit, not data ordering.</p>
-
-<h3 id="metric">Metric</h3>
-
-<p>Our primary metric is click-through rate (CTR): total clicks divided by total impressions. We also track cumulative CTR at each round to visualize how algorithms learn over time.</p>
+<p>Key point: I initially tried 18 coarse categories and LinUCB barely beat epsilon-greedy. Switching to 285 subcategories made the difference. Feature granularity unlocks contextual algorithms.</p>
 
 <h2 id="results">Results</h2>
-
-<h3 id="final-performance">Final Performance</h3>
 
 <table>
   <thead>
     <tr>
       <th>Algorithm</th>
       <th>CTR</th>
-      <th>vs. Random</th>
+      <th>vs Random</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>RandomChoice</td>
-      <td>0.1088</td>
+      <td>10.9%</td>
       <td>—</td>
     </tr>
     <tr>
-      <td>EpsilonGreedy</td>
-      <td>0.1931</td>
-      <td>+77.5%</td>
+      <td>Epsilon-Greedy</td>
+      <td><strong>19.3%</strong></td>
+      <td>+77%</td>
     </tr>
     <tr>
-      <td>ThompsonSampling</td>
-      <td>0.1821</td>
-      <td>+67.4%</td>
+      <td>Thompson Sampling</td>
+      <td>18.2%</td>
+      <td>+67%</td>
     </tr>
     <tr>
       <td>LinUCB</td>
-      <td>0.1789</td>
-      <td>+64.4%</td>
+      <td>17.9%</td>
+      <td>+64%</td>
     </tr>
   </tbody>
 </table>
 
-<p><img src="/assets/images/final_ctr.png" alt="Final CTR comparison across all four algorithms" /></p>
-
-<p>All three learning algorithms substantially outperform the random baseline. Epsilon-greedy leads with a 77% relative improvement, followed by Thompson Sampling and LinUCB close behind. With 100,000 impressions, the differences between algorithms are clearly visible — EpsilonGreedy achieves 19,313 clicks compared to RandomChoice’s 10,876, and LinUCB nearly matches Thompson Sampling at 17,893 clicks.</p>
-
-<h3 id="learning-curves">Learning Curves</h3>
+<p>Epsilon-greedy won. The simplest learning algorithm beat both Bayesian and contextual approaches.</p>
 
 <p><img src="/assets/images/cumulative_ctr.png" alt="Cumulative CTR over 100,000 impression rounds" /></p>
 
-<p>The cumulative CTR plot reveals how each algorithm learns over time. RandomChoice converges to ~10.9% and stays flat — there is no learning happening. EpsilonGreedy ramps up fastest, reaching near its final CTR by around 5,000 rounds. Thompson Sampling follows a similar trajectory but stabilizes slightly lower. LinUCB starts slower — its linear models need more data to learn the relationship between subcategory features and clicks — but steadily climbs throughout the entire run, closing the gap with Thompson Sampling by round 100,000 and still trending upward. All three learning algorithms clearly separate from the random baseline within the first few thousand rounds.</p>
+<h3 id="what-i-learned">What I Learned</h3>
 
-<h3 id="takeaways">Takeaways</h3>
+<p><strong>1. Any learning beats no learning.</strong> Even basic epsilon-greedy got 8,400 extra clicks over random. The explore/exploit framework delivers.</p>
 
-<p><strong>1. Any learning beats no learning.</strong> Even the simplest learning algorithm, epsilon-greedy, achieves a 77% relative improvement over random. With 100,000 impressions, that translates to over 8,400 additional clicks. The explore/exploit framework delivers real, measurable value.</p>
+<p><strong>2. Simple algorithms are hard to beat.</strong> Epsilon-greedy’s fast exploitation of per-article averages crushed it when the same articles kept appearing. Sophistication ≠ better performance.</p>
 
-<p><strong>2. Simple algorithms are hard to beat.</strong> Epsilon-greedy — the most straightforward learning approach — outperforms both Thompson Sampling and LinUCB on this dataset. Its fast exploitation of per-article averages is highly effective when the same articles recur across many impressions. Sophistication does not automatically mean better performance.</p>
+<p><strong>3. Priors matter for Thompson Sampling.</strong> The Beta(1,8) prior (encoding “articles get clicked ~11% of the time”) was crucial. With 18k sparse articles, a uniform prior is too slow.</p>
 
-<p><strong>3. Bayesian priors matter.</strong> Thompson Sampling performs well with a Beta(1,8) prior calibrated to the base click rate. Prior tuning is a practical consideration that textbooks often gloss over, but it matters in real-world settings with large article catalogs where many arms are sparsely observed.</p>
+<p><strong>4. Features make or break contextual bandits.</strong> Subcategories &gt; categories. LinUCB’s learning curve was still climbing at 100k impressions—with more data or richer features (title embeddings?), it might win.</p>
 
-<p><strong>4. Feature granularity unlocks contextual algorithms.</strong> Switching from 18 top-level categories to the top-30 subcategories meaningfully improved LinUCB’s performance. Subcategories like “football_nfl” and “basketball_nba” carry far more preference signal than a flat “sports” label. LinUCB’s learning curve is still climbing at 100,000 rounds, suggesting that with more data — or even richer features like title embeddings — it could surpass the context-free approaches.</p>
+<p><strong>5. The framework is the real win.</strong> Clean interface (select arm, observe reward, update) makes swapping algorithms trivial. The engineering investment pays off long after any single experiment.</p>
 
-<p><strong>5. The framework matters more than any single result.</strong> A clean algorithmic interface — select an arm, observe a reward, update — makes it trivial to swap in new approaches. The engineering investment in a modular simulation framework pays dividends long after any individual experiment.</p>
+<h2 id="back-to-llm-prompt-shaping">Back to LLM Prompt Shaping</h2>
 
-<h2 id="beyond-news-bandits-for-llm-prompt-shaping">Beyond News: Bandits for LLM Prompt Shaping</h2>
+<p>So what does this mean for the LLM application?</p>
 
-<p>The news recommendation problem has a clean structure — pick an article, observe a click — but the bandit framework is far more general. Any setting where a system must choose an action, observe feedback, and improve over time is a bandit problem. One compelling application is <strong>prompt shaping</strong> for large language models (LLMs).</p>
+<p>First, <strong>don’t assume the fanciest algorithm wins</strong>. LinUCB lost here, but the dataset favored global popularity over personalization. In conversations, individual differences matter more. A user’s tone shifts within a session. That’s where contextual bandits should shine.</p>
 
-<h3 id="the-problem">The Problem</h3>
+<p>Second, <strong>invest in features, not just algorithms</strong>. Coarse signals won’t cut it. You need granular conversational context—sentiment trajectory, question density, topic signals, session history. Same lesson as subcategories vs categories.</p>
 
-<p>LLMs are sensitive to how they are prompted. The same underlying question can produce dramatically different responses depending on the system prompt, tone instructions, or framing that precedes it. Today, most LLM applications use a single static system prompt chosen by the developer through manual experimentation. This is the equivalent of A/B testing in the news domain — rigid, slow to adapt, and blind to individual user differences.</p>
+<p>Third, <strong>the modular simulation framework transfers directly</strong>. The <code class="language-plaintext highlighter-rouge">BanditAlgorithm</code> interface doesn’t care if arms are articles or shaping prompts. Replay conversation logs instead of impressions, score LLM responses instead of clicks, and you’re running the same experiment in a new domain.</p>
 
-<p>What if the system could learn, in real time, which prompting strategy works best for each user?</p>
+<p>I built this as a clean testbed. The real application—teaching LLMs to adapt to you in real time—is next.</p>
 
-<h3 id="shaping-prompts-as-arms">Shaping Prompts as Arms</h3>
+<p>Code: <a href="https://github.com/dlfelps/bandit">github.com/dlfelps/bandit</a></p>
 
-<p>The bandit formulation maps naturally onto this problem. Define a fixed set of <strong>shaping prompts</strong> — short directives prepended to the LLM’s system prompt that steer its behavior along a specific axis. Each shaping prompt is an arm. The system selects one before generating a response, observes user feedback (explicit ratings, continued engagement, follow-up tone), and updates its beliefs about which shaping prompt works best.</p>
-
-<p>Consider a conversational assistant with the following shaping prompts:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Arm</th>
-      <th>Shaping Prompt</th>
-      <th>Behavioral Effect</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>A</td>
-      <td>“Validate the user’s perspective before responding.”</td>
-      <td>Agreeable, supportive tone</td>
-    </tr>
-    <tr>
-      <td>B</td>
-      <td>“Respectfully challenge assumptions in the user’s message.”</td>
-      <td>Contrarian, Socratic tone</td>
-    </tr>
-    <tr>
-      <td>C</td>
-      <td>“Respond with concise, factual statements only.”</td>
-      <td>Neutral, informational tone</td>
-    </tr>
-    <tr>
-      <td>D</td>
-      <td>“Mirror the user’s energy and emotional register.”</td>
-      <td>Adaptive, empathetic tone</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>A multi-armed bandit would learn which of these four strategies produces the best engagement <em>on average across all users</em>. Maybe Arm D wins globally because most people prefer responses that match their energy. But this ignores individual differences — a user who is venting may want validation (Arm A), while a user stress-testing an idea may prefer pushback (Arm B).</p>
-
-<h3 id="why-contextual-bandits-fit">Why Contextual Bandits Fit</h3>
-
-<p>This is where contextual bandits shine. Just as LinUCB uses subcategory features to personalize article recommendations, a contextual bandit can use <strong>conversational context features</strong> to personalize prompt selection. The context vector might encode:</p>
-
-<ul>
-  <li><strong>Tone of the user’s recent messages</strong> — sentiment polarity, assertiveness, question density</li>
-  <li><strong>Conversation trajectory</strong> — is the user escalating, de-escalating, or steady?</li>
-  <li><strong>Topic signals</strong> — technical question vs. emotional discussion vs. creative brainstorming</li>
-  <li><strong>Session history</strong> — which shaping prompts have already been tried and how the user responded</li>
-</ul>
-
-<p>With these features, LinUCB (or a similar contextual algorithm) could learn patterns like:</p>
-
-<ul>
-  <li>Users with high-assertiveness messages respond better to Arm B (challenge assumptions) — they want intellectual sparring, not agreement.</li>
-  <li>Users with high-negative-sentiment messages respond better to Arm A (validate first) — they need to feel heard before engaging with substance.</li>
-  <li>Users asking rapid-fire factual questions respond best to Arm C (concise facts) — they want efficiency, not empathy.</li>
-</ul>
-
-<p>These are exactly the kinds of fine-grained interaction patterns that context-free algorithms cannot capture. Epsilon-greedy would converge on a single globally popular strategy and miss the personalization opportunity entirely.</p>
-
-<h3 id="agree-or-disagree-a-concrete-example">Agree or Disagree: A Concrete Example</h3>
-
-<p>To make this tangible, consider the simplest version: two arms, <strong>agree</strong> and <strong>disagree</strong>. The shaping prompt either tells the LLM to affirm the user’s position or to push back on it. The context vector encodes the tone of the user’s previous message — a single feature capturing sentiment on a scale from strongly negative to strongly positive.</p>
-
-<p>A contextual bandit could learn the following policy:</p>
-
-<ul>
-  <li>When the user’s tone is <strong>frustrated or negative</strong> → agree (validate their experience, then gently reframe)</li>
-  <li>When the user’s tone is <strong>confident or assertive</strong> → disagree (introduce a counterpoint they may not have considered)</li>
-  <li>When the user’s tone is <strong>neutral or exploratory</strong> → either works, so explore more</li>
-</ul>
-
-<p>This is a learned policy, not a hardcoded rule. The bandit discovers it from reward signals — perhaps measured by whether the user continues the conversation, asks a follow-up, or rates the response positively. And because it is learned online, it adapts as user behavior shifts. If a user who normally prefers validation starts asking for critical feedback, the bandit picks up on the context change and adjusts.</p>
-
-<h3 id="design-considerations">Design Considerations</h3>
-
-<p>Applying bandits to prompt shaping introduces considerations that differ from the news recommendation setting:</p>
-
-<p><strong>Reward signal.</strong> In news, the reward is binary and immediate — did the user click? In a conversation, reward is harder to define. Possible signals include explicit thumbs-up/down ratings, whether the user continues the conversation, response length as a proxy for engagement, or sentiment shift between consecutive user messages. Each has tradeoffs between noise and informativeness.</p>
-
-<p><strong>Arm set size.</strong> The news setting has thousands of articles; prompt shaping works best with a small, curated set of arms (4–8 shaping prompts). This is an advantage — fewer arms means faster convergence and less wasted exploration. But it puts pressure on the prompt designer to choose a diverse, meaningful set of behavioral axes.</p>
-
-<p><strong>Stationarity.</strong> User preferences in a conversation can shift within a single session. A user might start exploratory and become frustrated. The bandit must respond to these within-session shifts, which favors algorithms with short memory or context features that capture trajectory, not just the current state.</p>
-
-<p><strong>Composability.</strong> Shaping prompts need not be mutually exclusive. A richer formulation might treat each behavioral axis as an independent bandit — one for tone (supportive vs. challenging), one for verbosity (concise vs. detailed), one for structure (freeform vs. bulleted). This combinatorial approach scales the action space but allows finer-grained personalization.</p>
-
-<h3 id="connection-to-the-simulation-framework">Connection to the Simulation Framework</h3>
-
-<p>The modular architecture from this project — abstract algorithm interface, simulation engine, pluggable reward signals — transfers directly to the prompt shaping domain. The <code class="language-plaintext highlighter-rouge">BanditAlgorithm</code> interface (select an arm, observe a reward, update) does not care whether arms are news articles or shaping prompts. A prompt-shaping simulation could reuse the same engine with a different data loader that replays conversation logs instead of impression logs, and a different reward function that scores LLM responses instead of recording clicks.</p>
-
-<p>The key insight from our news recommendation results also carries over: <strong>feature granularity unlocks contextual algorithms.</strong> Coarse features like “positive vs. negative tone” will produce modest personalization gains — analogous to LinUCB with only 18 categories. Fine-grained features capturing specific conversational patterns — analogous to the 285 subcategories — are where contextual bandits can meaningfully outperform simpler approaches.</p>
-
-<p>Code: Available in this <a href="https://github.com/dlfelps/bandit">repository</a></p>
 
         
       </section>
