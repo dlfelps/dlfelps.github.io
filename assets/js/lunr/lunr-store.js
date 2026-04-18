@@ -172,4 +172,10 @@ var store = [{
         "tags": ["claude","bandit","ad-tech"],
         "url": "/2026/03/01/bandit.html",
         "teaser": null
+      },{
+        "title": "Experiment 29",
+        "excerpt":"A tiny GitHub Action that turns every Python PR into a data-backed review — coverage, blast radius, performance, and maintainability, posted right in the comments. Stop Merging on Vibes: Meet Slop Report What is Slop Report? Slop Report is a drop-in GitHub Action for Python projects that runs alongside your...","categories": [],
+        "tags": ["claude","pr","github","vibe-coding","slop","code-review"],
+        "url": "/2026/04/01/slop-report.html",
+        "teaser": null
       }]

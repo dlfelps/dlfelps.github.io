@@ -1,4 +1,227 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2026-02-17T10:30:01+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 28</title><link href="https://dlfelps.github.io/2026/03/01/bandit.html" rel="alternate" type="text/html" title="Experiment 28" /><published>2026-03-01T00:00:00+00:00</published><updated>2026-03-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/03/01/bandit</id><content type="html" xml:base="https://dlfelps.github.io/2026/03/01/bandit.html"><![CDATA[<p>I tested four bandit algorithms on news recommendation to figure out if contextual learning could teach LLMs to adapt their prompting style to individual users in real time.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2026-04-18T11:37:22+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 29</title><link href="https://dlfelps.github.io/2026/04/01/slop-report.html" rel="alternate" type="text/html" title="Experiment 29" /><published>2026-04-01T00:00:00+00:00</published><updated>2026-04-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/04/01/slop-report</id><content type="html" xml:base="https://dlfelps.github.io/2026/04/01/slop-report.html"><![CDATA[<p>A tiny GitHub Action that turns every Python PR into a data-backed review — coverage, blast radius, performance, and maintainability, posted right in the comments.</p>
+
+<h1 id="stop-merging-on-vibes-meet-slop-report">Stop Merging on Vibes: Meet Slop Report</h1>
+
+<h2 id="what-is-slop-report">What is Slop Report?</h2>
+
+<p><a href="https://github.com/marketplace/actions/slop-report">Slop Report</a> is a drop-in GitHub Action for Python projects that runs alongside your existing CI and posts a single, readable quality summary as a comment on every pull request. It never blocks a merge — it just surfaces the signal you’d otherwise have to dig through logs, dashboards, and <code class="language-plaintext highlighter-rouge">radon</code> output to find.</p>
+
+<p>Here’s what reviewers actually see on the PR:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Score</th>
+      <th>Status</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Change Risk</td>
+      <td>72% covered</td>
+      <td>⚠️</td>
+      <td>28% of changed lines lack test coverage</td>
+    </tr>
+    <tr>
+      <td>Blast Radius</td>
+      <td>12 modules</td>
+      <td>🛑</td>
+      <td>High impact: auth, api, models affected</td>
+    </tr>
+    <tr>
+      <td>Performance</td>
+      <td>No regressions</td>
+      <td>✅</td>
+      <td>No tests exceeded 20% slowdown threshold</td>
+    </tr>
+    <tr>
+      <td>MI Regression</td>
+      <td>-10 pts</td>
+      <td>🛑</td>
+      <td>Worst: auth.py (80 → 70)</td>
+    </tr>
+    <tr>
+      <td>New File Quality</td>
+      <td>0.94×</td>
+      <td>⚠️</td>
+      <td>New files avg MI 68 vs main avg 72</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Five numbers, three status icons, one place to look. That’s the entire pitch.</p>
+
+<p>Under the hood it’s using tools you already know — <code class="language-plaintext highlighter-rouge">coverage</code>, <code class="language-plaintext highlighter-rouge">pytest --durations=0</code>, Python’s <code class="language-plaintext highlighter-rouge">ast</code> module, and <code class="language-plaintext highlighter-rouge">radon mi</code> — but wired together so the comparison between the PR branch and the base branch happens for you, automatically, every time.</p>
+
+<p>Setup is one file:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># .github/workflows/slop-report.yml</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">Slop Report</span>
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">pull_request</span><span class="pi">:</span>
+    <span class="na">types</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">opened</span><span class="pi">,</span> <span class="nv">synchronize</span><span class="pi">,</span> <span class="nv">reopened</span><span class="pi">]</span>
+<span class="na">permissions</span><span class="pi">:</span>
+  <span class="na">pull-requests</span><span class="pi">:</span> <span class="s">write</span>
+  <span class="na">contents</span><span class="pi">:</span> <span class="s">read</span>
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">slop-report</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v4</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">fetch-depth</span><span class="pi">:</span> <span class="m">0</span>   <span class="c1"># required — diffs against the base branch</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">dlfelps/slop-report@v1</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">github-token</span><span class="pi">:</span> <span class="s">$</span>
+</code></pre></div></div>
+
+<p>Commit that, open a PR, and the first comment shows up on the next push.</p>
+
+<hr />
+
+<h2 id="why-you-actually-want-this">Why You Actually Want This</h2>
+
+<p>Most teams already have “quality tooling.” They just don’t have it <em>where the decision is being made.</em> Here’s what that looks like in practice, and what Slop Report does about it.</p>
+
+<h3 id="lgtm--on-a-pr-that-dropped-coverage-by-15-points">“LGTM 🚀” on a PR that dropped coverage by 15 points</h3>
+
+<p>You have a coverage report. It’s in Codecov, or an artifact zipped up somewhere, or a badge that shows the repo-wide average — which barely moves when 40 new lines slip through untested. The reviewer opens the PR, sees a green check, and ships it.</p>
+
+<p><strong>Slop Report’s Change Risk metric</strong> ignores the repo-wide average entirely and looks only at the lines you actually changed in this PR. “72% covered” means 72% of <em>your diff</em> is hit by a test. If it’s 40%, the comment says 40% — right next to the code. You can’t miss it, and you don’t have to click anywhere.</p>
+
+<h3 id="the-one-line-change-that-broke-four-services">The one-line change that broke four services</h3>
+
+<p>Someone tweaks a helper in <code class="language-plaintext highlighter-rouge">utils/auth.py</code>. Looks harmless. Two sprints later you’re doing a post-mortem on why the billing service started 500ing.</p>
+
+<p><strong>Blast Radius</strong> builds an import graph of the whole repo with <code class="language-plaintext highlighter-rouge">ast</code> and tells you, at PR time, how many modules depend on the file you just touched. A “High impact: auth, api, models affected” tag on a one-line diff is the kind of prompt that makes a reviewer say <em>“hold on, let me actually read this”</em> — which is exactly the point.</p>
+
+<h3 id="the-performance-regression-that-only-shows-up-under-load">The performance regression that only shows up under load</h3>
+
+<p>Someone adds a nested loop, a pickle, a sync call inside an async path. It passes tests. It gets merged. Three weeks later a customer notices.</p>
+
+<p><strong>Performance</strong> checks out the base branch, runs the test suite with <code class="language-plaintext highlighter-rouge">pytest --durations=0</code>, then does the same on the PR branch, and diffs per-test timings. The worst offender gets named in the comment. “test_parse_invoice slowed 47%” is a very different conversation from “we’ll look into it in the next sprint.”</p>
+
+<h3 id="death-by-a-thousand-small-messes">Death by a thousand small messes</h3>
+
+<p>No single PR “makes the code worse.” But six months later every file is 400 lines of tangled conditionals and nobody knows how it got there.</p>
+
+<p><strong>MI Regression</strong> runs <code class="language-plaintext highlighter-rouge">radon mi</code> on each modified file on both branches and reports the worst maintainability drop. <strong>New File Quality</strong> does the same for files you’re adding — comparing their average Maintainability Index against the existing baseline. A 0.94× ratio means <em>on average, the new code you’re adding is less maintainable than what’s already in the repo.</em> Catching that in review is dramatically cheaper than catching it in a refactor quarter.</p>
+
+<h3 id="none-of-this-blocks-a-merge">None of this blocks a merge</h3>
+
+<p>This is the design decision that makes Slop Report actually get used: it never fails a workflow. It’s a comment, not a gate. Teams who’ve been burned by brittle quality gates can install it in five minutes without worrying that a flaky metric is going to hold up a release on Friday afternoon. Over time, the numbers themselves become the norm — “your PR has a 🛑 on blast radius” becomes a thing reviewers actually mention, because it’s visible.</p>
+
+<hr />
+
+<h2 id="bonus-fork-it-and-add-your-own-metric">Bonus: Fork It and Add Your Own Metric</h2>
+
+<p>Slop Report is intentionally small and hackable. The repo at <a href="https://github.com/dlfelps/slop-report">github.com/dlfelps/slop-report</a> is ~99% Python with a clean top-level layout:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>slop-report/
+├── action.yml          # declares inputs and the Docker entrypoint
+├── Dockerfile          # the action's runtime
+├── entrypoint.py       # orchestrates all the metrics, posts the comment
+├── requirements.txt
+├── src/                # one module per metric
+└── tests/
+</code></pre></div></div>
+
+<p>Want to add, say, a <strong>Docstring Coverage</strong> metric that flags PRs adding public functions without docstrings? Here’s the recipe.</p>
+
+<h3 id="1-fork-and-clone">1. Fork and clone</h3>
+
+<p>Hit <strong>Fork</strong> on the repo page, then:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/&lt;you&gt;/slop-report
+<span class="nb">cd </span>slop-report
+git checkout <span class="nt">-b</span> add-docstring-metric
+</code></pre></div></div>
+
+<h3 id="2-write-the-metric-as-its-own-module">2. Write the metric as its own module</h3>
+
+<p>Drop a new file into <code class="language-plaintext highlighter-rouge">src/</code> — say <code class="language-plaintext highlighter-rouge">src/docstring_coverage.py</code> — that exposes one function returning a structured result. Mirror the shape the existing metrics use (score, status, details) so it slots into the report cleanly:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/docstring_coverage.py
+</span><span class="kn">import</span> <span class="n">ast</span>
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">changed_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">total</span><span class="p">,</span> <span class="n">documented</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="n">offenders</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">changed_files</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">.</span><span class="nf">endswith</span><span class="p">(</span><span class="sh">"</span><span class="s">.py</span><span class="sh">"</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="nc">Path</span><span class="p">(</span><span class="n">path</span><span class="p">).</span><span class="nf">read_text</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">ast</span><span class="p">.</span><span class="nf">walk</span><span class="p">(</span><span class="n">tree</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="p">.</span><span class="n">FunctionDef</span><span class="p">,</span> <span class="n">ast</span><span class="p">.</span><span class="n">AsyncFunctionDef</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">node</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">_</span><span class="sh">"</span><span class="p">):</span>
+                    <span class="k">continue</span>  <span class="c1"># skip private
+</span>                <span class="n">total</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">ast</span><span class="p">.</span><span class="nf">get_docstring</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+                    <span class="n">documented</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">offenders</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s">::</span><span class="si">{</span><span class="n">node</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">total</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="sh">"</span><span class="s">score</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">N/A</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">status</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">✅</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">details</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">No new public functions</span><span class="sh">"</span><span class="p">}</span>
+    <span class="n">pct</span> <span class="o">=</span> <span class="nf">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">documented</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="sh">"</span><span class="s">✅</span><span class="sh">"</span> <span class="k">if</span> <span class="n">pct</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="k">else</span> <span class="sh">"</span><span class="s">⚠️</span><span class="sh">"</span> <span class="k">if</span> <span class="n">pct</span> <span class="o">&gt;=</span> <span class="mi">70</span> <span class="k">else</span> <span class="sh">"</span><span class="s">🛑</span><span class="sh">"</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="sh">"</span><span class="s">score</span><span class="sh">"</span><span class="p">:</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">pct</span><span class="si">}</span><span class="s">% documented</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">status</span><span class="sh">"</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">details</span><span class="sh">"</span><span class="p">:</span> <span class="sa">f</span><span class="sh">"</span><span class="s">Missing: </span><span class="si">{</span><span class="sh">'</span><span class="s">, </span><span class="sh">'</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">offenders</span><span class="p">[</span><span class="si">:</span><span class="mi">3</span><span class="p">])</span><span class="si">}</span><span class="sh">"</span> <span class="k">if</span> <span class="n">offenders</span> <span class="k">else</span> <span class="sh">"</span><span class="s">All documented</span><span class="sh">"</span><span class="p">,</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-wire-it-into-entrypointpy">3. Wire it into <code class="language-plaintext highlighter-rouge">entrypoint.py</code></h3>
+
+<p>Open <code class="language-plaintext highlighter-rouge">entrypoint.py</code> and find where the existing metrics (change risk, blast radius, etc.) are invoked and appended to the report. Add yours alongside them, guarded by an input flag so users can toggle it:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">INPUT_ENABLE_DOCSTRINGS</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">true</span><span class="sh">"</span><span class="p">).</span><span class="nf">lower</span><span class="p">()</span> <span class="o">==</span> <span class="sh">"</span><span class="s">true</span><span class="sh">"</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="n">src.docstring_coverage</span> <span class="kn">import</span> <span class="n">run</span> <span class="k">as</span> <span class="n">run_docstrings</span>
+    <span class="n">rows</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="sh">"</span><span class="s">Docstring Coverage</span><span class="sh">"</span><span class="p">,</span> <span class="nf">run_docstrings</span><span class="p">(</span><span class="n">changed_files</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<h3 id="4-declare-the-new-input-in-actionyml">4. Declare the new input in <code class="language-plaintext highlighter-rouge">action.yml</code></h3>
+
+<p>GitHub passes action inputs in as <code class="language-plaintext highlighter-rouge">INPUT_&lt;NAME&gt;</code> environment variables. Add yours:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">inputs</span><span class="pi">:</span>
+  <span class="na">enable-docstrings</span><span class="pi">:</span>
+    <span class="na">description</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Run</span><span class="nv"> </span><span class="s">docstring</span><span class="nv"> </span><span class="s">coverage</span><span class="nv"> </span><span class="s">analysis"</span>
+    <span class="na">required</span><span class="pi">:</span> <span class="kc">false</span>
+    <span class="na">default</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+</code></pre></div></div>
+
+<h3 id="5-add-a-test-and-run-locally">5. Add a test and run locally</h3>
+
+<p>Drop a fixture under <code class="language-plaintext highlighter-rouge">tests/</code> with a couple of sample Python files — one fully documented, one missing a docstring — and assert the expected score. Run <code class="language-plaintext highlighter-rouge">pytest</code> locally, then build the Docker image the same way the action does:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build <span class="nt">-t</span> slop-report-local <span class="nb">.</span>
+docker run <span class="nt">--rm</span> <span class="nt">-v</span> <span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace"</span> <span class="nt">-w</span> /workspace slop-report-local
+</code></pre></div></div>
+
+<h3 id="6-test-it-end-to-end-on-a-real-pr">6. Test it end-to-end on a real PR</h3>
+
+<p>Push your branch to your fork, then in a scratch repo reference <em>your</em> fork in the workflow:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">&lt;you&gt;/slop-report@add-docstring-metric</span>
+</code></pre></div></div>
+
+<p>Open a PR on the scratch repo and watch your new row show up in the comment.</p>
+
+<h3 id="7-send-it-upstream">7. Send it upstream</h3>
+
+<p>If it’s generally useful, open a PR back to <code class="language-plaintext highlighter-rouge">dlfelps/slop-report</code>. The repo is young (v1 shipped in April 2026), so thoughtful contributions are welcome.</p>
+
+<hr />
+
+<h2 id="give-it-five-minutes">Give it five minutes</h2>
+
+<p>Slop Report isn’t trying to replace your linter, your CI, or your coverage service. It’s trying to make the data you already have <em>visible at the one moment it matters most</em> — when a human is deciding whether to click “Merge.”</p>
+
+<p>Grab it from the <a href="https://github.com/marketplace/actions/slop-report">GitHub Marketplace</a>, drop the eight-line workflow into your repo, and open your next PR. Worst case, you ignore the comment. Best case, you catch the bug before your users do.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="pr" /><category term="github" /><category term="vibe-coding" /><category term="slop" /><category term="code-review" /><summary type="html"><![CDATA[A tiny GitHub Action that turns every Python PR into a data-backed review — coverage, blast radius, performance, and maintainability, posted right in the comments.]]></summary></entry><entry><title type="html">Experiment 28</title><link href="https://dlfelps.github.io/2026/03/01/bandit.html" rel="alternate" type="text/html" title="Experiment 28" /><published>2026-03-01T00:00:00+00:00</published><updated>2026-03-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/03/01/bandit</id><content type="html" xml:base="https://dlfelps.github.io/2026/03/01/bandit.html"><![CDATA[<p>I tested four bandit algorithms on news recommendation to figure out if contextual learning could teach LLMs to adapt their prompting style to individual users in real time.</p>
 
 <h1 id="teaching-llms-to-learn-what-you-want-using-bandit-algorithms">Teaching LLMs to Learn What You Want (Using Bandit Algorithms)</h1>
 
@@ -2646,144 +2869,4 @@ A few highlights of the report:</p>
 
 <h2 id="possible-improvements">Possible improvements</h2>
 
-<p>I was not able to find a way for <a href="https://typer.tiangolo.com/">Typer</a> to hide commands that were not yet applicable. Ideally, only the <code class="language-plaintext highlighter-rouge">details</code> command would be initially available (taking in the links.txt that was produced during the semi-manual scraping step). Then after creating “camps.pkl” and “places.txt” the <code class="language-plaintext highlighter-rouge">commute</code> command would be available. Finally the <code class="language-plaintext highlighter-rouge">report</code> command could be used.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="scraper" /><category term="cli" /><category term="selenium" /><category term="httpx" /><category term="yattag" /><category term="typer" /><category term="backend" /><summary type="html"><![CDATA[This post describes a command line tool I created that scrapes a website and generates reports.]]></summary></entry><entry><title type="html">Experiment 19</title><link href="https://dlfelps.github.io/2024/08/01/generative.html" rel="alternate" type="text/html" title="Experiment 19" /><published>2024-08-01T00:00:00+00:00</published><updated>2024-08-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2024/08/01/generative</id><content type="html" xml:base="https://dlfelps.github.io/2024/08/01/generative.html"><![CDATA[<p>This post describes the stable diffusion architecture for generative AI.</p>
-
-<h1 id="introduction">Introduction</h1>
-
-<p>I am going to introduce this post with a real conversation I had with Microsoft’s <a href="https://copilot.microsoft.com/">Copilot</a>:</p>
-
-<blockquote>
-  <p style="text-align: right;">Me:</p>
-  <p style="text-align: right;">Can you explain Generative AI to me like I am 5 years old?</p>
-
-  <p>Copilot:</p>
-
-  <p>Certainly! Imagine you have a magical drawing book. When you open it, it creates new pictures all by itself! That’s what generative AI does—it makes up things like drawings, stories, or even songs without anyone telling it exactly what to create. It’s like having a creative friend who invents cool stuff just by thinking about it! 🎨✨</p>
-
-  <p style="text-align: right;">Me:</p>
-  <p style="text-align: right;">Are you an example of a Generative AI?</p>
-
-  <p>Copilot:</p>
-
-  <p>Indeed! I’m like a friendly digital artist. When you ask me for something, I use my magical algorithms to create new sentences, poems, or even drawings. Just like a painter mixes colors to create beautiful pictures, I mix words and ideas to make interesting content! 🎨✨</p>
-
-  <p style="text-align: right;">Me:</p>
-  <p style="text-align: right;">Can you generate an image of an Eastern Bluebird drinking a milkshake?</p>
-
-  <p>Copilot:</p>
-
-  <p><img src="/assets/images/bluebird_milkshake_dalle.PNG" alt="bluebird milkshake" /></p>
-</blockquote>
-
-<p>END OF CONVERSATION</p>
-
-<p>I was impressed by the generated images. Behind the scenes, Copilot uses an OpenAI product called <a href="https://openai.com/dall-e-3/">DALLE-3</a> to generate images. Unfortunately DALLE-3 is not publicly available. So, for the remainder of this post, we will instead examine a closely related model called Stable Diffusion. How do they compare? Here is the output of Stable Diffusion for the same prompt above:</p>
-
-<p><img src="/assets/images/bluebird_milkshake_stable.webp" alt="stable diffusion" width="400" /></p>
-
-<p>Generally Stable Diffusion tends to produce images that are more photorealistic whereas DALLE-3 creates images that feel like computer-generated art.</p>
-
-<h1 id="unconditional-image-generation-denoising-diffusion-probabilistic-models">Unconditional Image Generation (Denoising Diffusion Probabilistic Models)</h1>
-
-<p>I will explain Stable Diffusion through a series of increasingly complex models. The first - and most foundational model -  is the Denoising Diffusion Probabilistic Model (DDPM), which serves as the core technology behind Stable Diffusion and DALLE-3.</p>
-
-<p>DDPMs are a class of generative models that work by iteratively denoising a diffusion process, which involves adding noise to an image and then trying to remove it. The underlying theory of DDPMs is based on the idea that transforming a simple distribution, such as a Gaussian, through a series of diffusion steps can result in a complex and expressive image data distribution. This allows the model to generate new images by reversing the diffusion process, starting from the full Gaussian distribution and ending up with the image distribution.</p>
-
-<p><img src="https://huggingface.co/blog/assets/78_annotated-diffusion/diffusion_figure.png" alt="forward diffusion" /></p>
-
-<p>To further demonstrate the contribution of each step I will show what kind of generative images are possible using the CUB-2011 dataset. Our final goal will be to produce fully synthetic birds. In this first step we will only be able to generate small bird-like shapes using the DDPM architecture alone.</p>
-
-<p><img src="/assets/images/generative_figure1.png" alt="ddpm" width="400" /></p>
-
-<p>Figure adapted from https://huggingface.co/blog/stable_diffusion</p>
-
-<p>The output of training the model is shown below. Here I take a snapshot of the sample images every 10 epochs to show the learning progression of the model.</p>
-
-<p><img src="/assets/images/ddpm-64.gif" alt="ddpm animation" /></p>
-
-<p>You can see birds if you squint, but the low resolution (64x64) makes these images less useful. DDPMs top out around (256x256) and become increasingly slow to train on a single GPU. We next explore two options for increasing the resolution.</p>
-
-<h1 id="generating-higher-resolution-images">Generating Higher Resolution Images</h1>
-
-<p>The following two sections offer alternatives to increasing the resolution of the generated images.</p>
-
-<h2 id="upscaling">Upscaling</h2>
-
-<p>The first approach uses image upscaling to increase the resolution of an image. Traditional upscaling methods, such as interpolation, don’t increase the inherent resolution of the image. The upscaler used here actually fills in missing details to increase resolution (NOTE: the upscaler itself is based on stable diffusion architecture). The architecture for the approach is outlined below:</p>
-
-<p><img src="/assets/images/generative_figure2.png" alt="upscaling" width="400" /></p>
-
-<p>Figure adapted from https://huggingface.co/blog/stable_diffusion</p>
-
-<p>The benefit of this approach is that it uses the same DDPM from step 1 (which produces images of 64x64) and then the upscaler increases the resolution to 256x256.</p>
-
-<p>The disadvantage of this approach is that the upscaler is not tuned specifically for your data (although it could be with additional training). It also makes a slow process (sampling the DDPM) even slower because you are performing two indepdenent steps (sampling then upscaling).</p>
-
-<h2 id="latent-model">Latent model</h2>
-
-<p>The second approach to increasing resolution was introduced in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>. The idea behind this approach is to surround the DDPM with a pretrained variational autoencoder<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>. The DDPM then learns to denoise the latent space (which also happens to be 64x64) instead of the image space. To create a new sample:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. generate random noise in the shape of the latent space
-2. use the DDPM to denoise the input
-3. use the decoder to transform the latent space back into image space (512x512)
-</code></pre></div></div>
-
-<p><img src="/assets/images/generative_figure3.png" alt="latent" width="400" /></p>
-
-<p>Figure adapted from https://huggingface.co/blog/stable_diffusion</p>
-
-<p>Unfortunately I did not have enough Colab credits to fully train this variant<sup id="fnref:2"><a href="#fn:2" class="footnote" rel="footnote" role="doc-noteref">2</a></sup>. Although the model outputs images that are 512x512, I admit that they don’t look very bird-like. Here is a single full image created after 50 epochs of training:</p>
-
-<p><img src="/assets/images/latent_bird.png" alt="latent image" /></p>
-
-<h1 id="conditional-image-generation-stable-diffusion">Conditional Image Generation (Stable Diffusion)</h1>
-
-<p>Up to this point we have not had any control over what kind of bird gets synthesized. The final step is to condition the DDPM on another input (usually text, but it could also be another image). NOTE: In order to train such a model, the training data would require both text and captions. The CUB-2011 dataset does not provide captions and I also discovered that significantly more compute is needed to train the latent models so I will use a pretrained Stable Diffusion model.</p>
-
-<p><img src="/assets/images/generative_figure4.png" alt="stable diffusion" width="600" /></p>
-
-<p>Figure adapted from https://huggingface.co/blog/stable_diffusion</p>
-
-<p>Here is an example output:</p>
-
-<p><img src="/assets/images/eastern_bluebird_stable.png" alt="stable diffusion output" /></p>
-
-<p>I generated the image above with the implementation provided by Lyumin Zhang called <a href="https://github.com/lllyasviel/Fooocus">Fooocus</a>. It is a pre-tuned version of <a href="https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0">StabilityAI’s Stable Diffusion XL model</a>. You can generate your own images using the provided Colab notebook -&gt; 
-<a target="_blank" href="https://colab.research.google.com/github/lllyasviel/Fooocus/blob/main/fooocus_colab.ipynb">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" />
-</a></p>
-
-<h1 id="conclusion">Conclusion</h1>
-
-<p>Generative AI is currently experiencing a boom, with new research and products coming out every day. The code for this experiment can be found at my <a href="https://github.com/dlfelps/ml_portfolio">ML portfolio website</a>. I would like to leave you with a final conversation from Microsoft’s <a href="https://copilot.microsoft.com/">Copilot</a>:</p>
-
-<blockquote>
-  <p style="text-align: right;">Me:</p>
-  <p style="text-align: right;">Can you write a poem about generative ai?</p>
-
-  <p>Copilot:</p>
-
-  <p>Sure, I’d love to! Here’s a poem about generative AI:</p>
-
-  <p>In circuits deep, where data flows, A spark ignites, a thought that grows. From silicon dreams, a mind takes flight, Crafting worlds in the dead of night.</p>
-
-  <p>With algorithms as its guiding star, It reaches realms both near and far. From pixels bright to words that sing, Generative AI creates everything.</p>
-
-  <p>It learns from patterns, vast and wide, In every byte, where secrets hide. A painter’s brush, a poet’s pen, It brings to life what once was then.</p>
-
-  <p>Yet in its core, a humble start, A tool to aid the human heart. For in each line and crafted scene, It mirrors dreams, both bold and serene.</p>
-
-  <p>So here’s to code that dreams and dares, To generative AI, with whom we share, A future bright, where minds entwine, In harmony, both yours and mine.</p>
-</blockquote>
-
-<p>END OF CONVERSATION</p>
-
-<div class="footnotes" role="doc-endnotes">
-  <ol>
-    <li id="fn:1">
-      <p>This particular autoencoder preserves spatial information by compressing a 512x512x3 image into a latent space of 64x64x4. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-    <li id="fn:2">
-      <p>As a comparison, in <a href="https://arxiv.org/abs/2112.10752">“High-Resolution Image Synthesis with Latent Diffusion Models”</a>, they trained a latent model on FFHQ for 283 hours on an A100. This would cost an equivalent of $370 in Colab compute units so you will have to forgive me for stopping early! <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-  </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="generative" /><category term="stable-diffusion" /><category term="computer-vision" /><category term="ml-portfolio" /><summary type="html"><![CDATA[This post describes the stable diffusion architecture for generative AI.]]></summary></entry></feed>
+<p>I was not able to find a way for <a href="https://typer.tiangolo.com/">Typer</a> to hide commands that were not yet applicable. Ideally, only the <code class="language-plaintext highlighter-rouge">details</code> command would be initially available (taking in the links.txt that was produced during the semi-manual scraping step). Then after creating “camps.pkl” and “places.txt” the <code class="language-plaintext highlighter-rouge">commute</code> command would be available. Finally the <code class="language-plaintext highlighter-rouge">report</code> command could be used.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="scraper" /><category term="cli" /><category term="selenium" /><category term="httpx" /><category term="yattag" /><category term="typer" /><category term="backend" /><summary type="html"><![CDATA[This post describes a command line tool I created that scrapes a website and generates reports.]]></summary></entry></feed>

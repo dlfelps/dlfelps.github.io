@@ -1,14 +1,19 @@
+
+
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.27.3 by Michael Rose
-  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Minimal Mistakes Jekyll Theme 4.28.0 by Michael Rose
+  Copyright 2013-2026 Michael Rose - mademistakes.com | @mmistakes
+  Copyright 2024-2026 iBug - ibugone.com | @iBug
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
 -->
 
 <html lang="en" class="no-js">
   <head>
-    <meta charset="utf-8">
+    
+<meta charset="utf-8">
+
 
 <!-- begin _includes/seo.html --><title>Experiment 22 - .NET Experiments</title>
 <meta name="description" content="The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.">
@@ -28,6 +33,8 @@
 
 
   <meta property="og:description" content="The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.">
+
+
 
 
 
@@ -83,7 +90,8 @@
   </head>
 
   <body class="layout--single" dir="ltr">
-    <nav class="skip-links">
+    
+<nav class="skip-links" aria-label="Skip links">
   <ul>
     <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
     <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
@@ -93,10 +101,11 @@
 
     
 
+
 <div class="masthead">
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
-      <nav id="site-nav" class="greedy-nav">
+      <nav id="site-nav" class="greedy-nav" aria-label="Primary navigation">
         
         <a class="site-title" href="/">
           .NET Experiments
@@ -128,11 +137,14 @@
 
 
 
+
+
 <div id="main" role="main">
   
 
 
-  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Experiment 22">
     <meta itemprop="description" content="The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.">
     <meta itemprop="datePublished" content="2025-09-01T00:00:00+00:00">
@@ -141,11 +153,12 @@
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
             <a href="https://dlfelps.github.io/2025/09/01/cobad.html" itemprop="url">Experiment 22
 </a>
           </h1>
           
+
 
   <p class="page__meta">
     
@@ -176,10 +189,10 @@
         </header>
       
 
-      <section class="page__content" itemprop="text">
+      <section class="page__content e-content" itemprop="text">
         
           <aside class="sidebar__right sticky">
-            <nav class="toc">
+            <nav class="toc" aria-label="Table of contents">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
               <ul class="toc__menu"><li><a href="#introduction-beyond-individual-anomalies">Introduction: Beyond Individual Anomalies</a><ul><li><a href="#the-paradigm-shift-from-individual-to-collective">The Paradigm Shift: From Individual to Collective</a></li><li><a href="#theoretical-foundations">Theoretical Foundations</a></li></ul></li><li><a href="#cobad-a-novel-approach-to-collective-behavior-anomaly-detection">CoBAD: A Novel Approach to Collective Behavior Anomaly Detection</a><ul><li><a href="#core-innovation-stay-point-centric-analysis">Core Innovation: Stay Point-Centric Analysis</a></li><li><a href="#algorithm-architecture">Algorithm Architecture</a><ul><li><a href="#stage-1-stay-point-extraction">Stage 1: Stay Point Extraction</a></li><li><a href="#stage-2-spatial-temporal-clustering">Stage 2: Spatial-Temporal Clustering</a></li><li><a href="#stage-3-collective-feature-engineering">Stage 3: Collective Feature Engineering</a></li><li><a href="#stage-4-paper-accurate-cobad-architecture">Stage 4: Paper-Accurate CoBAD Architecture</a></li></ul></li><li><a href="#what-makes-cobad-unique">What Makes CoBAD Unique</a><ul><li><a href="#1-multi-resolution-anomaly-analysis">1. Multi-Resolution Anomaly Analysis</a></li><li><a href="#2-dynamic-threshold-adaptation">2. Dynamic Threshold Adaptation</a></li><li><a href="#3-trajectory-level-pattern-analysis">3. Trajectory-Level Pattern Analysis</a></li><li><a href="#4-embedding-space-analysis-and-clustering">4. Embedding Space Analysis and Clustering</a></li></ul></li><li><a href="#scalability-and-performance">Scalability and Performance</a></li></ul></li><li><a href="#case-study-anomaly-detection-in-urban-mobility">Case Study: Anomaly Detection in Urban Mobility</a><ul><li><a href="#dataset-characteristics">Dataset Characteristics</a></li><li><a href="#key-findings">Key Findings</a><ul><li><a href="#anomaly-detection-results">Anomaly Detection Results</a></li><li><a href="#detailed-anomaly-analysis">Detailed Anomaly Analysis</a></li><li><a href="#link-analysis-results">Link Analysis Results</a></li></ul></li><li><a href="#feature-attribution-insights">Feature Attribution Insights</a></li></ul></li><li><a href="#implementation-and-reproducibility">Implementation and Reproducibility</a><ul><li><a href="#technical-stack">Technical Stack</a></li><li><a href="#key-outputs">Key Outputs</a><ul><li><a href="#1-interactive-visualizations">1. Interactive Visualizations</a></li><li><a href="#2-detailed-text-reports">2. Detailed Text Reports</a></li><li><a href="#3-numerical-data-exports">3. Numerical Data Exports</a></li></ul></li></ul></li><li><a href="#conclusion">Conclusion</a></li><li><a href="#claude-gotchas">Claude Gotchas</a></li><li><a href="#future-directions-and-applications">Future Directions and Applications</a><ul><li><a href="#potential-applications">Potential Applications</a></li><li><a href="#technical-enhancements">Technical Enhancements</a></li></ul></li><li><a href="#references">References</a></li></ul>
             </nav>
@@ -601,7 +614,10 @@ Features: [norm_x, norm_y, is_weekend, start_time, duration, placeholder] (6D)
       <footer class="page__meta">
         
         
+
   
+    
+
 
 
   
@@ -622,15 +638,21 @@ Features: [norm_x, norm_y, is_weekend, start_time, duration, placeholder] (6D)
   </p>
 
 
+  
+
+  
 
 
         
 
+
   <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-09-01T00:00:00+00:00">September 1, 2025</time></p>
+
 
       </footer>
 
-      <section class="page__share">
+      
+<section class="page__share">
   <h4 class="page__share-title">Share on</h4>
 
   <a href="https://x.com/intent/tweet?text=Experiment+22%20https%3A%2F%2Fdlfelps.github.io%2F2025%2F09%2F01%2Fcobad.html" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
@@ -652,7 +674,8 @@ Features: [norm_x, norm_y, is_weekend, start_time, duration, placeholder] (6D)
 
 
       
-  <nav class="pagination">
+
+  <nav class="pagination" aria-label="Post pagination">
     
       <a href="/2025/08/21/mobility.html" class="pagination--pager" title="Experiment 21">Previous</a>
     
@@ -683,6 +706,7 @@ Features: [norm_x, norm_y, is_weekend, start_time, duration, placeholder] (6D)
 <!-- end custom footer snippets -->
         
 
+
 <div class="page__footer-follow">
   <ul class="social-icons">
     
@@ -690,7 +714,7 @@ Features: [norm_x, norm_y, is_weekend, start_time, duration, placeholder] (6D)
     
 
     
-      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-square-rss" aria-hidden="true"></i> Feed</a></li>
     
   </ul>
 </div>
@@ -702,7 +726,9 @@ Features: [norm_x, norm_y, is_weekend, start_time, duration, placeholder] (6D)
     </div>
 
     
+
   <script src="/assets/js/main.min.js"></script>
+
 
 
 

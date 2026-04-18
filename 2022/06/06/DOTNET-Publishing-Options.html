@@ -1,14 +1,19 @@
+
+
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.27.3 by Michael Rose
-  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Minimal Mistakes Jekyll Theme 4.28.0 by Michael Rose
+  Copyright 2013-2026 Michael Rose - mademistakes.com | @mmistakes
+  Copyright 2024-2026 iBug - ibugone.com | @iBug
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
 -->
 
 <html lang="en" class="no-js">
   <head>
-    <meta charset="utf-8">
+    
+<meta charset="utf-8">
+
 
 <!-- begin _includes/seo.html --><title>Experiment 01 - .NET Experiments</title>
 <meta name="description" content="This experiment explores various publishing options associated with .NET, including:    framework-dependent vs self-contained   Windows vs Linux vs OSX   and more…">
@@ -28,6 +33,8 @@
 
 
   <meta property="og:description" content="This experiment explores various publishing options associated with .NET, including:    framework-dependent vs self-contained   Windows vs Linux vs OSX   and more…">
+
+
 
 
 
@@ -83,7 +90,8 @@
   </head>
 
   <body class="layout--single" dir="ltr">
-    <nav class="skip-links">
+    
+<nav class="skip-links" aria-label="Skip links">
   <ul>
     <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
     <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
@@ -93,10 +101,11 @@
 
     
 
+
 <div class="masthead">
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
-      <nav id="site-nav" class="greedy-nav">
+      <nav id="site-nav" class="greedy-nav" aria-label="Primary navigation">
         
         <a class="site-title" href="/">
           .NET Experiments
@@ -128,11 +137,14 @@
 
 
 
+
+
 <div id="main" role="main">
   
 
 
-  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Experiment 01">
     <meta itemprop="description" content="This experiment explores various publishing options associated with .NET, including:  framework-dependent vs self-contained  Windows vs Linux vs OSX  and more…">
     <meta itemprop="datePublished" content="2022-06-06T00:00:00+00:00">
@@ -141,11 +153,12 @@
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
             <a href="https://dlfelps.github.io/2022/06/06/DOTNET-Publishing-Options.html" itemprop="url">Experiment 01
 </a>
           </h1>
           
+
 
   <p class="page__meta">
     
@@ -176,10 +189,10 @@
         </header>
       
 
-      <section class="page__content" itemprop="text">
+      <section class="page__content e-content" itemprop="text">
         
           <aside class="sidebar__right sticky">
-            <nav class="toc">
+            <nav class="toc" aria-label="Table of contents">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
               <ul class="toc__menu"><li><a href="#introduction">Introduction</a></li><li><a href="#setup">Setup</a></li><li><a href="#experiment">Experiment</a><ul><li><a href="#framework-dependent-vs-self-contained">Framework-dependent vs self-contained</a></li><li><a href="#varying-the-platform-of-self-contained-releases">Varying the platform of self-contained releases</a></li><li><a href="#trimming">Trimming</a></li></ul></li><li><a href="#limitations-of-study">Limitations of study</a></li><li><a href="#conclusion">Conclusion</a><ul><li><a href="#references">References</a></li><li><a href="#footnotes">Footnotes</a></li></ul></li></ul>
             </nav>
@@ -386,7 +399,10 @@ dotnet publish -c "exp_1c_osx12_arm"  -r osx.12-arm64 --self-contained true -p:P
       <footer class="page__meta">
         
         
+
   
+    
+
 
 
   
@@ -401,15 +417,21 @@ dotnet publish -c "exp_1c_osx12_arm"  -r osx.12-arm64 --self-contained true -p:P
   </p>
 
 
+  
+
+  
 
 
         
 
+
   <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2022-06-06T00:00:00+00:00">June 6, 2022</time></p>
+
 
       </footer>
 
-      <section class="page__share">
+      
+<section class="page__share">
   <h4 class="page__share-title">Share on</h4>
 
   <a href="https://x.com/intent/tweet?text=Experiment+01%20https%3A%2F%2Fdlfelps.github.io%2F2022%2F06%2F06%2FDOTNET-Publishing-Options.html" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
@@ -431,7 +453,8 @@ dotnet publish -c "exp_1c_osx12_arm"  -r osx.12-arm64 --self-contained true -p:P
 
 
       
-  <nav class="pagination">
+
+  <nav class="pagination" aria-label="Post pagination">
     
       <a href="/2022/06/04/My-First-Post.html" class="pagination--pager" title="Welcome to my blog!">Previous</a>
     
@@ -462,6 +485,7 @@ dotnet publish -c "exp_1c_osx12_arm"  -r osx.12-arm64 --self-contained true -p:P
 <!-- end custom footer snippets -->
         
 
+
 <div class="page__footer-follow">
   <ul class="social-icons">
     
@@ -469,7 +493,7 @@ dotnet publish -c "exp_1c_osx12_arm"  -r osx.12-arm64 --self-contained true -p:P
     
 
     
-      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-square-rss" aria-hidden="true"></i> Feed</a></li>
     
   </ul>
 </div>
@@ -481,7 +505,9 @@ dotnet publish -c "exp_1c_osx12_arm"  -r osx.12-arm64 --self-contained true -p:P
     </div>
 
     
+
   <script src="/assets/js/main.min.js"></script>
+
 
 
 

@@ -1,0 +1,561 @@
+
+
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.28.0 by Michael Rose
+  Copyright 2013-2026 Michael Rose - mademistakes.com | @mmistakes
+  Copyright 2024-2026 iBug - ibugone.com | @iBug
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en" class="no-js">
+  <head>
+    
+<meta charset="utf-8">
+
+
+<!-- begin _includes/seo.html --><title>Experiment 29 - .NET Experiments</title>
+<meta name="description" content="A tiny GitHub Action that turns every Python PR into a data-backed review — coverage, blast radius, performance, and maintainability, posted right in the comments.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 29">
+<meta property="og:url" content="https://dlfelps.github.io/2026/04/01/slop-report.html">
+
+
+  <meta property="og:description" content="A tiny GitHub Action that turns every Python PR into a data-backed review — coverage, blast radius, performance, and maintainability, posted right in the comments.">
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-04-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2026/04/01/slop-report.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    
+<nav class="skip-links" aria-label="Skip links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav" aria-label="Primary navigation">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/"
+                
+                
+              >Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 29">
+    <meta itemprop="description" content="A tiny GitHub Action that turns every Python PR into a data-backed review — coverage, blast radius, performance, and maintainability, posted right in the comments.">
+    <meta itemprop="datePublished" content="2026-04-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="https://dlfelps.github.io/2026/04/01/slop-report.html" itemprop="url">Experiment 29
+</a>
+          </h1>
+          
+
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-04-01T00:00:00+00:00">April 1, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          17 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc" aria-label="Table of contents">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#stop-merging-on-vibes-meet-slop-report">Stop Merging on Vibes: Meet Slop Report</a><ul><li><a href="#what-is-slop-report">What is Slop Report?</a></li><li><a href="#why-you-actually-want-this">Why You Actually Want This</a><ul><li><a href="#lgtm--on-a-pr-that-dropped-coverage-by-15-points">“LGTM 🚀” on a PR that dropped coverage by 15 points</a></li><li><a href="#the-one-line-change-that-broke-four-services">The one-line change that broke four services</a></li><li><a href="#the-performance-regression-that-only-shows-up-under-load">The performance regression that only shows up under load</a></li><li><a href="#death-by-a-thousand-small-messes">Death by a thousand small messes</a></li><li><a href="#none-of-this-blocks-a-merge">None of this blocks a merge</a></li></ul></li><li><a href="#bonus-fork-it-and-add-your-own-metric">Bonus: Fork It and Add Your Own Metric</a><ul><li><a href="#1-fork-and-clone">1. Fork and clone</a></li><li><a href="#2-write-the-metric-as-its-own-module">2. Write the metric as its own module</a></li><li><a href="#3-wire-it-into-entrypointpy">3. Wire it into entrypoint.py</a></li><li><a href="#4-declare-the-new-input-in-actionyml">4. Declare the new input in action.yml</a></li><li><a href="#5-add-a-test-and-run-locally">5. Add a test and run locally</a></li><li><a href="#6-test-it-end-to-end-on-a-real-pr">6. Test it end-to-end on a real PR</a></li><li><a href="#7-send-it-upstream">7. Send it upstream</a></li></ul></li><li><a href="#give-it-five-minutes">Give it five minutes</a></li></ul></li></ul>
+            </nav>
+          </aside>
+        
+        <p>A tiny GitHub Action that turns every Python PR into a data-backed review — coverage, blast radius, performance, and maintainability, posted right in the comments.</p>
+
+<h1 id="stop-merging-on-vibes-meet-slop-report">Stop Merging on Vibes: Meet Slop Report</h1>
+
+<h2 id="what-is-slop-report">What is Slop Report?</h2>
+
+<p><a href="https://github.com/marketplace/actions/slop-report">Slop Report</a> is a drop-in GitHub Action for Python projects that runs alongside your existing CI and posts a single, readable quality summary as a comment on every pull request. It never blocks a merge — it just surfaces the signal you’d otherwise have to dig through logs, dashboards, and <code class="language-plaintext highlighter-rouge">radon</code> output to find.</p>
+
+<p>Here’s what reviewers actually see on the PR:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Score</th>
+      <th>Status</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Change Risk</td>
+      <td>72% covered</td>
+      <td>⚠️</td>
+      <td>28% of changed lines lack test coverage</td>
+    </tr>
+    <tr>
+      <td>Blast Radius</td>
+      <td>12 modules</td>
+      <td>🛑</td>
+      <td>High impact: auth, api, models affected</td>
+    </tr>
+    <tr>
+      <td>Performance</td>
+      <td>No regressions</td>
+      <td>✅</td>
+      <td>No tests exceeded 20% slowdown threshold</td>
+    </tr>
+    <tr>
+      <td>MI Regression</td>
+      <td>-10 pts</td>
+      <td>🛑</td>
+      <td>Worst: auth.py (80 → 70)</td>
+    </tr>
+    <tr>
+      <td>New File Quality</td>
+      <td>0.94×</td>
+      <td>⚠️</td>
+      <td>New files avg MI 68 vs main avg 72</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Five numbers, three status icons, one place to look. That’s the entire pitch.</p>
+
+<p>Under the hood it’s using tools you already know — <code class="language-plaintext highlighter-rouge">coverage</code>, <code class="language-plaintext highlighter-rouge">pytest --durations=0</code>, Python’s <code class="language-plaintext highlighter-rouge">ast</code> module, and <code class="language-plaintext highlighter-rouge">radon mi</code> — but wired together so the comparison between the PR branch and the base branch happens for you, automatically, every time.</p>
+
+<p>Setup is one file:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># .github/workflows/slop-report.yml</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">Slop Report</span>
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">pull_request</span><span class="pi">:</span>
+    <span class="na">types</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">opened</span><span class="pi">,</span> <span class="nv">synchronize</span><span class="pi">,</span> <span class="nv">reopened</span><span class="pi">]</span>
+<span class="na">permissions</span><span class="pi">:</span>
+  <span class="na">pull-requests</span><span class="pi">:</span> <span class="s">write</span>
+  <span class="na">contents</span><span class="pi">:</span> <span class="s">read</span>
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">slop-report</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v4</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">fetch-depth</span><span class="pi">:</span> <span class="m">0</span>   <span class="c1"># required — diffs against the base branch</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">dlfelps/slop-report@v1</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">github-token</span><span class="pi">:</span> <span class="s">$</span>
+</code></pre></div></div>
+
+<p>Commit that, open a PR, and the first comment shows up on the next push.</p>
+
+<hr />
+
+<h2 id="why-you-actually-want-this">Why You Actually Want This</h2>
+
+<p>Most teams already have “quality tooling.” They just don’t have it <em>where the decision is being made.</em> Here’s what that looks like in practice, and what Slop Report does about it.</p>
+
+<h3 id="lgtm--on-a-pr-that-dropped-coverage-by-15-points">“LGTM 🚀” on a PR that dropped coverage by 15 points</h3>
+
+<p>You have a coverage report. It’s in Codecov, or an artifact zipped up somewhere, or a badge that shows the repo-wide average — which barely moves when 40 new lines slip through untested. The reviewer opens the PR, sees a green check, and ships it.</p>
+
+<p><strong>Slop Report’s Change Risk metric</strong> ignores the repo-wide average entirely and looks only at the lines you actually changed in this PR. “72% covered” means 72% of <em>your diff</em> is hit by a test. If it’s 40%, the comment says 40% — right next to the code. You can’t miss it, and you don’t have to click anywhere.</p>
+
+<h3 id="the-one-line-change-that-broke-four-services">The one-line change that broke four services</h3>
+
+<p>Someone tweaks a helper in <code class="language-plaintext highlighter-rouge">utils/auth.py</code>. Looks harmless. Two sprints later you’re doing a post-mortem on why the billing service started 500ing.</p>
+
+<p><strong>Blast Radius</strong> builds an import graph of the whole repo with <code class="language-plaintext highlighter-rouge">ast</code> and tells you, at PR time, how many modules depend on the file you just touched. A “High impact: auth, api, models affected” tag on a one-line diff is the kind of prompt that makes a reviewer say <em>“hold on, let me actually read this”</em> — which is exactly the point.</p>
+
+<h3 id="the-performance-regression-that-only-shows-up-under-load">The performance regression that only shows up under load</h3>
+
+<p>Someone adds a nested loop, a pickle, a sync call inside an async path. It passes tests. It gets merged. Three weeks later a customer notices.</p>
+
+<p><strong>Performance</strong> checks out the base branch, runs the test suite with <code class="language-plaintext highlighter-rouge">pytest --durations=0</code>, then does the same on the PR branch, and diffs per-test timings. The worst offender gets named in the comment. “test_parse_invoice slowed 47%” is a very different conversation from “we’ll look into it in the next sprint.”</p>
+
+<h3 id="death-by-a-thousand-small-messes">Death by a thousand small messes</h3>
+
+<p>No single PR “makes the code worse.” But six months later every file is 400 lines of tangled conditionals and nobody knows how it got there.</p>
+
+<p><strong>MI Regression</strong> runs <code class="language-plaintext highlighter-rouge">radon mi</code> on each modified file on both branches and reports the worst maintainability drop. <strong>New File Quality</strong> does the same for files you’re adding — comparing their average Maintainability Index against the existing baseline. A 0.94× ratio means <em>on average, the new code you’re adding is less maintainable than what’s already in the repo.</em> Catching that in review is dramatically cheaper than catching it in a refactor quarter.</p>
+
+<h3 id="none-of-this-blocks-a-merge">None of this blocks a merge</h3>
+
+<p>This is the design decision that makes Slop Report actually get used: it never fails a workflow. It’s a comment, not a gate. Teams who’ve been burned by brittle quality gates can install it in five minutes without worrying that a flaky metric is going to hold up a release on Friday afternoon. Over time, the numbers themselves become the norm — “your PR has a 🛑 on blast radius” becomes a thing reviewers actually mention, because it’s visible.</p>
+
+<hr />
+
+<h2 id="bonus-fork-it-and-add-your-own-metric">Bonus: Fork It and Add Your Own Metric</h2>
+
+<p>Slop Report is intentionally small and hackable. The repo at <a href="https://github.com/dlfelps/slop-report">github.com/dlfelps/slop-report</a> is ~99% Python with a clean top-level layout:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>slop-report/
+├── action.yml          # declares inputs and the Docker entrypoint
+├── Dockerfile          # the action's runtime
+├── entrypoint.py       # orchestrates all the metrics, posts the comment
+├── requirements.txt
+├── src/                # one module per metric
+└── tests/
+</code></pre></div></div>
+
+<p>Want to add, say, a <strong>Docstring Coverage</strong> metric that flags PRs adding public functions without docstrings? Here’s the recipe.</p>
+
+<h3 id="1-fork-and-clone">1. Fork and clone</h3>
+
+<p>Hit <strong>Fork</strong> on the repo page, then:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/&lt;you&gt;/slop-report
+<span class="nb">cd </span>slop-report
+git checkout <span class="nt">-b</span> add-docstring-metric
+</code></pre></div></div>
+
+<h3 id="2-write-the-metric-as-its-own-module">2. Write the metric as its own module</h3>
+
+<p>Drop a new file into <code class="language-plaintext highlighter-rouge">src/</code> — say <code class="language-plaintext highlighter-rouge">src/docstring_coverage.py</code> — that exposes one function returning a structured result. Mirror the shape the existing metrics use (score, status, details) so it slots into the report cleanly:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/docstring_coverage.py
+</span><span class="kn">import</span> <span class="n">ast</span>
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">changed_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">total</span><span class="p">,</span> <span class="n">documented</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="n">offenders</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">changed_files</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">.</span><span class="nf">endswith</span><span class="p">(</span><span class="sh">"</span><span class="s">.py</span><span class="sh">"</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="nc">Path</span><span class="p">(</span><span class="n">path</span><span class="p">).</span><span class="nf">read_text</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">ast</span><span class="p">.</span><span class="nf">walk</span><span class="p">(</span><span class="n">tree</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="p">.</span><span class="n">FunctionDef</span><span class="p">,</span> <span class="n">ast</span><span class="p">.</span><span class="n">AsyncFunctionDef</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">node</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">_</span><span class="sh">"</span><span class="p">):</span>
+                    <span class="k">continue</span>  <span class="c1"># skip private
+</span>                <span class="n">total</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">ast</span><span class="p">.</span><span class="nf">get_docstring</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+                    <span class="n">documented</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">offenders</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s">::</span><span class="si">{</span><span class="n">node</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">total</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="sh">"</span><span class="s">score</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">N/A</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">status</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">✅</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">details</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">No new public functions</span><span class="sh">"</span><span class="p">}</span>
+    <span class="n">pct</span> <span class="o">=</span> <span class="nf">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">documented</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="sh">"</span><span class="s">✅</span><span class="sh">"</span> <span class="k">if</span> <span class="n">pct</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="k">else</span> <span class="sh">"</span><span class="s">⚠️</span><span class="sh">"</span> <span class="k">if</span> <span class="n">pct</span> <span class="o">&gt;=</span> <span class="mi">70</span> <span class="k">else</span> <span class="sh">"</span><span class="s">🛑</span><span class="sh">"</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="sh">"</span><span class="s">score</span><span class="sh">"</span><span class="p">:</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">pct</span><span class="si">}</span><span class="s">% documented</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">status</span><span class="sh">"</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">details</span><span class="sh">"</span><span class="p">:</span> <span class="sa">f</span><span class="sh">"</span><span class="s">Missing: </span><span class="si">{</span><span class="sh">'</span><span class="s">, </span><span class="sh">'</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">offenders</span><span class="p">[</span><span class="si">:</span><span class="mi">3</span><span class="p">])</span><span class="si">}</span><span class="sh">"</span> <span class="k">if</span> <span class="n">offenders</span> <span class="k">else</span> <span class="sh">"</span><span class="s">All documented</span><span class="sh">"</span><span class="p">,</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-wire-it-into-entrypointpy">3. Wire it into <code class="language-plaintext highlighter-rouge">entrypoint.py</code></h3>
+
+<p>Open <code class="language-plaintext highlighter-rouge">entrypoint.py</code> and find where the existing metrics (change risk, blast radius, etc.) are invoked and appended to the report. Add yours alongside them, guarded by an input flag so users can toggle it:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">INPUT_ENABLE_DOCSTRINGS</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">true</span><span class="sh">"</span><span class="p">).</span><span class="nf">lower</span><span class="p">()</span> <span class="o">==</span> <span class="sh">"</span><span class="s">true</span><span class="sh">"</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="n">src.docstring_coverage</span> <span class="kn">import</span> <span class="n">run</span> <span class="k">as</span> <span class="n">run_docstrings</span>
+    <span class="n">rows</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="sh">"</span><span class="s">Docstring Coverage</span><span class="sh">"</span><span class="p">,</span> <span class="nf">run_docstrings</span><span class="p">(</span><span class="n">changed_files</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<h3 id="4-declare-the-new-input-in-actionyml">4. Declare the new input in <code class="language-plaintext highlighter-rouge">action.yml</code></h3>
+
+<p>GitHub passes action inputs in as <code class="language-plaintext highlighter-rouge">INPUT_&lt;NAME&gt;</code> environment variables. Add yours:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">inputs</span><span class="pi">:</span>
+  <span class="na">enable-docstrings</span><span class="pi">:</span>
+    <span class="na">description</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Run</span><span class="nv"> </span><span class="s">docstring</span><span class="nv"> </span><span class="s">coverage</span><span class="nv"> </span><span class="s">analysis"</span>
+    <span class="na">required</span><span class="pi">:</span> <span class="kc">false</span>
+    <span class="na">default</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+</code></pre></div></div>
+
+<h3 id="5-add-a-test-and-run-locally">5. Add a test and run locally</h3>
+
+<p>Drop a fixture under <code class="language-plaintext highlighter-rouge">tests/</code> with a couple of sample Python files — one fully documented, one missing a docstring — and assert the expected score. Run <code class="language-plaintext highlighter-rouge">pytest</code> locally, then build the Docker image the same way the action does:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build <span class="nt">-t</span> slop-report-local <span class="nb">.</span>
+docker run <span class="nt">--rm</span> <span class="nt">-v</span> <span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace"</span> <span class="nt">-w</span> /workspace slop-report-local
+</code></pre></div></div>
+
+<h3 id="6-test-it-end-to-end-on-a-real-pr">6. Test it end-to-end on a real PR</h3>
+
+<p>Push your branch to your fork, then in a scratch repo reference <em>your</em> fork in the workflow:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">&lt;you&gt;/slop-report@add-docstring-metric</span>
+</code></pre></div></div>
+
+<p>Open a PR on the scratch repo and watch your new row show up in the comment.</p>
+
+<h3 id="7-send-it-upstream">7. Send it upstream</h3>
+
+<p>If it’s generally useful, open a PR back to <code class="language-plaintext highlighter-rouge">dlfelps/slop-report</code>. The repo is young (v1 shipped in April 2026), so thoughtful contributions are welcome.</p>
+
+<hr />
+
+<h2 id="give-it-five-minutes">Give it five minutes</h2>
+
+<p>Slop Report isn’t trying to replace your linter, your CI, or your coverage service. It’s trying to make the data you already have <em>visible at the one moment it matters most</em> — when a human is deciding whether to click “Merge.”</p>
+
+<p>Grab it from the <a href="https://github.com/marketplace/actions/slop-report">GitHub Marketplace</a>, drop the eight-line workflow into your repo, and open your next PR. Worst case, you ignore the comment. Best case, you catch the bug before your users do.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+  
+    
+
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/claude" class="page__taxonomy-item p-category" rel="tag">claude</a><span class="sep">, </span>
+    
+      <a href="/tags/code-review" class="page__taxonomy-item p-category" rel="tag">code-review</a><span class="sep">, </span>
+    
+      <a href="/tags/github" class="page__taxonomy-item p-category" rel="tag">github</a><span class="sep">, </span>
+    
+      <a href="/tags/pr" class="page__taxonomy-item p-category" rel="tag">pr</a><span class="sep">, </span>
+    
+      <a href="/tags/slop" class="page__taxonomy-item p-category" rel="tag">slop</a><span class="sep">, </span>
+    
+      <a href="/tags/vibe-coding" class="page__taxonomy-item p-category" rel="tag">vibe-coding</a>
+    
+    </span>
+  </p>
+
+
+  
+
+  
+
+
+        
+
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-04-01T00:00:00+00:00">April 1, 2026</time></p>
+
+
+      </footer>
+
+      
+<section class="page__share">
+  <h4 class="page__share-title">Share on</h4>
+
+  <a href="https://x.com/intent/tweet?text=Experiment+29%20https%3A%2F%2Fdlfelps.github.io%2F2026%2F04%2F01%2Fslop-report.html" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
+    <i class="fab fa-fw fa-x-twitter" aria-hidden="true"></i><span> X</span>
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2026%2F04%2F01%2Fslop-report.html" class="btn btn--facebook" aria-label="Share on Facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook">
+    <i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span>
+  </a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dlfelps.github.io/2026/04/01/slop-report.html" class="btn btn--linkedin" aria-label="Share on LinkedIn" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn">
+    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
+  </a>
+
+  <a href="https://bsky.app/intent/compose?text=Experiment+29%20https%3A%2F%2Fdlfelps.github.io%2F2026%2F04%2F01%2Fslop-report.html" class="btn btn--bluesky" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Bluesky">
+    <i class="fab fa-fw fa-bluesky" aria-hidden="true"></i><span> Bluesky</span>
+  </a>
+</section>
+
+
+      
+
+  <nav class="pagination" aria-label="Post pagination">
+    
+      <a href="/2026/03/01/bandit.html" class="pagination--pager" title="Experiment 28">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-square-rss" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2026 <a href="https://dlfelps.github.io">.NET Experiments</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
