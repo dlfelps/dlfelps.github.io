@@ -178,4 +178,10 @@ var store = [{
         "tags": ["claude","pr","github","vibe-coding","slop","code-review"],
         "url": "/2026/04/01/slop-report.html",
         "teaser": null
+      },{
+        "title": "Experiment 30",
+        "excerpt":"Enforce your dependency policy before AI agents or developers can commit it. Your AI agent has a pyproject.toml problem Your AI coding agent has been busy. While you were getting coffee, it cheerfully added requests-async-mega-turbo, definitely-not-malware, and cool-utils-2024 to your pyproject.toml. One has a critical CVE. One is AGPL-licensed and...","categories": [],
+        "tags": ["claude","agents","compliance","legal","security","cve"],
+        "url": "/2026/05/01/lex-align.html",
+        "teaser": null
       }]

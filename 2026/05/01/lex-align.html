@@ -1,0 +1,391 @@
+
+
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.28.0 by Michael Rose
+  Copyright 2013-2026 Michael Rose - mademistakes.com | @mmistakes
+  Copyright 2024-2026 iBug - ibugone.com | @iBug
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en" class="no-js">
+  <head>
+    
+<meta charset="utf-8">
+
+
+<!-- begin _includes/seo.html --><title>Experiment 30 - .NET Experiments</title>
+<meta name="description" content="Enforce your dependency policy before AI agents or developers can commit it.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Experiment 30">
+<meta property="og:url" content="https://dlfelps.github.io/2026/05/01/lex-align.html">
+
+
+  <meta property="og:description" content="Enforce your dependency policy before AI agents or developers can commit it.">
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-05-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2026/05/01/lex-align.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    
+<nav class="skip-links" aria-label="Skip links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav" aria-label="Primary navigation">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/"
+                
+                
+              >Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Experiment 30">
+    <meta itemprop="description" content="Enforce your dependency policy before AI agents or developers can commit it.">
+    <meta itemprop="datePublished" content="2026-05-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="https://dlfelps.github.io/2026/05/01/lex-align.html" itemprop="url">Experiment 30
+</a>
+          </h1>
+          
+
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-05-01T00:00:00+00:00">May 1, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          7 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc" aria-label="Table of contents">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#your-ai-agent-has-a-pyprojecttoml-problem">Your AI agent has a pyproject.toml problem</a><ul><li><a href="#why-existing-tooling-misses">Why existing tooling misses</a></li><li><a href="#why-agents-need-a-different-shape-of-answer">Why agents need a different shape of answer</a></li><li><a href="#one-answer">One answer</a></li><li><a href="#who-should-actually-care">Who should actually care</a></li></ul></li></ul>
+            </nav>
+          </aside>
+        
+        <p>Enforce your dependency policy before AI agents or developers can commit it.</p>
+
+<h1 id="your-ai-agent-has-a-pyprojecttoml-problem">Your AI agent has a <code class="language-plaintext highlighter-rouge">pyproject.toml</code> problem</h1>
+
+<p><img src="/assets/images/bouncer.PNG" alt="bouncer" /></p>
+
+<p>Your AI coding agent has been busy. While you were getting coffee, it cheerfully added <code class="language-plaintext highlighter-rouge">requests-async-mega-turbo</code>, <code class="language-plaintext highlighter-rouge">definitely-not-malware</code>, and <code class="language-plaintext highlighter-rouge">cool-utils-2024</code> to your <code class="language-plaintext highlighter-rouge">pyproject.toml</code>. One has a critical CVE. One is AGPL-licensed and you ship proprietary software. One was banned by your legal team last quarter.</p>
+
+<p>You won’t find out until PR review. Maybe.</p>
+
+<p>This is a new kind of problem, and most of the tools you already pay for are the wrong <em>shape</em> for it.</p>
+
+<h2 id="why-existing-tooling-misses">Why existing tooling misses</h2>
+
+<p>Dependabot, Snyk, and FOSSA do excellent work — <em>after</em> a PR is open. That timing made sense when “adding a dependency” was a deliberate human act. A developer added a package; a tool flagged it on review; the developer pushed back or pulled it out. Cost of being late: one revert.</p>
+
+<p>AI agents broke that loop. By the time the PR is open, the agent has already:</p>
+
+<ul>
+  <li>picked the package,</li>
+  <li>imported it across three files,</li>
+  <li>written tests against its API,</li>
+  <li>possibly refactored adjacent code to fit its idioms.</li>
+</ul>
+
+<p>Telling the reviewer “this dep is banned” at that point means throwing out a chunk of work and asking the agent to re-plan. The cost of being late didn’t just go up — it changed kind. And the existing tools haven’t caught up because their architecture assumes a slower, more deliberate authoring loop than the one we actually have now.</p>
+
+<h2 id="why-agents-need-a-different-shape-of-answer">Why agents need a different shape of answer</h2>
+
+<p>There’s a second, subtler problem: agents are bad at fuzzy answers.</p>
+
+<p>A human reading <em>“this package has license concerns, consider alternatives”</em> knows what to do. An LLM reading the same string will sometimes paste it into a code comment and keep going. The signal a coding agent can actually act on is a closed enum — <em>allowed</em>, <em>not allowed</em>, <em>replace with this</em> — returned <em>before</em> the bytes hit disk.</p>
+
+<p>That’s not a feature request. It’s a structural property of working with autonomous tools that take action on partial information. Policy delivered as prose is policy that won’t be enforced.</p>
+
+<p><img src="/assets/images/git_conflict.PNG" alt="git conflict" /></p>
+
+<h2 id="one-answer">One answer</h2>
+
+<p><a href="https://dlfelps.github.io/lex-align/"><code class="language-plaintext highlighter-rouge">lex-align</code></a> is one take on this: it checks every proposed Python dependency against your approved registry, OSV CVE feed, and license rules, and returns a clear verdict before the package lands in <code class="language-plaintext highlighter-rouge">pyproject.toml</code>. It’s narrow on purpose — Python only, direct dependencies, a single CVSS threshold, self-hosted. Those are choices, not gaps. The <a href="https://dlfelps.github.io/lex-align/">docs</a> walk through install, hooks, and agent integration.</p>
+
+<p>The piece worth pulling out is the philosophy of the verdict: <em>closed enum, deterministic, returned before action.</em> Whoever eventually builds the equivalent for JavaScript or Go will end up with the same shape, because the problem demands it.</p>
+
+<h2 id="who-should-actually-care">Who should actually care</h2>
+
+<p>If you have AI agents committing to a Python codebase with any real license or security policy, and you currently find out about violations at PR review or later, this hole exists in your stack whether you’ve named it or not. <code class="language-plaintext highlighter-rouge">lex-align</code> is a specific, working answer to it.</p>
+
+<p>If you’re on a polyglot stack, this particular tool isn’t yours yet — but the problem is, and watching how it gets solved in one language is a reasonable use of your time.</p>
+
+<p>The honest question to leave with: <em>do you actually know what your agents have installed this month?</em></p>
+
+<p>If the answer is no, the problem is real even if the tool you end up using isn’t this one.</p>
+
+<p><img src="/assets/images/lex-align-logo.png" alt="lex-align" /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+  
+    
+
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/agents" class="page__taxonomy-item p-category" rel="tag">agents</a><span class="sep">, </span>
+    
+      <a href="/tags/claude" class="page__taxonomy-item p-category" rel="tag">claude</a><span class="sep">, </span>
+    
+      <a href="/tags/compliance" class="page__taxonomy-item p-category" rel="tag">compliance</a><span class="sep">, </span>
+    
+      <a href="/tags/cve" class="page__taxonomy-item p-category" rel="tag">cve</a><span class="sep">, </span>
+    
+      <a href="/tags/legal" class="page__taxonomy-item p-category" rel="tag">legal</a><span class="sep">, </span>
+    
+      <a href="/tags/security" class="page__taxonomy-item p-category" rel="tag">security</a>
+    
+    </span>
+  </p>
+
+
+  
+
+  
+
+
+        
+
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-05-01T00:00:00+00:00">May 1, 2026</time></p>
+
+
+      </footer>
+
+      
+<section class="page__share">
+  <h4 class="page__share-title">Share on</h4>
+
+  <a href="https://x.com/intent/tweet?text=Experiment+30%20https%3A%2F%2Fdlfelps.github.io%2F2026%2F05%2F01%2Flex-align.html" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
+    <i class="fab fa-fw fa-x-twitter" aria-hidden="true"></i><span> X</span>
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2026%2F05%2F01%2Flex-align.html" class="btn btn--facebook" aria-label="Share on Facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook">
+    <i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span>
+  </a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dlfelps.github.io/2026/05/01/lex-align.html" class="btn btn--linkedin" aria-label="Share on LinkedIn" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn">
+    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
+  </a>
+
+  <a href="https://bsky.app/intent/compose?text=Experiment+30%20https%3A%2F%2Fdlfelps.github.io%2F2026%2F05%2F01%2Flex-align.html" class="btn btn--bluesky" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Bluesky">
+    <i class="fab fa-fw fa-bluesky" aria-hidden="true"></i><span> Bluesky</span>
+  </a>
+</section>
+
+
+      
+
+  <nav class="pagination" aria-label="Post pagination">
+    
+      <a href="/2026/04/01/slop-report.html" class="pagination--pager" title="Experiment 29">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-square-rss" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2026 <a href="https://dlfelps.github.io">.NET Experiments</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
