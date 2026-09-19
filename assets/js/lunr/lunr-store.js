@@ -184,4 +184,10 @@ var store = [{
         "tags": ["claude","agents","compliance","legal","security","cve"],
         "url": "/2026/05/01/lex-align.html",
         "teaser": null
+      },{
+        "title": "Vouch: making sure the numbers in your paper are actually the numbers your code produced",
+        "excerpt":"If you’ve ever written a research paper, you know this feeling: it’s 2am before the deadline, you just re-ran an experiment because you tweaked a hyperparameter, and now you’re hunting through six terminal tabs trying to remember which number goes in Table 2. You paste 93.2% into the LaTeX source....","categories": [],
+        "tags": ["research-tools","reproducibility","latex","python","vouch"],
+        "url": "/2026/09/01/vouch.html",
+        "teaser": null
       }]

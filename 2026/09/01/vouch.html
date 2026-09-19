@@ -1,0 +1,500 @@
+
+
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.28.1 by Michael Rose
+  Copyright 2013-2026 Michael Rose - mademistakes.com | @mmistakes
+  Copyright 2024-2026 iBug - ibugone.com | @iBug
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en" class="no-js" dir="ltr">
+  <head>
+    
+<meta charset="utf-8">
+
+
+<!-- begin _includes/seo.html --><title>Vouch: making sure the numbers in your paper are actually the numbers your code produced - .NET Experiments</title>
+<meta name="description" content="If you’ve ever written a research paper, you know this feeling: it’s 2am before the deadline, you just re-ran an experiment because you tweaked a hyperparameter, and now you’re hunting through six terminal tabs trying to remember which number goes in Table 2. You paste 93.2% into the LaTeX source. It’s probably right. You move on.">
+
+
+  <meta name="author" content="Daniel Felps">
+  
+  <meta property="article:author" content="Daniel Felps">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content=".NET Experiments">
+<meta property="og:title" content="Vouch: making sure the numbers in your paper are actually the numbers your code produced">
+<meta property="og:url" content="https://dlfelps.github.io/2026/09/01/vouch.html">
+
+
+  <meta property="og:description" content="If you’ve ever written a research paper, you know this feeling: it’s 2am before the deadline, you just re-ran an experiment because you tweaked a hyperparameter, and now you’re hunting through six terminal tabs trying to remember which number goes in Table 2. You paste 93.2% into the LaTeX source. It’s probably right. You move on.">
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-09-01T00:00:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://dlfelps.github.io/2026/09/01/vouch.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title=".NET Experiments Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    
+<nav class="skip-links" aria-label="Skip links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav" aria-label="Primary navigation">
+        
+        <a class="site-title" href="/">
+          .NET Experiments
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/"
+                
+                
+              >Quick-Start Guide</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Vouch: making sure the numbers in your paper are actually the numbers your code produced">
+    <meta itemprop="description" content="If you’ve ever written a research paper, you know this feeling: it’s 2am before thedeadline, you just re-ran an experiment because you tweaked a hyperparameter, and nowyou’re hunting through six terminal tabs trying to remember which number goes in Table 2.You paste 93.2% into the LaTeX source. It’s probably right. You move on.">
+    <meta itemprop="datePublished" content="2026-09-01T00:00:00+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="https://dlfelps.github.io/2026/09/01/vouch.html" itemprop="url">Vouch: making sure the numbers in your paper are actually the numbers your code produced
+</a>
+          </h1>
+          
+
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-09-01T00:00:00+00:00">September 1, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          13 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc" aria-label="Table of contents">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#the-actual-problem">The actual problem</a></li><li><a href="#how-people-currently-deal-with-this">How people currently deal with this</a></li><li><a href="#what-vouch-actually-does">What vouch actually does</a><ul><li><a href="#1-record-results-as-they-happen">1. Record results as they happen</a></li><li><a href="#2-find-the-key-without-guessing">2. Find the key without guessing</a></li><li><a href="#3-cite-it-right-in-the-latex">3. Cite it, right in the LaTeX</a></li><li><a href="#4-numbers-built-from-other-numbers">4. Numbers built from other numbers</a></li><li><a href="#5-the-gate-vouch-check">5. The gate: vouch check</a></li></ul></li><li><a href="#the-agent-angle">The agent angle</a></li><li><a href="#try-it">Try it</a></li></ul>
+            </nav>
+          </aside>
+        
+        <p>If you’ve ever written a research paper, you know this feeling: it’s 2am before the
+deadline, you just re-ran an experiment because you tweaked a hyperparameter, and now
+you’re hunting through six terminal tabs trying to remember which number goes in Table 2.
+You paste <code class="language-plaintext highlighter-rouge">93.2%</code> into the LaTeX source. It’s probably right. You move on.</p>
+
+<p>Six months later a reviewer asks you to double check that number, and you have no idea
+which run produced it, what seed it used, or whether the code that generated it is even
+the code that’s in the repo anymore.</p>
+
+<p>This is the problem <a href="https://dlfelps.github.io/vouch/">vouch</a> is built to kill.</p>
+
+<p><img src="./images/vouch-chaos-placeholder.png" alt="placeholder: a messy desk / terminal screenshot showing the &quot;which number was that again&quot; chaos" /></p>
+
+<h2 id="the-actual-problem">The actual problem</h2>
+
+<p>Papers are full of numbers, and almost none of them are checked by anything. The
+pipeline usually looks like:</p>
+
+<ol>
+  <li>Run an experiment.</li>
+  <li>Read a number off stdout, a CSV, or a plot.</li>
+  <li>Type that number into the paper by hand.</li>
+  <li>Re-run the experiment later (different seed, different GPU, a “quick fix” to the
+eval code) and forget to update the paper.</li>
+</ol>
+
+<p>Every one of those steps is a place where a typo, a stale run, or a silent code change
+can sneak a wrong number into print. And it’s not a hypothetical problem — “number in
+the paper doesn’t match the code” is one of the most common things that comes up in
+reproducibility audits.</p>
+
+<h2 id="how-people-currently-deal-with-this">How people currently deal with this</h2>
+
+<p><strong>Just being careful.</strong> The default approach. Doesn’t scale past your second draft,
+and definitely doesn’t survive a coauthor rerunning your code on their machine.</p>
+
+<p><strong>Experiment trackers (Weights &amp; Biases, MLflow, Sacred, Aim, etc.)</strong> These are great
+at logging metrics over the course of training and letting you compare runs in a
+dashboard. What they don’t do is close the loop with the <em>paper itself</em> — there’s
+still a manual step where a human reads a number off a dashboard and retypes it into
+LaTeX. The dashboard doesn’t know your paper exists, so it can’t tell you a cited
+number went stale.</p>
+
+<p><strong>Data/pipeline versioning (DVC, Git LFS)</strong> Solves a different problem — versioning
+large files and making pipelines reproducible end-to-end. Doesn’t touch the
+paper-writing side at all; you still need something to connect “this run” to “this
+sentence.”</p>
+
+<p><strong>Just re-running everything before submission</strong> Works, until it doesn’t — a
+“quick check” the night before a deadline isn’t going to catch that Table 3 was
+generated from a run that predates a bug fix in your eval script three weeks ago.</p>
+
+<p>None of these tools actually look at your <code class="language-plaintext highlighter-rouge">.tex</code> file and ask “does every number in
+here still trace back to a real, unchanged run?” That’s the gap vouch fills.</p>
+
+<h2 id="what-vouch-actually-does">What vouch actually does</h2>
+
+<p>Vouch treats every number in your paper as a <strong>citation</strong>, the same way you’d cite a
+reference. Instead of typing <code class="language-plaintext highlighter-rouge">93.2%</code>, you write <code class="language-plaintext highlighter-rouge">\vouch{evaluate.cifar.resnet.acc}</code>,
+and vouch guarantees that key resolves to a real, traceable value — or your build
+fails.</p>
+
+<h3 id="1-record-results-as-they-happen">1. Record results as they happen</h3>
+
+<p>You decorate the function that produces your results:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">vouch</span>
+
+<span class="nd">@vouch.track</span><span class="p">(</span><span class="n">over</span><span class="o">=</span><span class="sh">"</span><span class="s">seed</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="bp">...</span>
+    <span class="k">return</span> <span class="p">{</span><span class="sh">"</span><span class="s">acc</span><span class="sh">"</span><span class="p">:</span> <span class="n">acc</span><span class="p">,</span> <span class="sh">"</span><span class="s">loss</span><span class="sh">"</span><span class="p">:</span> <span class="n">loss</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>Every call gets recorded — arguments, seeds, timing, and the exact code that ran —
+keyed automatically as <code class="language-plaintext highlighter-rouge">evaluate.cifar.resnet.acc</code>, <code class="language-plaintext highlighter-rouge">evaluate.cifar.resnet.loss</code>, and
+so on. Runs that only differ by seed get collapsed into mean ± std automatically.</p>
+
+<h3 id="2-find-the-key-without-guessing">2. Find the key without guessing</h3>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>vouch search vit accuracy cifar
+<span class="gp">$</span><span class="w"> </span>vouch cite evaluate.cifar.vit.acc
+<span class="go">\vouch{evaluate.cifar.vit.acc}  →  90.6 ± 0.4%
+</span></code></pre></div></div>
+
+<p>There’s also a local browsable page (<code class="language-plaintext highlighter-rouge">vouch explore --open</code>) that walks script →
+function → keys and lets you click to copy the citation. If you’re working with an
+LLM agent instead of clicking around, <code class="language-plaintext highlighter-rouge">.vouch/CATALOG.md</code> lists every citable key —
+it’s the file an agent reads first before it invents a number.</p>
+
+<p><img src="./images/vouch-explore-placeholder.png" alt="placeholder: screenshot of `vouch explore` in the browser" /></p>
+
+<h3 id="3-cite-it-right-in-the-latex">3. Cite it, right in the LaTeX</h3>
+
+<div class="language-latex highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ResNet reaches <span class="k">\vouch</span><span class="p">{</span>evaluate.cifar.resnet.acc<span class="p">}</span> top-1 accuracy.
+<span class="k">\vouchtable</span><span class="p">{</span>main<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">vouch build</code> fills in the real values, and every number in the compiled PDF becomes
+a link to a “Value provenance” appendix — which call produced it, every seed’s
+result, the run, the command, the commit. Submitting the camera-ready version?
+<code class="language-plaintext highlighter-rouge">\usepackage[final]{vouch}</code> strips all of that out.</p>
+
+<p><img src="./images/vouch-provenance-placeholder.png" alt="placeholder: PDF snippet showing a cited number linking to its provenance appendix" /></p>
+
+<h3 id="4-numbers-built-from-other-numbers">4. Numbers built from other numbers</h3>
+
+<p>Differences, ratios, “who wins” claims — instead of doing that math in your head
+(or a scratch notebook that gets deleted), it lives in <code class="language-plaintext highlighter-rouge">vouch_values.py</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@vouch.derive</span><span class="p">(</span><span class="sh">"</span><span class="s">cifar.gap</span><span class="sh">"</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="sh">"</span><span class="s">.1f</span><span class="sh">"</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="sh">"</span><span class="s">points</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">gap</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="sh">"</span><span class="s">evaluate.cifar.resnet.acc.mean</span><span class="sh">"</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="sh">"</span><span class="s">evaluate.cifar.vit.acc.mean</span><span class="sh">"</span><span class="p">])</span>
+
+<span class="nd">@vouch.claim</span><span class="p">(</span><span class="sh">"</span><span class="s">cifar.big_gap</span><span class="sh">"</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sh">"</span><span class="s">ResNet leads by more than a point</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">big_gap</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">vouch</span><span class="p">.</span><span class="nf">gt</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="sh">"</span><span class="s">cifar.gap</span><span class="sh">"</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">vouch compare A B</code> will even write the difference/ratio/significance-test code for
+you.</p>
+
+<h3 id="5-the-gate-vouch-check">5. The gate: <code class="language-plaintext highlighter-rouge">vouch check</code></h3>
+
+<p>This is the part that actually saves you. Before you submit — or on every commit,
+via a pre-commit hook or CI — <code class="language-plaintext highlighter-rouge">vouch check</code> fails the build if:</p>
+
+<ul>
+  <li>a cited key doesn’t exist</li>
+  <li>the code behind a cited run has changed since the run happened</li>
+  <li>a claim no longer holds</li>
+  <li>a figure is stale</li>
+  <li>there’s a number typed by hand instead of cited</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>! bare-number    93.2% is typed by hand; it is evaluate.cifar.resnet.acc.mean
+! no-source      97.1% matches no recorded value: record it or remove it
+</code></pre></div></div>
+
+<p>That second warning is the one that catches the “wait, where did this number even
+come from” panic before a reviewer does.</p>
+
+<h2 id="the-agent-angle">The agent angle</h2>
+
+<p>Vouch was also built with the assumption that a lot of paper-writing now involves an
+LLM in the loop, and LLMs will absolutely make up a plausible-looking number if you
+let them. <code class="language-plaintext highlighter-rouge">vouch init --agents --yes</code> sets up a skill, a rules block, and a hook so
+that if an agent (like Claude Code) types a number into your paper instead of citing
+one, it gets bounced back in the same turn with the fix. There’s also an MCP server
+(<code class="language-plaintext highlighter-rouge">vouch mcp</code>) so any MCP-capable agent can search, cite, and check values directly.</p>
+
+<h2 id="try-it">Try it</h2>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>pip <span class="nb">install</span> <span class="nt">-e</span> <span class="nb">.</span>
+<span class="gp">$</span><span class="w"> </span>vouch init
+</code></pre></div></div>
+
+<p>No dependencies required for the base install. There’s a full walkthrough — a
+two-second toy experiment taken all the way to a compiled PDF — in the
+<a href="https://dlfelps.github.io/vouch/tutorial/">tutorial</a>, and the complete command
+reference and design doc are on the
+<a href="https://dlfelps.github.io/vouch/">documentation site</a>.</p>
+
+<p>If you’ve ever had to explain to a reviewer why the number in your rebuttal doesn’t
+match the number in your paper, this one’s for you.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+  
+    
+
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/latex" class="page__taxonomy-item p-category" rel="tag">latex</a><span class="sep">, </span>
+    
+      <a href="/tags/python" class="page__taxonomy-item p-category" rel="tag">python</a><span class="sep">, </span>
+    
+      <a href="/tags/reproducibility" class="page__taxonomy-item p-category" rel="tag">reproducibility</a><span class="sep">, </span>
+    
+      <a href="/tags/research-tools" class="page__taxonomy-item p-category" rel="tag">research-tools</a><span class="sep">, </span>
+    
+      <a href="/tags/vouch" class="page__taxonomy-item p-category" rel="tag">vouch</a>
+    
+    </span>
+  </p>
+
+
+  
+
+  
+
+
+        
+
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-09-01T00:00:00+00:00">September 1, 2026</time></p>
+
+
+      </footer>
+
+      
+<section class="page__share">
+  <h4 class="page__share-title">Share on</h4>
+
+  <a href="https://x.com/intent/tweet?text=Vouch%3A+making+sure+the+numbers+in+your+paper+are+actually+the+numbers+your+code+produced%20https%3A%2F%2Fdlfelps.github.io%2F2026%2F09%2F01%2Fvouch.html" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
+    <i class="fab fa-fw fa-x-twitter" aria-hidden="true"></i><span> X</span>
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdlfelps.github.io%2F2026%2F09%2F01%2Fvouch.html" class="btn btn--facebook" aria-label="Share on Facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook">
+    <i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span>
+  </a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dlfelps.github.io/2026/09/01/vouch.html" class="btn btn--linkedin" aria-label="Share on LinkedIn" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn">
+    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
+  </a>
+
+  <a href="https://bsky.app/intent/compose?text=Vouch%3A+making+sure+the+numbers+in+your+paper+are+actually+the+numbers+your+code+produced%20https%3A%2F%2Fdlfelps.github.io%2F2026%2F09%2F01%2Fvouch.html" class="btn btn--bluesky" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Bluesky">
+    <i class="fab fa-fw fa-bluesky" aria-hidden="true"></i><span> Bluesky</span>
+  </a>
+</section>
+
+
+      
+
+  <nav class="pagination" aria-label="Post pagination">
+    
+      <a href="/2026/05/01/lex-align.html" class="pagination--pager" title="Experiment 30">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-square-rss" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2026 <a href="https://dlfelps.github.io">.NET Experiments</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

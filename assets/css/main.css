@@ -13,7 +13,7 @@
 
 /* Copyright comment */
 /*!
- * Minimal Mistakes Jekyll Theme 4.28.0 by Michael Rose
+ * Minimal Mistakes Jekyll Theme 4.28.1 by Michael Rose
  * Copyright 2013-2026 Michael Rose - mademistakes.com | @mmistakes
  * Copyright 2024-2026 iBug - ibugone.com | @iBug
  * Free for personal and commercial use under the MIT license
@@ -857,10 +857,10 @@ blockquote cite::before {
 
 /* links */
 a:visited {
-  color: rgb(86.7, 90.95, 97.75);
+  color: rgb(34%, 35.6666666667%, 38.3333333333%);
 }
 a:hover {
-  color: rgb(42.75, 46.5, 52.5);
+  color: rgb(16.7647058824%, 18.2352941176%, 20.5882352941%);
   outline: 0;
 }
 
@@ -883,7 +883,7 @@ hr {
   display: block;
   margin: 1em 0;
   border: 0;
-  border-top: 1px solid rgb(205.5, 206.75, 208.75);
+  border-top: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 
 /* lists */
@@ -956,7 +956,7 @@ figcaption a {
   transition: all 0.2s ease-in-out;
 }
 figcaption a:hover {
-  color: rgb(42.75, 46.5, 52.5);
+  color: rgb(16.7647058824%, 18.2352941176%, 20.5882352941%);
 }
 
 /* Fix IE9 SVG bug */
@@ -1036,7 +1036,7 @@ input[type=submit],
 form {
   margin-bottom: 5px;
   padding: 1em;
-  background-color: rgb(241.7, 242.5, 243.1);
+  background-color: rgb(94.7843137255%, 95.0980392157%, 95.3333333333%);
 }
 form fieldset {
   margin-bottom: 5px;
@@ -1105,7 +1105,7 @@ select {
   margin-bottom: 0.5em;
   color: #222831;
   background-color: #eeeeee;
-  border: rgb(205.5, 206.75, 208.75);
+  border: rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
   border-radius: 4px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
 }
@@ -1380,8 +1380,8 @@ table + table {
 }
 
 thead {
-  background-color: rgb(205.5, 206.75, 208.75);
-  border-bottom: 2px solid rgb(154.125, 155.0625, 156.5625);
+  background-color: rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
+  border-bottom: 2px solid rgb(60.4411764706%, 60.8088235294%, 61.3970588235%);
 }
 
 th {
@@ -1392,7 +1392,7 @@ th {
 
 td {
   padding: 0.5em;
-  border-bottom: 1px solid rgb(154.125, 155.0625, 156.5625);
+  border-bottom: 1px solid rgb(60.4411764706%, 60.8088235294%, 61.3970588235%);
 }
 
 tr,
@@ -1406,7 +1406,7 @@ th {
    ========================================================================== */
 @-webkit-keyframes intro {
   0% {
-    opacity: 0;
+    opacity: 0.01;
   }
   100% {
     opacity: 1;
@@ -1414,7 +1414,7 @@ th {
 }
 @keyframes intro {
   0% {
-    opacity: 0;
+    opacity: 0.01;
   }
   100% {
     opacity: 1;
@@ -1459,13 +1459,13 @@ th {
   color: #fff;
 }
 .btn--primary:hover {
-  background-color: rgb(0, 116.8, 161.6);
+  background-color: rgb(0%, 45.8039215686%, 63.3725490196%);
   color: #fff;
 }
 .btn--inverse {
   background-color: #fff;
   color: #3d4144;
-  border: 1px solid rgb(205.5, 206.75, 208.75);
+  border: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 .btn--inverse:visited {
   background-color: #fff;
@@ -1497,7 +1497,7 @@ th {
   color: #fff;
 }
 .btn--success:hover {
-  background-color: rgb(50.4, 132.8, 50.4);
+  background-color: rgb(19.7647058824%, 52.0784313725%, 19.7647058824%);
   color: #fff;
 }
 .btn--warning {
@@ -1509,7 +1509,7 @@ th {
   color: #fff;
 }
 .btn--warning:hover {
-  background-color: rgb(171.2, 101.6, 4);
+  background-color: rgb(67.137254902%, 39.8431372549%, 1.568627451%);
   color: #fff;
 }
 .btn--danger {
@@ -1521,7 +1521,7 @@ th {
   color: #fff;
 }
 .btn--danger:hover {
-  background-color: rgb(190.4, 76, 72.8);
+  background-color: rgb(74.6666666667%, 29.8039215686%, 28.5490196078%);
   color: #fff;
 }
 .btn--info {
@@ -1533,7 +1533,7 @@ th {
   color: #fff;
 }
 .btn--info:hover {
-  background-color: rgb(47.2, 124.8, 148.8);
+  background-color: rgb(18.5098039216%, 48.9411764706%, 58.3529411765%);
   color: #fff;
 }
 .btn--bluesky {
@@ -1545,7 +1545,7 @@ th {
   color: #fff;
 }
 .btn--bluesky:hover {
-  background-color: rgb(12.8, 104.8, 203.2);
+  background-color: rgb(5.0196078431%, 41.0980392157%, 79.6862745098%);
   color: #fff;
 }
 .btn--facebook {
@@ -1557,7 +1557,7 @@ th {
   color: #fff;
 }
 .btn--facebook:hover {
-  background-color: rgb(47.2, 71.2, 121.6);
+  background-color: rgb(18.5098039216%, 27.9215686275%, 47.6862745098%);
   color: #fff;
 }
 .btn--linkedin {
@@ -1569,7 +1569,7 @@ th {
   color: #fff;
 }
 .btn--linkedin:hover {
-  background-color: rgb(0, 98.4, 145.6);
+  background-color: rgb(0%, 38.5882352941%, 57.0980392157%);
   color: #fff;
 }
 .btn--mastodon {
@@ -1581,7 +1581,7 @@ th {
   color: #fff;
 }
 .btn--mastodon:hover {
-  background-color: rgb(34.4, 115.2, 173.6);
+  background-color: rgb(13.4901960784%, 45.1764705882%, 68.0784313725%);
   color: #fff;
 }
 .btn--twitter {
@@ -1593,7 +1593,7 @@ th {
   color: #fff;
 }
 .btn--twitter:hover {
-  background-color: rgb(68, 137.6, 190.4);
+  background-color: rgb(26.6666666667%, 53.9607843137%, 74.6666666667%);
   color: #fff;
 }
 .btn--x {
@@ -1666,9 +1666,9 @@ th {
   font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
   font-size: 0.75em !important;
   text-indent: initial; /* override*/
-  background-color: rgb(228.1, 228.9, 229.5);
+  background-color: rgb(89.4509803922%, 89.7647058824%, 90%);
   border-radius: 4px;
-  box-shadow: 0 1px 1px rgba(188.5, 192.5, 195.5, 0.25);
+  box-shadow: 0 1px 1px rgba(73.9215686275%, 75.4901960784%, 76.6666666667%, 0.25);
 }
 .notice h4,
 .markdown-alert h4 {
@@ -1694,19 +1694,19 @@ th {
 }
 .notice a,
 .markdown-alert a {
-  color: rgb(169.65, 173.25, 175.95);
+  color: rgb(66.5294117647%, 67.9411764706%, 69%);
 }
 .notice a:hover,
 .markdown-alert a:hover {
-  color: rgb(94.25, 96.25, 97.75);
+  color: rgb(36.9607843137%, 37.7450980392%, 38.3333333333%);
 }
 blockquote.notice, blockquote.markdown-alert {
-  border-inline-start-color: rgb(169.65, 173.25, 175.95);
+  border-inline-start-color: rgb(66.5294117647%, 67.9411764706%, 69%);
 }
 
 .notice code,
 .markdown-alert code {
-  background-color: rgb(233.05, 233.45, 233.75);
+  background-color: rgb(91.3921568627%, 91.5490196078%, 91.6666666667%);
 }
 .notice pre code,
 .markdown-alert pre code {
@@ -1726,7 +1726,7 @@ blockquote.notice, blockquote.markdown-alert {
   font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
   font-size: 0.75em !important;
   text-indent: initial; /* override*/
-  background-color: rgb(190.4, 219.6, 230.8);
+  background-color: rgb(74.6666666667%, 86.1176470588%, 90.5098039216%);
   border-radius: 4px;
   box-shadow: 0 1px 1px rgba(0, 146, 202, 0.25);
 }
@@ -1754,19 +1754,19 @@ blockquote.notice, blockquote.markdown-alert {
 }
 .notice--primary a,
 .markdown-alert-important a {
-  color: rgb(0, 131.4, 181.8);
+  color: rgb(0%, 51.5294117647%, 71.2941176471%);
 }
 .notice--primary a:hover,
 .markdown-alert-important a:hover {
   color: #004965;
 }
 blockquote.notice--primary, blockquote.markdown-alert-important {
-  border-inline-start-color: rgb(0, 131.4, 181.8);
+  border-inline-start-color: rgb(0%, 51.5294117647%, 71.2941176471%);
 }
 
 .notice--primary code,
 .markdown-alert-important code {
-  background-color: rgb(214.2, 228.8, 234.4);
+  background-color: rgb(84%, 89.7254901961%, 91.9215686275%);
 }
 .notice--primary pre code,
 .markdown-alert-important pre code {
@@ -1786,7 +1786,7 @@ blockquote.notice--primary, blockquote.markdown-alert-important {
   font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
   font-size: 0.75em !important;
   text-indent: initial; /* override*/
-  background-color: rgb(202.2, 221.6, 227.6);
+  background-color: rgb(79.2941176471%, 86.9019607843%, 89.2549019608%);
   border-radius: 4px;
   box-shadow: 0 1px 1px rgba(59, 156, 186, 0.25);
 }
@@ -1814,19 +1814,19 @@ blockquote.notice--primary, blockquote.markdown-alert-important {
 }
 .notice--info a,
 .markdown-alert-note a {
-  color: rgb(53.1, 140.4, 167.4);
+  color: rgb(20.8235294118%, 55.0588235294%, 65.6470588235%);
 }
 .notice--info a:hover,
 .markdown-alert-note a:hover {
-  color: rgb(29.5, 78, 93);
+  color: rgb(11.568627451%, 30.5882352941%, 36.4705882353%);
 }
 blockquote.notice--info, blockquote.markdown-alert-note {
-  border-inline-start-color: rgb(53.1, 140.4, 167.4);
+  border-inline-start-color: rgb(20.8235294118%, 55.0588235294%, 65.6470588235%);
 }
 
 .notice--info code,
 .markdown-alert-note code {
-  background-color: rgb(220.1, 229.8, 232.8);
+  background-color: rgb(86.3137254902%, 90.1176470588%, 91.2941176471%);
 }
 .notice--info pre code,
 .markdown-alert-note pre code {
@@ -1846,7 +1846,7 @@ blockquote.notice--info, blockquote.markdown-alert-note {
   font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
   font-size: 0.75em !important;
   text-indent: initial; /* override*/
-  background-color: rgb(233.2, 215.8, 191.4);
+  background-color: rgb(91.4509803922%, 84.6274509804%, 75.0588235294%);
   border-radius: 4px;
   box-shadow: 0 1px 1px rgba(214, 127, 5, 0.25);
 }
@@ -1874,19 +1874,19 @@ blockquote.notice--info, blockquote.markdown-alert-note {
 }
 .notice--warning a,
 .markdown-alert-warning a {
-  color: rgb(192.6, 114.3, 4.5);
+  color: rgb(75.5294117647%, 44.8235294118%, 1.7647058824%);
 }
 .notice--warning a:hover,
 .markdown-alert-warning a:hover {
-  color: rgb(107, 63.5, 2.5);
+  color: rgb(41.9607843137%, 24.9019607843%, 0.9803921569%);
 }
 blockquote.notice--warning, blockquote.markdown-alert-warning {
-  border-inline-start-color: rgb(192.6, 114.3, 4.5);
+  border-inline-start-color: rgb(75.5294117647%, 44.8235294118%, 1.7647058824%);
 }
 
 .notice--warning code,
 .markdown-alert-warning code {
-  background-color: rgb(235.6, 226.9, 214.7);
+  background-color: rgb(92.3921568627%, 88.9803921569%, 84.1960784314%);
 }
 .notice--warning pre code,
 .markdown-alert-warning pre code {
@@ -1906,7 +1906,7 @@ blockquote.notice--warning, blockquote.markdown-alert-warning {
   font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
   font-size: 0.75em !important;
   text-indent: initial; /* override*/
-  background-color: rgb(203, 223.6, 203);
+  background-color: rgb(79.6078431373%, 87.6862745098%, 79.6078431373%);
   border-radius: 4px;
   box-shadow: 0 1px 1px rgba(63, 166, 63, 0.25);
 }
@@ -1934,19 +1934,19 @@ blockquote.notice--warning, blockquote.markdown-alert-warning {
 }
 .notice--success a,
 .markdown-alert-tip a {
-  color: rgb(56.7, 149.4, 56.7);
+  color: rgb(22.2352941176%, 58.5882352941%, 22.2352941176%);
 }
 .notice--success a:hover,
 .markdown-alert-tip a:hover {
-  color: rgb(31.5, 83, 31.5);
+  color: rgb(12.3529411765%, 32.5490196078%, 12.3529411765%);
 }
 blockquote.notice--success, blockquote.markdown-alert-tip {
-  border-inline-start-color: rgb(56.7, 149.4, 56.7);
+  border-inline-start-color: rgb(22.2352941176%, 58.5882352941%, 22.2352941176%);
 }
 
 .notice--success code,
 .markdown-alert-tip code {
-  background-color: rgb(220.5, 230.8, 220.5);
+  background-color: rgb(86.4705882353%, 90.5098039216%, 86.4705882353%);
 }
 .notice--success pre code,
 .markdown-alert-tip pre code {
@@ -1966,7 +1966,7 @@ blockquote.notice--success, blockquote.markdown-alert-tip {
   font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
   font-size: 0.75em !important;
   text-indent: initial; /* override*/
-  background-color: rgb(238, 209.4, 208.6);
+  background-color: rgb(93.3333333333%, 82.1176470588%, 81.8039215686%);
   border-radius: 4px;
   box-shadow: 0 1px 1px rgba(238, 95, 91, 0.25);
 }
@@ -1994,19 +1994,19 @@ blockquote.notice--success, blockquote.markdown-alert-tip {
 }
 .notice--danger a,
 .markdown-alert-caution a {
-  color: rgb(214.2, 85.5, 81.9);
+  color: rgb(84%, 33.5294117647%, 32.1176470588%);
 }
 .notice--danger a:hover,
 .markdown-alert-caution a:hover {
-  color: rgb(119, 47.5, 45.5);
+  color: rgb(46.6666666667%, 18.6274509804%, 17.8431372549%);
 }
 blockquote.notice--danger, blockquote.markdown-alert-caution {
-  border-inline-start-color: rgb(214.2, 85.5, 81.9);
+  border-inline-start-color: rgb(84%, 33.5294117647%, 32.1176470588%);
 }
 
 .notice--danger code,
 .markdown-alert-caution code {
-  background-color: rgb(238, 223.7, 223.3);
+  background-color: rgb(93.3333333333%, 87.7254901961%, 87.568627451%);
 }
 .notice--danger pre code,
 .markdown-alert-caution pre code {
@@ -2022,7 +2022,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
    ========================================================================== */
 .masthead {
   position: relative;
-  border-bottom: 1px solid rgb(205.5, 206.75, 208.75);
+  border-bottom: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
   -webkit-animation: intro 0.3s both;
   animation: intro 0.3s both;
   -webkit-animation-delay: 0.15s;
@@ -2201,11 +2201,11 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
   text-align: center;
   text-decoration: none;
   color: #393e46;
-  border: 1px solid rgb(154.125, 155.0625, 156.5625);
+  border: 1px solid rgb(60.4411764706%, 60.8088235294%, 61.3970588235%);
   border-radius: 0;
 }
 .pagination li a:hover {
-  color: rgb(42.75, 46.5, 52.5);
+  color: rgb(16.7647058824%, 18.2352941176%, 20.5882352941%);
 }
 .pagination li a.current, .pagination li a.current.disabled {
   color: #fff;
@@ -2241,7 +2241,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
   text-align: center;
   text-decoration: none;
   color: #393e46;
-  border: 1px solid rgb(154.125, 155.0625, 156.5625);
+  border: 1px solid rgb(60.4411764706%, 60.8088235294%, 61.3970588235%);
   border-radius: 4px;
 }
 .pagination--pager:hover {
@@ -2270,7 +2270,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
 .page__comments + .pagination {
   margin-top: 2em;
   padding-top: 2em;
-  border-top: 1px solid rgb(205.5, 206.75, 208.75);
+  border-top: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 
 /*
@@ -2362,7 +2362,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
   inset-inline-end: 0;
   margin-top: 15px;
   padding: 5px;
-  border: 1px solid rgb(205.5, 206.75, 208.75);
+  border: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
   border-radius: 4px;
   background: #eeeeee;
   -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
@@ -2378,7 +2378,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
 }
 .greedy-nav .hidden-links a:hover {
   color: #222831;
-  background: rgb(210.8, 212, 213.8);
+  background: rgb(82.6666666667%, 83.137254902%, 83.8431372549%);
 }
 .greedy-nav .hidden-links::before {
   content: "";
@@ -2388,7 +2388,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
   width: 0;
   border-style: solid;
   border-width: 0 10px 10px;
-  border-color: rgb(205.5, 206.75, 208.75) transparent;
+  border-color: rgb(80.5882352941%, 81.0784313725%, 81.862745098%) transparent;
   display: block;
   z-index: 0;
 }
@@ -2406,7 +2406,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
 }
 .greedy-nav .hidden-links li {
   display: block;
-  border-bottom: 1px solid rgb(205.5, 206.75, 208.75);
+  border-bottom: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 .greedy-nav .hidden-links li:last-child {
   border-bottom: none;
@@ -2436,7 +2436,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
     color: #7a8288;
     font-size: 0.75em;
     font-weight: bold;
-    border: 1px solid rgb(188.5, 192.5, 195.5);
+    border: 1px solid rgb(73.9215686275%, 75.4901960784%, 76.6666666667%);
     border-radius: 4px;
     z-index: 20;
     -webkit-transition: 0.2s ease-out;
@@ -2567,7 +2567,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
   font-size: 0.75em;
   font-weight: bold;
   text-transform: uppercase;
-  border-bottom: 1px solid rgb(205.5, 206.75, 208.75);
+  border-bottom: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 
 /*
@@ -2577,7 +2577,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
   font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
   color: #7a8288;
   background-color: #eeeeee;
-  border: 1px solid rgb(205.5, 206.75, 208.75);
+  border: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
   border-radius: 4px;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
@@ -2590,7 +2590,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
   border-start-end-radius: 4px;
 }
 .toc .active a {
-  background-color: rgb(204, 233.2, 244.4);
+  background-color: rgb(80%, 91.4509803922%, 95.8431372549%);
   color: #3d4144;
 }
 
@@ -2612,7 +2612,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
   color: #393e46;
   font-weight: bold;
   line-height: 1.5;
-  border-bottom: 1px solid rgb(205.5, 206.75, 208.75);
+  border-bottom: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 .toc__menu a:hover {
   color: #222831;
@@ -2739,7 +2739,7 @@ blockquote.notice--danger, blockquote.markdown-alert-caution {
   transition: 0.2s;
 }
 .search__toggle:hover {
-  color: rgb(0, 109.5, 151.5);
+  color: rgb(0%, 42.9411764706%, 59.4117647059%);
 }
 
 .search-icon {
@@ -3538,7 +3538,7 @@ body:hover .visually-hidden button {
 .greedy-nav__toggle:hover .navicon,
 .greedy-nav__toggle:hover .navicon:before,
 .greedy-nav__toggle:hover .navicon:after {
-  background: rgb(0, 109.5, 151.5);
+  background: rgb(0%, 42.9411764706%, 59.4117647059%);
 }
 .greedy-nav__toggle:hover.close .navicon {
   background: transparent;
@@ -3611,7 +3611,7 @@ body:hover .visually-hidden button {
   min-height: 0;
   z-index: 9999;
   background: #fff;
-  border: 1px solid rgb(205.5, 206.75, 208.75);
+  border: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
   border-radius: 4px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
 }
@@ -3624,19 +3624,19 @@ body:hover .visually-hidden button {
 }
 .modal__actions {
   padding: 0.5em 1em;
-  border-top: 1px solid rgb(205.5, 206.75, 208.75);
+  border-top: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 
 /*
    Footnotes
    ========================================================================== */
 .footnote {
-  color: rgb(155.25, 161.25, 165.75);
+  color: rgb(60.8823529412%, 63.2352941176%, 65%);
   text-decoration: none;
 }
 
 .footnotes {
-  color: rgb(155.25, 161.25, 165.75);
+  color: rgb(60.8823529412%, 63.2352941176%, 65%);
 }
 .footnotes ol,
 .footnotes li,
@@ -3848,7 +3848,7 @@ body {
 
 .page__content h2 {
   padding-bottom: 0.5em;
-  border-bottom: 1px solid rgb(205.5, 206.75, 208.75);
+  border-bottom: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 .page__content h1 .header-link, .page__content h2 .header-link, .page__content h3 .header-link, .page__content h4 .header-link, .page__content h5 .header-link, .page__content h6 .header-link {
   position: relative;
@@ -4024,7 +4024,7 @@ body {
 .page__share {
   margin-top: 2em;
   padding-top: 1em;
-  border-top: 1px solid rgb(205.5, 206.75, 208.75);
+  border-top: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 @media (max-width: 37.5em) {
   .page__share .btn span {
@@ -4088,12 +4088,12 @@ body {
   margin-bottom: 8px;
   padding: 5px 10px;
   text-decoration: none;
-  border: 1px solid rgb(154.125, 155.0625, 156.5625);
+  border: 1px solid rgb(60.4411764706%, 60.8088235294%, 61.3970588235%);
   border-radius: 4px;
 }
 .page__taxonomy-item:hover {
   text-decoration: none;
-  color: rgb(42.75, 46.5, 52.5);
+  color: rgb(16.7647058824%, 18.2352941176%, 20.5882352941%);
 }
 
 .taxonomy__section {
@@ -4101,7 +4101,7 @@ body {
   padding-bottom: 1em;
 }
 .taxonomy__section:not(:last-child) {
-  border-bottom: solid 1px rgb(205.5, 206.75, 208.75);
+  border-bottom: solid 1px rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 .taxonomy__section .archive__item-title {
   margin-top: 0;
@@ -4147,7 +4147,7 @@ body {
   justify-content: space-between;
   color: inherit;
   text-decoration: none;
-  border-bottom: 1px solid rgb(205.5, 206.75, 208.75);
+  border-bottom: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 
 .back-to-top {
@@ -4175,7 +4175,7 @@ body {
   margin-bottom: 10px;
   padding-top: 2rem;
   font-size: 0.75em;
-  border-top: 1px solid rgb(205.5, 206.75, 208.75);
+  border-top: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
   text-transform: uppercase;
 }
 
@@ -4206,7 +4206,7 @@ body {
   margin: 1em 0;
 }
 .comment:not(:last-child) {
-  border-bottom: 1px solid rgb(205.5, 206.75, 208.75);
+  border-bottom: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 
 .comment__avatar-wrapper {
@@ -4231,7 +4231,7 @@ body {
     width: 80px;
     height: 80px;
     padding: 5px;
-    border: 1px solid rgb(205.5, 206.75, 208.75);
+    border: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
   }
 }
 
@@ -4274,7 +4274,7 @@ body {
   float: inline-start;
   margin-top: 2em;
   padding-top: 1em;
-  border-top: 1px solid rgb(205.5, 206.75, 208.75);
+  border-top: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 @media (min-width: 64em) {
   .page__related {
@@ -4349,7 +4349,7 @@ body {
   padding-bottom: 0.5em;
   font-size: 1em;
   color: #393e46;
-  border-bottom: 1px solid rgb(205.5, 206.75, 208.75);
+  border-bottom: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 .archive__subtitle + .list__item .archive__item-title {
   margin-top: 0.5em;
@@ -4535,7 +4535,7 @@ body {
 }
 .feature__wrapper {
   margin-bottom: 2em;
-  border-bottom: 1px solid rgb(205.5, 206.75, 208.75);
+  border-bottom: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
 }
 .feature__wrapper .archive__item-title {
   margin-bottom: 0;
@@ -4835,7 +4835,7 @@ body {
 @media (min-width: 64em) {
   .author__avatar img {
     padding: 5px;
-    border: 1px solid rgb(205.5, 206.75, 208.75);
+    border: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
   }
 }
 
@@ -4932,7 +4932,7 @@ body {
   margin-top: 15px;
   padding: 10px;
   list-style-type: none;
-  border: 1px solid rgb(205.5, 206.75, 208.75);
+  border: 1px solid rgb(80.5882352941%, 81.0784313725%, 81.862745098%);
   border-radius: 4px;
   background: #eeeeee;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
@@ -4961,7 +4961,7 @@ body {
   width: 0;
   border-style: solid;
   border-width: 0 10px 10px;
-  border-color: rgb(205.5, 206.75, 208.75) transparent;
+  border-color: rgb(80.5882352941%, 81.0784313725%, 81.862745098%) transparent;
   z-index: 0;
 }
 @media (min-width: 64em) {

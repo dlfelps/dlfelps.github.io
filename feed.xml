@@ -1,4 +1,168 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2026-05-16T11:58:57+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Experiment 30</title><link href="https://dlfelps.github.io/2026/05/01/lex-align.html" rel="alternate" type="text/html" title="Experiment 30" /><published>2026-05-01T00:00:00+00:00</published><updated>2026-05-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/05/01/lex-align</id><content type="html" xml:base="https://dlfelps.github.io/2026/05/01/lex-align.html"><![CDATA[<p>Enforce your dependency policy before AI agents or developers can commit it.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2026-09-19T16:55:57+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Vouch: making sure the numbers in your paper are actually the numbers your code produced</title><link href="https://dlfelps.github.io/2026/09/01/vouch.html" rel="alternate" type="text/html" title="Vouch: making sure the numbers in your paper are actually the numbers your code produced" /><published>2026-09-01T00:00:00+00:00</published><updated>2026-09-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/09/01/vouch</id><content type="html" xml:base="https://dlfelps.github.io/2026/09/01/vouch.html"><![CDATA[<p>If you’ve ever written a research paper, you know this feeling: it’s 2am before the
+deadline, you just re-ran an experiment because you tweaked a hyperparameter, and now
+you’re hunting through six terminal tabs trying to remember which number goes in Table 2.
+You paste <code class="language-plaintext highlighter-rouge">93.2%</code> into the LaTeX source. It’s probably right. You move on.</p>
+
+<p>Six months later a reviewer asks you to double check that number, and you have no idea
+which run produced it, what seed it used, or whether the code that generated it is even
+the code that’s in the repo anymore.</p>
+
+<p>This is the problem <a href="https://dlfelps.github.io/vouch/">vouch</a> is built to kill.</p>
+
+<p><img src="./images/vouch-chaos-placeholder.png" alt="placeholder: a messy desk / terminal screenshot showing the &quot;which number was that again&quot; chaos" /></p>
+
+<h2 id="the-actual-problem">The actual problem</h2>
+
+<p>Papers are full of numbers, and almost none of them are checked by anything. The
+pipeline usually looks like:</p>
+
+<ol>
+  <li>Run an experiment.</li>
+  <li>Read a number off stdout, a CSV, or a plot.</li>
+  <li>Type that number into the paper by hand.</li>
+  <li>Re-run the experiment later (different seed, different GPU, a “quick fix” to the
+eval code) and forget to update the paper.</li>
+</ol>
+
+<p>Every one of those steps is a place where a typo, a stale run, or a silent code change
+can sneak a wrong number into print. And it’s not a hypothetical problem — “number in
+the paper doesn’t match the code” is one of the most common things that comes up in
+reproducibility audits.</p>
+
+<h2 id="how-people-currently-deal-with-this">How people currently deal with this</h2>
+
+<p><strong>Just being careful.</strong> The default approach. Doesn’t scale past your second draft,
+and definitely doesn’t survive a coauthor rerunning your code on their machine.</p>
+
+<p><strong>Experiment trackers (Weights &amp; Biases, MLflow, Sacred, Aim, etc.)</strong> These are great
+at logging metrics over the course of training and letting you compare runs in a
+dashboard. What they don’t do is close the loop with the <em>paper itself</em> — there’s
+still a manual step where a human reads a number off a dashboard and retypes it into
+LaTeX. The dashboard doesn’t know your paper exists, so it can’t tell you a cited
+number went stale.</p>
+
+<p><strong>Data/pipeline versioning (DVC, Git LFS)</strong> Solves a different problem — versioning
+large files and making pipelines reproducible end-to-end. Doesn’t touch the
+paper-writing side at all; you still need something to connect “this run” to “this
+sentence.”</p>
+
+<p><strong>Just re-running everything before submission</strong> Works, until it doesn’t — a
+“quick check” the night before a deadline isn’t going to catch that Table 3 was
+generated from a run that predates a bug fix in your eval script three weeks ago.</p>
+
+<p>None of these tools actually look at your <code class="language-plaintext highlighter-rouge">.tex</code> file and ask “does every number in
+here still trace back to a real, unchanged run?” That’s the gap vouch fills.</p>
+
+<h2 id="what-vouch-actually-does">What vouch actually does</h2>
+
+<p>Vouch treats every number in your paper as a <strong>citation</strong>, the same way you’d cite a
+reference. Instead of typing <code class="language-plaintext highlighter-rouge">93.2%</code>, you write <code class="language-plaintext highlighter-rouge">\vouch{evaluate.cifar.resnet.acc}</code>,
+and vouch guarantees that key resolves to a real, traceable value — or your build
+fails.</p>
+
+<h3 id="1-record-results-as-they-happen">1. Record results as they happen</h3>
+
+<p>You decorate the function that produces your results:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">vouch</span>
+
+<span class="nd">@vouch.track</span><span class="p">(</span><span class="n">over</span><span class="o">=</span><span class="sh">"</span><span class="s">seed</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="bp">...</span>
+    <span class="k">return</span> <span class="p">{</span><span class="sh">"</span><span class="s">acc</span><span class="sh">"</span><span class="p">:</span> <span class="n">acc</span><span class="p">,</span> <span class="sh">"</span><span class="s">loss</span><span class="sh">"</span><span class="p">:</span> <span class="n">loss</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>Every call gets recorded — arguments, seeds, timing, and the exact code that ran —
+keyed automatically as <code class="language-plaintext highlighter-rouge">evaluate.cifar.resnet.acc</code>, <code class="language-plaintext highlighter-rouge">evaluate.cifar.resnet.loss</code>, and
+so on. Runs that only differ by seed get collapsed into mean ± std automatically.</p>
+
+<h3 id="2-find-the-key-without-guessing">2. Find the key without guessing</h3>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>vouch search vit accuracy cifar
+<span class="gp">$</span><span class="w"> </span>vouch cite evaluate.cifar.vit.acc
+<span class="go">\vouch{evaluate.cifar.vit.acc}  →  90.6 ± 0.4%
+</span></code></pre></div></div>
+
+<p>There’s also a local browsable page (<code class="language-plaintext highlighter-rouge">vouch explore --open</code>) that walks script →
+function → keys and lets you click to copy the citation. If you’re working with an
+LLM agent instead of clicking around, <code class="language-plaintext highlighter-rouge">.vouch/CATALOG.md</code> lists every citable key —
+it’s the file an agent reads first before it invents a number.</p>
+
+<p><img src="./images/vouch-explore-placeholder.png" alt="placeholder: screenshot of `vouch explore` in the browser" /></p>
+
+<h3 id="3-cite-it-right-in-the-latex">3. Cite it, right in the LaTeX</h3>
+
+<div class="language-latex highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ResNet reaches <span class="k">\vouch</span><span class="p">{</span>evaluate.cifar.resnet.acc<span class="p">}</span> top-1 accuracy.
+<span class="k">\vouchtable</span><span class="p">{</span>main<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">vouch build</code> fills in the real values, and every number in the compiled PDF becomes
+a link to a “Value provenance” appendix — which call produced it, every seed’s
+result, the run, the command, the commit. Submitting the camera-ready version?
+<code class="language-plaintext highlighter-rouge">\usepackage[final]{vouch}</code> strips all of that out.</p>
+
+<p><img src="./images/vouch-provenance-placeholder.png" alt="placeholder: PDF snippet showing a cited number linking to its provenance appendix" /></p>
+
+<h3 id="4-numbers-built-from-other-numbers">4. Numbers built from other numbers</h3>
+
+<p>Differences, ratios, “who wins” claims — instead of doing that math in your head
+(or a scratch notebook that gets deleted), it lives in <code class="language-plaintext highlighter-rouge">vouch_values.py</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@vouch.derive</span><span class="p">(</span><span class="sh">"</span><span class="s">cifar.gap</span><span class="sh">"</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="sh">"</span><span class="s">.1f</span><span class="sh">"</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="sh">"</span><span class="s">points</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">gap</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="sh">"</span><span class="s">evaluate.cifar.resnet.acc.mean</span><span class="sh">"</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="sh">"</span><span class="s">evaluate.cifar.vit.acc.mean</span><span class="sh">"</span><span class="p">])</span>
+
+<span class="nd">@vouch.claim</span><span class="p">(</span><span class="sh">"</span><span class="s">cifar.big_gap</span><span class="sh">"</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sh">"</span><span class="s">ResNet leads by more than a point</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">big_gap</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">vouch</span><span class="p">.</span><span class="nf">gt</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="sh">"</span><span class="s">cifar.gap</span><span class="sh">"</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">vouch compare A B</code> will even write the difference/ratio/significance-test code for
+you.</p>
+
+<h3 id="5-the-gate-vouch-check">5. The gate: <code class="language-plaintext highlighter-rouge">vouch check</code></h3>
+
+<p>This is the part that actually saves you. Before you submit — or on every commit,
+via a pre-commit hook or CI — <code class="language-plaintext highlighter-rouge">vouch check</code> fails the build if:</p>
+
+<ul>
+  <li>a cited key doesn’t exist</li>
+  <li>the code behind a cited run has changed since the run happened</li>
+  <li>a claim no longer holds</li>
+  <li>a figure is stale</li>
+  <li>there’s a number typed by hand instead of cited</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>! bare-number    93.2% is typed by hand; it is evaluate.cifar.resnet.acc.mean
+! no-source      97.1% matches no recorded value: record it or remove it
+</code></pre></div></div>
+
+<p>That second warning is the one that catches the “wait, where did this number even
+come from” panic before a reviewer does.</p>
+
+<h2 id="the-agent-angle">The agent angle</h2>
+
+<p>Vouch was also built with the assumption that a lot of paper-writing now involves an
+LLM in the loop, and LLMs will absolutely make up a plausible-looking number if you
+let them. <code class="language-plaintext highlighter-rouge">vouch init --agents --yes</code> sets up a skill, a rules block, and a hook so
+that if an agent (like Claude Code) types a number into your paper instead of citing
+one, it gets bounced back in the same turn with the fix. There’s also an MCP server
+(<code class="language-plaintext highlighter-rouge">vouch mcp</code>) so any MCP-capable agent can search, cite, and check values directly.</p>
+
+<h2 id="try-it">Try it</h2>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>pip <span class="nb">install</span> <span class="nt">-e</span> <span class="nb">.</span>
+<span class="gp">$</span><span class="w"> </span>vouch init
+</code></pre></div></div>
+
+<p>No dependencies required for the base install. There’s a full walkthrough — a
+two-second toy experiment taken all the way to a compiled PDF — in the
+<a href="https://dlfelps.github.io/vouch/tutorial/">tutorial</a>, and the complete command
+reference and design doc are on the
+<a href="https://dlfelps.github.io/vouch/">documentation site</a>.</p>
+
+<p>If you’ve ever had to explain to a reviewer why the number in your rebuttal doesn’t
+match the number in your paper, this one’s for you.</p>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="research-tools" /><category term="reproducibility" /><category term="latex" /><category term="python" /><category term="vouch" /><summary type="html"><![CDATA[If you’ve ever written a research paper, you know this feeling: it’s 2am before the deadline, you just re-ran an experiment because you tweaked a hyperparameter, and now you’re hunting through six terminal tabs trying to remember which number goes in Table 2. You paste 93.2% into the LaTeX source. It’s probably right. You move on.]]></summary></entry><entry><title type="html">Experiment 30</title><link href="https://dlfelps.github.io/2026/05/01/lex-align.html" rel="alternate" type="text/html" title="Experiment 30" /><published>2026-05-01T00:00:00+00:00</published><updated>2026-05-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/05/01/lex-align</id><content type="html" xml:base="https://dlfelps.github.io/2026/05/01/lex-align.html"><![CDATA[<p>Enforce your dependency policy before AI agents or developers can commit it.</p>
 
 <h1 id="your-ai-agent-has-a-pyprojecttoml-problem">Your AI agent has a <code class="language-plaintext highlighter-rouge">pyproject.toml</code> problem</h1>
 
@@ -2472,264 +2636,4 @@ Features: [norm_x, norm_y, is_weekend, start_time, duration, placeholder] (6D)
       <p>LYMob-4Cities Dataset. (2024). Available at: https://zenodo.org/records/14219563 <a href="#fnref:7" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="gps" /><category term="mobility" /><category term="cobad" /><summary type="html"><![CDATA[The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.]]></summary></entry><entry><title type="html">Experiment 21</title><link href="https://dlfelps.github.io/2025/08/21/mobility.html" rel="alternate" type="text/html" title="Experiment 21" /><published>2025-08-21T00:00:00+00:00</published><updated>2025-08-21T00:00:00+00:00</updated><id>https://dlfelps.github.io/2025/08/21/mobility</id><content type="html" xml:base="https://dlfelps.github.io/2025/08/21/mobility.html"><![CDATA[<p>This post converts GPS trajectory data into learned embedded features to reveal human mobility patterns, enabling applications in urban planning, personalized services, and behavioral analysis.</p>
-
-<h1 id="introduction">Introduction</h1>
-
-<p>Human mobility patterns tell fascinating stories. Where we go, when we travel, and how we move through space reveals insights about urban planning, social behavior, economic activity, and even public health. But extracting meaningful patterns from raw GPS trajectories is challenging—until now.</p>
-
-<p>In this post, I’ll walk you through an exciting deep learning project that transforms complex mobility data into intelligent embeddings using a hybrid transformer-LSTM architecture. We’ll explore how this approach can revolutionize everything from urban planning to personalized location services.</p>
-
-<h2 id="the-challenge-making-sense-of-mobility-data">The Challenge: Making Sense of Mobility Data</h2>
-
-<p>GPS trajectories are deceptively complex. A single user’s movement data contains:</p>
-<ul>
-  <li><strong>Spatial information</strong>: Latitude and longitude coordinates</li>
-  <li><strong>Temporal patterns</strong>: When movements occur, day-of-week effects</li>
-  <li><strong>Sequential dependencies</strong>: How current location influences future destinations</li>
-  <li><strong>Individual behaviors</strong>: Personal routines and preferences</li>
-</ul>
-
-<p>Traditional analysis methods struggle to capture these multi-dimensional relationships. That’s where deep learning comes in.</p>
-
-<h2 id="introducing-lymob-4cities-a-rich-mobility-dataset">Introducing LYMob-4Cities: A Rich Mobility Dataset</h2>
-
-<p>Our project leverages the <strong>LYMob-4Cities dataset</strong>, a comprehensive collection of anonymized mobility traces from four major cities. This dataset provides:</p>
-
-<ul>
-  <li><strong>Multi-city coverage</strong>: Diverse urban environments with different characteristics</li>
-  <li><strong>Temporal depth</strong>: Extended observation periods capturing seasonal and weekly patterns</li>
-  <li><strong>User diversity</strong>: Thousands of anonymized users with varying mobility behaviors</li>
-  <li><strong>High resolution</strong>: Detailed GPS coordinates with timestamp information</li>
-</ul>
-
-<p>The dataset structure includes:</p>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">uid</code>: Anonymized user identifier</li>
-  <li><code class="language-plaintext highlighter-rouge">d</code>: Day number in the observation period</li>
-  <li>Geographic coordinates (latitude/longitude)</li>
-  <li>Temporal metadata including timestamps and day-of-week indicators</li>
-</ul>
-
-<p>This rich dataset enables us to build models that generalize across different urban contexts while respecting user privacy through anonymization.</p>
-
-<h2 id="the-architecture-hybrid-transformer-lstm-for-mobility">The Architecture: Hybrid Transformer-LSTM for Mobility</h2>
-
-<p>Our approach combines the best of both worlds: transformers for attention-based pattern recognition and LSTMs for sequential modeling.</p>
-
-<h3 id="core-components">Core Components</h3>
-
-<p><strong>1. Multi-Modal Embeddings</strong></p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Spatial embedding: lat/lon → dense vector
-</span><span class="n">spatial_emb</span> <span class="o">=</span> <span class="nc">SpatialEmbedding</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
-
-<span class="c1"># Temporal embedding: time features → dense vector  
-</span><span class="n">temporal_emb</span> <span class="o">=</span> <span class="nc">TemporalEmbedding</span><span class="p">(</span><span class="n">timestamps</span><span class="p">,</span> <span class="n">weekend_flags</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p><strong>2. Cross-Attention Mechanism</strong>
-The model learns how spatial and temporal features interact through dedicated attention layers, capturing patterns like “this user typically visits restaurants on Friday evenings.”</p>
-
-<p><strong>3. Transformer Blocks</strong>
-Multi-head self-attention processes the entire trajectory sequence simultaneously, identifying important locations and movement patterns.</p>
-
-<p><strong>4. Bidirectional LSTM</strong>
-Sequential processing captures temporal dependencies and generates the final 512-dimensional embedding that summarizes the entire trajectory.</p>
-
-<h3 id="why-this-architecture-works">Why This Architecture Works</h3>
-
-<ul>
-  <li><strong>Transformers</strong> excel at identifying important locations through attention</li>
-  <li><strong>LSTMs</strong> capture sequential dependencies in movement</li>
-  <li><strong>Cross-attention</strong> learns spatio-temporal interactions</li>
-  <li><strong>Bidirectional processing</strong> considers both past and future context</li>
-</ul>
-
-<h2 id="the-complete-pipeline">The Complete Pipeline</h2>
-
-<h3 id="stage-1-model-training">Stage 1: Model Training</h3>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python train_s2s.py
-</code></pre></div></div>
-
-<p>The training process:</p>
-<ul>
-  <li>Loads mobility data from multiple cities</li>
-  <li>Applies data augmentation (Gaussian noise) for robustness</li>
-  <li>Trains the hybrid model with early stopping</li>
-  <li>Saves the best checkpoint for inference</li>
-</ul>
-
-<p><strong>Key Innovation</strong>: The model uses only users with ID &lt; 4000 for training, reserving higher IDs for testing—ensuring true out-of-sample evaluation.</p>
-
-<h3 id="stage-2-embedding-generation">Stage 2: Embedding Generation</h3>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python inference.py
-</code></pre></div></div>
-
-<p>This stage:</p>
-<ul>
-  <li>Processes test users to generate trajectory embeddings</li>
-  <li>Applies PCA to reduce dimensionality for visualization</li>
-  <li>Creates analysis outputs including scatter plots and statistical summaries</li>
-</ul>
-
-<p><strong>Technical Detail</strong>: The 512-dimensional embeddings come from a bidirectional LSTM with 256 hidden units, effectively doubling the representation capacity.</p>
-
-<h3 id="stage-3-interactive-exploration">Stage 3: Interactive Exploration</h3>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python interactive_plot.py
-</code></pre></div></div>
-
-<p>The crown jewel: a Dash web application that enables:</p>
-<ul>
-  <li>Interactive exploration of embedding space</li>
-  <li>Point selection and trajectory heatmap generation</li>
-  <li>Real-time analysis of mobility patterns</li>
-</ul>
-
-<p><img src="/assets/images/Screenshot_20-8-2025_15056_127.0.0.1.jpeg" alt="Interactive Dashboard" />
-<em>Interactive dashboard showing PCA projections (left) and trajectory heatmaps (right)</em></p>
-
-<h2 id="remarkable-results-what-the-embeddings-reveal">Remarkable Results: What the Embeddings Reveal</h2>
-
-<p>The PCA analysis reveals fascinating insights:</p>
-
-<p><strong>Clustering by Behavior</strong>: Users with similar mobility patterns cluster together in embedding space, even across different cities.</p>
-
-<p><strong>Spatial Preservation</strong>: Geographic relationships are maintained—users who frequent similar areas have similar embeddings.</p>
-
-<p><strong>Temporal Patterns</strong>: Weekend vs. weekday behaviors create distinct embedding regions.</p>
-
-<p><strong>Generalization</strong>: The model successfully captures mobility patterns for completely unseen users.</p>
-
-<h2 id="real-world-applications">Real-World Applications</h2>
-
-<p>This technology opens doors to numerous applications:</p>
-
-<h3 id="️-urban-planning">🏙️ <strong>Urban Planning</strong></h3>
-<ul>
-  <li><strong>Traffic optimization</strong>: Predict congestion patterns before infrastructure changes</li>
-  <li><strong>Public transit</strong>: Design routes based on actual movement patterns</li>
-  <li><strong>Zoning decisions</strong>: Understand how people actually use urban spaces</li>
-</ul>
-
-<h3 id="-personalized-services">📱 <strong>Personalized Services</strong></h3>
-<ul>
-  <li><strong>Location recommendations</strong>: “Users with similar patterns also enjoyed…”</li>
-  <li><strong>Predictive routing</strong>: Anticipate destinations based on historical behavior</li>
-  <li><strong>Context-aware apps</strong>: Adapt interfaces based on movement patterns</li>
-</ul>
-
-<h3 id="-anomaly-detection">🚨 <strong>Anomaly Detection</strong></h3>
-<ul>
-  <li><strong>Security applications</strong>: Identify unusual movement patterns</li>
-  <li><strong>Public health</strong>: Track population mobility during emergencies</li>
-  <li><strong>Fraud detection</strong>: Verify location-based claims</li>
-</ul>
-
-<h3 id="-business-intelligence">📊 <strong>Business Intelligence</strong></h3>
-<ul>
-  <li><strong>Retail analytics</strong>: Understand customer foot traffic patterns</li>
-  <li><strong>Real estate</strong>: Evaluate locations based on mobility data</li>
-  <li><strong>Marketing</strong>: Target audiences based on movement behaviors</li>
-</ul>
-
-<h3 id="-research-applications">🔬 <strong>Research Applications</strong></h3>
-<ul>
-  <li><strong>Social science</strong>: Study human behavior at scale</li>
-  <li><strong>Transportation research</strong>: Validate mobility models</li>
-  <li><strong>Economic analysis</strong>: Understand commuting and economic patterns</li>
-</ul>
-
-<h2 id="privacy-and-ethics-a-responsible-approach">Privacy and Ethics: A Responsible Approach</h2>
-
-<p>Our implementation prioritizes privacy:</p>
-<ul>
-  <li><strong>Anonymized data</strong>: No personally identifiable information</li>
-  <li><strong>Aggregated insights</strong>: Focus on population-level patterns</li>
-  <li><strong>Secure processing</strong>: Local analysis without data sharing</li>
-  <li><strong>Transparent methods</strong>: Open-source implementation for scrutiny</li>
-</ul>
-
-<h2 id="technical-innovation-why-this-matters">Technical Innovation: Why This Matters</h2>
-
-<p>This project demonstrates several key advances:</p>
-
-<p><strong>1. Multi-Modal Learning</strong>: Successfully combining spatial and temporal information in a unified architecture.</p>
-
-<p><strong>2. Scalable Embeddings</strong>: 512-dimensional representations that capture complex mobility patterns while remaining computationally tractable.</p>
-
-<p><strong>3. Interactive Analysis</strong>: Real-time exploration tools that make complex AI accessible to domain experts.</p>
-
-<p><strong>4. Generalization</strong>: Models that work across different cities and user populations.</p>
-
-<h2 id="getting-started-try-it-yourself">Getting Started: Try It Yourself</h2>
-
-<p>The complete implementation is available with detailed documentation:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install dependencies</span>
-pip <span class="nb">install </span>torch pandas scikit-learn plotly dash
-
-<span class="c"># Train the model</span>
-python train_s2s.py
-
-<span class="c"># Generate embeddings</span>
-python inference.py
-
-<span class="c"># Launch interactive dashboard</span>
-python interactive_plot.py
-</code></pre></div></div>
-
-<p>The modular design makes it easy to:</p>
-<ul>
-  <li>Adapt to your own mobility datasets</li>
-  <li>Experiment with different architectures</li>
-  <li>Add new visualization components</li>
-  <li>Integrate with existing systems</li>
-</ul>
-
-<h2 id="the-future-of-mobility-intelligence">The Future of Mobility Intelligence</h2>
-
-<p>This project represents just the beginning. Future directions include:</p>
-
-<ul>
-  <li><strong>Federated learning</strong>: Training on distributed datasets while preserving privacy</li>
-  <li><strong>Multi-modal integration</strong>: Incorporating weather, events, and social data</li>
-  <li><strong>Real-time processing</strong>: Streaming analysis for live mobility insights</li>
-  <li><strong>Causal modeling</strong>: Understanding why people move, not just where</li>
-</ul>
-
-<h2 id="conclusion-from-data-to-intelligence">Conclusion: From Data to Intelligence</h2>
-
-<p>Human mobility data contains incredible insights waiting to be unlocked. By combining modern deep learning architectures with thoughtful data science, we can transform raw GPS coordinates into intelligent representations that reveal the hidden patterns of human behavior.</p>
-
-<p>The implications extend far beyond technology—this work can inform better cities, more personalized services, and deeper understanding of human society. As we continue to generate more location data through our digital lives, tools like these become essential for making sense of our increasingly connected world.</p>
-
-<p>Whether you’re an urban planner designing the cities of tomorrow, a data scientist exploring new applications, or simply curious about the intersection of AI and human behavior, this project demonstrates the power of applying modern machine learning to one of humanity’s most fundamental activities: movement through space and time.</p>
-
-<hr />
-
-<p><em>Want to explore the code? Check out the <a href="https://github.com/dlfelps/lstm-trajectory">GitHub repository</a> for complete implementation details, documentation, and examples.</em></p>
-
-<h2 id="about-the-dataset">About the Dataset</h2>
-
-<p>The LYMob-4Cities dataset used in this project represents a significant contribution to mobility research, providing researchers with access to large-scale, anonymized mobility data from diverse urban environments. This type of dataset is crucial for developing and validating mobility models that can generalize across different cities and cultures.</p>
-
-<p>For researchers interested in working with similar data, consider exploring:</p>
-<ul>
-  <li>Academic partnerships with transportation authorities</li>
-  <li>Open mobility datasets from cities with data sharing initiatives</li>
-  <li>Synthetic mobility data generation techniques</li>
-  <li>Privacy-preserving data collection methods</li>
-</ul>
-
-<p>The responsible use of such datasets, with proper anonymization and ethical oversight, enables breakthrough research while protecting individual privacy—a balance that’s essential as we advance mobility intelligence.</p>
-
-<h2 id="claude-gotchas">Claude Gotchas</h2>
-
-<p>I was impressed by Claude Code’s ability to assist and expedite with the exploration of this dataset and creation of the LSTM model. I wanted to document a few gotchas that I came across during the development process that would have been difficult for a non-developer / non-ML person to identify since they didn’t cause any errors:</p>
-
-<ol>
-  <li>ISSUE - The model was actually predicting the final location from the full trajectory (i.e. including the final location). <strong>RESOLUTION - I identified the problem by when I noticed the model converged quickly and had excellent performance on test datasets. I found the problem, told Claude, and Claude fixed it.</strong></li>
-  <li>ISSUE - The LSTM used bad values for padding points. <strong>RESOLUTION - Trajectories are not the same length and the LSTM model requires that you pad short sequences to make them equal. One is supposed to choose padding values that do not appear in the real data. However, Claude chose “0” for user_id, x, y, and time. These are all valid values. I manually changed them to acceptable values.</strong></li>
-  <li>ISSUE - The model initially treated the user_id variable as a continuous variable instead of a categorical variable. <strong>RESOLUTION - When I pointed out the mistake Claude had a good suggestion to use an embedding layer and updated the code accordingly.</strong></li>
-  <li>ISSUE - Claude chose the wrong normalization algorithm. <strong>RESOLUTION - I noticed that the first two PCA dimensions captured almost 97% of the variance. This was surprising given the complexity of the data. Upon further inspection, I noticed that before performing PCA Claude applied a matrix L2 norm to the trajectory embeddings. The correct normalization method is a zero-mean, unit-variance normalization method. I was able to tell Claude to replace the method.</strong></li>
-</ol>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="gps" /><category term="mobility" /><summary type="html"><![CDATA[This post converts GPS trajectory data into learned embedded features to reveal human mobility patterns, enabling applications in urban planning, personalized services, and behavioral analysis.]]></summary></entry></feed>
+</div>]]></content><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><category term="claude" /><category term="gps" /><category term="mobility" /><category term="cobad" /><summary type="html"><![CDATA[The blog post introduces CoBAD (Collective Behavior Anomaly Detection), a deep learning approach that detects anomalous group behaviors in human mobility data by analyzing stay points and collective patterns rather than individual trajectories.]]></summary></entry></feed>
