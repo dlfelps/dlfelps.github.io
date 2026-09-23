@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2026-09-19T22:55:17+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Vouch: making sure the numbers in your paper are actually the numbers your code produced</title><link href="https://dlfelps.github.io/2026/09/01/vouch.html" rel="alternate" type="text/html" title="Vouch: making sure the numbers in your paper are actually the numbers your code produced" /><published>2026-09-01T00:00:00+00:00</published><updated>2026-09-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/09/01/vouch</id><content type="html" xml:base="https://dlfelps.github.io/2026/09/01/vouch.html"><![CDATA[<p>If you’ve ever written a research paper, you know this feeling: it’s 2am before the
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://dlfelps.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://dlfelps.github.io/" rel="alternate" type="text/html" /><updated>2026-09-23T11:25:40+00:00</updated><id>https://dlfelps.github.io/feed.xml</id><title type="html">.NET Experiments</title><subtitle>Bill Nye meets Bill Gates ;)</subtitle><author><name>Daniel Felps</name><email>dlfelps@gmail.com</email></author><entry><title type="html">Vouch: making sure the numbers in your paper are actually the numbers your code produced</title><link href="https://dlfelps.github.io/2026/09/01/vouch.html" rel="alternate" type="text/html" title="Vouch: making sure the numbers in your paper are actually the numbers your code produced" /><published>2026-09-01T00:00:00+00:00</published><updated>2026-09-01T00:00:00+00:00</updated><id>https://dlfelps.github.io/2026/09/01/vouch</id><content type="html" xml:base="https://dlfelps.github.io/2026/09/01/vouch.html"><![CDATA[<p>If you’ve ever written a research paper, you know this feeling: it’s 2am before the
 deadline, you just re-ran an experiment because you tweaked a hyperparameter, and now
 you’re hunting through six terminal tabs trying to remember which number goes in Table 2.
 You paste <code class="language-plaintext highlighter-rouge">93.2%</code> into the LaTeX source. It’s probably right. You move on.</p>
@@ -9,7 +9,7 @@ the code that’s in the repo anymore.</p>
 
 <p>This is the problem <a href="https://dlfelps.github.io/vouch/">vouch</a> is built to kill.</p>
 
-<p><img src="./images/vouch-chaos-placeholder.png" alt="placeholder: a messy desk / terminal screenshot showing the &quot;which number was that again&quot; chaos" /></p>
+<p><img src="/assets/images/blog_problem.png" alt="vouch desktop" /></p>
 
 <h2 id="the-actual-problem">The actual problem</h2>
 
@@ -88,7 +88,7 @@ function → keys and lets you click to copy the citation. If you’re working w
 LLM agent instead of clicking around, <code class="language-plaintext highlighter-rouge">.vouch/CATALOG.md</code> lists every citable key —
 it’s the file an agent reads first before it invents a number.</p>
 
-<p><img src="./images/vouch-explore-placeholder.png" alt="placeholder: screenshot of `vouch explore` in the browser" /></p>
+<p><img src="/assets/images/2_explore.png" alt="vouch explore" /></p>
 
 <h3 id="3-cite-it-right-in-the-latex">3. Cite it, right in the LaTeX</h3>
 
@@ -101,7 +101,9 @@ a link to a “Value provenance” appendix — which call produced it, every se
 result, the run, the command, the commit. Submitting the camera-ready version?
 <code class="language-plaintext highlighter-rouge">\usepackage[final]{vouch}</code> strips all of that out.</p>
 
-<p><img src="./images/vouch-provenance-placeholder.png" alt="placeholder: PDF snippet showing a cited number linking to its provenance appendix" /></p>
+<p><img src="/assets/images/3_pdf.png" alt="pdf" /></p>
+
+<p><img src="/assets/images/5_appendix.png" alt="appendix" /></p>
 
 <h3 id="4-numbers-built-from-other-numbers">4. Numbers built from other numbers</h3>
 
